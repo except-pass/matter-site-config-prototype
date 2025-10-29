@@ -980,15 +980,18 @@ export const pointTransforms: PointTransform[] = [
       },
       {
         "uuid": "Generator.LinkedPort",
-        "title": "Generator Port Usage",
-        "help": "Selects what is connected to the generator port. ⚠️ The generator port only accomodates one type of connection at a time. Do not connect anything else.",
+        "title": "Generator Port Connection",
+        "help": "If using a generator, select which port it's connected to — either the GEN port or the Grid Input port (sometimes called microgrid mode). If no generator is installed, leave this setting on GEN port.",
         "entries": {
           "Port": {
-            "name": "Connection Type",
+            "name": "Generator connected to",
+            "meanings": {
+              "0": "GeneratorPort",
+              "1": "GridPort",
+            },            
             "friendly_meanings": {
-              "0": "Generator",
-              "1": "AC Coupling",
-              "2": "Smart Load"
+              "0": "GEN port (also select if not using generator).",
+              "1": "Grid port (aka microgrid mode)",
             }
           }
         }
@@ -996,15 +999,15 @@ export const pointTransforms: PointTransform[] = [
         {
           "uuid": "Generator.BatteryChargeCurrentLimit",
           "title": "Battery Charge Current Limit",
-          "help": "Sets the maximum current the generator will use to charge the battery.",
+          "help": "Sets the maximum DC current the inverter will send to the battery from the generator.",
           "entries": {
-            "Current": { "name": "Charge Current (A)" }
+            "Current": { "name": "Charge Current (Adc)" }
           }
         },
         {
           "uuid": "Generator.GeneratorRatedPower",
           "title": "Generator Rated Power",
-          "help": "Specify the generator’s continuous rated output power.",
+          "help": "Specify the generator's continuous rated output power.",
           "entries": {
             "Power": {
               "name": "Rated Power (kW)",
@@ -1106,14 +1109,6 @@ export const pointTransforms: PointTransform[] = [
             }
           }
         }
-        
-      
-      
-      
-      
-      
-      
-      
 
 
 ];

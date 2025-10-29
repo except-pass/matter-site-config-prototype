@@ -3063,14 +3063,14 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Generator Port Usage",
-                  "help": "Selects what is connected to the generator port. ⚠️ The generator port only accomodates one type of connection at a time. Do not connect anything else.",
+                  "title": "Generator Port Connection",
+                  "help": "If using a generator, select which port it's connected to — either the GEN port or the Grid Input port (sometimes called microgrid mode). If no generator is installed, leave this setting on GEN port.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
                     {
-                      "name": "Connection Type",
+                      "name": "Generator connected to",
                       "arg": "Port",
                       "dtype": "enum",
                       "description": "",
@@ -3080,9 +3080,8 @@
                         "1": "GridPort"
                       },
                       "friendly_meanings": {
-                        "0": "Generator",
-                        "1": "AC Coupling",
-                        "2": "Smart Load"
+                        "0": "GEN port (also select if not using generator).",
+                        "1": "Grid port (aka microgrid mode)"
                       }
                     }
                   ],
@@ -3097,13 +3096,13 @@
                 },
                 {
                   "title": "Battery Charge Current Limit",
-                  "help": "Sets the maximum current the generator will use to charge the battery.",
+                  "help": "Sets the maximum DC current the inverter will send to the battery from the generator.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
                     {
-                      "name": "Charge Current (A)",
+                      "name": "Charge Current (Adc)",
                       "arg": "Current",
                       "dtype": "Number",
                       "description": "",
@@ -3121,7 +3120,7 @@
                 },
                 {
                   "title": "Generator Rated Power",
-                  "help": "Specify the generator’s continuous rated output power.",
+                  "help": "Specify the generator's continuous rated output power.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
