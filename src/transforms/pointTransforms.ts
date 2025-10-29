@@ -241,10 +241,12 @@ export const pointTransforms: PointTransform[] = [
   help: "Defines the battery state-of-charge limits that control the Smart Load. The Smart Load turns on when SOC rises above the start limit **and** PV power exceeds the start power limit.  Smart load turns off when SOC falls below the stop limit.",
   entries: {
     OnSOC: {
-      name: "Start When Battery SOC Is Above (%)"
+      name: "Start When Battery SOC Is Above (%)",
+      less_than: "OffSOC",
     },
     OffSOC: {
-      name: "Stop When Battery SOC Is Below (%)"
+      name: "Stop When Battery SOC Is Below (%)",
+      greater_than: "OnSOC",
     }
   }
 },
@@ -377,16 +379,19 @@ export const pointTransforms: PointTransform[] = [
     }
   },
     {
-      "uuid": "ACCharge.ACChargeStatus",
-      "title": "Allow Charging from Grid",
-      "help": "Enables charging the battery from the utility grid.",
-      "entries": {
-        "Mode": {
-          "name": "Grid Charge",
-          "friendly_meanings": {
+      uuid: "ACCharge.ACChargeStatus",
+      section: {
+        title: "Grid Charge",
+      },
+      title: "Allow Battery Charging from Grid",
+      help: "Enables charging the battery from the utility grid.",
+      entries: {
+        Mode: {
+          name: "Grid Charge",
+          friendly_meanings: {
             "0": "Disabled",
             "1": "Enabled"
-            }
+          }
         }
       }
     },
@@ -511,20 +516,23 @@ export const pointTransforms: PointTransform[] = [
   {
     uuid: "BatteryScheduling.BatteryScheduling",
     title: "Battery Scheduling",
-    help: "Enables the battery scheduling feature. This must be turned on for Time-of-Use (TOU) charge and discharge schedules to take effect. When disabled, all TOU settings are ignored and normal battery behavior applies.",
+    help: "This is a special scheduling mode designed for certain time-of-use (TOU) utility rates or  ther custom situations. Your system will normally manage charging and discharging utomatically—you don't need to set a schedule unless you want this specific behavior.",
     entries: {
       Mode: {
         name: "Scheduling",
         friendly_meanings: {
           "0": "Disable Scheduling",
-          "1": "Use Scheduling"
+          "1": "Charge or discharge the battery at the same time each day"
         }
       }
     }
   },
     {
       uuid: "BatteryTOUCharge.TOUMaximumChargingPower",
-      title: "Max Power During Scheduled Charge",
+      title: "Max Power During PV Charge Only",
+      section: {
+        title: "PV Charge Only",
+      },
       help: "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods. Limit this to control how hard the battery charges from the grid in those windows.",
       entries: {
         Power: {
@@ -534,8 +542,8 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUCharge.TOUChargingPlan1",
-      title: "TOU Charge Window 1",
-      help: "Defines the first time window when the battery is allowed to charge according to TOU rules. The inverter may charge from grid during this window, subject to the TOU Max Charge Power limit.",
+      title: "Schedule Window 1 for PV Charge Only",
+      help: "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
       entries: {
         StartTime_h: {
           name: "Start Hour (0-23)"
@@ -553,8 +561,8 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUCharge.TOUChargingPlan2",
-      title: "TOU Charge Window 2",
-      help: "Defines the second allowed charging window for TOU operation.",
+      title: "Schedule Window 2 for PV Charge Only",
+      help: "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
       entries: {
         StartTime_h: {
           name: "Start Hour (0-23)"
@@ -572,8 +580,8 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUCharge.TOUChargingPlan3",
-      title: "TOU Charge Window 3",
-      help: "Defines the third allowed charging window for TOU operation.",
+      title: "Schedule Window 3 for PV Charge Only",
+      help: "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
       entries: {
         StartTime_h: {
           name: "Start Hour (0-23)"
@@ -591,7 +599,10 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUDischarge.TOUMaximumDischargingPower",
-      title: "TOU Max Discharge Power",
+      section: {
+        title: "Discharge Only",
+      },
+      title: "Max Power During Discharge Only",
       help: "Sets the maximum discharging power during scheduled Time-of-Use (TOU) discharge periods. Limit this to control how much battery power is exported to loads or grid during those windows.",
       entries: {
         Power: {
@@ -602,7 +613,7 @@ export const pointTransforms: PointTransform[] = [
     {
       uuid: "BatteryTOUDischarge.DischargingStopSoc",
       title: "TOU Discharge Stop SOC",
-      help: "Sets the minimum state of charge (SOC) that the battery will discharge to during TOU operation. Once this level is reached, discharging stops to preserve reserve capacity for later use or backup.",
+      help: "Sets the minimum state of charge (SOC) that the battery will discharge to during 'Discharge Only' operation. Once this level is reached, discharging stops to preserve reserve capacity for later use or backup.",
       entries: {
         SOC: {
           name: "SOC (%)"
@@ -611,8 +622,8 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUDischarge.TOUDischargingPlan1",
-      title: "TOU Discharge Window 1",
-      help: "Defines the first time window when the battery is allowed to discharge during TOU operation. The inverter can supply loads or export power during this window, within the Max Discharge Power limit.",
+      title: "Schedule Window 1 for Discharge Only",
+      help: "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
       entries: {
         StartTime_h: {
           name: "Start Hour (0-23)"
@@ -630,8 +641,8 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUDischarge.TOUDischargingPlan2",
-      title: "TOU Discharge Window 2",
-      help: "Defines the second allowed discharge window for TOU operation.",
+      title: "Schedule Window 2 for Discharge Only",
+      help: "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
       entries: {
         StartTime_h: {
           name: "Start Hour (0-23)"
@@ -649,8 +660,8 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUDischarge.TOUDischargingPlan3",
-      title: "TOU Discharge Window 3",
-      help: "Defines the third allowed discharge window for TOU operation.",
+      title: "Schedule Window 3 for Discharge Only",
+      help: "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
       entries: {
         StartTime_h: {
           name: "Start Hour (0-23)"
