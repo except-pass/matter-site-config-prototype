@@ -364,12 +364,20 @@ function DualHandleSlider({
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  // Colors for up to 4 handles
+  // Colors for handles (expanded palette for many sliders)
   const colors = [
     { bg: 'bg-emerald-500', text: 'text-emerald-600', border: 'border-emerald-500' },
     { bg: 'bg-blue-500', text: 'text-blue-600', border: 'border-blue-500' },
     { bg: 'bg-purple-500', text: 'text-purple-600', border: 'border-purple-500' },
     { bg: 'bg-orange-500', text: 'text-orange-600', border: 'border-orange-500' },
+    { bg: 'bg-pink-500', text: 'text-pink-600', border: 'border-pink-500' },
+    { bg: 'bg-indigo-500', text: 'text-indigo-600', border: 'border-indigo-500' },
+    { bg: 'bg-teal-500', text: 'text-teal-600', border: 'border-teal-500' },
+    { bg: 'bg-rose-500', text: 'text-rose-600', border: 'border-rose-500' },
+    { bg: 'bg-cyan-500', text: 'text-cyan-600', border: 'border-cyan-500' },
+    { bg: 'bg-amber-500', text: 'text-amber-600', border: 'border-amber-500' },
+    { bg: 'bg-lime-500', text: 'text-lime-600', border: 'border-lime-500' },
+    { bg: 'bg-fuchsia-500', text: 'text-fuchsia-600', border: 'border-fuchsia-500' },
   ];
 
   // Assume all entries share the same range
@@ -432,10 +440,16 @@ function DualHandleSlider({
     document.addEventListener('mouseup', handleUp);
   };
 
+  // Determine grid columns based on number of entries
+  // For many sliders (8+), use 3-4 columns to keep compact
+  const gridColsClass = entries.length >= 8
+    ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'
+    : 'grid-cols-2';
+
   return (
     <div className="flex flex-col gap-3 text-sm">
       {/* Input fields with color-coded labels */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className={`grid ${gridColsClass} gap-3`}>
         {entries.map((entry, idx) => {
           const color = colors[idx % colors.length];
           const value = formState[entry.arg] ?? rangeMin;
@@ -476,12 +490,12 @@ function DualHandleSlider({
         </div>
 
         {/* Slider track and handles container */}
-        <div className="relative" ref={trackRef}>
+        <div className="relative overflow-hidden" ref={trackRef}>
           {/* Visual track bar */}
           <div className="absolute top-1/2 left-0 right-0 h-2 bg-slate-200 rounded-full -translate-y-1/2" />
 
           {/* Stack clickable handle zones and visual handles */}
-          <div className="relative" style={{ height: '24px' }}>
+          <div className="relative overflow-hidden" style={{ height: '24px' }}>
             {entries.map((entry, idx) => {
               const color = colors[idx % colors.length];
               const value = formState[entry.arg] ?? rangeMin;

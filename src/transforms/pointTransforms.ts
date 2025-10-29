@@ -376,6 +376,84 @@ export const pointTransforms: PointTransform[] = [
       }
     }
   },
+    {
+      "uuid": "ACCharge.ACChargeStatus",
+      "title": "Allow Charging from Grid",
+      "help": "Enables charging the battery from the utility grid.",
+      "entries": {
+        "Mode": {
+          "name": "Grid Charge",
+          "friendly_meanings": {
+            "0": "Disabled",
+            "1": "Enabled"
+            }
+        }
+      }
+    },
+    {
+      "uuid": "ACCharge.ACChargePower",
+      "title": "Grid Charge Power Limit",
+      "help": "Sets the maximum power the inverter will draw from the grid for charging. This cap applies when Grid Charge is enabled (and within any configured time windows).",
+      "entries": {
+        "Power": {
+          "name": "Max Grid Charge Power (W)"
+        }
+      }
+    },
+    {
+      "uuid": "ACCharge.ACChgStartSOC",
+      "title": "Grid Charge SOC Limits",
+      "help": "Defines when grid charging starts and stops based on battery state of charge (SOC). Charging starts when SOC falls below Start, and stops when SOC reaches Stop.",
+      "entries": {
+        "SOC": {
+          "name": "Start SOC (%)",
+          "description": "Begin grid charging when battery SOC drops to this level (typical 20–40%)",
+          "less_than": "StopSOC",
+          "range": { "min": 10, "max": 60 }
+        },
+        "StopSOC": {
+          "name": "Stop SOC (%)",
+          "description": "Stop grid charging when battery SOC reaches this level (typical 80–95%)",
+          "greater_than": "SOC",
+          "range": { "min": 50, "max": 100 }
+        }
+      }
+    },
+    {
+      "uuid": "ACCharge.ACChargeType",
+      "title": "Grid Charge Control Type",
+      "help": "Select whether grid charging follows a time schedule or SOC/voltage thresholds.",
+      "entries": {
+        "Type": {
+          "name": "Control Type",
+          "friendly_meanings": {
+            "0": "By Time Schedule",
+            "1": "By SOC/Voltage"
+          }
+        }
+      }
+    },
+    {
+      "uuid": "ACCharge.ACChargingPlan",
+      "title": "Grid Charge Windows (Slider is bugged)",
+      "help": "During these times, your battery will continue to charge from solar power normally, but will also use additional power from the grid to charge the battery.",
+      "entries": {
+        "StartTime1_h": { "name": "Window 1 Start Hour", "range": { "min": 0, "max": 23 } },
+        "StartTime1_m": { "name": "Window 1 Start Minute", "range": { "min": 0, "max": 59 } },
+        "EndTime1_h":   { "name": "Window 1 End Hour",   "range": { "min": 0, "max": 23 } },
+        "EndTime1_m":   { "name": "Window 1 End Minute", "range": { "min": 0, "max": 59 } },
+  
+        "StartTime2_h": { "name": "Window 2 Start Hour", "range": { "min": 0, "max": 23 } },
+        "StartTime2_m": { "name": "Window 2 Start Minute", "range": { "min": 0, "max": 59 } },
+        "EndTime2_h":   { "name": "Window 2 End Hour",   "range": { "min": 0, "max": 23 } },
+        "EndTime2_m":   { "name": "Window 2 End Minute", "range": { "min": 0, "max": 59 } },
+  
+        "StartTime3_h": { "name": "Window 3 Start Hour", "range": { "min": 0, "max": 23 } },
+        "StartTime3_m": { "name": "Window 3 Start Minute", "range": { "min": 0, "max": 59 } },
+        "EndTime3_h":   { "name": "Window 3 End Hour",   "range": { "min": 0, "max": 23 } },
+        "EndTime3_m":   { "name": "Window 3 End Minute", "range": { "min": 0, "max": 59 } }
+      }
+    },  
   {
     uuid: "BatteryBase.ChargeLimitSoc",
     title: "Charge Limit (SOC)",
@@ -439,14 +517,14 @@ export const pointTransforms: PointTransform[] = [
         name: "Scheduling",
         friendly_meanings: {
           "0": "Disable Scheduling",
-          "1": "Use TOU Scheduling"
+          "1": "Use Scheduling"
         }
       }
     }
   },
     {
       uuid: "BatteryTOUCharge.TOUMaximumChargingPower",
-      title: "TOU Max Charge Power",
+      title: "Max Power During Scheduled Charge",
       help: "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods. Limit this to control how hard the battery charges from the grid in those windows.",
       entries: {
         Power: {

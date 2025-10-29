@@ -385,14 +385,14 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "AC Charge Status",
-                  "help": "Attribute in ACCharge cluster",
+                  "title": "Allow Charging from Grid",
+                  "help": "Enables charging the battery from the utility grid.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
                     {
-                      "name": "Mode",
+                      "name": "Grid Charge",
                       "arg": "Mode",
                       "dtype": "enum",
                       "description": "",
@@ -402,8 +402,8 @@
                         "1": "Enable"
                       },
                       "friendly_meanings": {
-                        "0": "Disable",
-                        "1": "Enable"
+                        "0": "Disabled",
+                        "1": "Enabled"
                       }
                     }
                   ],
@@ -417,14 +417,14 @@
                   "uuid": "ACCharge.ACChargeStatus"
                 },
                 {
-                  "title": "AC Charge Power",
-                  "help": "Attribute in ACCharge cluster",
+                  "title": "Grid Charge Power Limit",
+                  "help": "Sets the maximum power the inverter will draw from the grid for charging. This cap applies when Grid Charge is enabled (and within any configured time windows).",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
                     {
-                      "name": "Power",
+                      "name": "Max Grid Charge Power (W)",
                       "arg": "Power",
                       "dtype": "Number",
                       "description": "",
@@ -445,8 +445,8 @@
                   "uuid": "ACCharge.ACChargePower"
                 },
                 {
-                  "title": "AC Charge SOC Limits",
-                  "help": "Defines when the inverter will start and stop AC charging based on battery state of charge (SOC). Charging starts when SOC falls below the Start value and stops once it reaches the Stop value.",
+                  "title": "Grid Charge SOC Limits",
+                  "help": "Defines when grid charging starts and stops based on battery state of charge (SOC). Charging starts when SOC falls below Start, and stops when SOC reaches Stop.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -455,7 +455,7 @@
                       "name": "Start SOC (%)",
                       "arg": "SOC",
                       "dtype": "Number",
-                      "description": "AC charging begins when battery SOC drops to this level",
+                      "description": "Begin grid charging when battery SOC drops to this level (typical 20–40%)",
                       "longdescription": "",
                       "range": {
                         "min": 0,
@@ -467,7 +467,7 @@
                       "name": "Stop SOC (%)",
                       "arg": "StopSOC",
                       "dtype": "Number",
-                      "description": "AC charging stops when battery SOC reaches this level",
+                      "description": "Stop grid charging when battery SOC reaches this level (typical 80–95%)",
                       "longdescription": "",
                       "range": {
                         "min": 0,
@@ -486,14 +486,14 @@
                   "uuid": "ACCharge.ACChgStartSOC"
                 },
                 {
-                  "title": "AC Charge Type",
-                  "help": "Attribute in ACCharge cluster",
+                  "title": "Grid Charge Control Type",
+                  "help": "Select whether grid charging follows a time schedule or SOC/voltage thresholds.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
                     {
-                      "name": "Type",
+                      "name": "Control Type",
                       "arg": "Type",
                       "dtype": "enum",
                       "description": "",
@@ -503,8 +503,8 @@
                         "1": "according to SOC/Volt"
                       },
                       "friendly_meanings": {
-                        "0": "according to time",
-                        "1": "according to SOC/Volt"
+                        "0": "By Time Schedule",
+                        "1": "By SOC/Voltage"
                       }
                     }
                   ],
@@ -518,14 +518,14 @@
                   "uuid": "ACCharge.ACChargeType"
                 },
                 {
-                  "title": "AC Charging Plan",
-                  "help": "Attribute in ACCharge cluster",
+                  "title": "Grid Charge Windows (Slider is bugged)",
+                  "help": "During these times, your battery will continue to charge from solar power normally, but will also use additional power from the grid to charge the battery.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
                     {
-                      "name": "StartTime1_h",
+                      "name": "Window 1 Start Hour",
                       "arg": "StartTime1_h",
                       "dtype": "Number",
                       "description": "",
@@ -536,7 +536,7 @@
                       }
                     },
                     {
-                      "name": "StartTime1_m",
+                      "name": "Window 1 Start Minute",
                       "arg": "StartTime1_m",
                       "dtype": "Number",
                       "description": "",
@@ -547,7 +547,7 @@
                       }
                     },
                     {
-                      "name": "EndTime1_h",
+                      "name": "Window 1 End Hour",
                       "arg": "EndTime1_h",
                       "dtype": "Number",
                       "description": "",
@@ -558,7 +558,7 @@
                       }
                     },
                     {
-                      "name": "EndTime1_m",
+                      "name": "Window 1 End Minute",
                       "arg": "EndTime1_m",
                       "dtype": "Number",
                       "description": "",
@@ -569,7 +569,7 @@
                       }
                     },
                     {
-                      "name": "StartTime2_h",
+                      "name": "Window 2 Start Hour",
                       "arg": "StartTime2_h",
                       "dtype": "Number",
                       "description": "",
@@ -580,7 +580,7 @@
                       }
                     },
                     {
-                      "name": "StartTime2_m",
+                      "name": "Window 2 Start Minute",
                       "arg": "StartTime2_m",
                       "dtype": "Number",
                       "description": "",
@@ -591,7 +591,7 @@
                       }
                     },
                     {
-                      "name": "EndTime2_h",
+                      "name": "Window 2 End Hour",
                       "arg": "EndTime2_h",
                       "dtype": "Number",
                       "description": "",
@@ -602,7 +602,7 @@
                       }
                     },
                     {
-                      "name": "EndTime2_m",
+                      "name": "Window 2 End Minute",
                       "arg": "EndTime2_m",
                       "dtype": "Number",
                       "description": "",
@@ -613,7 +613,7 @@
                       }
                     },
                     {
-                      "name": "StartTime3_h",
+                      "name": "Window 3 Start Hour",
                       "arg": "StartTime3_h",
                       "dtype": "Number",
                       "description": "",
@@ -624,7 +624,7 @@
                       }
                     },
                     {
-                      "name": "StartTime3_m",
+                      "name": "Window 3 Start Minute",
                       "arg": "StartTime3_m",
                       "dtype": "Number",
                       "description": "",
@@ -635,7 +635,7 @@
                       }
                     },
                     {
-                      "name": "EndTime3_h",
+                      "name": "Window 3 End Hour",
                       "arg": "EndTime3_h",
                       "dtype": "Number",
                       "description": "",
@@ -646,7 +646,7 @@
                       }
                     },
                     {
-                      "name": "EndTime3_m",
+                      "name": "Window 3 End Minute",
                       "arg": "EndTime3_m",
                       "dtype": "Number",
                       "description": "",
@@ -1376,7 +1376,7 @@
                       },
                       "friendly_meanings": {
                         "0": "Disable Scheduling",
-                        "1": "Use TOU Scheduling"
+                        "1": "Use Scheduling"
                       }
                     }
                   ],
@@ -1402,7 +1402,7 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "TOU Max Charge Power",
+                  "title": "Max Power During Scheduled Charge",
                   "help": "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods. Limit this to control how hard the battery charges from the grid in those windows.",
                   "element_type": "Attribute",
                   "access": "RW",
