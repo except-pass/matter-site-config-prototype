@@ -529,7 +529,7 @@
                       "name": "Start SOC (%)",
                       "arg": "SOC",
                       "dtype": "Number",
-                      "description": "Begin grid charging when battery SOC drops to this level (typical 20–40%)",
+                      "description": "Begin grid charging when battery SOC drops to this level (typical 20-40%)",
                       "longdescription": "",
                       "range": {
                         "min": 0,
@@ -2916,8 +2916,8 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Voltage Reactive Power Mode",
-                  "help": "Attribute in VoltageReactivePowerMode cluster",
+                  "title": "Volt-VAR Mode",
+                  "help": "Shows whether Volt-VAR (voltage-reactive power) control is active. This value is read-only and reflects the current configuration or utility command.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
@@ -2933,8 +2933,8 @@
                         "1": "Enable"
                       },
                       "friendly_meanings": {
-                        "0": "Disable",
-                        "1": "Enable"
+                        "0": "Inactive - no Volt-VAR control",
+                        "1": "Active - Volt-VAR control"
                       }
                     }
                   ],
@@ -2949,13 +2949,13 @@
                 },
                 {
                   "title": "Autonomous Vref Adjustment",
-                  "help": "Attribute in VoltageReactivePowerMode cluster",
+                  "help": "Indicates whether the inverter autonomously adjusts its reference voltage (Vref).",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Mode",
+                      "name": "Autonomous Adjustment",
                       "arg": "Mode",
                       "dtype": "enum",
                       "description": "",
@@ -2980,14 +2980,14 @@
                   "uuid": "VoltageReactivePowerMode.AutonomousVrefAdjustment"
                 },
                 {
-                  "title": "Verf",
-                  "help": "Attribute in VoltageReactivePowerMode cluster",
+                  "title": "Reference Voltage (Vref)",
+                  "help": "Voltage reference used for Volt-VAR calculations.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Verf",
+                      "name": "Vref",
                       "arg": "Verf",
                       "dtype": "Number",
                       "description": "",
@@ -3005,13 +3005,13 @@
                 },
                 {
                   "title": "Vref Adjustment Time Constant",
-                  "help": "Attribute in VoltageReactivePowerMode cluster",
+                  "help": "Time constant applied when adjusting Vref.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Time",
+                      "name": "Time Constant",
                       "arg": "Time",
                       "dtype": "Number",
                       "description": "",
@@ -3028,35 +3028,35 @@
                   "uuid": "VoltageReactivePowerMode.VrefAdjustmentTimeConstant"
                 },
                 {
-                  "title": "Under Over Voltage",
-                  "help": "Attribute in VoltageReactivePowerMode cluster",
+                  "title": "Volt-VAR Voltage Breakpoints",
+                  "help": "Voltage points (V1-V4) that define the Volt-VAR curve breakpoints.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "V1",
+                      "name": "V1 (Voltage Point 1)",
                       "arg": "V1",
                       "dtype": "Number",
                       "description": "",
                       "longdescription": ""
                     },
                     {
-                      "name": "V2",
+                      "name": "V2 (Voltage Point 2)",
                       "arg": "V2",
                       "dtype": "Number",
                       "description": "",
                       "longdescription": ""
                     },
                     {
-                      "name": "V3",
+                      "name": "V3 (Voltage Point 3)",
                       "arg": "V3",
                       "dtype": "Number",
                       "description": "",
                       "longdescription": ""
                     },
                     {
-                      "name": "V4",
+                      "name": "V4 (Voltage Point 4)",
                       "arg": "V4",
                       "dtype": "Number",
                       "description": "",
@@ -3073,14 +3073,14 @@
                   "uuid": "VoltageReactivePowerMode.UnderOverVoltage"
                 },
                 {
-                  "title": "Q1",
-                  "help": "Attribute in VoltageReactivePowerMode cluster",
+                  "title": "Reactive Power Setpoint Q1",
+                  "help": "Reactive power at voltage point V1 on the Volt-VAR curve.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Q1",
+                      "name": "Q1 (Reactive Setpoint 1)",
                       "arg": "Q1",
                       "dtype": "Number",
                       "description": "",
@@ -3097,14 +3097,14 @@
                   "uuid": "VoltageReactivePowerMode.Q1"
                 },
                 {
-                  "title": "Q2",
-                  "help": "Attribute in VoltageReactivePowerMode cluster",
+                  "title": "Reactive Power Setpoint Q2",
+                  "help": "Reactive power at voltage point V2 on the Volt-VAR curve.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Q2",
+                      "name": "Q2 (Reactive Setpoint 2)",
                       "arg": "Q2",
                       "dtype": "Number",
                       "description": "",
@@ -3121,14 +3121,14 @@
                   "uuid": "VoltageReactivePowerMode.Q2"
                 },
                 {
-                  "title": "Q3",
-                  "help": "Attribute in VoltageReactivePowerMode cluster",
+                  "title": "Reactive Power Setpoint Q3",
+                  "help": "Reactive power at voltage point V3 on the Volt-VAR curve.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Q3",
+                      "name": "Q3 (Reactive Setpoint 3)",
                       "arg": "Q3",
                       "dtype": "Number",
                       "description": "",
@@ -3145,14 +3145,14 @@
                   "uuid": "VoltageReactivePowerMode.Q3"
                 },
                 {
-                  "title": "Q4",
-                  "help": "Attribute in VoltageReactivePowerMode cluster",
+                  "title": "Reactive Power Setpoint Q4",
+                  "help": "Reactive power at voltage point V4 on the Volt-VAR curve.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Q4",
+                      "name": "Q4 (Reactive Setpoint 4)",
                       "arg": "Q4",
                       "dtype": "Number",
                       "description": "",
@@ -3169,14 +3169,14 @@
                   "uuid": "VoltageReactivePowerMode.Q4"
                 },
                 {
-                  "title": "Open Loop Response Time",
-                  "help": "Attribute in VoltageReactivePowerMode cluster",
+                  "title": "Open-Loop Response Time",
+                  "help": "Response time used for open-loop Volt-VAR changes.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Time",
+                      "name": "Response Time",
                       "arg": "Time",
                       "dtype": "Number",
                       "description": "",
@@ -3205,8 +3205,8 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "PQ Mode Status",
-                  "help": "Attribute in ActivePowerReactivePowerMode cluster",
+                  "title": "P-Q Mode Status",
+                  "help": "Shows whether Active/Reactive Power (P-Q) control mode is enabled.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
@@ -3222,8 +3222,8 @@
                         "1": "Enable"
                       },
                       "friendly_meanings": {
-                        "0": "Disable",
-                        "1": "Enable"
+                        "0": "Inactive - no P-Q control",
+                        "1": "Active - P-Q control"
                       }
                     }
                   ],
@@ -3237,28 +3237,28 @@
                   "uuid": "ActivePowerReactivePowerMode.PQModeStatus"
                 },
                 {
-                  "title": "P_QP",
-                  "help": "Attribute in ActivePowerReactivePowerMode cluster",
+                  "title": "P-Q Curve Points",
+                  "help": "Breakpoint setpoints for the Active/Reactive Power (P-Q) characteristic.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "P1",
+                      "name": "P1 Setpoint",
                       "arg": "P1",
                       "dtype": "Number",
                       "description": "",
                       "longdescription": ""
                     },
                     {
-                      "name": "P2",
+                      "name": "P2 Setpoint",
                       "arg": "P2",
                       "dtype": "Number",
                       "description": "",
                       "longdescription": ""
                     },
                     {
-                      "name": "P3",
+                      "name": "P3 Setpoint",
                       "arg": "P3",
                       "dtype": "Number",
                       "description": "",
@@ -3287,8 +3287,8 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Voltage Active Power Mode",
-                  "help": "Attribute in VoltageActivePowerMode cluster",
+                  "title": "Volt-Watt Mode",
+                  "help": "Shows whether Volt-Watt (voltage-active power) control is enabled.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
@@ -3304,8 +3304,8 @@
                         "1": "Enable"
                       },
                       "friendly_meanings": {
-                        "0": "Disable",
-                        "1": "Enable"
+                        "0": "Inactive - no Volt-Watt control",
+                        "1": "Active - Volt-Watt control"
                       }
                     }
                   ],
@@ -3319,21 +3319,21 @@
                   "uuid": "VoltageActivePowerMode.VoltageActivePowerMode"
                 },
                 {
-                  "title": "Volt Watt V",
-                  "help": "Attribute in VoltageActivePowerMode cluster",
+                  "title": "Volt-Watt Voltage Breakpoints",
+                  "help": "Voltage points that define the Volt-Watt curve.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "VoltWattV1",
+                      "name": "V1 (Voltage Point 1)",
                       "arg": "VoltWattV1",
                       "dtype": "Number",
                       "description": "",
                       "longdescription": ""
                     },
                     {
-                      "name": "VoltWattV2",
+                      "name": "V2 (Voltage Point 2)",
                       "arg": "VoltWattV2",
                       "dtype": "Number",
                       "description": "",
@@ -3350,14 +3350,14 @@
                   "uuid": "VoltageActivePowerMode.VoltWattV"
                 },
                 {
-                  "title": "Volt Watt P2",
-                  "help": "Attribute in VoltageActivePowerMode cluster",
+                  "title": "Volt-Watt Power Setpoint",
+                  "help": "Power setpoint at voltage breakpoint V2 on the Volt-Watt curve.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "VoltWattP2",
+                      "name": "P2 Setpoint",
                       "arg": "VoltWattP2",
                       "dtype": "Number",
                       "description": "",
@@ -3374,14 +3374,14 @@
                   "uuid": "VoltageActivePowerMode.VoltWattP2"
                 },
                 {
-                  "title": "Open Loop Response Time",
-                  "help": "Attribute in VoltageActivePowerMode cluster",
+                  "title": "Open-Loop Response Time",
+                  "help": "Response time used for open-loop Volt-Watt changes.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Time",
+                      "name": "Response Time",
                       "arg": "Time",
                       "dtype": "Number",
                       "description": "",
@@ -3410,8 +3410,8 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Frequency Active Power Mode Status",
-                  "help": "Attribute in FrequencyActivePowerMode cluster",
+                  "title": "Frequency-Active Power Mode",
+                  "help": "Indicates whether frequency-power (Freq-Watt) control is currently enabled.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
@@ -3442,14 +3442,14 @@
                   "uuid": "FrequencyActivePowerMode.FrequencyActivePowerModeStatus"
                 },
                 {
-                  "title": "Open Loop Response Time",
-                  "help": "Attribute in FrequencyActivePowerMode cluster",
+                  "title": "Open-Loop Response Time",
+                  "help": "Response time applied to open-loop frequency-power adjustments.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Time",
+                      "name": "Response Time",
                       "arg": "Time",
                       "dtype": "Number",
                       "description": "",
@@ -3466,14 +3466,14 @@
                   "uuid": "FrequencyActivePowerMode.OpenLoopResponseTime"
                 },
                 {
-                  "title": "Over Frequency Droop_db OF",
-                  "help": "Attribute in FrequencyActivePowerMode cluster",
+                  "title": "Over-Frequency Droop: Deadband",
+                  "help": "Over Frequency Droop dbOF — Deadband around nominal frequency before active power reduction begins.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Frequency",
+                      "name": "Deadband (Hz)",
                       "arg": "Frequency",
                       "dtype": "Number",
                       "description": "",
@@ -3490,14 +3490,14 @@
                   "uuid": "FrequencyActivePowerMode.OverFrequencyDroop_dbOF"
                 },
                 {
-                  "title": "Over Frequency Droop_k OF",
-                  "help": "Attribute in FrequencyActivePowerMode cluster",
+                  "title": "Over-Frequency Droop: Gain (k)",
+                  "help": "Over Frequency Droop kOF — Slope (gain k) of active power reduction versus frequency rise above nominal.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Frequency",
+                      "name": "Gain k (slope)",
                       "arg": "Frequency",
                       "dtype": "Number",
                       "description": "",
@@ -3514,14 +3514,14 @@
                   "uuid": "FrequencyActivePowerMode.OverFrequencyDroop_kOF"
                 },
                 {
-                  "title": "Under Frequency Droop_db UF",
-                  "help": "Attribute in FrequencyActivePowerMode cluster",
+                  "title": "Under-Frequency Droop: Deadband",
+                  "help": "Under Frequency Droop dbUF — Deadband around nominal frequency before active power increase/response begins.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Frequency",
+                      "name": "Deadband (Hz)",
                       "arg": "Frequency",
                       "dtype": "Number",
                       "description": "",
@@ -3538,14 +3538,14 @@
                   "uuid": "FrequencyActivePowerMode.UnderFrequencyDroop_dbUF"
                 },
                 {
-                  "title": "Under Frequency Droop_k UF",
-                  "help": "Attribute in FrequencyActivePowerMode cluster",
+                  "title": "Under-Frequency Droop: Gain (k)",
+                  "help": "Under Frequency Droop kUF — Slope (gain k) of active power response versus frequency drop below nominal.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Frequency",
+                      "name": "Gain k (slope)",
                       "arg": "Frequency",
                       "dtype": "Number",
                       "description": "",

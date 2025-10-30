@@ -473,13 +473,13 @@ export const pointTransforms: PointTransform[] = [
       "entries": {
         "SOC": {
           "name": "Start SOC (%)",
-          "description": "Begin grid charging when battery SOC drops to this level (typical 20–40%)",
+          "description": "Begin grid charging when battery SOC drops to this level (typical 20-40%)",
           "less_than": "StopSOC",
           "range": { "min": 10, "max": 60 }
         },
         "StopSOC": {
           "name": "Stop SOC (%)",
-          "description": "Stop grid charging when battery SOC reaches this level (typical 80–95%)",
+          "description": "Stop grid charging when battery SOC reaches this level (typical 80-95%)",
           "greater_than": "SOC",
           "range": { "min": 50, "max": 100 }
         }
@@ -1035,32 +1035,209 @@ export const pointTransforms: PointTransform[] = [
               }
             }
           },
-          
-      {
-        "uuid": "ACCharge.ACChgStartSOC",
-        "title": "AC Charge SOC Limits",
-        "help": "Defines when the inverter will start and stop AC charging based on battery state of charge (SOC). Charging starts when SOC falls below the Start value and stops once it reaches the Stop value.",
-        "entries": {
-          "SOC": {
-            "name": "Start SOC (%)",
-            "description": "AC charging begins when battery SOC drops to this level",
-            "less_than": "StopSOC",
-            "range": {
-              "min": 0,
-              "max": 90
+          {
+            "uuid": "VoltageReactivePowerMode.VoltageReactivePowerMode",
+            "title": "Volt-VAR Mode",
+            "help": "Shows whether Volt-VAR (voltage-reactive power) control is active. This value is read-only and reflects the current configuration or utility command.",
+            "entries": {
+              "Mode": {
+                "name": "Mode",
+                "friendly_meanings": {
+                  "0": "Inactive - no Volt-VAR control",
+                  "1": "Active - Volt-VAR control"
+                }
+              }
             }
           },
-          "StopSOC": {
-            "name": "Stop SOC (%)",
-            "description": "AC charging stops when battery SOC reaches this level",
-            "greater_than": "SOC",
-            "range": {
-              "min": 10,
-              "max": 100
+          {
+            "uuid": "VoltageReactivePowerMode.AutonomousVrefAdjustment",
+            "title": "Autonomous Vref Adjustment",
+            "help": "Indicates whether the inverter autonomously adjusts its reference voltage (Vref).",
+            "entries": {
+              "Mode": {
+                "name": "Autonomous Adjustment",
+                "friendly_meanings": {
+                  "0": "Disable",
+                  "1": "Enable"
+                }
+              }
             }
-          }
-        }
-      },
+          },
+          {
+            "uuid": "VoltageReactivePowerMode.Verf",
+            "title": "Reference Voltage (Vref)",
+            "help": "Voltage reference used for Volt-VAR calculations.",
+            "entries": {
+              "Verf": { "name": "Vref" }
+            }
+          },
+          {
+            "uuid": "VoltageReactivePowerMode.VrefAdjustmentTimeConstant",
+            "title": "Vref Adjustment Time Constant",
+            "help": "Time constant applied when adjusting Vref.",
+            "entries": {
+              "Time": { "name": "Time Constant" }
+            }
+          },
+          {
+            "uuid": "VoltageReactivePowerMode.UnderOverVoltage",
+            "title": "Volt-VAR Voltage Breakpoints",
+            "help": "Voltage points (V1-V4) that define the Volt-VAR curve breakpoints.",
+            "entries": {
+              "V1": { "name": "V1 (Voltage Point 1)" },
+              "V2": { "name": "V2 (Voltage Point 2)" },
+              "V3": { "name": "V3 (Voltage Point 3)" },
+              "V4": { "name": "V4 (Voltage Point 4)" }
+            }
+          },
+          {
+            "uuid": "VoltageReactivePowerMode.Q1",
+            "title": "Reactive Power Setpoint Q1",
+            "help": "Reactive power at voltage point V1 on the Volt-VAR curve.",
+            "entries": {
+              "Q1": { "name": "Q1 (Reactive Setpoint 1)" }
+            }
+          },
+          {
+            "uuid": "VoltageReactivePowerMode.Q2",
+            "title": "Reactive Power Setpoint Q2",
+            "help": "Reactive power at voltage point V2 on the Volt-VAR curve.",
+            "entries": {
+              "Q2": { "name": "Q2 (Reactive Setpoint 2)" }
+            }
+          },
+          {
+            "uuid": "VoltageReactivePowerMode.Q3",
+            "title": "Reactive Power Setpoint Q3",
+            "help": "Reactive power at voltage point V3 on the Volt-VAR curve.",
+            "entries": {
+              "Q3": { "name": "Q3 (Reactive Setpoint 3)" }
+            }
+          },
+          {
+            "uuid": "VoltageReactivePowerMode.Q4",
+            "title": "Reactive Power Setpoint Q4",
+            "help": "Reactive power at voltage point V4 on the Volt-VAR curve.",
+            "entries": {
+              "Q4": { "name": "Q4 (Reactive Setpoint 4)" }
+            }
+          },
+          {
+            "uuid": "VoltageReactivePowerMode.OpenLoopResponseTime",
+            "title": "Open-Loop Response Time",
+            "help": "Response time used for open-loop Volt-VAR changes.",
+            "entries": {
+              "Time": { "name": "Response Time" }
+            }
+          },
+          {
+            "uuid": "ActivePowerReactivePowerMode.PQModeStatus",
+            "title": "P-Q Mode Status",
+            "help": "Shows whether Active/Reactive Power (P-Q) control mode is enabled.",
+            "entries": {
+              "Mode": {
+                "name": "Mode",
+                "friendly_meanings": { "0": "Inactive - no P-Q control", "1": "Active - P-Q control" }
+              }
+            }
+          },
+          {
+            "uuid": "ActivePowerReactivePowerMode.P_QP",
+            "title": "P-Q Curve Points",
+            "help": "Breakpoint setpoints for the Active/Reactive Power (P-Q) characteristic.",
+            "entries": {
+              "P1": { "name": "P1 Setpoint" },
+              "P2": { "name": "P2 Setpoint" },
+              "P3": { "name": "P3 Setpoint" }
+            }
+          },
+          {
+            "uuid": "VoltageActivePowerMode.VoltageActivePowerMode",
+            "title": "Volt-Watt Mode",
+            "help": "Shows whether Volt-Watt (voltage-active power) control is enabled.",
+            "entries": {
+              "Mode": {
+                "name": "Mode",
+                "friendly_meanings": { "0": "Inactive - no Volt-Watt control", "1": "Active - Volt-Watt control" }
+              }
+            }
+          },
+          {
+            "uuid": "VoltageActivePowerMode.VoltWattV",
+            "title": "Volt-Watt Voltage Breakpoints",
+            "help": "Voltage points that define the Volt-Watt curve.",
+            "entries": {
+              "VoltWattV1": { "name": "V1 (Voltage Point 1)" },
+              "VoltWattV2": { "name": "V2 (Voltage Point 2)" }
+            }
+          },
+          {
+            "uuid": "VoltageActivePowerMode.VoltWattP2",
+            "title": "Volt-Watt Power Setpoint",
+            "help": "Power setpoint at voltage breakpoint V2 on the Volt-Watt curve.",
+            "entries": {
+              "VoltWattP2": { "name": "P2 Setpoint" }
+            }
+          },
+          {
+            "uuid": "VoltageActivePowerMode.OpenLoopResponseTime",
+            "title": "Open-Loop Response Time",
+            "help": "Response time used for open-loop Volt-Watt changes.",
+            "entries": {
+              "Time": { "name": "Response Time" }
+            }
+          },
+          {
+            "uuid": "FrequencyActivePowerMode.FrequencyActivePowerModeStatus",
+            "title": "Frequency-Active Power Mode",
+            "help": "Indicates whether frequency-power (Freq-Watt) control is currently enabled.",
+            "entries": {
+              "Mode": {
+                "name": "Mode",
+                "friendly_meanings": { "0": "Disable", "1": "Enable" }
+              }
+            }
+          },
+          {
+            "uuid": "FrequencyActivePowerMode.OpenLoopResponseTime",
+            "title": "Open-Loop Response Time",
+            "help": "Response time applied to open-loop frequency-power adjustments.",
+            "entries": {
+              "Time": { "name": "Response Time" }
+            }
+          },
+          {
+            "uuid": "FrequencyActivePowerMode.OverFrequencyDroop_dbOF",
+            "title": "Over-Frequency Droop: Deadband",
+            "help": "Over Frequency Droop dbOF — Deadband around nominal frequency before active power reduction begins.",
+            "entries": {
+              "Frequency": { "name": "Deadband (Hz)" }
+            }
+          },
+          {
+            "uuid": "FrequencyActivePowerMode.OverFrequencyDroop_kOF",
+            "title": "Over-Frequency Droop: Gain (k)",
+            "help": "Over Frequency Droop kOF — Slope (gain k) of active power reduction versus frequency rise above nominal.",
+            "entries": {
+              "Frequency": { "name": "Gain k (slope)" }
+            }
+          },
+          {
+            "uuid": "FrequencyActivePowerMode.UnderFrequencyDroop_dbUF",
+            "title": "Under-Frequency Droop: Deadband",
+            "help": "Under Frequency Droop dbUF — Deadband around nominal frequency before active power increase/response begins.",
+            "entries": {
+              "Frequency": { "name": "Deadband (Hz)" }
+            }
+          },
+          {
+            "uuid": "FrequencyActivePowerMode.UnderFrequencyDroop_kUF",
+            "title": "Under-Frequency Droop: Gain (k)",
+            "help": "Under Frequency Droop kUF — Slope (gain k) of active power response versus frequency drop below nominal.",
+            "entries": {
+              "Frequency": { "name": "Gain k (slope)" }
+            }
+          },          
       {
         "uuid": "ACCoupledPV.ACCouplePVSOC",
         "title": "AC-Coupled PV SOC Limits",
