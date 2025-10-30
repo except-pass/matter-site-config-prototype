@@ -169,24 +169,80 @@ export const pointTransforms: PointTransform[] = [
     },
   },
   {
+    uuid: "Basic.OperatingMode",
+    title: "Grid Interaction",
+    help: "Select whether the inverter operates independently of the grid, or is connected to the grid. If off-grid, you should also ignore grid-loss warnings.",
+    entries: {
+      Mode: {
+        name: "Mode",
+        friendly_meanings: {
+          "0": "Off-Grid.  There is no available power grid",
+          "1": "Grid-Tied. Grid power is available."
+        }
+      }
+  }
+},
+{
+  uuid: "Basic.WorkMode",
+  title: "Operating Mode",
+  help: "Select how solar power is prioritized. Self-consumption: PV powers the home first, then charges the battery, and exports last (if allowed). Export first: PV powers the home, then exports to grid, and charges the battery last. Backup power: PV charges the battery first to build reserve, then powers the home, and exports last (if allowed).",
+  entries: {
+    Mode: {
+      name: "Mode",
+      friendly_meanings: {
+        "0": "Self-consumption",
+        "1": "Export first",
+        "2": "Backup power"
+      }
+    }
+  }
+},
+{
+  uuid: "Basic.PowerStatus",
+  title: "Power Status",
+  help: "Put the inverter on standby to stop operation or change settings.",
+  entries: {
+    State: {
+      name: "State",
+      friendly_meanings: {
+        "0": "Standby",
+        "1": "Running"
+      }
+    }
+  }
+},
+  {
     uuid: "LimitActivePower.LimitActivePowerStatus",
     section: {
       title: "Power Limits",
     },
-    title: "Active Power Limiting Status",
-    help: "Indicates whether inverter output power limiting is currently active. If active, the inverter will limit its output power to the 'Current Power Limit'.",
-    entries: {}
+    title: "Limit Power Output",
+    help: "Shows whether power output limiting is currently active. When not limited, the inverter can deliver its full available power (subject only to natural hardware limits). When limited, an external or configured cap is applied to restrict inverter output to the specified Power Limit.",
+    entries: {
+      Mode: {
+        name: "Mode",
+        friendly_meanings: {
+          "0": "Not limited - full output",
+          "1": "Limit output power"
+        }
+      }
+    }
   },
   {
     uuid: "LimitActivePower.ActivePowerPercent",
-    title: "Current Power Limit",
+    title: "Power Limit",
     help: "The inverter's present active-power output limit as a percentage of its rated capacity. If power limiting is active, the inverter will limit its output power to this percentage of its rated capacity.",
-    entries: {}
+    entries: {
+      Power: {
+        name: "Power Limit (%)",
+        range: { min: 0, max: 100 }
+      }
+    }
   },
   {
     uuid: "Basic.GridLossWarningClear",
     title: "Ignore Grid-Loss Warning",
-    help: "When enabled, the inverter will not treat the absence of grid power as a fault. Use this mode for permanently off-grid systems where grid connection is intentionally unavailable.",
+    help: "When enabled, the inverter will not treat the absence of grid power as a fault. Use this mode for permanently off-grid systems where grid connection is unavailable.",
     entries: {
       Mode: {
         name: "Grid-Loss Behavior",
@@ -303,8 +359,13 @@ export const pointTransforms: PointTransform[] = [
   },
   {
     uuid: "Parallel.ParallelNum",
-    title: "Parallel Group Size",
+    title: "Inverters in parallel",
     help: "Total number of inverters detected in this parallel system.",
+    entries: {
+      Num:{
+        dtype: "Number"
+      }
+    }
   },
   {
     uuid: "Parallel.Role",
@@ -857,6 +918,124 @@ export const pointTransforms: PointTransform[] = [
           }
         }
       },
+        {
+          "uuid": "GridConnection.PermitServiceStatus",
+          "title": "Permit to Operate",
+          "help": "Shows whether the inverter is permitted to operate in grid-connected mode according to site authorization.",
+          "entries": {
+            "Mode": {
+              "name": "Permit Status",
+              "friendly_meanings": {
+                "0": "Not Permitted",
+                "1": "Permitted"
+              }
+            }
+          }
+        },
+        {
+          "uuid": "GridConnection.RampRate",
+          "title": "Ramp Rate",
+          "help": "How quickly inverter output is allowed to increase.",
+          "entries": {
+            "Rate": {
+              "name": "Ramp Rate (%/sec)"
+            }
+          }
+        },
+        {
+          "uuid": "GridConnection.ApplicableVoltage",
+          "title": "Applicable Grid Voltage Range",
+          "help": "Voltage window within which grid connection is permitted. Outside this range the inverter will not connect or will disconnect.",
+          "entries": {
+            "ApplicableVoltageLow": {
+              "name": "Lower Limit (Vac)"
+            },
+            "ApplicableVoltageHigh": {
+              "name": "Upper Limit (Vac)"
+            }
+          }
+        },
+        {
+          "uuid": "GridConnection.ApplicableFrequency",
+          "title": "Applicable Grid Frequency Range",
+          "help": "Frequency window within which grid connection is permitted. Outside this range the inverter will not connect or will disconnect.",
+          "entries": {
+            "ApplicableFrequencyLow": {
+              "name": "Lower Limit (Hz)"
+            },
+            "ApplicableFrequencyHigh": {
+              "name": "Upper Limit (Hz)"
+            }
+          }
+        },
+        {
+          "uuid": "GridConnection.DelayTime",
+          "title": "Connection Delay Times",
+          "help": "Delays applied before initial grid connection and after a grid disturbance clears (reconnection). These timers help meet interconnection standards.  The connection delay is how long the inverter will wait after first being powered on.  Reconnection delay is how long the inverter will wait after a grid disturbance or outage clears.",
+          "entries": {
+            "ConnectionDelayTime": {
+              "name": "Connection Delay (s)"
+            },
+            "ReconnectionDelayTime": {
+              "name": "Reconnection Delay (s)"
+            }
+          }
+        },
+          {
+            "uuid": "ConstantPowerFactorMode.ConstantPowerFactorModeStatus",
+            "title": "Power Factor Mode",
+            "help": "Shows whether constant power-factor control is active.",
+            "entries": {
+              "Mode": {
+                "name": "Status",
+                "friendly_meanings": {
+                  "0": "Inactive — No PF control",
+                  "1": "Active — Constant PF"
+                }
+              }
+            }
+          },
+          {
+            "uuid": "ConstantPowerFactorMode.ConstantPowerFactor",
+            "title": "Power Factor Setpoint",
+            "help": "The target power factor and excitation. Under-excited = lagging (absorbing vars); Over-excited = leading (supplying vars).",
+            "entries": {
+              "Excited": {
+                "name": "Excitation"
+              },
+              "PowerFactor": {
+                "name": "Power Factor (PF)"
+              }
+            }
+          },
+          {
+            "uuid": "ConstantReactivePowerMode.ConstantReactivePowerModeStatus",
+            "title": "Reactive Power Mode",
+            "help": "Shows whether constant reactive-power control is active.",
+            "entries": {
+              "Excited": {
+                "name": "Excitation"
+              },
+              "Status": {
+                "name": "Status",
+                "friendly_meanings": {
+                  "0": "Inactive - no reactive power control",
+                  "1": "Active - reactive power control"
+                }
+              }
+            }
+          },
+          {
+            "uuid": "ConstantReactivePowerMode.ReactivePowerPercentCMD",
+            "title": "Reactive Power Setpoint",
+            "help": "Displays the reactive-power target as a percentage of rated power (vars). Excitation determines whether vars are supplied (leading) or absorbed (lagging).",
+            "entries": {
+              "Power": {
+                "name": "Reactive Power (%)"
+              }
+            }
+          },
+          
       {
         "uuid": "ACCharge.ACChgStartSOC",
         "title": "AC Charge SOC Limits",

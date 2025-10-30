@@ -97,8 +97,8 @@
                   "widget": "datetime"
                 },
                 {
-                  "title": "Operating Mode",
-                  "help": "Attribute in Basic cluster",
+                  "title": "Grid Interaction",
+                  "help": "Select whether the inverter operates independently of the grid, or is connected to the grid. If off-grid, you should also ignore grid-loss warnings.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -114,8 +114,8 @@
                         "1": "Grid-tied"
                       },
                       "friendly_meanings": {
-                        "0": "Off-grid",
-                        "1": "Grid-tied"
+                        "0": "Off-Grid.  There is no available power grid",
+                        "1": "Grid-Tied. Grid power is available."
                       }
                     }
                   ],
@@ -129,8 +129,42 @@
                   "uuid": "Basic.OperatingMode"
                 },
                 {
+                  "title": "Operating Mode",
+                  "help": "Select how solar power is prioritized. Self-consumption: PV powers the home first, then charges the battery, and exports last (if allowed). Export first: PV powers the home, then exports to grid, and charges the battery last. Backup power: PV charges the battery first to build reserve, then powers the home, and exports last (if allowed).",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Self used mode",
+                        "1": "Feed-in priority mode",
+                        "2": "Back-up mode"
+                      },
+                      "friendly_meanings": {
+                        "0": "Self-consumption",
+                        "1": "Export first",
+                        "2": "Backup power"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Basic",
+                      "Element": "WorkMode"
+                    }
+                  },
+                  "uuid": "Basic.WorkMode"
+                },
+                {
                   "title": "Ignore Grid-Loss Warning",
-                  "help": "When enabled, the inverter will not treat the absence of grid power as a fault. Use this mode for permanently off-grid systems where grid connection is intentionally unavailable.",
+                  "help": "When enabled, the inverter will not treat the absence of grid power as a fault. Use this mode for permanently off-grid systems where grid connection is unavailable.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -162,11 +196,27 @@
                 },
                 {
                   "title": "Power Status",
-                  "help": "Attribute in Basic cluster",
+                  "help": "Put the inverter on standby to stop operation or change settings.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "State",
+                      "arg": "State",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Standby",
+                        "1": "Other"
+                      },
+                      "friendly_meanings": {
+                        "0": "Standby",
+                        "1": "Running"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -237,12 +287,28 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Active Power Limiting Status",
-                  "help": "Indicates whether inverter output power limiting is currently active. If active, the inverter will limit its output power to the 'Current Power Limit'.",
+                  "title": "Limit Power Output",
+                  "help": "Shows whether power output limiting is currently active. When not limited, the inverter can deliver its full available power (subject only to natural hardware limits). When limited, an external or configured cap is applied to restrict inverter output to the specified Power Limit.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Not limited - full output",
+                        "1": "Limit output power"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -253,12 +319,20 @@
                   "uuid": "LimitActivePower.LimitActivePowerStatus"
                 },
                 {
-                  "title": "Current Power Limit",
+                  "title": "Power Limit",
                   "help": "The inverter's present active-power output limit as a percentage of its rated capacity. If power limiting is active, the inverter will limit its output power to this percentage of its rated capacity.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Power Limit (%)",
+                      "arg": "Power",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -462,18 +536,6 @@
                         "max": 90
                       },
                       "less_than": "StopSOC"
-                    },
-                    {
-                      "name": "Stop SOC (%)",
-                      "arg": "StopSOC",
-                      "dtype": "Number",
-                      "description": "Stop grid charging when battery SOC reaches this level (typical 80–95%)",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 100
-                      },
-                      "greater_than": "SOC"
                     }
                   ],
                   "protocol": {
@@ -484,6 +546,34 @@
                     }
                   },
                   "uuid": "ACCharge.ACChgStartSOC"
+                },
+                {
+                  "title": "AC Chg Stop SOC",
+                  "help": "Attribute in ACCharge cluster",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "SOC",
+                      "arg": "SOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 90
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChgStopSOC"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChgStopSOC"
                 },
                 {
                   "title": "Grid Charge Control Type",
@@ -777,6 +867,72 @@
                   "uuid": "Parallel.ComposedPhase"
                 },
                 {
+                  "title": "Clear Detected Phases",
+                  "help": "Attribute in Parallel cluster",
+                  "element_type": "Attribute",
+                  "access": "W",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Phase",
+                      "arg": "Phase",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Clear"
+                      },
+                      "friendly_meanings": {
+                        "0": "Clear"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Parallel",
+                      "Element": "ClearDetectedPhases"
+                    }
+                  },
+                  "uuid": "Parallel.ClearDetectedPhases"
+                },
+                {
+                  "title": "Detected Grid Phases",
+                  "help": "Attribute in Parallel cluster",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Phase",
+                      "arg": "Phase",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "None",
+                        "1": "R",
+                        "2": "S",
+                        "3": "T"
+                      },
+                      "friendly_meanings": {
+                        "0": "None",
+                        "1": "R",
+                        "2": "S",
+                        "3": "T"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Parallel",
+                      "Element": "DetectedGridPhases"
+                    }
+                  },
+                  "uuid": "Parallel.DetectedGridPhases"
+                },
+                {
                   "title": "Share Battery",
                   "help": "Allows inverters in a parallel group to use a common battery bank instead of keeping batteries isolated per inverter.",
                   "element_type": "Attribute",
@@ -809,12 +965,20 @@
                   "uuid": "Parallel.ShareBatteryStatus"
                 },
                 {
-                  "title": "Parallel Group Size",
+                  "title": "Inverters in parallel",
                   "help": "Total number of inverters detected in this parallel system.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Num",
+                      "arg": "Num",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -830,7 +994,23 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Role",
+                      "arg": "Role",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Master",
+                        "1": "Slave"
+                      },
+                      "friendly_meanings": {
+                        "0": "Master",
+                        "1": "Slave"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -846,7 +1026,25 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Phase",
+                      "arg": "Phase",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "R",
+                        "1": "S",
+                        "2": "T"
+                      },
+                      "friendly_meanings": {
+                        "0": "R",
+                        "1": "S",
+                        "2": "T"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2324,15 +2522,15 @@
                   "readOnly": false,
                   "entries": [
                     {
-                      "name": "Low Frequency Trip Delay (ms)",
-                      "arg": "GridFreqLimitLowTime",
+                      "name": "High Frequency Trip Delay (ms)",
+                      "arg": "GridFreqLimitHighTime",
                       "dtype": "Number",
                       "description": "",
                       "longdescription": ""
                     },
                     {
-                      "name": "High Frequency Trip Delay (ms)",
-                      "arg": "GridFreqLimitHighTime",
+                      "name": "Low Frequency Trip Delay (ms)",
+                      "arg": "GridFreqLimitLowTime",
                       "dtype": "Number",
                       "description": "",
                       "longdescription": ""
@@ -2355,15 +2553,15 @@
                   "readOnly": false,
                   "entries": [
                     {
-                      "name": "Low Frequency Trip Delay (ms)",
-                      "arg": "GridFreqLimitLowTime",
+                      "name": "High Frequency Trip Delay (ms)",
+                      "arg": "GridFreqLimitHighTime",
                       "dtype": "Number",
                       "description": "",
                       "longdescription": ""
                     },
                     {
-                      "name": "High Frequency Trip Delay (ms)",
-                      "arg": "GridFreqLimitHighTime",
+                      "name": "Low Frequency Trip Delay (ms)",
+                      "arg": "GridFreqLimitLowTime",
                       "dtype": "Number",
                       "description": "",
                       "longdescription": ""
@@ -2391,12 +2589,28 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Permit Service Status",
-                  "help": "Attribute in GridConnection cluster",
+                  "title": "Permit to Operate",
+                  "help": "Shows whether the inverter is permitted to operate in grid-connected mode according to site authorization.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Permit Status",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Not Permitted",
+                        "1": "Permitted"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2408,11 +2622,19 @@
                 },
                 {
                   "title": "Ramp Rate",
-                  "help": "Attribute in GridConnection cluster",
+                  "help": "How quickly inverter output is allowed to increase.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Ramp Rate (%/sec)",
+                      "arg": "Rate",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2423,12 +2645,27 @@
                   "uuid": "GridConnection.RampRate"
                 },
                 {
-                  "title": "Applicable Voltage",
-                  "help": "Attribute in GridConnection cluster",
+                  "title": "Applicable Grid Voltage Range",
+                  "help": "Voltage window within which grid connection is permitted. Outside this range the inverter will not connect or will disconnect.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Lower Limit (Vac)",
+                      "arg": "ApplicableVoltageLow",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Upper Limit (Vac)",
+                      "arg": "ApplicableVoltageHigh",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2439,12 +2676,27 @@
                   "uuid": "GridConnection.ApplicableVoltage"
                 },
                 {
-                  "title": "Applicable Frequency",
-                  "help": "Attribute in GridConnection cluster",
+                  "title": "Applicable Grid Frequency Range",
+                  "help": "Frequency window within which grid connection is permitted. Outside this range the inverter will not connect or will disconnect.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Lower Limit (Hz)",
+                      "arg": "ApplicableFrequencyLow",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Upper Limit (Hz)",
+                      "arg": "ApplicableFrequencyHigh",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2455,12 +2707,27 @@
                   "uuid": "GridConnection.ApplicableFrequency"
                 },
                 {
-                  "title": "Delay Time",
-                  "help": "Attribute in GridConnection cluster",
+                  "title": "Connection Delay Times",
+                  "help": "Delays applied before initial grid connection and after a grid disturbance clears (reconnection). These timers help meet interconnection standards.  The connection delay is how long the inverter will wait after first being powered on.  Reconnection delay is how long the inverter will wait after a grid disturbance or outage clears.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Connection Delay (s)",
+                      "arg": "ConnectionDelayTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Reconnection Delay (s)",
+                      "arg": "ReconnectionDelayTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2483,12 +2750,28 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Constant Power Factor Mode Status",
-                  "help": "Attribute in ConstantPowerFactorMode cluster",
+                  "title": "Power Factor Mode",
+                  "help": "Shows whether constant power-factor control is active.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Status",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Inactive — No PF control",
+                        "1": "Active — Constant PF"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2499,12 +2782,35 @@
                   "uuid": "ConstantPowerFactorMode.ConstantPowerFactorModeStatus"
                 },
                 {
-                  "title": "Constant Power Factor",
-                  "help": "Attribute in ConstantPowerFactorMode cluster",
+                  "title": "Power Factor Setpoint",
+                  "help": "The target power factor and excitation. Under-excited = lagging (absorbing vars); Over-excited = leading (supplying vars).",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Excitation",
+                      "arg": "Excited",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Under-excited",
+                        "1": "Over-excited"
+                      },
+                      "friendly_meanings": {
+                        "0": "Under-excited",
+                        "1": "Over-excited"
+                      }
+                    },
+                    {
+                      "name": "Power Factor (PF)",
+                      "arg": "PowerFactor",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2527,12 +2833,43 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Constant Reactive Power Mode Status",
-                  "help": "Attribute in ConstantReactivePowerMode cluster",
+                  "title": "Reactive Power Mode",
+                  "help": "Shows whether constant reactive-power control is active.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Excitation",
+                      "arg": "Excited",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Under-excited",
+                        "1": "Over-excited"
+                      },
+                      "friendly_meanings": {
+                        "0": "Under-excited",
+                        "1": "Over-excited"
+                      }
+                    },
+                    {
+                      "name": "Status",
+                      "arg": "Status",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Inactive - no reactive power control",
+                        "1": "Active - reactive power control"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2543,12 +2880,20 @@
                   "uuid": "ConstantReactivePowerMode.ConstantReactivePowerModeStatus"
                 },
                 {
-                  "title": "Reactive Power Percent CMD",
-                  "help": "Attribute in ConstantReactivePowerMode cluster",
+                  "title": "Reactive Power Setpoint",
+                  "help": "Displays the reactive-power target as a percentage of rated power (vars). Excitation determines whether vars are supplied (leading) or absorbed (lagging).",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Reactive Power (%)",
+                      "arg": "Power",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2576,7 +2921,23 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2592,7 +2953,23 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2608,7 +2985,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Verf",
+                      "arg": "Verf",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2624,7 +3009,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Time",
+                      "arg": "Time",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2640,7 +3033,36 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "V1",
+                      "arg": "V1",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "V2",
+                      "arg": "V2",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "V3",
+                      "arg": "V3",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "V4",
+                      "arg": "V4",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2656,7 +3078,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Q1",
+                      "arg": "Q1",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2672,7 +3102,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Q2",
+                      "arg": "Q2",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2688,7 +3126,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Q3",
+                      "arg": "Q3",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2704,7 +3150,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Q4",
+                      "arg": "Q4",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2720,7 +3174,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Time",
+                      "arg": "Time",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2748,7 +3210,23 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2764,7 +3242,29 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "P1",
+                      "arg": "P1",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "P2",
+                      "arg": "P2",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "P3",
+                      "arg": "P3",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2792,7 +3292,23 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2808,7 +3324,22 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "VoltWattV1",
+                      "arg": "VoltWattV1",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "VoltWattV2",
+                      "arg": "VoltWattV2",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2824,7 +3355,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "VoltWattP2",
+                      "arg": "VoltWattP2",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2840,7 +3379,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Time",
+                      "arg": "Time",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2868,7 +3415,23 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      }
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2884,7 +3447,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Time",
+                      "arg": "Time",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2900,7 +3471,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Frequency",
+                      "arg": "Frequency",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2916,7 +3495,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Frequency",
+                      "arg": "Frequency",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2932,7 +3519,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Frequency",
+                      "arg": "Frequency",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -2948,7 +3543,15 @@
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
-                  "entries": [],
+                  "entries": [
+                    {
+                      "name": "Frequency",
+                      "arg": "Frequency",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
                   "protocol": {
                     "matter": {
                       "MEP": "HybridInverter",
@@ -3225,8 +3828,8 @@
                       "description": "",
                       "longdescription": "",
                       "meanings": {
-                        "0": "ON",
-                        "1": "OFF"
+                        "0": "OFF",
+                        "1": "ON"
                       },
                       "friendly_meanings": {
                         "0": "Closed / On",
