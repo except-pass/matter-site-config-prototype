@@ -368,6 +368,11 @@ export const pointTransforms: PointTransform[] = [
     }
   },
   {
+    uuid: "Parallel.ClearDetectedPhases",
+    title: "Clear Detected Phases",
+    help: "Clears the detected phases for this inverter.",
+  },  
+  {
     uuid: "Parallel.Role",
     title: "Inverter Role",
     help: "Reports whether this inverter is acting as Master or Secondary in the current parallel configuration.",
@@ -468,23 +473,26 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       "uuid": "ACCharge.ACChgStartSOC",
-      "title": "Grid Charge SOC Limits",
-      "help": "Defines when grid charging starts and stops based on battery state of charge (SOC). Charging starts when SOC falls below Start, and stops when SOC reaches Stop.",
+      "title": "Grid Charge Starting SOC",
+      "help": "Defines when grid charging starts based on battery state of charge (SOC). Charging starts when SOC falls below Starting SOC.",
       "entries": {
         "SOC": {
           "name": "Start SOC (%)",
-          "description": "Begin grid charging when battery SOC drops to this level (typical 20-40%)",
-          "less_than": "StopSOC",
-          "range": { "min": 10, "max": 60 }
+          "range": { "min": 0, "max": 100 }
         },
-        "StopSOC": {
-          "name": "Stop SOC (%)",
-          "description": "Stop grid charging when battery SOC reaches this level (typical 80-95%)",
-          "greater_than": "SOC",
-          "range": { "min": 50, "max": 100 }
-        }
       }
     },
+    {
+      "uuid": "ACCharge.ACChgStopSOC",
+      "title": "Grid Charge Stop SOC",
+      "help": "Defines when grid charging stops based on battery state of charge (SOC). Charging stops when SOC reaches Stop SOC.",
+      "entries": {
+        "StopSOC": {
+          "name": "Stop SOC (%)",
+          "range": { "min": 0, "max": 100 }
+        }
+      }
+    },    
     {
       "uuid": "ACCharge.ACChargeType",
       "title": "Grid Charge Control Type",

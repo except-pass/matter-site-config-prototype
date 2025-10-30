@@ -519,8 +519,8 @@
                   "uuid": "ACCharge.ACChargePower"
                 },
                 {
-                  "title": "Grid Charge SOC Limits",
-                  "help": "Defines when grid charging starts and stops based on battery state of charge (SOC). Charging starts when SOC falls below Start, and stops when SOC reaches Stop.",
+                  "title": "Grid Charge Starting SOC",
+                  "help": "Defines when grid charging starts based on battery state of charge (SOC). Charging starts when SOC falls below Starting SOC.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -529,13 +529,12 @@
                       "name": "Start SOC (%)",
                       "arg": "SOC",
                       "dtype": "Number",
-                      "description": "Begin grid charging when battery SOC drops to this level (typical 20-40%)",
+                      "description": "",
                       "longdescription": "",
                       "range": {
                         "min": 0,
                         "max": 90
-                      },
-                      "less_than": "StopSOC"
+                      }
                     }
                   ],
                   "protocol": {
@@ -548,8 +547,8 @@
                   "uuid": "ACCharge.ACChgStartSOC"
                 },
                 {
-                  "title": "AC Chg Stop SOC",
-                  "help": "Attribute in ACCharge cluster",
+                  "title": "Grid Charge Stop SOC",
+                  "help": "Defines when grid charging stops based on battery state of charge (SOC). Charging stops when SOC reaches Stop SOC.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -868,7 +867,7 @@
                 },
                 {
                   "title": "Clear Detected Phases",
-                  "help": "Attribute in Parallel cluster",
+                  "help": "Clears the detected phases for this inverter.",
                   "element_type": "Attribute",
                   "access": "W",
                   "readOnly": false,
