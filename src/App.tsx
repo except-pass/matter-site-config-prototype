@@ -759,6 +759,28 @@ function PointCard({ point }: { point: PointDef }) {
 
   // Build a mock command payload for preview when clicking "Set"
   const handleSet = () => {
+    const normalizedArguments: EntryValue = { ...formState };
+
+    point.entries.forEach((entry) => {
+      if (entry.dtype !== 'enum' || !entry.meanings) {
+        return;
+      }
+
+      const rawValue = normalizedArguments[entry.arg];
+      if (rawValue === undefined || rawValue === null || rawValue === '') {
+        return;
+      }
+
+      const match = Object.entries(entry.meanings).find(([wireVal, semantic]) => {
+        const friendly = entry.friendly_meanings?.[wireVal] ?? semantic;
+        return rawValue === friendly || rawValue === semantic;
+      });
+
+      if (match) {
+        normalizedArguments[entry.arg] = match[1];
+      }
+    });
+
     let payload: any = {};
 
     if (point.protocol.matter) {
@@ -777,7 +799,7 @@ function PointCard({ point }: { point: PointDef }) {
               MEP: point.protocol.matter.MEP,
               Cluster: point.protocol.matter.Cluster,
               Element: point.protocol.matter.Element,
-              arguments: formState
+              arguments: normalizedArguments
             }
           ],
           thingId: {
@@ -797,7 +819,7 @@ function PointCard({ point }: { point: PointDef }) {
           register_type: point.protocol.modbus.register_type,
           size: point.protocol.modbus.size
         },
-        values: formState
+        values: normalizedArguments
       };
     }
 
