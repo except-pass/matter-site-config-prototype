@@ -309,10 +309,11 @@ export const pointTransforms: PointTransform[] = [
 {
     uuid: "Parallel.ModbusAddr",
     title: "Modbus Address",
-    help: "Sets the Modbus address (slave ID) for this inverter on the parallel bus.",
+    help: "The Modbus address (also known as the unit ID, slave ID, or node ID) for this inverter. The primary inverter should use address 1, and any secondary inverters should use 2 or higher. Each inverter that communicates on the same Modbus network or electrical bus must have a unique address, but addresses do not need to be globally unique across separate, unconnected systems.",
     entries: {
       Addr: {
-        name: "Address"
+        name: "Address",
+        range: { min: 1, max: 255 }
       }
     }
   },
@@ -425,11 +426,11 @@ export const pointTransforms: PointTransform[] = [
   },
   {
     uuid: "FeedInGrid.FeedInGridMaxPower",
-    title: "Export Power Limit",
-    help: "Sets the maximum power the inverter is allowed to send to the grid. Use this to meet utility export limits or site commissioning requirements.",
+    title: "Max Power Sold to Grid",
+    help: "Sets the maximum power the inverter is allowed to sell/export to the grid. Use this to meet utility export limits or site commissioning requirements.",
     entries: {
       Power: {
-        name: "Max Export Power (W)"
+        name: "Power (kW)"
       }
     }
   },
@@ -481,7 +482,7 @@ export const pointTransforms: PointTransform[] = [
       "entries": {
         "SOC": {
           "name": "Start SOC (%)",
-          "range": { "min": 0, "max": 100 }
+          "range": { "min": 0, "max": 90 }
         },
       }
     },
@@ -492,7 +493,7 @@ export const pointTransforms: PointTransform[] = [
       "entries": {
         "StopSOC": {
           "name": "Stop SOC (%)",
-          "range": { "min": 0, "max": 100 }
+          "range": { "min": 0, "max": 90 }
         }
       }
     },    
@@ -547,7 +548,8 @@ export const pointTransforms: PointTransform[] = [
     help: "Sets the minimum state of charge (SOC) the battery will discharge to while grid power is available. Below this level, the inverter will stop discharging and switch to grid power to protect battery capacity.",
     entries: {
       SOC: {
-        name: "SOC (%)"
+        name: "SOC (%)",
+        description: "Recommended: between 20-90%.  Must be higher than the Off-Grid Battery Cutoff SOC."
       }
     }
   },
@@ -557,7 +559,8 @@ export const pointTransforms: PointTransform[] = [
     help: "Sets the minimum state of charge (SOC) the battery will discharge to when operating off-grid. Once the battery reaches this level, the inverter stops discharging to prevent deep discharge and maintain battery health.",
     entries: {
       SOC: {
-        name: "SOC (%)"
+        name: "SOC (%)",
+        description: "Recommended: between 20-90%.  Must be lower than the On-Grid Battery Cutoff SOC."
       }
     }
   },
@@ -601,14 +604,15 @@ export const pointTransforms: PointTransform[] = [
   },
     {
       uuid: "BatteryTOUCharge.TOUMaximumChargingPower",
-      title: "Max Power During PV Charge Only",
+      title: "Max Power During 'PV Charge Only' Periods",
       section: {
         title: "PV Charge Only",
       },
-      help: "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods. Limit this to control how hard the battery charges from the grid in those windows.",
+      help: "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods in kW. Limit this to control how hard the battery charges from the grid in those windows.",
       entries: {
         Power: {
-          name: "Max Charge Power (%)"
+          name: "Power (kW)",
+          description: "Should not exceed the inverter's rated power"
         }
       }
     },
@@ -674,11 +678,12 @@ export const pointTransforms: PointTransform[] = [
       section: {
         title: "Discharge Only",
       },
-      title: "Max Power During Discharge Only",
-      help: "Sets the maximum discharging power during scheduled Time-of-Use (TOU) discharge periods. Limit this to control how much battery power is exported to loads or grid during those windows.",
+      title: "Max Power During 'Discharge Only' Periods",
+      help: "Sets the maximum discharging power during scheduled Time-of-Use (TOU) discharge periods in kW. Limit this to control how much battery power is exported to loads or grid during those windows.",
       entries: {
         Power: {
-          name: "Max Discharge Power (%)"
+          name: "Power (kW)",
+          description: "Should not exceed the inverter's rated power"
         }
       }
     },
@@ -1297,7 +1302,7 @@ export const pointTransforms: PointTransform[] = [
       {
         "uuid": "GridBase.GridType",
         "title": "Grid Type",
-        "help": "Choose the type of wriing the sites uses.  This helps configure the system to match the build's power setup.  Note the voltage you enter here must match the EPS Voltage.",
+        "help": "Choose the type of wiring the site uses.  This helps configure the system to match the build's power setup.  Note the voltage you enter here must match the EPS Voltage.",
         "entries": {
           "Type": {
             "name": "Service Type",
