@@ -347,7 +347,7 @@
           ]
         },
         {
-          "sectionTitle": "Feed In Grid",
+          "sectionTitle": "Selling Power",
           "subsections": [
             {
               "title": null,
@@ -355,14 +355,14 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Feed to Grid",
-                  "help": "Allows the inverter to export power back to the utility grid. Enable this only if local regulations and interconnect agreements permit grid export.",
+                  "title": "Allow Selling Power to Grid",
+                  "help": "Allows the inverter to sell/export power back to the utility grid. Enable this only if local regulations and interconnect agreements permit grid export.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
                     {
-                      "name": "Feed to Grid",
+                      "name": " ",
                       "arg": "Mode",
                       "dtype": "enum",
                       "description": "",
@@ -372,8 +372,8 @@
                         "1": "Enable"
                       },
                       "friendly_meanings": {
-                        "0": "Disabled",
-                        "1": "Enabled"
+                        "0": "Not allowed",
+                        "1": "Allowed"
                       }
                     }
                   ],
