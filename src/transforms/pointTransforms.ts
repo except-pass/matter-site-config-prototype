@@ -408,14 +408,17 @@ export const pointTransforms: PointTransform[] = [
   },
   {
     uuid: "FeedInGrid.FeedInGridStatus",
-    title: "Feed to Grid",
-    help: "Allows the inverter to export power back to the utility grid. Enable this only if local regulations and interconnect agreements permit grid export.",
+    section: {
+      title: "Selling Power",
+    },
+    title: "Allow Selling Power to Grid",
+    help: "Allows the inverter to sell/export power back to the utility grid. Enable this only if local regulations and interconnect agreements permit grid export.",
     entries: {
       Mode: {
-        name: "Feed to Grid",
+        name: " ",
         friendly_meanings: {
-          "0": "Disabled",
-          "1": "Enabled"
+          "0": "Not allowed",
+          "1": "Allowed"
         }
       }
     }
