@@ -684,7 +684,7 @@
                 },
                 {
                   "title": "Inverter Role",
-                  "help": "Reports whether this inverter is acting as Master or Secondary in the current parallel configuration.",
+                  "help": "Reports whether this inverter is acting as Primary (sometimes called the Master) or Secondary in the current parallel configuration.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
