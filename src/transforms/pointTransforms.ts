@@ -40,6 +40,15 @@ interface SubsectionTransform {
   title?: string | null;
 }
 
+interface MoveToTransform {
+  /** Target theme name (optional - defaults to current theme) */
+  theme?: string;
+  /** Target section title */
+  section: string;
+  /** Target subsection title (optional - defaults to first subsection or creates one) */
+  subsection?: string;
+}
+
 interface PointTransform {
   /** Identify the point by UUID (e.g., "BatteryBase.ChaDisChaCtrlType") */
   uuid: string;
@@ -53,12 +62,24 @@ interface PointTransform {
   section?: SectionTransform;
   /** Optional subsection-level overrides */
   subsection?: SubsectionTransform;
+  /** Move this point to a different section/theme */
+  move_to?: MoveToTransform;
 }
 
 /**
  * Array of point transformations to apply.
  * Each transformation targets a specific point by UUID and can modify
  * the point's title, help text, and individual entry properties.
+ *
+ * Example of moving a point to a different section:
+ * {
+ *   uuid: "Basic.PowerControl",
+ *   move_to: {
+ *     section: "Power Management",           // Target section title (required)
+ *     subsection: "Control",                 // Target subsection title (optional)
+ *     theme: "Advanced"                      // Target theme name (optional, defaults to current theme)
+ *   }
+ * }
  */
 export const pointTransforms: PointTransform[] = [
   {
@@ -450,6 +471,10 @@ export const pointTransforms: PointTransform[] = [
   },
     {
       uuid: "ACCharge.ACChargeStatus",
+      move_to: {
+        theme: "Battery",
+        section: "Grid Charge"
+      },
       section: {
         title: "Grid Charge",
       },
@@ -459,14 +484,18 @@ export const pointTransforms: PointTransform[] = [
         Mode: {
           name: "Grid Charge",
           friendly_meanings: {
-            "0": "Disabled",
-            "1": "Enabled"
+            "0": "Do not charge the battery from grid power",
+            "1": "Allowed"
           }
         }
       }
     },
     {
       "uuid": "ACCharge.ACChargePower",
+      "move_to": {
+        "theme": "Battery",
+        "section": "Grid Charge"
+      },
       "title": "Grid Charge Power Limit",
       "help": "Sets the maximum power the inverter will draw from the grid for charging. This cap applies when Grid Charge is enabled (and within any configured time windows).",
       "entries": {
@@ -477,6 +506,10 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       "uuid": "ACCharge.ACChgStartSOC",
+      "move_to": {
+        "theme": "Battery",
+        "section": "Grid Charge"
+      },
       "title": "Grid Charge Starting SOC",
       "help": "Defines when grid charging starts based on battery state of charge (SOC). Charging starts when SOC falls below Starting SOC.",
       "entries": {
@@ -488,6 +521,10 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       "uuid": "ACCharge.ACChgStopSOC",
+      "move_to": {
+        "theme": "Battery",
+        "section": "Grid Charge"
+      },
       "title": "Grid Charge Stop SOC",
       "help": "Defines when grid charging stops based on battery state of charge (SOC). Charging stops when SOC reaches Stop SOC.",
       "entries": {
@@ -499,6 +536,10 @@ export const pointTransforms: PointTransform[] = [
     },    
     {
       "uuid": "ACCharge.ACChargeType",
+      "move_to": {
+        "theme": "Battery",
+        "section": "Grid Charge"
+      },
       "title": "Grid Charge Control Type",
       "help": "Select whether grid charging follows a time schedule or SOC/voltage thresholds.",
       "entries": {
@@ -513,6 +554,10 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       "uuid": "ACCharge.ACChargingPlan",
+      "move_to": {
+        "theme": "Battery",
+        "section": "Grid Charge"
+      },
       "title": "Grid Charge Windows (Placeholder.  I'll break this up later.)",
       "help": "During these times, your battery will continue to charge from solar power normally, but will also use additional power from the grid to charge the battery.",
       "entries": {
@@ -597,14 +642,14 @@ export const pointTransforms: PointTransform[] = [
         name: "Scheduling",
         friendly_meanings: {
           "0": "Disable Scheduling",
-          "1": "Charge or discharge the battery at the same time each day"
+          "1": "Enable the 'PV Charge Only' and 'Discharge Only' scheduling modes"
         }
       }
     }
   },
     {
       uuid: "BatteryTOUCharge.TOUMaximumChargingPower",
-      title: "Max Power During 'PV Charge Only' Periods",
+      title: "Max Battery Charge Power During 'PV Charge Only' Periods",
       section: {
         title: "PV Charge Only",
       },
@@ -678,7 +723,7 @@ export const pointTransforms: PointTransform[] = [
       section: {
         title: "Discharge Only",
       },
-      title: "Max Power During 'Discharge Only' Periods",
+      title: "Max Inverter Output Power During 'Discharge Only' Periods",
       help: "Sets the maximum discharging power during scheduled Time-of-Use (TOU) discharge periods in kW. Limit this to control how much battery power is exported to loads or grid during those windows.",
       entries: {
         Power: {

@@ -46,6 +46,13 @@ function transformPoints(data: any, stats: TransformStats): any {
   // Deep clone to avoid mutation
   const result = JSON.parse(JSON.stringify(data));
 
+  // First pass: Apply transformations and collect points to move
+  const pointsToMove: Array<{
+    point: any;
+    moveTo: any;
+    originalLocation: { themeName: string; sectionTitle: string; subsectionTitle: string };
+  }> = [];
+
   // Traverse themes -> sections -> subsections -> points
   result.themes?.forEach((theme: any) => {
     theme.sections?.forEach((section: any) => {
@@ -69,6 +76,26 @@ function transformPoints(data: any, stats: TransformStats): any {
             subsection,
           });
 
+          // Check if point should be moved
+          const allTransforms = getAllPointTransforms();
+          const transform = allTransforms.find((t) => t.uuid === point.uuid);
+          if (transform?.move_to) {
+            pointsToMove.push({
+              point,
+              moveTo: transform.move_to,
+              originalLocation: {
+                themeName: theme.themeName,
+                sectionTitle: section.sectionTitle,
+                subsectionTitle: subsection?.title,
+              },
+            });
+            changes.push(
+              `Move: → ${transform.move_to.theme || theme.themeName} / ${transform.move_to.section}${
+                transform.move_to.subsection ? ` / ${transform.move_to.subsection}` : ""
+              }`
+            );
+          }
+
           // Assign widget type
           const widgetType = getWidgetType(point.uuid);
           if (widgetType !== "default") {
@@ -76,7 +103,7 @@ function transformPoints(data: any, stats: TransformStats): any {
             changes.push(`Widget: ${widgetType}`);
           }
 
-          if (wasTransformed || widgetType !== "default") {
+          if (wasTransformed || widgetType !== "default" || transform?.move_to) {
             // Track what changed
             if (point.title !== originalTitle) {
               changes.push(`Title: "${originalTitle}" → "${point.title}"`);
@@ -122,6 +149,71 @@ function transformPoints(data: any, stats: TransformStats): any {
           }
         });
       });
+    });
+  });
+
+  // Second pass: Move points to their target locations
+  pointsToMove.forEach(({ point, moveTo, originalLocation }) => {
+    // Remove from original location
+    result.themes?.forEach((theme: any) => {
+      if (theme.themeName === originalLocation.themeName) {
+        theme.sections?.forEach((section: any) => {
+          if (section.sectionTitle === originalLocation.sectionTitle) {
+            section.subsections?.forEach((subsection: any) => {
+              if (subsection.title === originalLocation.subsectionTitle) {
+                const pointIndex = subsection.points?.findIndex((p: any) => p.uuid === point.uuid);
+                if (pointIndex !== undefined && pointIndex !== -1) {
+                  subsection.points.splice(pointIndex, 1);
+                }
+              }
+            });
+          }
+        });
+      }
+    });
+
+    // Add to target location
+    const targetThemeName = moveTo.theme || originalLocation.themeName;
+    let targetTheme = result.themes?.find((t: any) => t.themeName === targetThemeName);
+
+    if (!targetTheme) {
+      // Create theme if it doesn't exist
+      targetTheme = { themeName: targetThemeName, sections: [] };
+      if (!result.themes) result.themes = [];
+      result.themes.push(targetTheme);
+    }
+
+    // Find or create target section
+    let targetSection = targetTheme.sections?.find((s: any) => s.sectionTitle === moveTo.section);
+    if (!targetSection) {
+      targetSection = { sectionTitle: moveTo.section, subsections: [] };
+      if (!targetTheme.sections) targetTheme.sections = [];
+      targetTheme.sections.push(targetSection);
+    }
+
+    // Find or create target subsection
+    const targetSubsectionTitle = moveTo.subsection || "";
+    let targetSubsection = targetSection.subsections?.find((ss: any) => ss.title === targetSubsectionTitle);
+    if (!targetSubsection) {
+      targetSubsection = { title: targetSubsectionTitle, points: [] };
+      if (!targetSection.subsections) targetSection.subsections = [];
+      targetSection.subsections.push(targetSubsection);
+    }
+
+    // Add point to target
+    if (!targetSubsection.points) targetSubsection.points = [];
+    targetSubsection.points.push(point);
+  });
+
+  // Third pass: Clean up empty subsections and sections
+  result.themes?.forEach((theme: any) => {
+    theme.sections = theme.sections?.filter((section: any) => {
+      // Remove empty subsections
+      section.subsections = section.subsections?.filter((subsection: any) => {
+        return subsection.points && subsection.points.length > 0;
+      });
+      // Keep section only if it has subsections
+      return section.subsections && section.subsections.length > 0;
     });
   });
 

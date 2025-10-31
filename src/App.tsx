@@ -177,8 +177,14 @@ function buildInitialPointState(point: PointDef): EntryValue {
 // Small UI atoms
 // -----------------------------------------------------------------------------
 
-const InfoIcon = () => (
-  <span className="text-xs text-slate-500 border border-slate-400 rounded-full w-4 h-4 flex items-center justify-center leading-none">i</span>
+const InfoIcon = ({ onClick }: { onClick?: () => void }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className="text-xs text-slate-500 border border-slate-400 rounded-full w-4 h-4 flex items-center justify-center leading-none hover:bg-slate-100 hover:text-slate-700 hover:border-slate-500 transition-colors cursor-pointer"
+  >
+    i
+  </button>
 );
 
 const RefreshIcon = () => (
@@ -743,6 +749,93 @@ function TimeRangeWidget({
 }
 
 // -----------------------------------------------------------------------------
+// HelpModal - displays help text in a modal
+// -----------------------------------------------------------------------------
+function HelpModal({
+  title,
+  content,
+  isOpen,
+  onClose
+}: {
+  title: string;
+  content: string;
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  // Simple markdown-like rendering for bold text
+  const renderContent = (text: string) => {
+    const parts = text.split(/(\*\*[^*]+\*\*)/g);
+    return parts.map((part, idx) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={idx} className="font-semibold text-slate-900">{part.slice(2, -2)}</strong>;
+      }
+      return <span key={idx}>{part}</span>;
+    });
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/10  p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-xl shadow-2xl w-full max-w-lg border border-slate-300 overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-start justify-between p-5 border-b border-slate-200 bg-slate-50">
+          <div className="flex items-center gap-2">
+            <div className="text-slate-500 border border-slate-400 rounded-full w-5 h-5 flex items-center justify-center leading-none text-xs font-medium">
+              i
+            </div>
+            <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+          </div>
+          <button
+            type="button"
+            className="text-slate-400 hover:text-slate-600 transition-colors text-xl leading-none -mt-1"
+            onClick={onClose}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-5 max-h-[60vh] overflow-y-auto">
+          <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+            {renderContent(content)}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex justify-end p-4 border-t border-slate-200 bg-slate-50">
+          <button
+            type="button"
+            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
 // PointCard - card for a single logical point ("DATE & TIME", etc.)
 // -----------------------------------------------------------------------------
 function PointCard({ point }: { point: PointDef }) {
@@ -752,6 +845,7 @@ function PointCard({ point }: { point: PointDef }) {
 
   const [showDialog, setShowDialog] = useState(false);
   const [dialogPayload, setDialogPayload] = useState<any>(null);
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   const handleFieldChange = (argName: string, nextVal: any) => {
     setFormState((prev) => ({ ...prev, [argName]: nextVal }));
@@ -847,8 +941,8 @@ function PointCard({ point }: { point: PointDef }) {
             {point.title}
           </div>
           {point.help && (
-            <div className="mt-0.5" title={point.help}>
-              <InfoIcon />
+            <div className="mt-0.5">
+              <InfoIcon onClick={() => setShowHelpModal(true)} />
             </div>
           )}
           {readOnly && <ReadOnlyBadge />}
@@ -948,6 +1042,14 @@ function PointCard({ point }: { point: PointDef }) {
           </div>
         </div>
       )}
+
+      {/* help modal */}
+      <HelpModal
+        title={point.title}
+        content={point.help || ''}
+        isOpen={showHelpModal}
+        onClose={() => setShowHelpModal(false)}
+      />
     </div>
   );
 }

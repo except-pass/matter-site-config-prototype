@@ -455,315 +455,6 @@
           ]
         },
         {
-          "sectionTitle": "Grid Charge",
-          "subsections": [
-            {
-              "title": null,
-              "visibility": "default",
-              "collapsedByDefault": false,
-              "points": [
-                {
-                  "title": "Allow Battery Charging from Grid",
-                  "help": "Enables charging the battery from the utility grid.",
-                  "element_type": "Attribute",
-                  "access": "RW",
-                  "readOnly": false,
-                  "entries": [
-                    {
-                      "name": "Grid Charge",
-                      "arg": "Mode",
-                      "dtype": "enum",
-                      "description": "",
-                      "longdescription": "",
-                      "meanings": {
-                        "0": "Disable",
-                        "1": "Enable"
-                      },
-                      "friendly_meanings": {
-                        "0": "Disabled",
-                        "1": "Enabled"
-                      }
-                    }
-                  ],
-                  "protocol": {
-                    "matter": {
-                      "MEP": "HybridInverter",
-                      "Cluster": "ACCharge",
-                      "Element": "ACChargeStatus"
-                    }
-                  },
-                  "uuid": "ACCharge.ACChargeStatus"
-                },
-                {
-                  "title": "Grid Charge Power Limit",
-                  "help": "Sets the maximum power the inverter will draw from the grid for charging. This cap applies when Grid Charge is enabled (and within any configured time windows).",
-                  "element_type": "Attribute",
-                  "access": "RW",
-                  "readOnly": false,
-                  "entries": [
-                    {
-                      "name": "Max Grid Charge Power (W)",
-                      "arg": "Power",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 100
-                      }
-                    }
-                  ],
-                  "protocol": {
-                    "matter": {
-                      "MEP": "HybridInverter",
-                      "Cluster": "ACCharge",
-                      "Element": "ACChargePower"
-                    }
-                  },
-                  "uuid": "ACCharge.ACChargePower"
-                },
-                {
-                  "title": "Grid Charge Starting SOC",
-                  "help": "Defines when grid charging starts based on battery state of charge (SOC). Charging starts when SOC falls below Starting SOC.",
-                  "element_type": "Attribute",
-                  "access": "RW",
-                  "readOnly": false,
-                  "entries": [
-                    {
-                      "name": "Start SOC (%)",
-                      "arg": "SOC",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 90
-                      }
-                    }
-                  ],
-                  "protocol": {
-                    "matter": {
-                      "MEP": "HybridInverter",
-                      "Cluster": "ACCharge",
-                      "Element": "ACChgStartSOC"
-                    }
-                  },
-                  "uuid": "ACCharge.ACChgStartSOC"
-                },
-                {
-                  "title": "Grid Charge Stop SOC",
-                  "help": "Defines when grid charging stops based on battery state of charge (SOC). Charging stops when SOC reaches Stop SOC.",
-                  "element_type": "Attribute",
-                  "access": "RW",
-                  "readOnly": false,
-                  "entries": [
-                    {
-                      "name": "SOC",
-                      "arg": "SOC",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 90
-                      }
-                    }
-                  ],
-                  "protocol": {
-                    "matter": {
-                      "MEP": "HybridInverter",
-                      "Cluster": "ACCharge",
-                      "Element": "ACChgStopSOC"
-                    }
-                  },
-                  "uuid": "ACCharge.ACChgStopSOC"
-                },
-                {
-                  "title": "Grid Charge Control Type",
-                  "help": "Select whether grid charging follows a time schedule or SOC/voltage thresholds.",
-                  "element_type": "Attribute",
-                  "access": "RW",
-                  "readOnly": false,
-                  "entries": [
-                    {
-                      "name": "Control Type",
-                      "arg": "Type",
-                      "dtype": "enum",
-                      "description": "",
-                      "longdescription": "",
-                      "meanings": {
-                        "0": "according to time",
-                        "1": "according to SOC/Volt"
-                      },
-                      "friendly_meanings": {
-                        "0": "By Time Schedule",
-                        "1": "By SOC/Voltage"
-                      }
-                    }
-                  ],
-                  "protocol": {
-                    "matter": {
-                      "MEP": "HybridInverter",
-                      "Cluster": "ACCharge",
-                      "Element": "ACChargeType"
-                    }
-                  },
-                  "uuid": "ACCharge.ACChargeType"
-                },
-                {
-                  "title": "Grid Charge Windows (Placeholder.  I'll break this up later.)",
-                  "help": "During these times, your battery will continue to charge from solar power normally, but will also use additional power from the grid to charge the battery.",
-                  "element_type": "Attribute",
-                  "access": "RW",
-                  "readOnly": false,
-                  "entries": [
-                    {
-                      "name": "Window 1 Start Hour",
-                      "arg": "StartTime1_h",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 23
-                      }
-                    },
-                    {
-                      "name": "Window 1 Start Minute",
-                      "arg": "StartTime1_m",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 59
-                      }
-                    },
-                    {
-                      "name": "Window 1 End Hour",
-                      "arg": "EndTime1_h",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 23
-                      }
-                    },
-                    {
-                      "name": "Window 1 End Minute",
-                      "arg": "EndTime1_m",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 59
-                      }
-                    },
-                    {
-                      "name": "Window 2 Start Hour",
-                      "arg": "StartTime2_h",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 23
-                      }
-                    },
-                    {
-                      "name": "Window 2 Start Minute",
-                      "arg": "StartTime2_m",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 59
-                      }
-                    },
-                    {
-                      "name": "Window 2 End Hour",
-                      "arg": "EndTime2_h",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 23
-                      }
-                    },
-                    {
-                      "name": "Window 2 End Minute",
-                      "arg": "EndTime2_m",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 59
-                      }
-                    },
-                    {
-                      "name": "Window 3 Start Hour",
-                      "arg": "StartTime3_h",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 23
-                      }
-                    },
-                    {
-                      "name": "Window 3 Start Minute",
-                      "arg": "StartTime3_m",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 59
-                      }
-                    },
-                    {
-                      "name": "Window 3 End Hour",
-                      "arg": "EndTime3_h",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 23
-                      }
-                    },
-                    {
-                      "name": "Window 3 End Minute",
-                      "arg": "EndTime3_m",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 59
-                      }
-                    }
-                  ],
-                  "protocol": {
-                    "matter": {
-                      "MEP": "HybridInverter",
-                      "Cluster": "ACCharge",
-                      "Element": "ACChargingPlan"
-                    }
-                  },
-                  "uuid": "ACCharge.ACChargingPlan"
-                }
-              ]
-            }
-          ]
-        },
-        {
           "sectionTitle": "Parallel",
           "subsections": [
             {
@@ -1577,7 +1268,7 @@
                       },
                       "friendly_meanings": {
                         "0": "Disable Scheduling",
-                        "1": "Charge or discharge the battery at the same time each day"
+                        "1": "Enable the 'PV Charge Only' and 'Discharge Only' scheduling modes"
                       }
                     }
                   ],
@@ -1603,7 +1294,7 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Max Power During 'PV Charge Only' Periods",
+                  "title": "Max Battery Charge Power During 'PV Charge Only' Periods",
                   "help": "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods in kW. Limit this to control how hard the battery charges from the grid in those windows.",
                   "element_type": "Attribute",
                   "access": "RW",
@@ -1829,7 +1520,7 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Max Power During 'Discharge Only' Periods",
+                  "title": "Max Inverter Output Power During 'Discharge Only' Periods",
                   "help": "Sets the maximum discharging power during scheduled Time-of-Use (TOU) discharge periods in kW. Limit this to control how much battery power is exported to loads or grid during those windows.",
                   "element_type": "Attribute",
                   "access": "RW",
@@ -2069,6 +1760,313 @@
                   },
                   "uuid": "BatteryTOUDischarge.TOUDischargingPlan3",
                   "widget": "timerange"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Grid Charge",
+          "subsections": [
+            {
+              "title": "",
+              "points": [
+                {
+                  "title": "Allow Battery Charging from Grid",
+                  "help": "Enables charging the battery from the utility grid.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Grid Charge",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Do not charge the battery from grid power",
+                        "1": "Allowed"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChargeStatus"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChargeStatus"
+                },
+                {
+                  "title": "Grid Charge Power Limit",
+                  "help": "Sets the maximum power the inverter will draw from the grid for charging. This cap applies when Grid Charge is enabled (and within any configured time windows).",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Max Grid Charge Power (W)",
+                      "arg": "Power",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChargePower"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChargePower"
+                },
+                {
+                  "title": "Grid Charge Starting SOC",
+                  "help": "Defines when grid charging starts based on battery state of charge (SOC). Charging starts when SOC falls below Starting SOC.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start SOC (%)",
+                      "arg": "SOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 90
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChgStartSOC"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChgStartSOC"
+                },
+                {
+                  "title": "Grid Charge Stop SOC",
+                  "help": "Defines when grid charging stops based on battery state of charge (SOC). Charging stops when SOC reaches Stop SOC.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "SOC",
+                      "arg": "SOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 90
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChgStopSOC"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChgStopSOC"
+                },
+                {
+                  "title": "Grid Charge Control Type",
+                  "help": "Select whether grid charging follows a time schedule or SOC/voltage thresholds.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Control Type",
+                      "arg": "Type",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "according to time",
+                        "1": "according to SOC/Volt"
+                      },
+                      "friendly_meanings": {
+                        "0": "By Time Schedule",
+                        "1": "By SOC/Voltage"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChargeType"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChargeType"
+                },
+                {
+                  "title": "Grid Charge Windows (Placeholder.  I'll break this up later.)",
+                  "help": "During these times, your battery will continue to charge from solar power normally, but will also use additional power from the grid to charge the battery.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Window 1 Start Hour",
+                      "arg": "StartTime1_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 1 Start Minute",
+                      "arg": "StartTime1_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "Window 1 End Hour",
+                      "arg": "EndTime1_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 1 End Minute",
+                      "arg": "EndTime1_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "Window 2 Start Hour",
+                      "arg": "StartTime2_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 2 Start Minute",
+                      "arg": "StartTime2_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "Window 2 End Hour",
+                      "arg": "EndTime2_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 2 End Minute",
+                      "arg": "EndTime2_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "Window 3 Start Hour",
+                      "arg": "StartTime3_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 3 Start Minute",
+                      "arg": "StartTime3_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "Window 3 End Hour",
+                      "arg": "EndTime3_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 3 End Minute",
+                      "arg": "EndTime3_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChargingPlan"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChargingPlan"
                 }
               ]
             }
