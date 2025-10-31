@@ -330,7 +330,11 @@
                       "arg": "Power",
                       "dtype": "Number",
                       "description": "",
-                      "longdescription": ""
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
                     }
                   ],
                   "protocol": {
@@ -781,8 +785,8 @@
                       "description": "",
                       "longdescription": "",
                       "range": {
-                        "min": 0,
-                        "max": 150
+                        "min": 1,
+                        "max": 255
                       }
                     }
                   ],
@@ -3787,7 +3791,7 @@
                       "longdescription": "",
                       "range": {
                         "min": 0,
-                        "max": 100
+                        "max": 90
                       },
                       "less_than": "StopSOC"
                     },
@@ -3798,7 +3802,7 @@
                       "description": "Generator stops when battery charges to this level",
                       "longdescription": "",
                       "range": {
-                        "min": 0,
+                        "min": 5,
                         "max": 100
                       },
                       "greater_than": "StartSOC"
@@ -3972,8 +3976,8 @@
                       "description": "AC-coupled PV begins charging when SOC drops to this level (typical 20-40%)",
                       "longdescription": "",
                       "range": {
-                        "min": 0,
-                        "max": 100
+                        "min": 10,
+                        "max": 60
                       },
                       "less_than": "StopSOC"
                     },
@@ -3984,7 +3988,7 @@
                       "description": "AC-coupled PV stops charging when SOC reaches this level (typical 80-95%)",
                       "longdescription": "",
                       "range": {
-                        "min": 0,
+                        "min": 50,
                         "max": 100
                       },
                       "greater_than": "StartSOC"

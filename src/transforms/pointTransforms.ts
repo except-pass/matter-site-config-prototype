@@ -1543,6 +1543,11 @@ export function transformPoint(
             ...entryTransform.friendly_meanings,
           };
         }
+        if (entryTransform.range !== undefined) {
+          entry.range = {
+            ...entryTransform.range,
+          };
+        }
         // Apply constraints
         if (entryTransform.greater_than !== undefined) {
           entry.greater_than = entryTransform.greater_than;
