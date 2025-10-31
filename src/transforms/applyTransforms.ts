@@ -195,7 +195,17 @@ function transformPoints(data: any, stats: TransformStats): any {
     const targetSubsectionTitle = moveTo.subsection || "";
     let targetSubsection = targetSection.subsections?.find((ss: any) => ss.title === targetSubsectionTitle);
     if (!targetSubsection) {
-      targetSubsection = { title: targetSubsectionTitle, points: [] };
+      // Check if the transform specifies collapsedByDefault for the subsection
+      const allTransforms = getAllPointTransforms();
+      const transform = allTransforms.find((t) => t.uuid === point.uuid);
+      const collapsedByDefault = transform?.subsection?.collapsedByDefault ?? false;
+
+      targetSubsection = {
+        title: targetSubsectionTitle,
+        points: [],
+        collapsedByDefault: collapsedByDefault,
+        visibility: "default"
+      };
       if (!targetSection.subsections) targetSection.subsections = [];
       targetSection.subsections.push(targetSubsection);
     }

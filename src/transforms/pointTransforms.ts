@@ -38,6 +38,8 @@ interface SectionTransform {
 interface SubsectionTransform {
   /** New title for the subsection */
   title?: string | null;
+  /** Whether this subsection should be collapsed by default */
+  collapsedByDefault?: boolean;
 }
 
 interface MoveToTransform {
@@ -397,7 +399,16 @@ export const pointTransforms: PointTransform[] = [
   {
     uuid: "Parallel.Role",
     title: "Inverter Role",
-    help: "Reports whether this inverter is acting as Master or Secondary in the current parallel configuration.",
+    help: "Reports whether this inverter is acting as Primary (sometimes called the Master) or Secondary in the current parallel configuration.",
+    entries: {
+      Role: {
+        name: "Role",
+        friendly_meanings: {
+          "0": "Primary",
+          "1": "Secondary"
+        }
+      }
+    }
   },
   {
     uuid: "Parallel.ParallelPhase",
@@ -1044,6 +1055,15 @@ export const pointTransforms: PointTransform[] = [
         },
           {
             "uuid": "ConstantPowerFactorMode.ConstantPowerFactorModeStatus",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Constant Power Factor"
+            },
+            "subsection": {
+              "title": "Constant Power Factor",
+              "collapsedByDefault": true
+            },
             "title": "Power Factor Mode",
             "help": "Shows whether constant power-factor control is active.",
             "entries": {
@@ -1058,6 +1078,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "ConstantPowerFactorMode.ConstantPowerFactor",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Constant Power Factor"
+            },
+            "subsection": {
+              "title": "Constant Power Factor",
+              "collapsedByDefault": true
+            },
             "title": "Power Factor Setpoint",
             "help": "The target power factor and excitation. Under-excited = lagging (absorbing vars); Over-excited = leading (supplying vars).",
             "entries": {
@@ -1071,6 +1100,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "ConstantReactivePowerMode.ConstantReactivePowerModeStatus",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Constant Reactive Power"
+            },
+            "subsection": {
+              "title": "Constant Reactive Power",
+              "collapsedByDefault": true
+            },
             "title": "Reactive Power Mode",
             "help": "Shows whether constant reactive-power control is active.",
             "entries": {
@@ -1088,6 +1126,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "ConstantReactivePowerMode.ReactivePowerPercentCMD",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Constant Reactive Power"
+            },
+            "subsection": {
+              "title": "Constant Reactive Power",
+              "collapsedByDefault": true
+            },
             "title": "Reactive Power Setpoint",
             "help": "Displays the reactive-power target as a percentage of rated power (vars). Excitation determines whether vars are supplied (leading) or absorbed (lagging).",
             "entries": {
@@ -1098,6 +1145,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageReactivePowerMode.VoltageReactivePowerMode",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-VAR (Voltage-Reactive Power)"
+            },
+            "subsection": {
+              "title": "Volt-VAR (Voltage-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "Volt-VAR Mode",
             "help": "Shows whether Volt-VAR (voltage-reactive power) control is active. This value is read-only and reflects the current configuration or utility command.",
             "entries": {
@@ -1112,6 +1168,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageReactivePowerMode.AutonomousVrefAdjustment",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-VAR (Voltage-Reactive Power)"
+            },
+            "subsection": {
+              "title": "Volt-VAR (Voltage-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "Autonomous Vref Adjustment",
             "help": "Indicates whether the inverter autonomously adjusts its reference voltage (Vref).",
             "entries": {
@@ -1126,6 +1191,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageReactivePowerMode.Verf",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-VAR (Voltage-Reactive Power)"
+            },
+            "subsection": {
+              "title": "Volt-VAR (Voltage-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "Reference Voltage (Vref)",
             "help": "Voltage reference used for Volt-VAR calculations.",
             "entries": {
@@ -1134,6 +1208,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageReactivePowerMode.VrefAdjustmentTimeConstant",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-VAR (Voltage-Reactive Power)"
+            },
+            "subsection": {
+              "title": "Volt-VAR (Voltage-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "Vref Adjustment Time Constant",
             "help": "Time constant applied when adjusting Vref.",
             "entries": {
@@ -1142,6 +1225,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageReactivePowerMode.UnderOverVoltage",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-VAR (Voltage-Reactive Power)"
+            },
+            "subsection": {
+              "title": "Volt-VAR (Voltage-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "Volt-VAR Voltage Breakpoints",
             "help": "Voltage points (V1-V4) that define the Volt-VAR curve breakpoints.",
             "entries": {
@@ -1153,6 +1245,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageReactivePowerMode.Q1",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-VAR (Voltage-Reactive Power)"
+            },
+            "subsection": {
+              "title": "Volt-VAR (Voltage-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "Reactive Power Setpoint Q1",
             "help": "Reactive power at voltage point V1 on the Volt-VAR curve.",
             "entries": {
@@ -1161,6 +1262,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageReactivePowerMode.Q2",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-VAR (Voltage-Reactive Power)"
+            },
+            "subsection": {
+              "title": "Volt-VAR (Voltage-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "Reactive Power Setpoint Q2",
             "help": "Reactive power at voltage point V2 on the Volt-VAR curve.",
             "entries": {
@@ -1169,6 +1279,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageReactivePowerMode.Q3",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-VAR (Voltage-Reactive Power)"
+            },
+            "subsection": {
+              "title": "Volt-VAR (Voltage-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "Reactive Power Setpoint Q3",
             "help": "Reactive power at voltage point V3 on the Volt-VAR curve.",
             "entries": {
@@ -1177,6 +1296,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageReactivePowerMode.Q4",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-VAR (Voltage-Reactive Power)"
+            },
+            "subsection": {
+              "title": "Volt-VAR (Voltage-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "Reactive Power Setpoint Q4",
             "help": "Reactive power at voltage point V4 on the Volt-VAR curve.",
             "entries": {
@@ -1185,6 +1313,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageReactivePowerMode.OpenLoopResponseTime",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-VAR (Voltage-Reactive Power)"
+            },
+            "subsection": {
+              "title": "Volt-VAR (Voltage-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "Open-Loop Response Time",
             "help": "Response time used for open-loop Volt-VAR changes.",
             "entries": {
@@ -1193,6 +1330,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "ActivePowerReactivePowerMode.PQModeStatus",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "P-Q Mode (Active-Reactive Power)"
+            },
+            "subsection": {
+              "title": "P-Q Mode (Active-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "P-Q Mode Status",
             "help": "Shows whether Active/Reactive Power (P-Q) control mode is enabled.",
             "entries": {
@@ -1204,6 +1350,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "ActivePowerReactivePowerMode.P_QP",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "P-Q Mode (Active-Reactive Power)"
+            },
+            "subsection": {
+              "title": "P-Q Mode (Active-Reactive Power)",
+              "collapsedByDefault": true
+            },
             "title": "P-Q Curve Points",
             "help": "Breakpoint setpoints for the Active/Reactive Power (P-Q) characteristic.",
             "entries": {
@@ -1214,6 +1369,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageActivePowerMode.VoltageActivePowerMode",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-Watt (Voltage-Active Power)"
+            },
+            "subsection": {
+              "title": "Volt-Watt (Voltage-Active Power)",
+              "collapsedByDefault": true
+            },
             "title": "Volt-Watt Mode",
             "help": "Shows whether Volt-Watt (voltage-active power) control is enabled.",
             "entries": {
@@ -1225,6 +1389,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageActivePowerMode.VoltWattV",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-Watt (Voltage-Active Power)"
+            },
+            "subsection": {
+              "title": "Volt-Watt (Voltage-Active Power)",
+              "collapsedByDefault": true
+            },
             "title": "Volt-Watt Voltage Breakpoints",
             "help": "Voltage points that define the Volt-Watt curve.",
             "entries": {
@@ -1234,6 +1407,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageActivePowerMode.VoltWattP2",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-Watt (Voltage-Active Power)"
+            },
+            "subsection": {
+              "title": "Volt-Watt (Voltage-Active Power)",
+              "collapsedByDefault": true
+            },
             "title": "Volt-Watt Power Setpoint",
             "help": "Power setpoint at voltage breakpoint V2 on the Volt-Watt curve.",
             "entries": {
@@ -1242,6 +1424,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "VoltageActivePowerMode.OpenLoopResponseTime",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Volt-Watt (Voltage-Active Power)"
+            },
+            "subsection": {
+              "title": "Volt-Watt (Voltage-Active Power)",
+              "collapsedByDefault": true
+            },
             "title": "Open-Loop Response Time",
             "help": "Response time used for open-loop Volt-Watt changes.",
             "entries": {
@@ -1250,6 +1441,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "FrequencyActivePowerMode.FrequencyActivePowerModeStatus",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Freq-Watt (Frequency-Active Power)"
+            },
+            "subsection": {
+              "title": "Freq-Watt (Frequency-Active Power)",
+              "collapsedByDefault": true
+            },
             "title": "Frequency-Active Power Mode",
             "help": "Indicates whether frequency-power (Freq-Watt) control is currently enabled.",
             "entries": {
@@ -1261,6 +1461,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "FrequencyActivePowerMode.OpenLoopResponseTime",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Freq-Watt (Frequency-Active Power)"
+            },
+            "subsection": {
+              "title": "Freq-Watt (Frequency-Active Power)",
+              "collapsedByDefault": true
+            },
             "title": "Open-Loop Response Time",
             "help": "Response time applied to open-loop frequency-power adjustments.",
             "entries": {
@@ -1269,6 +1478,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "FrequencyActivePowerMode.OverFrequencyDroop_dbOF",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Freq-Watt (Frequency-Active Power)"
+            },
+            "subsection": {
+              "title": "Freq-Watt (Frequency-Active Power)",
+              "collapsedByDefault": true
+            },
             "title": "Over-Frequency Droop: Deadband",
             "help": "Over Frequency Droop dbOF — Deadband around nominal frequency before active power reduction begins.",
             "entries": {
@@ -1277,6 +1495,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "FrequencyActivePowerMode.OverFrequencyDroop_kOF",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Freq-Watt (Frequency-Active Power)"
+            },
+            "subsection": {
+              "title": "Freq-Watt (Frequency-Active Power)",
+              "collapsedByDefault": true
+            },
             "title": "Over-Frequency Droop: Gain (k)",
             "help": "Over Frequency Droop kOF — Slope (gain k) of active power reduction versus frequency rise above nominal.",
             "entries": {
@@ -1285,6 +1512,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "FrequencyActivePowerMode.UnderFrequencyDroop_dbUF",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Freq-Watt (Frequency-Active Power)"
+            },
+            "subsection": {
+              "title": "Freq-Watt (Frequency-Active Power)",
+              "collapsedByDefault": true
+            },
             "title": "Under-Frequency Droop: Deadband",
             "help": "Under Frequency Droop dbUF — Deadband around nominal frequency before active power increase/response begins.",
             "entries": {
@@ -1293,6 +1529,15 @@ export const pointTransforms: PointTransform[] = [
           },
           {
             "uuid": "FrequencyActivePowerMode.UnderFrequencyDroop_kUF",
+            "move_to": {
+              "theme": "Grid",
+              "section": "Grid Support",
+              "subsection": "Freq-Watt (Frequency-Active Power)"
+            },
+            "subsection": {
+              "title": "Freq-Watt (Frequency-Active Power)",
+              "collapsedByDefault": true
+            },
             "title": "Under-Frequency Droop: Gain (k)",
             "help": "Under Frequency Droop kUF — Slope (gain k) of active power response versus frequency drop below nominal.",
             "entries": {
@@ -1656,6 +1901,9 @@ export function transformPoint(
   if (transform.subsection && subsection) {
     if (transform.subsection.title !== undefined) {
       subsection.title = transform.subsection.title;
+    }
+    if (transform.subsection.collapsedByDefault !== undefined) {
+      subsection.collapsedByDefault = transform.subsection.collapsedByDefault;
     }
   }
 

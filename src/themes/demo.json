@@ -700,8 +700,8 @@
                         "1": "Slave"
                       },
                       "friendly_meanings": {
-                        "0": "Master",
-                        "1": "Slave"
+                        "0": "Primary",
+                        "1": "Secondary"
                       }
                     }
                   ],
@@ -2068,7 +2068,9 @@
                   },
                   "uuid": "ACCharge.ACChargingPlan"
                 }
-              ]
+              ],
+              "collapsedByDefault": false,
+              "visibility": "default"
             }
           ]
         }
@@ -2743,12 +2745,10 @@
           ]
         },
         {
-          "sectionTitle": "Constant Power Factor Mode",
+          "sectionTitle": "Grid Support",
           "subsections": [
             {
-              "title": null,
-              "visibility": "default",
-              "collapsedByDefault": false,
+              "title": "Constant Power Factor",
               "points": [
                 {
                   "title": "Power Factor Mode",
@@ -2821,17 +2821,12 @@
                   },
                   "uuid": "ConstantPowerFactorMode.ConstantPowerFactor"
                 }
-              ]
-            }
-          ]
-        },
-        {
-          "sectionTitle": "Constant Reactive Power Mode",
-          "subsections": [
+              ],
+              "collapsedByDefault": true,
+              "visibility": "default"
+            },
             {
-              "title": null,
-              "visibility": "default",
-              "collapsedByDefault": false,
+              "title": "Constant Reactive Power",
               "points": [
                 {
                   "title": "Reactive Power Mode",
@@ -2904,17 +2899,12 @@
                   },
                   "uuid": "ConstantReactivePowerMode.ReactivePowerPercentCMD"
                 }
-              ]
-            }
-          ]
-        },
-        {
-          "sectionTitle": "Voltage Reactive Power Mode",
-          "subsections": [
+              ],
+              "collapsedByDefault": true,
+              "visibility": "default"
+            },
             {
-              "title": null,
-              "visibility": "default",
-              "collapsedByDefault": false,
+              "title": "Volt-VAR (Voltage-Reactive Power)",
               "points": [
                 {
                   "title": "Volt-VAR Mode",
@@ -3193,17 +3183,12 @@
                   },
                   "uuid": "VoltageReactivePowerMode.OpenLoopResponseTime"
                 }
-              ]
-            }
-          ]
-        },
-        {
-          "sectionTitle": "Active Power Reactive Power Mode",
-          "subsections": [
+              ],
+              "collapsedByDefault": true,
+              "visibility": "default"
+            },
             {
-              "title": null,
-              "visibility": "default",
-              "collapsedByDefault": false,
+              "title": "P-Q Mode (Active-Reactive Power)",
               "points": [
                 {
                   "title": "P-Q Mode Status",
@@ -3275,17 +3260,12 @@
                   },
                   "uuid": "ActivePowerReactivePowerMode.P_QP"
                 }
-              ]
-            }
-          ]
-        },
-        {
-          "sectionTitle": "Voltage Active Power Mode",
-          "subsections": [
+              ],
+              "collapsedByDefault": true,
+              "visibility": "default"
+            },
             {
-              "title": null,
-              "visibility": "default",
-              "collapsedByDefault": false,
+              "title": "Volt-Watt (Voltage-Active Power)",
               "points": [
                 {
                   "title": "Volt-Watt Mode",
@@ -3398,17 +3378,12 @@
                   },
                   "uuid": "VoltageActivePowerMode.OpenLoopResponseTime"
                 }
-              ]
-            }
-          ]
-        },
-        {
-          "sectionTitle": "Frequency Active Power Mode",
-          "subsections": [
+              ],
+              "collapsedByDefault": true,
+              "visibility": "default"
+            },
             {
-              "title": null,
-              "visibility": "default",
-              "collapsedByDefault": false,
+              "title": "Freq-Watt (Frequency-Active Power)",
               "points": [
                 {
                   "title": "Frequency-Active Power Mode",
@@ -3562,7 +3537,9 @@
                   },
                   "uuid": "FrequencyActivePowerMode.UnderFrequencyDroop_kUF"
                 }
-              ]
+              ],
+              "collapsedByDefault": true,
+              "visibility": "default"
             }
           ]
         }

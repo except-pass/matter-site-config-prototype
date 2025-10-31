@@ -838,7 +838,7 @@ function HelpModal({
 // -----------------------------------------------------------------------------
 // PointCard - card for a single logical point ("DATE & TIME", etc.)
 // -----------------------------------------------------------------------------
-function PointCard({ point }: { point: PointDef }) {
+function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpTextMatch?: boolean }) {
   const [formState, setFormState] = useState<EntryValue>(
     buildInitialPointState(point)
   );
@@ -941,8 +941,11 @@ function PointCard({ point }: { point: PointDef }) {
             {point.title}
           </div>
           {point.help && (
-            <div className="mt-0.5">
+            <div className="mt-0.5 relative">
               <InfoIcon onClick={() => setShowHelpModal(true)} />
+              {helpTextMatch && (
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              )}
             </div>
           )}
           {readOnly && <ReadOnlyBadge />}
@@ -1057,8 +1060,29 @@ function PointCard({ point }: { point: PointDef }) {
 // -----------------------------------------------------------------------------
 // SubsectionBlock - renders one subsection, possibly collapsible (Advanced)
 // -----------------------------------------------------------------------------
-function SubsectionBlock({ subsection }: { subsection: SubsectionDef }) {
+function SubsectionBlock({
+  subsection,
+  searchQuery,
+  pointMatchesSearch
+}: {
+  subsection: SubsectionDef;
+  searchQuery: string;
+  pointMatchesSearch: (point: PointDef, query: string) => { matches: boolean; helpTextMatch: boolean };
+}) {
   const [open, setOpen] = useState(!subsection.collapsedByDefault);
+
+  // Filter points based on search
+  const filteredPoints = subsection.points
+    .map(p => ({ point: p, searchResult: pointMatchesSearch(p, searchQuery) }))
+    .filter(({ searchResult }) => searchResult.matches);
+
+  // Don't render if no points match search
+  if (filteredPoints.length === 0) {
+    return null;
+  }
+
+  // Auto-expand if searching and has matches
+  const shouldBeOpen = searchQuery.trim() ? true : open;
 
   // always-open subsection (normal/default)
   if (!subsection.collapsedByDefault) {
@@ -1070,8 +1094,8 @@ function SubsectionBlock({ subsection }: { subsection: SubsectionDef }) {
           </div>
         )}
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {subsection.points.map((p) => (
-            <PointCard key={p.uuid} point={p} />
+          {filteredPoints.map(({ point, searchResult }) => (
+            <PointCard key={point.uuid} point={point} helpTextMatch={searchResult.helpTextMatch} />
           ))}
         </div>
       </div>
@@ -1088,13 +1112,13 @@ function SubsectionBlock({ subsection }: { subsection: SubsectionDef }) {
         <span className="text-slate-800 text-sm font-semibold uppercase tracking-wide">
           {subsection.title || "Advanced"}
         </span>
-        <span className="text-slate-500 text-xs">{open ? "▾" : "▸"}</span>
+        <span className="text-slate-500 text-xs">{shouldBeOpen ? "▾" : "▸"}</span>
       </button>
 
-      {open && (
+      {shouldBeOpen && (
         <div className="p-4 border-t border-slate-200 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {subsection.points.map((p) => (
-            <PointCard key={p.uuid} point={p} />
+          {filteredPoints.map(({ point, searchResult }) => (
+            <PointCard key={point.uuid} point={point} helpTextMatch={searchResult.helpTextMatch} />
           ))}
         </div>
       )}
@@ -1105,8 +1129,28 @@ function SubsectionBlock({ subsection }: { subsection: SubsectionDef }) {
 // -----------------------------------------------------------------------------
 // SectionBlock - renders a full section with all its subsections in order
 // -----------------------------------------------------------------------------
-function SectionBlock({ section, sectionId }: { section: SectionDef; sectionId: string }) {
+function SectionBlock({
+  section,
+  sectionId,
+  searchQuery,
+  pointMatchesSearch
+}: {
+  section: SectionDef;
+  sectionId: string;
+  searchQuery: string;
+  pointMatchesSearch: (point: PointDef, query: string) => { matches: boolean; helpTextMatch: boolean };
+}) {
   const [isOpen, setIsOpen] = useState(true);
+
+  // Check if any subsection has matching points
+  const hasMatches = section.subsections.some(sub =>
+    sub.points.some(p => pointMatchesSearch(p, searchQuery).matches)
+  );
+
+  // Don't render if no matches when searching
+  if (searchQuery.trim() && !hasMatches) {
+    return null;
+  }
 
   return (
     <section className="bg-white/0" id={sectionId}>
@@ -1121,7 +1165,12 @@ function SectionBlock({ section, sectionId }: { section: SectionDef; sectionId: 
       {isOpen && (
         <div>
           {section.subsections.map((sub, i) => (
-            <SubsectionBlock key={i} subsection={sub} />
+            <SubsectionBlock
+              key={i}
+              subsection={sub}
+              searchQuery={searchQuery}
+              pointMatchesSearch={pointMatchesSearch}
+            />
           ))}
         </div>
       )}
@@ -1132,8 +1181,30 @@ function SectionBlock({ section, sectionId }: { section: SectionDef; sectionId: 
 // -----------------------------------------------------------------------------
 // ThemeBlock - renders a full theme with all its sections
 // -----------------------------------------------------------------------------
-function ThemeBlock({ theme, themeId }: { theme: ThemeDef; themeId: string }) {
+function ThemeBlock({
+  theme,
+  themeId,
+  searchQuery,
+  pointMatchesSearch
+}: {
+  theme: ThemeDef;
+  themeId: string;
+  searchQuery: string;
+  pointMatchesSearch: (point: PointDef, query: string) => { matches: boolean; helpTextMatch: boolean };
+}) {
   const [isOpen, setIsOpen] = useState(true);
+
+  // Check if any section has matching points
+  const hasMatches = theme.sections.some(section =>
+    section.subsections.some(sub =>
+      sub.points.some(p => pointMatchesSearch(p, searchQuery).matches)
+    )
+  );
+
+  // Don't render if no matches when searching
+  if (searchQuery.trim() && !hasMatches) {
+    return null;
+  }
 
   return (
     <div className="bg-white/0" id={themeId}>
@@ -1154,6 +1225,8 @@ function ThemeBlock({ theme, themeId }: { theme: ThemeDef; themeId: string }) {
                 key={`${section.sectionTitle}-${idx}`}
                 section={section}
                 sectionId={sectionId}
+                searchQuery={searchQuery}
+                pointMatchesSearch={pointMatchesSearch}
               />
             );
           })}
@@ -1171,6 +1244,7 @@ export default function PointThemeDemoPage() {
   const [selectedPageId, setSelectedPageId] = useState(defaultPageId);
   const [selectedDevice, setSelectedDevice] = useState("envy-04237218B0");
   const [activeSection, setActiveSection] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const lastUpdatedAt = useMemo(() => new Date(Date.now() - 15 * 60 * 1000), []);
   const lastUpdatedLabel = useMemo(
@@ -1190,6 +1264,48 @@ export default function PointThemeDemoPage() {
   useEffect(() => {
     assertSchemaExpectations(activePage);
   }, [activePage]);
+
+  // Search filtering function
+  const pointMatchesSearch = (point: PointDef, query: string): { matches: boolean; helpTextMatch: boolean } => {
+    if (!query.trim()) {
+      return { matches: true, helpTextMatch: false };
+    }
+
+    const lowerQuery = query.toLowerCase();
+
+    // Check title
+    if (point.title?.toLowerCase().includes(lowerQuery)) {
+      return { matches: true, helpTextMatch: false };
+    }
+
+    // Check help text
+    if (point.help?.toLowerCase().includes(lowerQuery)) {
+      return { matches: true, helpTextMatch: true };
+    }
+
+    // Check entries - names and friendly meanings
+    for (const entry of point.entries) {
+      if (entry.name?.toLowerCase().includes(lowerQuery)) {
+        return { matches: true, helpTextMatch: false };
+      }
+
+      // Check friendly meanings
+      if (entry.friendly_meanings) {
+        for (const meaning of Object.values(entry.friendly_meanings)) {
+          if (meaning.toLowerCase().includes(lowerQuery)) {
+            return { matches: true, helpTextMatch: false };
+          }
+        }
+      }
+
+      // Check description
+      if (entry.description?.toLowerCase().includes(lowerQuery)) {
+        return { matches: true, helpTextMatch: false };
+      }
+    }
+
+    return { matches: false, helpTextMatch: false };
+  };
 
   // Track scroll position to highlight active section
   useEffect(() => {
@@ -1348,10 +1464,23 @@ export default function PointThemeDemoPage() {
                 {activePage.pageName} – Site Config
               </div>
               <div className="flex items-center gap-2">
-                <input
-                  className="flex-1 rounded border border-slate-300 bg-white px-2 py-1 text-sm text-slate-800 max-w-md"
-                  placeholder="Search…"
-                />
+                <div className="relative flex-1 max-w-md">
+                  <input
+                    className="w-full rounded border border-slate-300 bg-white px-2 py-1 pr-8 text-sm text-slate-800"
+                    placeholder="Search…"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  {searchQuery && (
+                    <button
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                      onClick={() => setSearchQuery("")}
+                      title="Clear search"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
                 <button className="text-xs border border-slate-400 rounded px-2 py-1 bg-white hover:bg-slate-50 text-slate-700 flex items-center gap-1">
                   <span>⟳</span>
                   <span>Refresh</span>
@@ -1369,6 +1498,8 @@ export default function PointThemeDemoPage() {
                   key={`${theme.themeName}-${idx}`}
                   theme={theme}
                   themeId={themeId}
+                  searchQuery={searchQuery}
+                  pointMatchesSearch={pointMatchesSearch}
                 />
               );
             })}
