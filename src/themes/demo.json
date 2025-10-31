@@ -753,7 +753,7 @@
           ]
         },
         {
-          "sectionTitle": "Measurement",
+          "sectionTitle": "Current Transformer (CT) Settings",
           "subsections": [
             {
               "title": null,
@@ -1282,16 +1282,9 @@
                   "uuid": "BatteryScheduling.BatteryScheduling"
                 }
               ]
-            }
-          ]
-        },
-        {
-          "sectionTitle": "PV Charge Only",
-          "subsections": [
+            },
             {
-              "title": null,
-              "visibility": "default",
-              "collapsedByDefault": false,
+              "title": "PV Charge Only",
               "points": [
                 {
                   "title": "Max Battery Charge Power During 'PV Charge Only' Periods",
@@ -1507,17 +1500,12 @@
                   "uuid": "BatteryTOUCharge.TOUChargingPlan3",
                   "widget": "timerange"
                 }
-              ]
-            }
-          ]
-        },
-        {
-          "sectionTitle": "Discharge Only",
-          "subsections": [
-            {
-              "title": null,
-              "visibility": "default",
+              ],
               "collapsedByDefault": false,
+              "visibility": "default"
+            },
+            {
+              "title": "Discharge Only",
               "points": [
                 {
                   "title": "Max Inverter Output Power During 'Discharge Only' Periods",
@@ -1761,7 +1749,9 @@
                   "uuid": "BatteryTOUDischarge.TOUDischargingPlan3",
                   "widget": "timerange"
                 }
-              ]
+              ],
+              "collapsedByDefault": false,
+              "visibility": "default"
             }
           ]
         },

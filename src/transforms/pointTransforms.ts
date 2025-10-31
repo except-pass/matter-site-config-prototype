@@ -417,6 +417,9 @@ export const pointTransforms: PointTransform[] = [
   },
   {
     uuid: "Measurement.CTSampleRatio",
+    section: {
+      title: "Current Transformer (CT) Settings",
+    },
     title: "CT Ratio",
     help: "Select the current transformer (CT) ratio used for metering. This must match the CT hardware rating so that current and power readings are accurate.",
     entries: {
@@ -660,10 +663,16 @@ export const pointTransforms: PointTransform[] = [
   },
     {
       uuid: "BatteryTOUCharge.TOUMaximumChargingPower",
-      title: "Max Battery Charge Power During 'PV Charge Only' Periods",
-      section: {
-        title: "PV Charge Only",
+      move_to: {
+        theme: "Battery",
+        section: "Battery Scheduling",
+        subsection: "PV Charge Only"
       },
+      subsection: {
+        title: "PV Charge Only",
+        collapsedByDefault: false
+      },
+      title: "Max Battery Charge Power During 'PV Charge Only' Periods",
       help: "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods in kW. Limit this to control how hard the battery charges from the grid in those windows.",
       entries: {
         Power: {
@@ -674,6 +683,15 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUCharge.TOUChargingPlan1",
+      move_to: {
+        theme: "Battery",
+        section: "Battery Scheduling",
+        subsection: "PV Charge Only"
+      },
+      subsection: {
+        title: "PV Charge Only",
+        collapsedByDefault: false
+      },
       title: "Schedule Window 1 for PV Charge Only",
       help: "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
       entries: {
@@ -693,6 +711,15 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUCharge.TOUChargingPlan2",
+      move_to: {
+        theme: "Battery",
+        section: "Battery Scheduling",
+        subsection: "PV Charge Only"
+      },
+      subsection: {
+        title: "PV Charge Only",
+        collapsedByDefault: false
+      },
       title: "Schedule Window 2 for PV Charge Only",
       help: "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
       entries: {
@@ -712,6 +739,15 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUCharge.TOUChargingPlan3",
+      move_to: {
+        theme: "Battery",
+        section: "Battery Scheduling",
+        subsection: "PV Charge Only"
+      },
+      subsection: {
+        title: "PV Charge Only",
+        collapsedByDefault: false
+      },
       title: "Schedule Window 3 for PV Charge Only",
       help: "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
       entries: {
@@ -731,8 +767,14 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUDischarge.TOUMaximumDischargingPower",
-      section: {
+      move_to: {
+        theme: "Battery",
+        section: "Battery Scheduling",
+        subsection: "Discharge Only"
+      },
+      subsection: {
         title: "Discharge Only",
+        collapsedByDefault: false
       },
       title: "Max Inverter Output Power During 'Discharge Only' Periods",
       help: "Sets the maximum discharging power during scheduled Time-of-Use (TOU) discharge periods in kW. Limit this to control how much battery power is exported to loads or grid during those windows.",
@@ -745,6 +787,15 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUDischarge.DischargingStopSoc",
+      move_to: {
+        theme: "Battery",
+        section: "Battery Scheduling",
+        subsection: "Discharge Only"
+      },
+      subsection: {
+        title: "Discharge Only",
+        collapsedByDefault: false
+      },
       title: "TOU Discharge Stop SOC",
       help: "Sets the minimum state of charge (SOC) that the battery will discharge to during 'Discharge Only' operation. Once this level is reached, discharging stops to preserve reserve capacity for later use or backup.",
       entries: {
@@ -755,6 +806,15 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUDischarge.TOUDischargingPlan1",
+      move_to: {
+        theme: "Battery",
+        section: "Battery Scheduling",
+        subsection: "Discharge Only"
+      },
+      subsection: {
+        title: "Discharge Only",
+        collapsedByDefault: false
+      },
       title: "Schedule Window 1 for Discharge Only",
       help: "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
       entries: {
@@ -774,6 +834,15 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUDischarge.TOUDischargingPlan2",
+      move_to: {
+        theme: "Battery",
+        section: "Battery Scheduling",
+        subsection: "Discharge Only"
+      },
+      subsection: {
+        title: "Discharge Only",
+        collapsedByDefault: false
+      },
       title: "Schedule Window 2 for Discharge Only",
       help: "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
       entries: {
@@ -793,6 +862,15 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "BatteryTOUDischarge.TOUDischargingPlan3",
+      move_to: {
+        theme: "Battery",
+        section: "Battery Scheduling",
+        subsection: "Discharge Only"
+      },
+      subsection: {
+        title: "Discharge Only",
+        collapsedByDefault: false
+      },
       title: "Schedule Window 3 for Discharge Only",
       help: "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
       entries: {
