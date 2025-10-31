@@ -293,7 +293,7 @@ export const pointTransforms: PointTransform[] = [
   {
     uuid: "LoadShedding.OnGridAlwaysOn",
     title: "Smart Load On-Grid Behavior",
-    help: "Determines Smart Load behavior while the system is connected to the grid. When enabled, the Smart Load remains powered even if normal control conditions are not met. (AKA: **On Grid Always On**.)",
+    help: "Determines Smart Load behavior while the system is connected to the grid. When enabled, the Smart Load remains powered even if normal control conditions are not met. (AKA: **On-Grid Always On**.)",
     entries: {
       Mode: {
         name: "On-Grid Always-On Mode",
@@ -1546,12 +1546,12 @@ export const pointTransforms: PointTransform[] = [
           },          
       {
         "uuid": "ACCoupledPV.ACCouplePVSOC",
-        "title": "AC-Coupled PV SOC Limits",
-        "help": "Defines the battery state-of-charge thresholds that control when the inverter allows AC-coupled PV charging to start and stop.",
+        "title": "AC Coupled PV SOC Limits",
+        "help": "Defines the battery state-of-charge thresholds that control when the inverter allows AC Coupled PV charging to start and stop.",
         "entries": {
           "StartSOC": {
             "name": "Start SOC (%)",
-            "description": "AC-coupled PV begins charging when SOC drops to this level (typical 20-40%)",
+            "description": "AC Coupled PV begins charging when SOC drops to this level (typical 20-40%)",
             "less_than": "StopSOC",
             "range": {
               "min": 10,
@@ -1560,7 +1560,7 @@ export const pointTransforms: PointTransform[] = [
           },
           "StopSOC": {
             "name": "Stop SOC (%)",
-            "description": "AC-coupled PV stops charging when SOC reaches this level (typical 80-95%)",
+            "description": "AC Coupled PV stops charging when SOC reaches this level (typical 80-95%)",
             "greater_than": "StartSOC",
             "range": {
               "min": 50,
@@ -1770,11 +1770,11 @@ export const pointTransforms: PointTransform[] = [
         },
         {
           "uuid": "ACCoupledPV.ACCoupledPV",
-          "title": "AC-Coupled PV",
-          "help": "Enable this option when connecting a grid-tied solar inverter (AC-coupled PV) to the system. Disable when no AC-coupled PV is present.",
+          "title": "AC Coupled PV",
+          "help": "Enable this option when connecting a grid-tied solar inverter (AC Coupled PV) to the system. Disable when no AC Coupled PV is present.",
           "entries": {
             "Mode": {
-              "name": "AC-Coupled PV Mode",
+              "name": "AC Coupled PV Mode",
               "friendly_meanings": {
                 "0": "Disable",
                 "1": "Enable"
