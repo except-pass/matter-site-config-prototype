@@ -2194,7 +2194,7 @@
                   "uuid": "ACCharge.ACChargeType"
                 },
                 {
-                  "title": "Grid Charge Windows (Placeholder.  I'll break this up later.)",
+                  "title": "Grid Charge Windows",
                   "help": "During these times, your battery will continue to charge from solar power normally, but will also use additional power from the grid to charge the battery.",
                   "element_type": "Attribute",
                   "access": "RW",
