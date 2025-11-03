@@ -45,13 +45,22 @@ interface EntryDef {
 interface PointDef {
   title: string;
   help?: string;
-  element_type: string; // Attribute | Service
+  element_type: string; // Attribute | Service | GeneratorExercise
   access: string; // R | RW | Invoke
   readOnly?: boolean;
   entries: EntryDef[];
-  protocol: any; // matter / modbus info
+  protocol: {
+    matter?: any;
+    modbus?: any;
+    cgi?: {
+      MEP: string;
+      Cluster: string;
+      Element: string;
+    };
+  };
   uuid: string;
   widget?: "datetime" | "time" | "timerange" | "default";
+  invokeButtonText?: string; // Custom text for invoke button (defaults to "Invoke")
 }
 
 interface SubsectionDef {
@@ -110,6 +119,18 @@ const pageLookup: Record<string, PageDef> = pageRegistry.reduce(
 // -----------------------------------------------------------------------------
 function buildInitialPointState(point: PointDef): EntryValue {
   const obj: EntryValue = {};
+
+  // Special handling for GeneratorExercise - start with empty values
+  if (point.element_type === "GeneratorExercise") {
+    point.entries.forEach((entry) => {
+      if (entry.dtype === 'enum') {
+        obj[entry.arg] = '';
+      } else {
+        obj[entry.arg] = '';
+      }
+    });
+    return obj;
+  }
 
   // Detect if this point has multiple Number entries with ranges (dual slider case)
   const rangedNumberEntries = point.entries.filter(
@@ -748,6 +769,75 @@ function TimeRangeWidget({
   );
 }
 
+// GeneratorExercise Widget - for scheduling recurring generator exercise
+function GeneratorExerciseWidget({
+  formState,
+  readOnly,
+  onChange,
+}: {
+  formState: EntryValue;
+  readOnly: boolean;
+  onChange: (argName: string, value: any) => void;
+}) {
+  const dayOfWeek = formState.DayOfWeek ?? 0;
+  const hour = formState.Hour ?? 0;
+  const minute = formState.Minute ?? 0;
+
+  // Convert hour and minute to time string for the time picker
+  const getTimeString = (): string => {
+    return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+  };
+
+  // Parse time string and update hour and minute
+  const setTimeString = (value: string) => {
+    const [hourStr, minStr] = value.split(':');
+    onChange("Hour", parseInt(hourStr, 10));
+    onChange("Minute", parseInt(minStr, 10));
+  };
+
+  // Generate cron expression preview
+  const cronExpression = `${minute} ${hour} * * ${dayOfWeek}`;
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const schedulePreview = `Every ${dayNames[dayOfWeek]} at ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-1">
+          <label className="text-slate-600 text-xs font-medium">Day of Week</label>
+          <select
+            className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 disabled:bg-slate-100"
+            disabled={readOnly}
+            value={dayOfWeek}
+            onChange={(e) => onChange("DayOfWeek", Number(e.target.value))}
+          >
+            {dayNames.map((day, idx) => (
+              <option key={idx} value={idx}>{day}</option>
+            ))}
+          </select>
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-slate-600 text-xs font-medium">Time</label>
+          <input
+            type="time"
+            className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 disabled:bg-slate-100"
+            disabled={readOnly}
+            value={getTimeString()}
+            onChange={(e) => setTimeString(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Schedule preview */}
+      <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+        <div className="text-xs text-slate-600 font-medium mb-1">Schedule Preview</div>
+        <div className="text-sm text-slate-800">{schedulePreview}</div>
+        <div className="text-xs text-slate-500 mt-1 font-mono">Cron: {cronExpression}</div>
+      </div>
+    </div>
+  );
+}
+
 // -----------------------------------------------------------------------------
 // HelpModal - displays help text in a modal
 // -----------------------------------------------------------------------------
@@ -905,15 +995,86 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
         }
       };
     } else if (point.protocol.modbus) {
+      const isWrite = point.access !== "R";
+      const registerType = point.protocol.modbus.register_type;
+
+      // Map register type to Modbus function code
+      // For reading: 3 = read holding registers, 4 = read input registers
+      // For writing: 6 = write single register, 16 = write multiple registers
+      let functionCode: number;
+      if (isWrite) {
+        // For write operations: use function 6 for single register, 16 for multiple
+        functionCode = point.protocol.modbus.size > 1 ? 16 : 6;
+      } else {
+        // For read operations: use function based on register type
+        functionCode = registerType === 3 ? 3 : 4;
+      }
+
+      if (isWrite) {
+        // Get the first value from normalizedArguments (for write operations)
+        const firstEntryArg = point.entries[0]?.arg;
+        const writeValue = firstEntryArg ? normalizedArguments[firstEntryArg] : 0;
+
+        payload = {
+          version: "1.0",
+          requestId: Date.now(),
+          endPoint: "Modbus",
+          method: "Write",
+          timeout: 5,
+          data: {
+            type: "RTU",
+            uartPort: 1,
+            slaveId: 1,
+            address: point.protocol.modbus.address,
+            function: functionCode,
+            value: writeValue
+          }
+        };
+      } else {
+        // Read operation
+        payload = {
+          version: "1.0",
+          requestId: Date.now(),
+          endPoint: "Modbus",
+          method: "Read",
+          timeout: 5,
+          data: {
+            type: "RTU",
+            uartPort: 1,
+            slaveId: 1,
+            address: point.protocol.modbus.address,
+            function: functionCode,
+            registerNumber: point.protocol.modbus.size
+          }
+        };
+      }
+    } else if (point.element_type === "GeneratorExercise" && point.protocol.cgi) {
+      // Special handling for GeneratorExercise element type (CGI protocol)
+      const dayOfWeek = normalizedArguments.DayOfWeek ?? 0;
+      const hour = normalizedArguments.Hour ?? 0;
+      const minute = normalizedArguments.Minute ?? 0;
+
+      // Generate cron expression
+      const cronTimer = `${minute} ${hour} * * ${dayOfWeek}`;
+
       payload = {
-        bus: "modbus",
-        write: point.access !== "R",
-        map: {
-          address: point.protocol.modbus.address,
-          register_type: point.protocol.modbus.register_type,
-          size: point.protocol.modbus.size
-        },
-        values: normalizedArguments
+        version: "1.0",
+        requestId: Date.now(),
+        method: "Invoke",
+        endPoint: "LuaPlugin",
+        timeout: 5,
+        data: {
+          Cluster: point.protocol.cgi.Cluster,
+          MEP: point.protocol.cgi.MEP,
+          cronTimer: cronTimer,
+          Element: point.protocol.cgi.Element,
+          thingId: {
+            Type: "Inverter",
+            Mn: "fortress",
+            Md: "FP-ENVY-Inverter",
+            SN: "04237218B0"
+          }
+        }
       };
     }
 
@@ -921,7 +1082,15 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
     setShowDialog(true);
   };
 
+  const normalizedAccess = typeof point.access === "string"
+    ? point.access.trim().toLowerCase()
+    : "";
+  const isInvoke = normalizedAccess === "invoke";
+
   const readOnly = point.readOnly || point.access === "R";
+  const setButtonAppearance = readOnly
+    ? "border-slate-300 bg-slate-100 text-slate-400 cursor-not-allowed"
+    : "border-slate-400 bg-white text-slate-700 hover:bg-slate-50";
 
   // Detect if this point should use a multi-handle slider
   const rangedNumberEntries = point.entries.filter(
@@ -963,10 +1132,7 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
           </button>
 
           <button
-            className={`border text-xs font-medium rounded px-2 py-1 leading-none transition ${{
-              true: "border-slate-300 bg-slate-100 text-slate-400 cursor-not-allowed",
-              false: "border-slate-400 bg-white text-slate-700 hover:bg-slate-50"
-            }[readOnly.toString()]}`}
+            className={`border text-xs font-medium rounded px-2 py-1 leading-none transition ${setButtonAppearance}`}
             disabled={readOnly}
             onClick={handleSet}
           >
@@ -990,6 +1156,12 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
           readOnly={readOnly}
           onChange={handleFieldChange}
         />
+      ) : point.element_type === "GeneratorExercise" ? (
+        <GeneratorExerciseWidget
+          formState={formState}
+          readOnly={readOnly}
+          onChange={handleFieldChange}
+        />
       ) : shouldUseDualSlider ? (
         <DualHandleSlider
           entries={rangedNumberEntries}
@@ -1008,6 +1180,19 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
               onChange={(val) => handleFieldChange(entry.arg, val)}
             />
           ))}
+        </div>
+      )}
+
+      {isInvoke && (
+        <div className="mt-4 flex items-center gap-2">
+          <button
+            type="button"
+            className={`border text-xs font-medium rounded px-2 py-1 leading-none transition ${setButtonAppearance}`}
+            disabled={readOnly}
+            onClick={handleSet}
+          >
+            {point.invokeButtonText || "Invoke"}
+          </button>
         </div>
       )}
 

@@ -5,7 +5,7 @@
       "themeName": "Inverter",
       "sections": [
         {
-          "sectionTitle": "Setup",
+          "sectionTitle": "Basic Setup",
           "subsections": [
             {
               "title": null,
@@ -164,7 +164,7 @@
                 },
                 {
                   "title": "Ignore Grid-Loss Warning",
-                  "help": "When enabled, the inverter will not treat the absence of grid power as a fault. Use this mode for permanently off-grid systems where grid connection is unavailable.",
+                  "help": "When enabled, the inverter will not treat the absence of grid power as an alarm. Use this mode for permanently off-grid systems where grid connection is unavailable.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -180,7 +180,7 @@
                         "1": "Enable"
                       },
                       "friendly_meanings": {
-                        "0": "Treat as Fault",
+                        "0": "Treat as Alarm",
                         "1": "Ignore (Off-Grid Mode)"
                       }
                     }
@@ -240,7 +240,8 @@
                       "Element": "AllToDefault"
                     }
                   },
-                  "uuid": "Basic.AllToDefault"
+                  "uuid": "Basic.AllToDefault",
+                  "invokeButtonText": "Reset Now"
                 },
                 {
                   "title": "Inverter Power Control",
@@ -273,6 +274,51 @@
                     }
                   },
                   "uuid": "Basic.PowerControl"
+                }
+              ]
+            },
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Dry Contact Reuse",
+                  "help": "Selects how the inverter's dry contact relay is reused. It can be configured for various control functions such as grid export limitation, smart load control, or dark start.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Dry Contact Reuse",
+                      "arg": "DryContactReuse",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "None",
+                        "1": "Rapid Shutdown (RSD)",
+                        "2": "Black Start",
+                        "3": "Smart Load",
+                        "4": "Non-critical Load"
+                      },
+                      "friendly_meanings": {
+                        "0": "None",
+                        "1": "Rapid Shutdown (RSD)",
+                        "2": "Black Start",
+                        "3": "Smart Load",
+                        "4": "Non-critical Load"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 999,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "uuid": "Modbus.DryContactReuse"
                 }
               ]
             }
@@ -419,8 +465,8 @@
                   "uuid": "FeedInGrid.FeedInGridMaxPower"
                 },
                 {
-                  "title": "Fast Zero Export",
-                  "help": "Forces export power to the grid to stay at or near zero by rapidly adjusting inverter output. Use when export is not allowed or must be minimized.",
+                  "title": "Prevent Grid Export: Strict Mode",
+                  "help": "Keeps power export at or near zero by adjusting inverter output in real time. When enabled, the inverter supplies only local (on-site) loads and will not send power back to the grid. This mode is required when grid export is not allowed. Ensure the CTs are installed on the grid connection point and  not on the inverter's load side, so the inverter can correctly detect and prevent export.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -436,8 +482,8 @@
                         "1": "Enable"
                       },
                       "friendly_meanings": {
-                        "0": "Disabled",
-                        "1": "Enabled"
+                        "0": "Disable strict mode",
+                        "1": "Enable strict mode"
                       }
                     }
                   ],
@@ -463,8 +509,8 @@
               "collapsedByDefault": false,
               "points": [
                 {
-                  "title": "Modbus Address",
-                  "help": "The Modbus address (also known as the unit ID, slave ID, or node ID) for this inverter. The primary inverter should use address 1, and any secondary inverters should use 2 or higher. Each inverter that communicates on the same Modbus network or electrical bus must have a unique address, but addresses do not need to be globally unique across separate, unconnected systems.",
+                  "title": "Parallel unit ID",
+                  "help": "The Unit ID (also known as the unit ID, slave ID, or node ID) for this inverter. The primary inverter should use address 1, and any secondary inverters should use 2 or higher. This sets the modbus address that inverters use to communicate with each other. Each inverter that communicates on the same Modbus communication line must have a unique address, but addresses do not need to be globally unique across separate, unconnected systems.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -762,7 +808,7 @@
               "points": [
                 {
                   "title": "CT Ratio",
-                  "help": "Select the current transformer (CT) ratio used for metering. This must match the CT hardware rating so that current and power readings are accurate.",
+                  "help": "Select the current transformer (CT) ratio used for metering electric current on the grid port connection. This must match the CT hardware rating so that current and power readings are accurate.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -800,7 +846,7 @@
                 },
                 {
                   "title": "CT Direction",
-                  "help": "Sets the CT installation direction. Use Reversed if the CT arrow is facing the opposite way and the system is reading import/export backwards.",
+                  "help": "Sets the CT installation direction. You may choose to reverse this if your inverter is reading import when power is actually flowing out to the grid (export) or vice versa.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -829,6 +875,87 @@
                     }
                   },
                   "uuid": "Measurement.CTDirection"
+                }
+              ]
+            },
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Meter Measurement Source",
+                  "help": "The inverter can either read CTs directly, or read a stand-alone electric meter.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Meter Type",
+                      "arg": "MeterType",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Meter",
+                        "1": "CTs"
+                      },
+                      "friendly_meanings": {
+                        "0": "Meter",
+                        "1": "CTs"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 1,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "uuid": "Modbus.MeterType"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "PV",
+          "subsections": [
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "PV Sell to Grid",
+                  "help": "You may disable solar power export to the utility grid. This setting supports NEM3 compatibility.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "PV Sell to Grid",
+                      "arg": "PVSellToGrid",
+                      "dtype": "String",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "7": "Enable export of PV power to the grid"
+                      },
+                      "friendly_meanings": {
+                        "7": "Enable export of PV power to the grid"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 3,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "uuid": "Modbus.PVSellToGrid"
                 }
               ]
             }
@@ -1120,7 +1247,7 @@
                       "name": "SOC (%)",
                       "arg": "SOC",
                       "dtype": "Number",
-                      "description": "Recommended: between 20-90%.  Must be higher than the Off-Grid Battery Cutoff SOC.",
+                      "description": "Recommended: between 21-90%.  Must be higher than the Off-Grid Battery Cutoff SOC.",
                       "longdescription": "",
                       "range": {
                         "min": 0,
@@ -1148,7 +1275,7 @@
                       "name": "SOC (%)",
                       "arg": "SOC",
                       "dtype": "Number",
-                      "description": "Recommended: between 20-90%.  Must be lower than the On-Grid Battery Cutoff SOC.",
+                      "description": "Recommended: between 20-89%.  Must be lower than the On-Grid Battery Cutoff SOC.",
                       "longdescription": "",
                       "range": {
                         "min": 0,
@@ -1164,6 +1291,66 @@
                     }
                   },
                   "uuid": "BatteryBase.OffGridCutOffSoc"
+                }
+              ]
+            },
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Charge Current",
+                  "help": "Instead of using the presets, you may set the charge current directly in amps.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Charge Current (A)",
+                      "arg": "ChargeCurr",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "unit": "A",
+                      "range": {
+                        "min": 0
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 101,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "uuid": "Modbus.ChargeCurr"
+                },
+                {
+                  "title": "Discharge Current",
+                  "help": "Instead of using the presets, you may set the discharge current directly in amps.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Discharge Current (A)",
+                      "arg": "DischgCurr",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "unit": "A"
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 102,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "uuid": "Modbus.DischgCurr"
                 }
               ]
             }
@@ -1251,7 +1438,7 @@
               "points": [
                 {
                   "title": "Battery Scheduling",
-                  "help": "This is a special scheduling mode designed for certain time-of-use (TOU) utility rates or  ther custom situations. Your system will normally manage charging and discharging utomatically—you don't need to set a schedule unless you want this specific behavior.",
+                  "help": "This is a special scheduling mode designed for certain time-of-use (TOU) utility rates or other custom situations. In most circumstances, we recomment allowing your system to  manage charging and discharging automatically without setting a schedule.  You don't need to set a schedule unless you have a specific reason to charge or discharge at exact times.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -1288,7 +1475,7 @@
               "points": [
                 {
                   "title": "Max Battery Charge Power During 'PV Charge Only' Periods",
-                  "help": "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods in kW. Limit this to control how hard the battery charges from the grid in those windows.",
+                  "help": "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods in kW. Set this limit to control the power level at which the battery will charge from the grid during PV charge only periods",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -1763,7 +1950,7 @@
               "points": [
                 {
                   "title": "Allow Battery Charging from Grid",
-                  "help": "Enables charging the battery from the utility grid.",
+                  "help": "Enables the battery to charge from the utility grid.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2079,7 +2266,7 @@
               "points": [
                 {
                   "title": "Grid Parameters",
-                  "help": "This setting changes the conditions under which the inverter will trip off. Different areas have different rules about when this equipment is allowed to disconnect and when it must ride through. Choose the code required by the local utility or AHJ.",
+                  "help": "This setting changes the conditions under which the inverter will connect or disconnect from the utility grid. Different areas have different rules about when this equipment is allowed to disconnect and when it must ride through. Choose the code required by the local utility or AHJ.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2117,7 +2304,7 @@
                 },
                 {
                   "title": "Grid Type",
-                  "help": "Choose the type of wiring the site uses.  This helps configure the system to match the build's power setup.  Note the voltage you enter here must match the EPS Voltage.",
+                  "help": "Choose wiring configuration of the site.  This helps configure the system to match the power service at the site.  Note the voltage you enter here must match the EPS Voltage.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2199,7 +2386,7 @@
               "points": [
                 {
                   "title": "Grid Voltage Limits (Stage 1)",
-                  "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect.",
+                  "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2230,7 +2417,7 @@
                 },
                 {
                   "title": "Grid Voltage Limits (Stage 2)",
-                  "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect.",
+                  "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2261,7 +2448,7 @@
                 },
                 {
                   "title": "Grid Voltage Limits (Stage 3)",
-                  "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect.",
+                  "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2292,7 +2479,7 @@
                 },
                 {
                   "title": "Grid Frequency Limits (Stage 1)",
-                  "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect to protect the system and comply with grid safety standards.",
+                  "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2323,7 +2510,7 @@
                 },
                 {
                   "title": "Grid Frequency Limits (Stage 2)",
-                  "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect to protect the system and comply with grid safety standards.",
+                  "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2354,7 +2541,7 @@
                 },
                 {
                   "title": "Grid Frequency Limits (Stage 3)",
-                  "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect to protect the system and comply with grid safety standards.",
+                  "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2385,7 +2572,7 @@
                 },
                 {
                   "title": "Grid Voltage Trip Time",
-                  "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects.",
+                  "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects from the grid.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2416,7 +2603,7 @@
                 },
                 {
                   "title": "Grid Voltage Trip Time (Stage 2)",
-                  "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects.",
+                  "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects from the grid.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2447,7 +2634,7 @@
                 },
                 {
                   "title": "Grid Voltage Trip Time (Stage 3)",
-                  "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects.",
+                  "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects from the grid.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2478,7 +2665,7 @@
                 },
                 {
                   "title": "Grid Frequency Trip Time (Stage 1)",
-                  "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects.",
+                  "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects from the grid.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2509,7 +2696,7 @@
                 },
                 {
                   "title": "Grid Frequency Trip Time (Stage 2)",
-                  "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects.",
+                  "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects from the grid.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2540,7 +2727,7 @@
                 },
                 {
                   "title": "Grid Frequency Trip Time (Stage 3)",
-                  "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects.",
+                  "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects from the grid.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -2583,7 +2770,7 @@
               "points": [
                 {
                   "title": "Permit to Operate",
-                  "help": "Shows whether the inverter is permitted to operate in grid-connected mode according to site authorization.",
+                  "help": "Shows whether the inverter is permitted to operate in grid-connected mode.",
                   "element_type": "Attribute",
                   "access": "R",
                   "readOnly": true,
@@ -3667,7 +3854,7 @@
                 },
                 {
                   "title": "Battery Charge Current Limit",
-                  "help": "Sets the maximum DC current the inverter will send to the battery from the generator.",
+                  "help": "Sets the maximum DC current the inverter will send to the battery when charging from the generator.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -3815,8 +4002,8 @@
                   "uuid": "Generator.GenDryContact"
                 },
                 {
-                  "title": "Generator Test",
-                  "help": "Start the generator for a test run.",
+                  "title": "Battery Quick Charge with Generator",
+                  "help": "Start the generator to charge the battery.",
                   "element_type": "Attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -3832,8 +4019,8 @@
                         "1": "Enable"
                       },
                       "friendly_meanings": {
-                        "0": "Stop test",
-                        "1": "Start test"
+                        "0": "Stop quick charge",
+                        "1": "Start quick charge"
                       }
                     }
                   ],
@@ -3877,6 +4064,166 @@
                     }
                   },
                   "uuid": "Generator.GeneratorBoost"
+                }
+              ]
+            },
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Generator Charge Mode",
+                  "help": "Selects how the generator charges the battery. When enabled, the generator will charge the battery automatically based on voltage or SOC.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Generator Charge Mode",
+                      "arg": "GenChg",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Based on SOC",
+                        "1": "Based on Voltage"
+                      },
+                      "friendly_meanings": {
+                        "0": "Based on SOC",
+                        "1": "Based on Voltage"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 999,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "uuid": "Modbus.GenChg"
+                },
+                {
+                  "title": "Generator Charge Start Voltage",
+                  "help": "Sets the battery voltage at which the generator begins charging. Effective when generator charging by voltage is enabled.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Generator Charge Start Voltage",
+                      "arg": "GenChgStartVolt",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "unit": "V"
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 194,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "uuid": "Modbus.GenChgStartVolt"
+                },
+                {
+                  "title": "Generator Charge End Voltage",
+                  "help": "Sets the battery voltage at which the generator stops charging. Effective when generator charging by voltage is enabled.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Generator Charge End Voltage",
+                      "arg": "GenChgEndVolt",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "unit": "V"
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 195,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "uuid": "Modbus.GenChgEndVolt"
+                }
+              ]
+            },
+            {
+              "title": "Generator Exercise",
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Generator Exercise Schedule",
+                  "help": "Configure a recurring schedule for generator exercise runs. Select the day of the week and time when the generator should run automatically.",
+                  "element_type": "GeneratorExercise",
+                  "access": "INVOKE",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Day of Week",
+                      "arg": "DayOfWeek",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Sunday",
+                        "1": "Monday",
+                        "2": "Tuesday",
+                        "3": "Wednesday",
+                        "4": "Thursday",
+                        "5": "Friday",
+                        "6": "Saturday"
+                      },
+                      "friendly_meanings": {
+                        "0": "Sunday",
+                        "1": "Monday",
+                        "2": "Tuesday",
+                        "3": "Wednesday",
+                        "4": "Thursday",
+                        "5": "Friday",
+                        "6": "Saturday"
+                      }
+                    },
+                    {
+                      "name": "Hour",
+                      "arg": "Hour",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Minute",
+                      "arg": "Minute",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "cgi": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Plan",
+                      "Element": "GeneratorExercise"
+                    }
+                  },
+                  "uuid": "CGI.GeneratorExercise"
                 }
               ]
             }
@@ -3938,11 +4285,11 @@
                       "name": "Start SOC (%)",
                       "arg": "StartSOC",
                       "dtype": "Number",
-                      "description": "AC Coupled PV begins charging when SOC drops to this level (typical 20-40%)",
+                      "description": "AC Coupled PV begins charging when SOC drops to this level",
                       "longdescription": "",
                       "range": {
-                        "min": 10,
-                        "max": 60
+                        "min": 0,
+                        "max": 100
                       },
                       "less_than": "StopSOC"
                     },
@@ -3950,10 +4297,10 @@
                       "name": "Stop SOC (%)",
                       "arg": "StopSOC",
                       "dtype": "Number",
-                      "description": "AC Coupled PV stops charging when SOC reaches this level (typical 80-95%)",
+                      "description": "AC Coupled PV stops charging when SOC reaches this level",
                       "longdescription": "",
                       "range": {
-                        "min": 50,
+                        "min": 0,
                         "max": 100
                       },
                       "greater_than": "StartSOC"

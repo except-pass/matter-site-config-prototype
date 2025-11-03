@@ -58,6 +58,8 @@ interface PointTransform {
   title?: string;
   /** New help text for the point */
   help?: string;
+  /** Custom text for invoke button (only applies to points with access: "INVOKE") */
+  invokeButtonText?: string;
   /** Transformations for specific entries within the point */
   entries?: Record<string, EntryTransform>;
   /** Optional section-level overrides */
@@ -169,6 +171,7 @@ export const pointTransforms: PointTransform[] = [
   {
     uuid: "Basic.AllToDefault",
     title: "Reset to Factory Defaults",
+    invokeButtonText: "Reset Now",
     help: "Restores all inverter configuration parameters to their original factory values. Use with caution — this cannot be undone.",
   },
   {
@@ -188,7 +191,7 @@ export const pointTransforms: PointTransform[] = [
   {
     uuid: "Basic.SystemTime",
     section: {
-      title: "Setup",
+      title: "Basic Setup",
     },
   },
   {
@@ -265,12 +268,12 @@ export const pointTransforms: PointTransform[] = [
   {
     uuid: "Basic.GridLossWarningClear",
     title: "Ignore Grid-Loss Warning",
-    help: "When enabled, the inverter will not treat the absence of grid power as a fault. Use this mode for permanently off-grid systems where grid connection is unavailable.",
+    help: "When enabled, the inverter will not treat the absence of grid power as an alarm. Use this mode for permanently off-grid systems where grid connection is unavailable.",
     entries: {
       Mode: {
         name: "Grid-Loss Behavior",
         friendly_meanings: {
-          "0": "Treat as Fault",
+          "0": "Treat as Alarm",
           "1": "Ignore (Off-Grid Mode)"
         }
       }
@@ -331,8 +334,8 @@ export const pointTransforms: PointTransform[] = [
 },
 {
     uuid: "Parallel.ModbusAddr",
-    title: "Modbus Address",
-    help: "The Modbus address (also known as the unit ID, slave ID, or node ID) for this inverter. The primary inverter should use address 1, and any secondary inverters should use 2 or higher. Each inverter that communicates on the same Modbus network or electrical bus must have a unique address, but addresses do not need to be globally unique across separate, unconnected systems.",
+    title: "Parallel unit ID",
+    help: "The Unit ID (also known as the unit ID, slave ID, or node ID) for this inverter. The primary inverter should use address 1, and any secondary inverters should use 2 or higher. This sets the modbus address that inverters use to communicate with each other. Each inverter that communicates on the same Modbus communication line must have a unique address, but addresses do not need to be globally unique across separate, unconnected systems.",
     entries: {
       Addr: {
         name: "Address",
@@ -421,7 +424,7 @@ export const pointTransforms: PointTransform[] = [
       title: "Current Transformer (CT) Settings",
     },
     title: "CT Ratio",
-    help: "Select the current transformer (CT) ratio used for metering. This must match the CT hardware rating so that current and power readings are accurate.",
+    help: "Select the current transformer (CT) ratio used for metering electric current on the grid port connection. This must match the CT hardware rating so that current and power readings are accurate.",
     entries: {
       Direction: {
         name: "CT Ratio",
@@ -431,7 +434,7 @@ export const pointTransforms: PointTransform[] = [
   {
     uuid: "Measurement.CTDirection",
     title: "CT Direction",
-    help: "Sets the CT installation direction. Use Reversed if the CT arrow is facing the opposite way and the system is reading import/export backwards.",
+    help: "Sets the CT installation direction. You may choose to reverse this if your inverter is reading import when power is actually flowing out to the grid (export) or vice versa.",
     entries: {
       Direction: {
         name: "Direction",
@@ -471,14 +474,15 @@ export const pointTransforms: PointTransform[] = [
   },
   {
     uuid: "FeedInGrid.FastZeroExportStatus",
-    title: "Fast Zero Export",
-    help: "Forces export power to the grid to stay at or near zero by rapidly adjusting inverter output. Use when export is not allowed or must be minimized.",
+    title: "Prevent Grid Export: Strict Mode",
+    help: "Keeps power export at or near zero by adjusting inverter output in real time. When enabled, the inverter supplies only local (on-site) loads and will not send power back to the grid. This mode is required when grid export is not allowed. Ensure the CTs are installed on the grid connection point and  not on the inverter's load side, so the inverter can correctly detect and prevent export.",
+
     entries: {
       Mode: {
         name: "Fast Zero Export",
         friendly_meanings: {
-          "0": "Disabled",
-          "1": "Enabled"
+          "0": "Disable strict mode",
+          "1": "Enable strict mode"
         }
       }
     }
@@ -493,7 +497,7 @@ export const pointTransforms: PointTransform[] = [
         title: "Grid Charge",
       },
       title: "Allow Battery Charging from Grid",
-      help: "Enables charging the battery from the utility grid.",
+      help: "Enables the battery to charge from the utility grid.",
       entries: {
         Mode: {
           name: "Grid Charge",
@@ -608,7 +612,7 @@ export const pointTransforms: PointTransform[] = [
     entries: {
       SOC: {
         name: "SOC (%)",
-        description: "Recommended: between 20-90%.  Must be higher than the Off-Grid Battery Cutoff SOC."
+        description: "Recommended: between 21-90%.  Must be higher than the Off-Grid Battery Cutoff SOC."
       }
     }
   },
@@ -619,7 +623,7 @@ export const pointTransforms: PointTransform[] = [
     entries: {
       SOC: {
         name: "SOC (%)",
-        description: "Recommended: between 20-90%.  Must be lower than the On-Grid Battery Cutoff SOC."
+        description: "Recommended: between 20-89%.  Must be lower than the On-Grid Battery Cutoff SOC."
       }
     }
   },
@@ -650,7 +654,7 @@ export const pointTransforms: PointTransform[] = [
   {
     uuid: "BatteryScheduling.BatteryScheduling",
     title: "Battery Scheduling",
-    help: "This is a special scheduling mode designed for certain time-of-use (TOU) utility rates or  ther custom situations. Your system will normally manage charging and discharging utomatically—you don't need to set a schedule unless you want this specific behavior.",
+    help: "This is a special scheduling mode designed for certain time-of-use (TOU) utility rates or other custom situations. In most circumstances, we recomment allowing your system to  manage charging and discharging automatically without setting a schedule.  You don't need to set a schedule unless you have a specific reason to charge or discharge at exact times.",
     entries: {
       Mode: {
         name: "Scheduling",
@@ -673,7 +677,7 @@ export const pointTransforms: PointTransform[] = [
         collapsedByDefault: false
       },
       title: "Max Battery Charge Power During 'PV Charge Only' Periods",
-      help: "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods in kW. Limit this to control how hard the battery charges from the grid in those windows.",
+      help: "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods in kW. Set this limit to control the power level at which the battery will charge from the grid during PV charge only periods",
       entries: {
         Power: {
           name: "Power (kW)",
@@ -891,7 +895,7 @@ export const pointTransforms: PointTransform[] = [
     {
       uuid: "GridProtection.GridVoltLimit1",
       title: "Grid Voltage Limits (Stage 1)",
-      help: "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect.",
+      help: "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
       entries: {
         GridVoltLimitHigh: {
           name: "Upper Limit (Vac)",
@@ -906,7 +910,7 @@ export const pointTransforms: PointTransform[] = [
     {
       uuid: "GridProtection.GridVoltLimit2",
       title: "Grid Voltage Limits (Stage 2)",
-      help: "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect.",
+      help: "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
       entries: {
         GridVoltLimitHigh: {
           name: "Upper Limit (Vac)",
@@ -921,7 +925,7 @@ export const pointTransforms: PointTransform[] = [
     {
       uuid: "GridProtection.GridVoltLimit3",
       title: "Grid Voltage Limits (Stage 3)",
-      help: "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect.",
+      help: "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
       entries: {
         GridVoltLimitHigh: {
           name: "Upper Limit (Vac)",
@@ -936,7 +940,7 @@ export const pointTransforms: PointTransform[] = [
     {
       uuid: "GridProtection.GridFreqLimit1",
       title: "Grid Frequency Limits (Stage 1)",
-      help: "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect to protect the system and comply with grid safety standards.",
+      help: "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
       entries: {
         GridFreqLimitHigh: {
           name: "Upper Limit (Hz)",
@@ -951,7 +955,7 @@ export const pointTransforms: PointTransform[] = [
     {
       uuid: "GridProtection.GridFreqLimit2",
       title: "Grid Frequency Limits (Stage 2)",
-      help: "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect to protect the system and comply with grid safety standards.",
+      help: "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
       entries: {
         GridFreqLimitHigh: {
           name: "Upper Limit (Hz)",
@@ -966,7 +970,7 @@ export const pointTransforms: PointTransform[] = [
     {
       uuid: "GridProtection.GridFreqLimit3",
       title: "Grid Frequency Limits (Stage 3)",
-      help: "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect to protect the system and comply with grid safety standards.",
+      help: "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
       entries: {
         GridFreqLimitHigh: {
           name: "Upper Limit (Hz)",
@@ -981,7 +985,7 @@ export const pointTransforms: PointTransform[] = [
       {
       uuid: "GridProtection.GridVoltLimit1Time",
         "title": "Grid Voltage Trip Time",
-        "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects.",
+        "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects from the grid.",
         "entries": {
           "GridVoltLimitLowTime": {
             "name": "Low Voltage Trip Delay (ms)",
@@ -996,7 +1000,7 @@ export const pointTransforms: PointTransform[] = [
       {
         "uuid": "GridProtection.GridVoltLimit2Time",
         "title": "Grid Voltage Trip Time (Stage 2)",
-        "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects.",
+        "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects from the grid.",
         "entries": {
           "GridVoltLimitLowTime": {
             "name": "Low Voltage Trip Delay (ms)",
@@ -1011,7 +1015,7 @@ export const pointTransforms: PointTransform[] = [
       {
         "uuid": "GridProtection.GridVoltLimit3Time",
         "title": "Grid Voltage Trip Time (Stage 3)",
-        "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects.",
+        "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects from the grid.",
         "entries": {
           "GridVoltLimitLowTime": {
             "name": "Low Voltage Trip Delay (ms)",
@@ -1026,7 +1030,7 @@ export const pointTransforms: PointTransform[] = [
       {
         "uuid": "GridProtection.GridFreqLimit1Time",
         "title": "Grid Frequency Trip Time (Stage 1)",
-        "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects.",
+        "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects from the grid.",
         "entries": {
           "GridFreqLimitLowTime": {
             "name": "Low Frequency Trip Delay (ms)",
@@ -1041,7 +1045,7 @@ export const pointTransforms: PointTransform[] = [
       {
         "uuid": "GridProtection.GridFreqLimit2Time",
         "title": "Grid Frequency Trip Time (Stage 2)",
-        "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects.",
+        "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects from the grid.",
         "entries": {
           "GridFreqLimitLowTime": {
             "name": "Low Frequency Trip Delay (ms)",
@@ -1056,7 +1060,7 @@ export const pointTransforms: PointTransform[] = [
       {
         "uuid": "GridProtection.GridFreqLimit3Time",
         "title": "Grid Frequency Trip Time (Stage 3)",
-        "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects.",
+        "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects from the grid.",
         "entries": {
           "GridFreqLimitLowTime": {
             "name": "Low Frequency Trip Delay (ms)",
@@ -1071,7 +1075,7 @@ export const pointTransforms: PointTransform[] = [
         {
           "uuid": "GridConnection.PermitServiceStatus",
           "title": "Permit to Operate",
-          "help": "Shows whether the inverter is permitted to operate in grid-connected mode according to site authorization.",
+          "help": "Shows whether the inverter is permitted to operate in grid-connected mode.",
           "entries": {
             "Mode": {
               "name": "Permit Status",
@@ -1629,19 +1633,19 @@ export const pointTransforms: PointTransform[] = [
         "entries": {
           "StartSOC": {
             "name": "Start SOC (%)",
-            "description": "AC Coupled PV begins charging when SOC drops to this level (typical 20-40%)",
+            "description": "AC Coupled PV begins charging when SOC drops to this level",
             "less_than": "StopSOC",
             "range": {
-              "min": 10,
-              "max": 60
+              "min": 0,
+              "max": 100
             }
           },
           "StopSOC": {
             "name": "Stop SOC (%)",
-            "description": "AC Coupled PV stops charging when SOC reaches this level (typical 80-95%)",
+            "description": "AC Coupled PV stops charging when SOC reaches this level",
             "greater_than": "StartSOC",
             "range": {
-              "min": 50,
+              "min": 0,
               "max": 100
             }
           }
@@ -1650,7 +1654,7 @@ export const pointTransforms: PointTransform[] = [
       {
         "uuid": "GridBase.GridRegulation",
         "title": "Grid Parameters",
-        "help": "This setting changes the conditions under which the inverter will trip off. Different areas have different rules about when this equipment is allowed to disconnect and when it must ride through. Choose the code required by the local utility or AHJ.",
+        "help": "This setting changes the conditions under which the inverter will connect or disconnect from the utility grid. Different areas have different rules about when this equipment is allowed to disconnect and when it must ride through. Choose the code required by the local utility or AHJ.",
         "section": {
           "title": "Setup"
         },
@@ -1670,7 +1674,7 @@ export const pointTransforms: PointTransform[] = [
       {
         "uuid": "GridBase.GridType",
         "title": "Grid Type",
-        "help": "Choose the type of wiring the site uses.  This helps configure the system to match the build's power setup.  Note the voltage you enter here must match the EPS Voltage.",
+        "help": "Choose wiring configuration of the site.  This helps configure the system to match the power service at the site.  Note the voltage you enter here must match the EPS Voltage.",
         "entries": {
           "Type": {
             "name": "Service Type",
@@ -1750,7 +1754,7 @@ export const pointTransforms: PointTransform[] = [
         {
           "uuid": "Generator.BatteryChargeCurrentLimit",
           "title": "Battery Charge Current Limit",
-          "help": "Sets the maximum DC current the inverter will send to the battery from the generator.",
+          "help": "Sets the maximum DC current the inverter will send to the battery when charging from the generator.",
           "entries": {
             "Current": { "name": "Charge Current (Adc)" }
           }
@@ -1815,14 +1819,14 @@ export const pointTransforms: PointTransform[] = [
         },
         {
           "uuid": "Generator.StartGeneratorExercise",
-          "title": "Generator Test",
-          "help": "Start the generator for a test run.",
+          "title": "Battery Quick Charge with Generator",
+          "help": "Start the generator to charge the battery.",
           "entries": {
             "Mode": {
               "name": " ",
               "friendly_meanings": {
-                "0": "Stop test",
-                "1": "Start test"
+                "0": "Stop quick charge",
+                "1": "Start quick charge"
               }
             }
           }
@@ -1883,6 +1887,9 @@ export function transformPoint(
   }
   if (transform.help !== undefined) {
     point.help = transform.help;
+  }
+  if (transform.invokeButtonText !== undefined) {
+    point.invokeButtonText = transform.invokeButtonText;
   }
 
   // Apply entry-level changes

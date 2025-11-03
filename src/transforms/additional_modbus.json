@@ -1,0 +1,297 @@
+{
+  "points": [
+    {
+      "theme": "Inverter",
+      "section": "Measurement",
+      "subsection": "Advanced",
+      "visibility": "advanced",
+      "collapsedByDefault": true,
+      "title": "Meter Measurement Source",
+      "help": "The inverter can either read CTs directly, or read a stand-alone electric meter.",
+      "uuid": "Modbus.MeterType",
+      "element_type": "Register",
+      "access": "RW",
+      "readOnly": false,
+      "entries": [
+        {
+          "name": "Meter Type",
+          "arg": "MeterType",
+          "dtype": "enum16",
+          "meanings": {
+            "0": "Meter",
+            "1": "CTs"
+          }
+        }
+      ],
+      "protocol": {
+        "modbus": {
+          "address": 1,
+          "register_type": 3,
+          "size": 1
+        }
+      }
+    },
+    {
+      "theme": "Inverter",
+      "section": "Basic",
+      "subsection": "Advanced",
+      "visibility": "advanced",
+      "collapsedByDefault": true,
+      "title": "Dry Contact Reuse",
+      "help": "Selects how the inverter's dry contact relay is reused. It can be configured for various control functions such as grid export limitation, smart load control, or dark start.",
+      "uuid": "Modbus.DryContactReuse",
+      "element_type": "Register",
+      "access": "RW",
+      "readOnly": false,
+      "entries": [
+        {
+          "name": "Dry Contact Reuse",
+          "arg": "DryContactReuse",
+          "dtype": "enum16",
+          "meanings": {
+            "0": "None",
+            "1": "Rapid Shutdown (RSD)",
+            "2": "Black Start",
+            "3": "Smart Load",
+            "4": "Non-critical Load"
+          }
+        }
+      ],
+      "protocol": {
+        "modbus": {
+          "address": 999,
+          "register_type": 3,
+          "size": 1
+        }
+      }
+    },
+    {
+      "theme": "Inverter",
+      "section": "PV",
+      "subsection": "Advanced",
+      "visibility": "advanced",
+      "collapsedByDefault": true,
+      "title": "PV Sell to Grid",
+      "help": "You may disable solar power export to the utility grid. This setting supports NEM3 compatibility.",
+      "uuid": "Modbus.PVSellToGrid",
+      "element_type": "Register",
+      "access": "RW",
+      "readOnly": false,
+      "entries": [
+        {
+          "name": "PV Sell to Grid",
+          "arg": "PVSellToGrid",
+          "dtype": "bitfield16",
+          "meanings": {
+            "7": "Enable export of PV power to the grid"
+          }
+        }
+      ],
+      "protocol": {
+        "modbus": {
+          "address": 3,
+          "register_type": 3,
+          "size": 1
+        }
+      }
+    },
+    {
+      "theme": "Battery",
+      "section": "Battery Base",
+      "subsection": "Advanced",
+      "visibility": "advanced",
+      "collapsedByDefault": true,
+      "title": "Charge Current",
+      "help": "Instead of using the presets, you may set the charge current directly in amps.",
+      "uuid": "Modbus.ChargeCurr",
+      "element_type": "Register",
+      "access": "RW",
+      "readOnly": false,
+      "entries": [
+        {
+          "name": "Charge Current (A)",
+          "arg": "ChargeCurr",
+          "dtype": "uint16",
+          "unit": "A",
+          "range": {
+            "min": 0
+          }
+        }
+      ],
+      "protocol": {
+        "modbus": {
+          "address": 101,
+          "register_type": 3,
+          "size": 1
+        }
+      }
+    },
+    {
+      "theme": "Battery",
+      "section": "Battery Base",
+      "subsection": "Advanced",
+      "visibility": "advanced",
+      "collapsedByDefault": true,
+      "title": "Discharge Current",
+      "help": "Instead of using the presets, you may set the discharge current directly in amps.",
+      "uuid": "Modbus.DischgCurr",
+      "element_type": "Register",
+      "access": "RW",
+      "readOnly": false,
+      "entries": [
+        {
+          "name": "Discharge Current (A)",
+          "arg": "DischgCurr",
+          "dtype": "uint16",
+          "unit": "A"
+        }
+      ],
+      "protocol": {
+        "modbus": {
+          "address": 102,
+          "register_type": 3,
+          "size": 1
+        }
+      }
+    },
+        {
+          "theme": "Generator",
+          "section": "Generator",
+          "subsection": "Advanced",
+          "visibility": "advanced",
+          "collapsedByDefault": true,
+          "title": "Generator Charge Mode",
+          "help": "Selects how the generator charges the battery. When enabled, the generator will charge the battery automatically based on voltage or SOC.",
+          "uuid": "Modbus.GenChg",
+          "element_type": "Register",
+          "access": "RW",
+          "readOnly": false,
+          "entries": [
+            {
+              "name": "Generator Charge Mode",
+              "arg": "GenChg",
+              "dtype": "enum16",
+              "meanings": {
+                "0": "Based on SOC",
+                "1": "Based on Voltage"
+              }
+            }
+          ],
+          "protocol": {
+            "modbus": {
+              "address": 999,
+              "register_type": 3,
+              "size": 1
+            }
+          }
+        },
+        {
+          "theme": "Generator",
+          "section": "Generator",
+          "subsection": "Advanced",
+          "title": "Generator Charge Start Voltage",
+          "help": "Sets the battery voltage at which the generator begins charging. Effective when generator charging by voltage is enabled.",
+          "uuid": "Modbus.GenChgStartVolt",
+          "element_type": "Register",
+          "access": "RW",
+          "readOnly": false,
+          "entries": [
+            {
+              "name": "Generator Charge Start Voltage",
+              "arg": "GenChgStartVolt",
+              "dtype": "uint16",
+              "unit": "V"
+            }
+          ],
+          "protocol": {
+            "modbus": {
+              "address": 194,
+              "register_type": 3,
+              "size": 1
+            }
+          }
+        },
+        {
+          "theme": "Generator",
+          "section": "Generator",
+          "subsection": "Advanced",
+          "visibility": "advanced",
+          "collapsedByDefault": true,
+          "title": "Generator Charge End Voltage",
+          "help": "Sets the battery voltage at which the generator stops charging. Effective when generator charging by voltage is enabled.",
+          "uuid": "Modbus.GenChgEndVolt",
+          "element_type": "Register",
+          "access": "RW",
+          "readOnly": false,
+          "entries": [
+            {
+              "name": "Generator Charge End Voltage",
+              "arg": "GenChgEndVolt",
+              "dtype": "uint16",
+              "unit": "V"
+            }
+          ],
+          "protocol": {
+            "modbus": {
+              "address": 195,
+              "register_type": 3,
+              "size": 1
+            }
+          }
+        },
+
+        {
+          "theme": "Generator",
+          "section": "Generator",
+          "subsection": "Generator Exercise",
+          "title": "Generator Exercise Schedule",
+          "help": "Configure a recurring schedule for generator exercise runs. Select the day of the week and time when the generator should run automatically.",
+          "uuid": "CGI.GeneratorExercise",
+          "element_type": "GeneratorExercise",
+          "access": "Invoke",
+          "readOnly": false,
+          "entries": [
+            {
+              "name": "Day of Week",
+              "arg": "DayOfWeek",
+              "dtype": "enum",
+              "meanings": {
+                "0": "Sunday",
+                "1": "Monday",
+                "2": "Tuesday",
+                "3": "Wednesday",
+                "4": "Thursday",
+                "5": "Friday",
+                "6": "Saturday"
+              }
+            },
+            {
+              "name": "Hour",
+              "arg": "Hour",
+              "dtype": "Number",
+              "range": {
+                "min": 0,
+                "max": 23
+              }
+            },
+            {
+              "name": "Minute",
+              "arg": "Minute",
+              "dtype": "Number",
+              "range": {
+                "min": 0,
+                "max": 59
+              }
+            }
+          ],
+          "protocol": {
+            "cgi": {
+              "MEP": "HybridInverter",
+              "Cluster": "Plan",
+              "Element": "GeneratorExercise"
+            }
+          }
+        }
+
+  ]
+}
