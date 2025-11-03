@@ -208,7 +208,7 @@ export const pointTransforms: PointTransform[] = [
 {
   uuid: "Basic.WorkMode",
   title: "Operating Mode",
-  help: "Select how solar power is prioritized. Self-consumption: PV powers the home first, then charges the battery, and exports last (if allowed). Export first: PV powers the home, then exports to grid, and charges the battery last. Backup power: PV charges the battery first to build reserve, then powers the home, and exports last (if allowed).",
+  help: "Select how solar power is prioritized. Self-consumption: PV powers the home first, then charges the battery, and exports last (if allowed). Export first: PV powers the home, then exports to grid, and charges the battery last. Backup power: PV charges the battery first to build reserve, then powers the home, and exports last (if allowed). If a battery schedule is running (PV Charge Only, Discharge Only, or Grid Charge), the inverter will follow that schedule during those times instead of this operating mode. When the scheduled period ends, the inverter will return to the selected operating mode.",
   entries: {
     Mode: {
       name: "Mode",
@@ -223,7 +223,7 @@ export const pointTransforms: PointTransform[] = [
 {
   uuid: "Basic.PowerStatus",
   title: "Power Status",
-  help: "Put the inverter on standby to stop operation or change settings.",
+  help: "Put the inverter into standby mode to stop operation or make configuration changes. While in standby, the inverter will not generate PV power or charge/discharge the battery. If grid power is available, it be used to supply the loads. If the grid is unavailable, the building will not have power.",
   entries: {
     State: {
       name: "State",
