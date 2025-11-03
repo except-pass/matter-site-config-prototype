@@ -101,7 +101,7 @@
       "subsection": "Advanced",
       "visibility": "advanced",
       "collapsedByDefault": true,
-      "title": "Charge Current",
+      "title": "Max Charge Current",
       "help": "Instead of using the presets, you may set the charge current directly in amps.",
       "uuid": "Modbus.ChargeCurr",
       "element_type": "Register",
@@ -121,6 +121,37 @@
       "protocol": {
         "modbus": {
           "address": 101,
+          "register_type": 3,
+          "size": 1
+        }
+      }
+    },
+    {
+      "theme": "Battery",
+      "section": "Battery Base",
+      "subsection": "Advanced",
+      "visibility": "advanced",
+      "collapsedByDefault": true,
+      "title": "Max Discharge Current",
+      "help": "Instead of using the presets, you may set the discharge current directly in amps.",
+      "uuid": "Modbus.DischgCurr",
+      "element_type": "Register",
+      "access": "RW",
+      "readOnly": false,
+      "entries": [
+        {
+          "name": "Charge Current (A)",
+          "arg": "ChargeCurr",
+          "dtype": "uint16",
+          "unit": "A",
+          "range": {
+            "min": 0
+          }
+        }
+      ],
+      "protocol": {
+        "modbus": {
+          "address": 102,
           "register_type": 3,
           "size": 1
         }
@@ -154,6 +185,33 @@
         }
       }
     },
+    {
+      "theme": "Battery",
+      "section": "Battery Base",
+      "subsection": "Advanced",
+      "title": "Battery Voltage Correction",
+      "help": " ",
+      "uuid": "Modbus.DischgCurr",
+      "element_type": "Register",
+      "access": "RW",
+      "readOnly": false,
+      "entries": [
+        {
+          "name": "Battery Voltage Correction",
+          "arg": "BatteryVoltageCorrection",
+          "dtype": "uint16",
+          "unit": "V",
+          "scalefactor": 0.1
+        }
+      ],
+      "protocol": {
+        "modbus": {
+          "address": 999,
+          "register_type": 3,
+          "size": 1
+        }
+      }
+    },    
         {
           "theme": "Generator",
           "section": "Generator",
@@ -291,7 +349,149 @@
               "Element": "GeneratorExercise"
             }
           }
+        },
+        {
+          "theme": "Battery",
+          "section": "Grid Charge",
+          "subsection": "Advanced",
+          "visibility": "advanced",
+          "collapsedByDefault": true,
+          "title": "Grid Charge Control Style",
+          "help": "Selects how grid charging is controlled. Charging can follow a time schedule, stop when a voltage limit is reached, or stop when a target state of charge (SOC) is reached.",
+          "uuid": "Modbus.GridChargeControlStyle",
+          "element_type": "Register",
+          "access": "RW",
+          "readOnly": false,
+          "entries": [
+            {
+              "name": "Control Style",
+              "arg": "GridChargeControlStyle",
+              "dtype": "bitfield16",
+              "meanings": {
+                "1": "Charge based on time",
+                "2": "Stop charging at voltage limit",
+                "3": "Stop charging at SOC limit"
+              }
+            }
+          ],
+          "protocol": {
+            "modbus": {
+              "address": 120,
+              "register_type": 3,
+              "size": 1
+            }
+          }
+        },
+        {
+          "theme": "Battery",
+          "section": "Grid Charge",
+          "subsection": "Advanced",
+          "title": "Grid Charging Start Voltage",
+          "help": "Sets the battery voltage at which grid charging will stop.",
+          "uuid": "Modbus.GridChargingStartVoltage",
+          "element_type": "Register",
+          "access": "RW",
+          "readOnly": false,
+          "entries": [
+            {
+              "name": "Grid Charging Start Voltage",
+              "arg": "GridChargingStartVoltage",
+              "dtype": "uint16",
+              "scalefactor": 0.1,
+              "unit": "V"
+            }
+          ],
+          "protocol": {
+            "modbus": {
+              "address": 158,
+              "register_type": 3,
+              "size": 1
+            }
+          }
+        },        
+        {
+          "theme": "Battery",
+          "section": "Grid Charge",
+          "subsection": "Advanced",
+          "title": "Grid Charging Stop Voltage",
+          "help": "Sets the maximum battery voltage during grid charging. Once this voltage is reached, the inverter will stop charging from the grid to protect the battery and prevent overvoltage.",
+          "uuid": "Modbus.GridChargingStopVoltage",
+          "element_type": "Register",
+          "access": "RW",
+          "readOnly": false,
+          "entries": [
+            {
+              "name": "Grid Charging Stop Voltage",
+              "arg": "GridChargingStopVoltage",
+              "dtype": "uint16",
+              "scalefactor": 0.1,
+              "unit": "V"
+            }
+          ],
+          "protocol": {
+            "modbus": {
+              "address": 159,
+              "register_type": 3,
+              "size": 1
+            }
+          }
+        },
+        {
+          "theme": "Battery",
+          "section": "Battery Scheduling",
+          "subsection": "Advanced",
+          "visibility": "advanced",
+          "collapsedByDefault": true,
+          "title": "Discharge only Control Style",
+          "help": "Selects how 'discharge only' is controlled. 'Discharge only' can stop when a voltage limit is reached or when a target state of charge (SOC) is reached.",
+          "uuid": "Modbus.DischargeOnlyControlStyle",
+          "element_type": "Register",
+          "access": "RW",
+          "readOnly": false,
+          "entries": [
+            {
+              "name": "Control Style",
+              "arg": "DischargeOnlyControlStyle",
+              "dtype": "bitfield16",
+              "meanings": {
+                "4": "Enable SOC control (disable for voltage control)"
+              }
+            }
+          ],
+          "protocol": {
+            "modbus": {
+              "address": 120,
+              "register_type": 3,
+              "size": 1
+            }
+          }
+        },
+        {
+          "theme": "Battery",
+          "section": "Battery Scheduling",
+          "subsection": "Advanced",
+          "title": "Discharge only Stop Voltage",
+          "help": "Sets the battery voltage at which discharge only will stop.",
+          "uuid": "Modbus.DischargeOnlyStopVoltage",
+          "element_type": "Register",
+          "access": "RW",
+          "readOnly": false,
+          "entries": [
+            {
+              "name": "Discharge only Stop Voltage",
+              "arg": "DischargeOnlyStopVoltage",
+              "dtype": "uint16",
+              "scalefactor": 0.1,
+              "unit": "V"
+            }
+          ],
+          "protocol": {
+            "modbus": {
+              "address": 202,
+              "register_type": 3,
+              "size": 1
+            }
+          }
         }
-
   ]
 }

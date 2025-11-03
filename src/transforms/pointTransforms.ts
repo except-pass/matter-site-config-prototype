@@ -894,6 +894,10 @@ export const pointTransforms: PointTransform[] = [
     },
     {
       uuid: "GridProtection.GridVoltLimit1",
+      subsection: {
+        title: "Grid Protection Parameters",
+        collapsedByDefault: true
+      },
       title: "Grid Voltage Limits (Stage 1)",
       help: "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
       entries: {

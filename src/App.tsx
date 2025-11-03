@@ -51,7 +51,12 @@ interface PointDef {
   entries: EntryDef[];
   protocol: {
     matter?: any;
-    modbus?: any;
+    modbus?: {
+      address: number;
+      register_type: number;
+      size: number;
+      scale_factor?: number;
+    };
     cgi?: {
       MEP: string;
       Cluster: string;
@@ -189,6 +194,20 @@ function buildInitialPointState(point: PointDef): EntryValue {
       return;
     }
 
+    // Handle bitfield types (bitfield8, bitfield16, bitfield32)
+    if (entry.dtype && entry.dtype.startsWith('bitfield')) {
+      // Initialize as an object mapping bit positions to boolean states
+      // Start with all bits unchecked
+      const bitStates: Record<string, boolean> = {};
+      if (entry.meanings) {
+        Object.keys(entry.meanings).forEach(bitPos => {
+          bitStates[bitPos] = false;
+        });
+      }
+      obj[entry.arg] = bitStates;
+      return;
+    }
+
     obj[entry.arg] = '';
   });
   return obj;
@@ -233,9 +252,53 @@ function EntryField({
   const commonClasses =
     "w-full rounded border border-slate-300 bg-white px-2 py-1 text-sm text-slate-800 disabled:bg-slate-100 disabled:text-slate-500";
   const containerClasses =
-    entry.dtype === 'enum'
+    entry.dtype === 'enum' || (entry.dtype && entry.dtype.startsWith('bitfield'))
       ? 'col-span-full flex flex-col gap-1 text-sm'
       : 'flex flex-col gap-1 text-sm';
+
+  // Handle bitfield types
+  if (entry.dtype && entry.dtype.startsWith('bitfield') && entry.meanings) {
+    const bitStates = value || {};
+
+    const handleBitToggle = (bitPos: string) => {
+      const newStates = { ...bitStates, [bitPos]: !bitStates[bitPos] };
+      onChange(newStates);
+    };
+
+    return (
+      <div className={containerClasses}>
+        <div className="text-slate-600 text-[11px] uppercase font-medium flex items-center justify-between">
+          <span>{entry.name}</span>
+          {entry.unit && (
+            <span className="text-[10px] text-slate-400 uppercase">{entry.unit}</span>
+          )}
+        </div>
+        <div className="flex flex-col gap-2 py-1">
+          {Object.entries(entry.meanings).map(([bitPos, description]) => (
+            <label
+              key={bitPos}
+              className={`flex items-center gap-2 cursor-pointer ${readOnly ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              <input
+                type="checkbox"
+                className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500 disabled:cursor-not-allowed"
+                disabled={readOnly}
+                checked={bitStates[bitPos] || false}
+                onChange={() => handleBitToggle(bitPos)}
+              />
+              <span className="text-sm text-slate-800">{description}</span>
+            </label>
+          ))}
+        </div>
+        {entry.description && (
+          <div className="text-xs text-slate-500 leading-snug">{entry.description}</div>
+        )}
+        {entry.longdescription && (
+          <div className="text-xs text-slate-400 leading-snug">{entry.longdescription}</div>
+        )}
+      </div>
+    );
+  }
 
   if (entry.dtype === 'enum' && entry.meanings) {
     const options = Object.entries(entry.meanings).map(([wireVal, semantic]) => {
@@ -394,13 +457,13 @@ function DualHandleSlider({
   // Colors for handles (expanded palette for many sliders)
   const colors = [
     { bg: 'bg-emerald-500', text: 'text-emerald-600', border: 'border-emerald-500' },
+    { bg: 'bg-rose-500', text: 'text-rose-600', border: 'border-rose-500' },
     { bg: 'bg-blue-500', text: 'text-blue-600', border: 'border-blue-500' },
     { bg: 'bg-purple-500', text: 'text-purple-600', border: 'border-purple-500' },
     { bg: 'bg-orange-500', text: 'text-orange-600', border: 'border-orange-500' },
     { bg: 'bg-pink-500', text: 'text-pink-600', border: 'border-pink-500' },
     { bg: 'bg-indigo-500', text: 'text-indigo-600', border: 'border-indigo-500' },
     { bg: 'bg-teal-500', text: 'text-teal-600', border: 'border-teal-500' },
-    { bg: 'bg-rose-500', text: 'text-rose-600', border: 'border-rose-500' },
     { bg: 'bg-cyan-500', text: 'text-cyan-600', border: 'border-cyan-500' },
     { bg: 'bg-amber-500', text: 'text-amber-600', border: 'border-amber-500' },
     { bg: 'bg-lime-500', text: 'text-lime-600', border: 'border-lime-500' },
@@ -779,26 +842,35 @@ function GeneratorExerciseWidget({
   readOnly: boolean;
   onChange: (argName: string, value: any) => void;
 }) {
-  const dayOfWeek = formState.DayOfWeek ?? 0;
-  const hour = formState.Hour ?? 0;
-  const minute = formState.Minute ?? 0;
+  const dayOfWeek = formState.DayOfWeek !== '' ? formState.DayOfWeek : null;
+  const hour = formState.Hour !== '' ? formState.Hour : null;
+  const minute = formState.Minute !== '' ? formState.Minute : null;
 
   // Convert hour and minute to time string for the time picker
   const getTimeString = (): string => {
+    if (hour === null || minute === null) return '';
     return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
   };
 
   // Parse time string and update hour and minute
   const setTimeString = (value: string) => {
+    if (!value) {
+      onChange("Hour", '');
+      onChange("Minute", '');
+      return;
+    }
     const [hourStr, minStr] = value.split(':');
     onChange("Hour", parseInt(hourStr, 10));
     onChange("Minute", parseInt(minStr, 10));
   };
 
-  // Generate cron expression preview
-  const cronExpression = `${minute} ${hour} * * ${dayOfWeek}`;
   const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const schedulePreview = `Every ${dayNames[dayOfWeek]} at ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+
+  // Generate schedule preview only if values are set
+  let schedulePreview = "No schedule configured";
+  if (dayOfWeek !== null && hour !== null && minute !== null) {
+    schedulePreview = `Every ${dayNames[dayOfWeek]} at ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -808,9 +880,10 @@ function GeneratorExerciseWidget({
           <select
             className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 disabled:bg-slate-100"
             disabled={readOnly}
-            value={dayOfWeek}
-            onChange={(e) => onChange("DayOfWeek", Number(e.target.value))}
+            value={dayOfWeek !== null ? dayOfWeek : ''}
+            onChange={(e) => onChange("DayOfWeek", e.target.value === '' ? '' : Number(e.target.value))}
           >
+            <option value="">Select day...</option>
             {dayNames.map((day, idx) => (
               <option key={idx} value={idx}>{day}</option>
             ))}
@@ -832,7 +905,6 @@ function GeneratorExerciseWidget({
       <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
         <div className="text-xs text-slate-600 font-medium mb-1">Schedule Preview</div>
         <div className="text-sm text-slate-800">{schedulePreview}</div>
-        <div className="text-xs text-slate-500 mt-1 font-mono">Cron: {cronExpression}</div>
       </div>
     </div>
   );
@@ -945,6 +1017,7 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
   const handleSet = () => {
     const normalizedArguments: EntryValue = { ...formState };
 
+    // Convert enum friendly values to wire values
     point.entries.forEach((entry) => {
       if (entry.dtype !== 'enum' || !entry.meanings) {
         return;
@@ -963,6 +1036,25 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
       if (match) {
         normalizedArguments[entry.arg] = match[1];
       }
+    });
+
+    // Convert bitfield states to integers
+    point.entries.forEach((entry) => {
+      if (!entry.dtype || !entry.dtype.startsWith('bitfield')) {
+        return;
+      }
+
+      const bitStates = normalizedArguments[entry.arg] || {};
+      let intValue = 0;
+
+      // Set each bit based on the checkbox state
+      Object.entries(bitStates).forEach(([bitPos, isSet]) => {
+        if (isSet) {
+          intValue |= (1 << parseInt(bitPos, 10));
+        }
+      });
+
+      normalizedArguments[entry.arg] = intValue;
     });
 
     let payload: any = {};
@@ -1013,7 +1105,13 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
       if (isWrite) {
         // Get the first value from normalizedArguments (for write operations)
         const firstEntryArg = point.entries[0]?.arg;
-        const writeValue = firstEntryArg ? normalizedArguments[firstEntryArg] : 0;
+        let writeValue = firstEntryArg ? normalizedArguments[firstEntryArg] : 0;
+
+        // Apply scale factor if present
+        // If scale_factor is 0.1, a display value of 50 becomes 500 (50 / 0.1)
+        if (point.protocol.modbus.scale_factor && typeof writeValue === 'number') {
+          writeValue = Math.round(writeValue / point.protocol.modbus.scale_factor);
+        }
 
         payload = {
           version: "1.0",
@@ -1050,9 +1148,9 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
       }
     } else if (point.element_type === "GeneratorExercise" && point.protocol.cgi) {
       // Special handling for GeneratorExercise element type (CGI protocol)
-      const dayOfWeek = normalizedArguments.DayOfWeek ?? 0;
-      const hour = normalizedArguments.Hour ?? 0;
-      const minute = normalizedArguments.Minute ?? 0;
+      const dayOfWeek = normalizedArguments.DayOfWeek !== '' ? normalizedArguments.DayOfWeek : 0;
+      const hour = normalizedArguments.Hour !== '' ? normalizedArguments.Hour : 0;
+      const minute = normalizedArguments.Minute !== '' ? normalizedArguments.Minute : 0;
 
       // Generate cron expression
       const cronTimer = `${minute} ${hour} * * ${dayOfWeek}`;
@@ -1126,6 +1224,16 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
             title="Refresh from device"
             onClick={() => {
               console.log("refresh", point.uuid);
+
+              // Mock read behavior for GeneratorExercise
+              if (point.element_type === "GeneratorExercise") {
+                // Populate with sensible mock data: Wednesday at 10:00 AM
+                setFormState({
+                  DayOfWeek: 3,  // Wednesday
+                  Hour: 10,
+                  Minute: 0
+                });
+              }
             }}
           >
             <RefreshIcon />
@@ -1183,7 +1291,7 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
         </div>
       )}
 
-      {isInvoke && (
+      {isInvoke && point.element_type !== "GeneratorExercise" && (
         <div className="mt-4 flex items-center gap-2">
           <button
             type="button"

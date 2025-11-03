@@ -276,6 +276,18 @@ function transformPoints(
       section.subsections = section.subsections?.filter((subsection: any) => {
         return subsection.points && subsection.points.length > 0;
       });
+
+      // Sort subsections: empty/null titles first, then others in original order
+      if (section.subsections) {
+        section.subsections.sort((a: any, b: any) => {
+          const aEmpty = !a.title || a.title === '';
+          const bEmpty = !b.title || b.title === '';
+          if (aEmpty && !bEmpty) return -1;
+          if (!aEmpty && bEmpty) return 1;
+          return 0;
+        });
+      }
+
       // Keep section only if it has subsections
       return section.subsections && section.subsections.length > 0;
     });
@@ -454,6 +466,10 @@ function normalizeDtype(raw?: string): ManualDtype {
   const value = (raw || "").toLowerCase();
   if (value.startsWith("enum")) {
     return "enum";
+  }
+  // Preserve bitfield types (bitfield8, bitfield16, bitfield32)
+  if (value.startsWith("bitfield")) {
+    return raw as ManualDtype;
   }
   if (value.includes("number") || value.includes("int") || value.includes("uint") || value.includes("float")) {
     return "Number";
