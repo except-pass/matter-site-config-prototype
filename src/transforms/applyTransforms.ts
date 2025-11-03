@@ -36,6 +36,13 @@ interface ManualEntryDefinition {
   friendly_meanings?: Record<string, string | number>;
   greater_than?: string;
   less_than?: string;
+  protocol?: {
+    matter?: {
+      MEP?: string;
+      Cluster?: string;
+      Element?: string;
+    };
+  };
 }
 
 interface ManualModbusDefinition {
@@ -457,6 +464,9 @@ function buildManualEntry(entry: ManualEntryDefinition) {
   }
   if (entry.less_than) {
     normalized.less_than = entry.less_than;
+  }
+  if (entry.protocol) {
+    normalized.protocol = entry.protocol;
   }
 
   return normalized;

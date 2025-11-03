@@ -28,6 +28,16 @@ interface EntryTransform {
   greater_than?: string;
   /** This entry's value must be less than the specified entry */
   less_than?: string;
+
+  // Entry-level protocol definitions (for multi-element widgets)
+  /** Protocol configuration for this specific entry */
+  protocol?: {
+    matter?: {
+      MEP?: string;
+      Cluster?: string;
+      Element?: string;
+    };
+  };
 }
 
 interface SectionTransform {
@@ -528,30 +538,33 @@ export const pointTransforms: PointTransform[] = [
         "theme": "Battery",
         "section": "Grid Charge"
       },
-      "title": "Grid Charge Starting SOC",
-      "help": "Defines when grid charging starts based on battery state of charge (SOC). Charging starts when SOC falls below Starting SOC.",
+      "title": "Grid Charge SOC Range",
+      "help": "Defines when grid charging starts and stops based on battery state of charge (SOC). Charging starts when SOC falls below Start SOC and stops when it reaches Stop SOC.",
       "entries": {
         "SOC": {
           "name": "Start SOC (%)",
-          "range": { "min": 0, "max": 90 }
+          "dtype": "Number",
+          "range": { "min": 0, "max": 100 },
+          "less_than": "StopSOC",
+          "protocol": {
+            "matter": {
+              "Element": "ACChgStartSOC"
+            }
+          }
         },
-      }
-    },
-    {
-      "uuid": "ACCharge.ACChgStopSOC",
-      "move_to": {
-        "theme": "Battery",
-        "section": "Grid Charge"
-      },
-      "title": "Grid Charge Stop SOC",
-      "help": "Defines when grid charging stops based on battery state of charge (SOC). Charging stops when SOC reaches Stop SOC.",
-      "entries": {
         "StopSOC": {
           "name": "Stop SOC (%)",
-          "range": { "min": 0, "max": 90 }
+          "dtype": "Number",
+          "range": { "min": 0, "max": 100 },
+          "greater_than": "SOC",
+          "protocol": {
+            "matter": {
+              "Element": "ACChgStopSOC"
+            }
+          }
         }
       }
-    },    
+    },
     {
       "uuid": "ACCharge.ACChargeType",
       "move_to": {
@@ -1632,7 +1645,7 @@ export const pointTransforms: PointTransform[] = [
           },          
       {
         "uuid": "ACCoupledPV.ACCouplePVSOC",
-        "title": "AC Coupled PV SOC Limits",
+        "title": "AC Coupled PV Start/Stop SOC",
         "help": "Defines the battery state-of-charge thresholds that control when the inverter allows AC Coupled PV charging to start and stop.",
         "entries": {
           "StartSOC": {
@@ -1934,6 +1947,10 @@ export function transformPoint(
         if (entryTransform.less_than !== undefined) {
           entry.less_than = entryTransform.less_than;
         }
+        // Apply entry-level protocol
+        if (entryTransform.protocol !== undefined) {
+          entry.protocol = entryTransform.protocol;
+        }
       }
     });
 
@@ -1972,6 +1989,10 @@ export function transformPoint(
         }
         if (entryTransform.less_than !== undefined) {
           newEntry.less_than = entryTransform.less_than;
+        }
+        // Add entry-level protocol
+        if (entryTransform.protocol !== undefined) {
+          newEntry.protocol = entryTransform.protocol;
         }
 
         point.entries.push(newEntry);

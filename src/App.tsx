@@ -40,6 +40,13 @@ interface EntryDef {
   friendly_meanings?: Record<string, string>; // semantic key -> UI label
   greater_than?: string; // This entry must be > the named entry
   less_than?: string; // This entry must be < the named entry
+  protocol?: {
+    matter?: {
+      MEP?: string;
+      Cluster?: string;
+      Element?: string;
+    };
+  };
 }
 
 interface PointDef {
@@ -806,27 +813,62 @@ function TimeRangeWidget({
     }
   };
 
+  const clearTimes = () => {
+    if (readOnly) return;
+    setStartTime('00:00');
+    setEndTime('00:00');
+  };
+
+  const startTime = getStartTime();
+  const endTime = getEndTime();
+  const showStartClear = !readOnly && startTime !== '00:00';
+  const showEndClear = !readOnly && endTime !== '00:00';
+
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <div className="flex flex-col gap-1">
+    <div className="flex items-end gap-4">
+      <div className="w-[150px] flex-shrink-0 flex flex-col gap-1">
         <label className="text-slate-600 text-xs font-medium">Start Time</label>
-        <input
-          type="time"
-          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 disabled:bg-slate-100"
-          disabled={readOnly}
-          value={getStartTime()}
-          onChange={(e) => setStartTime(e.target.value)}
-        />
+        <div className="relative">
+          <input
+            type="time"
+            className="w-full rounded border border-slate-300 bg-white px-3 pr-7 py-2 text-sm text-slate-800 disabled:bg-slate-100"
+            disabled={readOnly}
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+          />
+          {showStartClear && (
+            <button
+              type="button"
+              className="absolute inset-y-0 right-1 flex items-center px-1 text-slate-400 hover:text-slate-700"
+              onClick={clearTimes}
+              aria-label="Clear time range"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
-      <div className="flex flex-col gap-1">
+      <div className="w-[150px] flex-shrink-0 flex flex-col gap-1">
         <label className="text-slate-600 text-xs font-medium">End Time</label>
-        <input
-          type="time"
-          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 disabled:bg-slate-100"
-          disabled={readOnly}
-          value={getEndTime()}
-          onChange={(e) => setEndTime(e.target.value)}
-        />
+        <div className="relative">
+          <input
+            type="time"
+            className="w-full rounded border border-slate-300 bg-white px-3 pr-7 py-2 text-sm text-slate-800 disabled:bg-slate-100"
+            disabled={readOnly}
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+          />
+          {showEndClear && (
+            <button
+              type="button"
+              className="absolute inset-y-0 right-1 flex items-center px-1 text-slate-400 hover:text-slate-700"
+              onClick={clearTimes}
+              aria-label="Clear time range"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -1017,7 +1059,11 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
   const handleSet = () => {
     const normalizedArguments: EntryValue = { ...formState };
 
-    // Convert enum friendly values to wire values
+    // Convert enum friendly values based on protocol
+    // Modbus: use wire values (keys like "0")
+    // Matter: use semantic values (strings like "Meter")
+    const useWireValues = point.protocol.modbus !== undefined;
+
     point.entries.forEach((entry) => {
       if (entry.dtype !== 'enum' || !entry.meanings) {
         return;
@@ -1034,7 +1080,8 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
       });
 
       if (match) {
-        normalizedArguments[entry.arg] = match[1];
+        // Modbus uses wire values as integers (e.g., 0), Matter uses semantic values (e.g., "Meter")
+        normalizedArguments[entry.arg] = useWireValues ? parseInt(match[0], 10) : match[1];
       }
     });
 
@@ -1060,6 +1107,32 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
     let payload: any = {};
 
     if (point.protocol.matter) {
+      // Check if entries have individual protocol definitions (for multi-element widgets)
+      const hasEntryProtocols = point.entries.some(e => e.protocol?.matter);
+
+      let elements;
+      if (hasEntryProtocols) {
+        // Build multiple Element objects, one per entry with protocol
+        elements = point.entries
+          .filter(entry => entry.protocol?.matter)
+          .map(entry => ({
+            MEP: entry.protocol!.matter!.MEP || point.protocol.matter.MEP,
+            Cluster: entry.protocol!.matter!.Cluster || point.protocol.matter.Cluster,
+            Element: entry.protocol!.matter!.Element || point.protocol.matter.Element,
+            arguments: { [entry.arg]: normalizedArguments[entry.arg] }
+          }));
+      } else {
+        // Legacy single-element behavior
+        elements = [
+          {
+            MEP: point.protocol.matter.MEP,
+            Cluster: point.protocol.matter.Cluster,
+            Element: point.protocol.matter.Element,
+            arguments: normalizedArguments
+          }
+        ];
+      }
+
       payload = {
         version: "1.0",
         timeout: 60,
@@ -1070,14 +1143,7 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
             ? "Invoke"
             : "Write",
         data: {
-          Elements: [
-            {
-              MEP: point.protocol.matter.MEP,
-              Cluster: point.protocol.matter.Cluster,
-              Element: point.protocol.matter.Element,
-              arguments: normalizedArguments
-            }
-          ],
+          Elements: elements,
           thingId: {
             Type: "Inverter",
             Mn: "fortress",
