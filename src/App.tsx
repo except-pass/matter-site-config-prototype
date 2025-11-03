@@ -71,7 +71,7 @@ interface PointDef {
     };
   };
   uuid: string;
-  widget?: "datetime" | "time" | "timerange" | "default";
+  widget?: "datetime" | "time" | "timerange" | "timerange-multi" | "default";
   invokeButtonText?: string; // Custom text for invoke button (defaults to "Invoke")
 }
 
@@ -85,6 +85,18 @@ interface SubsectionDef {
 interface SectionDef {
   sectionTitle: string;
   subsections: SubsectionDef[];
+}
+
+interface EquipmentOption {
+  id: string;
+  label: string;
+  thingId: {
+    Type: string;
+    Mn: string;
+    Md: string;
+    SN: string;
+  };
+  modbusSlaveId: number;
 }
 
 
@@ -124,6 +136,31 @@ const pageLookup: Record<string, PageDef> = pageRegistry.reduce(
   },
   {} as Record<string, PageDef>
 );
+
+const equipmentOptions: EquipmentOption[] = [
+  {
+    id: "envy-04237218B0",
+    label: "⭐ Envy - 04237218B0",
+    thingId: {
+      Type: "Inverter",
+      Mn: "fortress",
+      Md: "FP-ENVY-Inverter",
+      SN: "04237218B0"
+    },
+    modbusSlaveId: 1
+  },
+  {
+    id: "envy-04237219C3",
+    label: "Envy - 04237219C3",
+    thingId: {
+      Type: "Inverter",
+      Mn: "fortress",
+      Md: "FP-ENVY-Inverter",
+      SN: "04237219C3"
+    },
+    modbusSlaveId: 2
+  }
+];
 
 
 // -----------------------------------------------------------------------------
@@ -659,6 +696,49 @@ function unpackTime(packedValue: number): { hour: number; minute: number } {
   return { hour, minute };
 }
 
+const ZERO_TIME = '00:00';
+
+function TimeInputField({
+  label,
+  value,
+  readOnly,
+  onChange,
+  onClear,
+}: {
+  label: string;
+  value: string;
+  readOnly: boolean;
+  onChange: (value: string) => void;
+  onClear: () => void;
+}) {
+  const showClear = !readOnly && value !== ZERO_TIME;
+
+  return (
+    <div className="w-[150px] flex-shrink-0 flex flex-col gap-1">
+      <label className="text-slate-600 text-xs font-medium">{label}</label>
+      <div className="relative">
+        <input
+          type="time"
+          className="w-full rounded border border-slate-300 bg-white px-3 pr-8 py-2 text-sm text-slate-800 disabled:bg-slate-100"
+          disabled={readOnly}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+        {showClear && (
+          <button
+            type="button"
+            className="absolute inset-y-0 right-1 flex items-center px-1 text-slate-400 hover:text-slate-700"
+            onClick={onClear}
+            aria-label={`Clear ${label.toLowerCase()}`}
+          >
+            ✕
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // -----------------------------------------------------------------------------
 // Widget Components for special point types
 // -----------------------------------------------------------------------------
@@ -769,7 +849,7 @@ function TimeRangeWidget({
       const min = String(formState[startMinEntry.arg] ?? 0).padStart(2, '0');
       return `${hour}:${min}`;
     }
-    return "00:00";
+    return ZERO_TIME;
   };
 
   const getEndTime = (): string => {
@@ -782,7 +862,7 @@ function TimeRangeWidget({
       const min = String(formState[endMinEntry.arg] ?? 0).padStart(2, '0');
       return `${hour}:${min}`;
     }
-    return "00:00";
+    return ZERO_TIME;
   };
 
   const setStartTime = (value: string) => {
@@ -815,61 +895,182 @@ function TimeRangeWidget({
 
   const clearTimes = () => {
     if (readOnly) return;
-    setStartTime('00:00');
-    setEndTime('00:00');
+    setStartTime(ZERO_TIME);
+    setEndTime(ZERO_TIME);
   };
 
   const startTime = getStartTime();
   const endTime = getEndTime();
-  const showStartClear = !readOnly && startTime !== '00:00';
-  const showEndClear = !readOnly && endTime !== '00:00';
 
   return (
     <div className="flex items-end gap-4">
-      <div className="w-[150px] flex-shrink-0 flex flex-col gap-1">
-        <label className="text-slate-600 text-xs font-medium">Start Time</label>
-        <div className="relative">
-          <input
-            type="time"
-            className="w-full rounded border border-slate-300 bg-white px-3 pr-7 py-2 text-sm text-slate-800 disabled:bg-slate-100"
-            disabled={readOnly}
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-          />
-          {showStartClear && (
-            <button
-              type="button"
-              className="absolute inset-y-0 right-1 flex items-center px-1 text-slate-400 hover:text-slate-700"
-              onClick={clearTimes}
-              aria-label="Clear time range"
-            >
-              ✕
-            </button>
-          )}
-        </div>
-      </div>
-      <div className="w-[150px] flex-shrink-0 flex flex-col gap-1">
-        <label className="text-slate-600 text-xs font-medium">End Time</label>
-        <div className="relative">
-          <input
-            type="time"
-            className="w-full rounded border border-slate-300 bg-white px-3 pr-7 py-2 text-sm text-slate-800 disabled:bg-slate-100"
-            disabled={readOnly}
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-          />
-          {showEndClear && (
-            <button
-              type="button"
-              className="absolute inset-y-0 right-1 flex items-center px-1 text-slate-400 hover:text-slate-700"
-              onClick={clearTimes}
-              aria-label="Clear time range"
-            >
-              ✕
-            </button>
-          )}
-        </div>
-      </div>
+      <TimeInputField
+        label="Start Time"
+        value={startTime}
+        readOnly={readOnly}
+        onChange={setStartTime}
+        onClear={clearTimes}
+      />
+      <TimeInputField
+        label="End Time"
+        value={endTime}
+        readOnly={readOnly}
+        onChange={setEndTime}
+        onClear={clearTimes}
+      />
+    </div>
+  );
+}
+
+function MultiTimeRangeWidget({
+  point,
+  formState,
+  readOnly,
+  onChange,
+}: {
+  point: PointDef;
+  formState: EntryValue;
+  readOnly: boolean;
+  onChange: (argName: string, value: any) => void;
+}) {
+  const widgetConfig = getWidgetConfig(point.uuid);
+  const isPacked = widgetConfig?.encoding === "packed_hm";
+
+  if (isPacked) {
+    // Packed multi-range encoding is not supported yet; fall back to single widget
+    return (
+      <TimeRangeWidget
+        point={point}
+        formState={formState}
+        readOnly={readOnly}
+        onChange={onChange}
+      />
+    );
+  }
+
+  type WindowConfig = {
+    id: number;
+    startHourArg?: string;
+    startMinArg?: string;
+    endHourArg?: string;
+    endMinArg?: string;
+  };
+
+  const windowMap = new Map<number, WindowConfig>();
+
+  point.entries.forEach((entry) => {
+    const match = entry.arg.match(/^(StartTime|EndTime)(\d+)_([hm])$/i);
+    if (!match) {
+      return;
+    }
+
+    const [, type, indexStr, part] = match;
+    const index = parseInt(indexStr, 10);
+    if (!windowMap.has(index)) {
+      windowMap.set(index, { id: index });
+    }
+
+    const config = windowMap.get(index)!;
+    const lowerPart = part.toLowerCase();
+
+    if (type.toLowerCase() === 'starttime') {
+      if (lowerPart === 'h') {
+        config.startHourArg = entry.arg;
+      } else {
+        config.startMinArg = entry.arg;
+      }
+    } else {
+      if (lowerPart === 'h') {
+        config.endHourArg = entry.arg;
+      } else {
+        config.endMinArg = entry.arg;
+      }
+    }
+  });
+
+  const windows = Array.from(windowMap.values()).sort((a, b) => a.id - b.id);
+
+  if (windows.length === 0) {
+    return (
+      <TimeRangeWidget
+        point={point}
+        formState={formState}
+        readOnly={readOnly}
+        onChange={onChange}
+      />
+    );
+  }
+
+  const getTimeString = (hourArg?: string, minArg?: string) => {
+    const hourVal = hourArg !== undefined ? formState[hourArg] : 0;
+    const minVal = minArg !== undefined ? formState[minArg] : 0;
+
+    const hour = typeof hourVal === 'number' ? hourVal : parseInt(hourVal ?? 0, 10) || 0;
+    const minute = typeof minVal === 'number' ? minVal : parseInt(minVal ?? 0, 10) || 0;
+
+    return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+  };
+
+  const setTimeForWindow = (
+    windowConfig: WindowConfig,
+    which: 'start' | 'end',
+    value: string
+  ) => {
+    const [hourStr, minuteStr] = value.split(':');
+    const hour = parseInt(hourStr, 10);
+    const minute = parseInt(minuteStr, 10);
+
+    if (which === 'start') {
+      if (windowConfig.startHourArg) onChange(windowConfig.startHourArg, hour);
+      if (windowConfig.startMinArg) onChange(windowConfig.startMinArg, minute);
+    } else {
+      if (windowConfig.endHourArg) onChange(windowConfig.endHourArg, hour);
+      if (windowConfig.endMinArg) onChange(windowConfig.endMinArg, minute);
+    }
+  };
+
+  const clearWindow = (windowConfig: WindowConfig) => {
+    if (readOnly) return;
+    if (windowConfig.startHourArg) onChange(windowConfig.startHourArg, 0);
+    if (windowConfig.startMinArg) onChange(windowConfig.startMinArg, 0);
+    if (windowConfig.endHourArg) onChange(windowConfig.endHourArg, 0);
+    if (windowConfig.endMinArg) onChange(windowConfig.endMinArg, 0);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      {windows.map((windowConfig) => {
+        const startValue = getTimeString(windowConfig.startHourArg, windowConfig.startMinArg);
+        const endValue = getTimeString(windowConfig.endHourArg, windowConfig.endMinArg);
+        const handleClear = () => clearWindow(windowConfig);
+
+        return (
+          <div
+            key={windowConfig.id}
+            className="flex flex-col gap-3 rounded-lg border border-slate-200 bg-slate-50/60 p-3"
+          >
+            <div className="text-xs font-semibold uppercase text-slate-600">
+              Grid Charge Window {windowConfig.id}
+            </div>
+            <div className="flex items-end gap-4">
+              <TimeInputField
+                label="Start Time"
+                value={startValue}
+                readOnly={readOnly}
+                onChange={(val) => setTimeForWindow(windowConfig, 'start', val)}
+                onClear={handleClear}
+              />
+              <TimeInputField
+                label="End Time"
+                value={endValue}
+                readOnly={readOnly}
+                onChange={(val) => setTimeForWindow(windowConfig, 'end', val)}
+                onClear={handleClear}
+              />
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -1042,7 +1243,15 @@ function HelpModal({
 // -----------------------------------------------------------------------------
 // PointCard - card for a single logical point ("DATE & TIME", etc.)
 // -----------------------------------------------------------------------------
-function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpTextMatch?: boolean }) {
+function PointCard({
+  point,
+  helpTextMatch = false,
+  equipment,
+}: {
+  point: PointDef;
+  helpTextMatch?: boolean;
+  equipment: EquipmentOption;
+}) {
   const [formState, setFormState] = useState<EntryValue>(
     buildInitialPointState(point)
   );
@@ -1050,6 +1259,15 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
   const [showDialog, setShowDialog] = useState(false);
   const [dialogPayload, setDialogPayload] = useState<any>(null);
   const [showHelpModal, setShowHelpModal] = useState(false);
+
+  const fallbackThingId = equipmentOptions[0]?.thingId ?? {
+    Type: "Inverter",
+    Mn: "fortress",
+    Md: "FP-ENVY-Inverter",
+    SN: ""
+  };
+  const activeThingId = equipment?.thingId ?? fallbackThingId;
+  const activeSlaveId = equipment?.modbusSlaveId ?? equipmentOptions[0]?.modbusSlaveId ?? 1;
 
   const handleFieldChange = (argName: string, nextVal: any) => {
     setFormState((prev) => ({ ...prev, [argName]: nextVal }));
@@ -1144,12 +1362,7 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
             : "Write",
         data: {
           Elements: elements,
-          thingId: {
-            Type: "Inverter",
-            Mn: "fortress",
-            Md: "FP-ENVY-Inverter",
-            SN: "04237218B0"
-          }
+          thingId: activeThingId
         }
       };
     } else if (point.protocol.modbus) {
@@ -1188,7 +1401,7 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
           data: {
             type: "RTU",
             uartPort: 1,
-            slaveId: 1,
+            slaveId: activeSlaveId,
             address: point.protocol.modbus.address,
             function: functionCode,
             value: writeValue
@@ -1205,7 +1418,7 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
           data: {
             type: "RTU",
             uartPort: 1,
-            slaveId: 1,
+            slaveId: activeSlaveId,
             address: point.protocol.modbus.address,
             function: functionCode,
             registerNumber: point.protocol.modbus.size
@@ -1232,12 +1445,7 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
           MEP: point.protocol.cgi.MEP,
           cronTimer: cronTimer,
           Element: point.protocol.cgi.Element,
-          thingId: {
-            Type: "Inverter",
-            Mn: "fortress",
-            Md: "FP-ENVY-Inverter",
-            SN: "04237218B0"
-          }
+          thingId: activeThingId
         }
       };
     }
@@ -1318,6 +1526,13 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
       {/* fields grid or custom widget */}
       {point.widget === "datetime" ? (
         <DateTimeWidget
+          point={point}
+          formState={formState}
+          readOnly={readOnly}
+          onChange={handleFieldChange}
+        />
+      ) : point.widget === "timerange-multi" ? (
+        <MultiTimeRangeWidget
           point={point}
           formState={formState}
           readOnly={readOnly}
@@ -1422,11 +1637,13 @@ function PointCard({ point, helpTextMatch = false }: { point: PointDef; helpText
 function SubsectionBlock({
   subsection,
   searchQuery,
-  pointMatchesSearch
+  pointMatchesSearch,
+  equipment,
 }: {
   subsection: SubsectionDef;
   searchQuery: string;
   pointMatchesSearch: (point: PointDef, query: string) => { matches: boolean; helpTextMatch: boolean };
+  equipment: EquipmentOption;
 }) {
   const [open, setOpen] = useState(!subsection.collapsedByDefault);
 
@@ -1454,7 +1671,12 @@ function SubsectionBlock({
         )}
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredPoints.map(({ point, searchResult }) => (
-            <PointCard key={point.uuid} point={point} helpTextMatch={searchResult.helpTextMatch} />
+            <PointCard
+              key={point.uuid}
+              point={point}
+              helpTextMatch={searchResult.helpTextMatch}
+              equipment={equipment}
+            />
           ))}
         </div>
       </div>
@@ -1477,7 +1699,12 @@ function SubsectionBlock({
       {shouldBeOpen && (
         <div className="p-4 border-t border-slate-200 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredPoints.map(({ point, searchResult }) => (
-            <PointCard key={point.uuid} point={point} helpTextMatch={searchResult.helpTextMatch} />
+            <PointCard
+              key={point.uuid}
+              point={point}
+              helpTextMatch={searchResult.helpTextMatch}
+              equipment={equipment}
+            />
           ))}
         </div>
       )}
@@ -1492,12 +1719,14 @@ function SectionBlock({
   section,
   sectionId,
   searchQuery,
-  pointMatchesSearch
+  pointMatchesSearch,
+  equipment,
 }: {
   section: SectionDef;
   sectionId: string;
   searchQuery: string;
   pointMatchesSearch: (point: PointDef, query: string) => { matches: boolean; helpTextMatch: boolean };
+  equipment: EquipmentOption;
 }) {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -1529,6 +1758,7 @@ function SectionBlock({
               subsection={sub}
               searchQuery={searchQuery}
               pointMatchesSearch={pointMatchesSearch}
+              equipment={equipment}
             />
           ))}
         </div>
@@ -1544,12 +1774,14 @@ function ThemeBlock({
   theme,
   themeId,
   searchQuery,
-  pointMatchesSearch
+  pointMatchesSearch,
+  equipment,
 }: {
   theme: ThemeDef;
   themeId: string;
   searchQuery: string;
   pointMatchesSearch: (point: PointDef, query: string) => { matches: boolean; helpTextMatch: boolean };
+  equipment: EquipmentOption;
 }) {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -1586,6 +1818,7 @@ function ThemeBlock({
                 sectionId={sectionId}
                 searchQuery={searchQuery}
                 pointMatchesSearch={pointMatchesSearch}
+                equipment={equipment}
               />
             );
           })}
@@ -1600,8 +1833,10 @@ function ThemeBlock({
 // -----------------------------------------------------------------------------
 export default function PointThemeDemoPage() {
   const defaultPageId = pageRegistry[0]?.id ?? "";
-  const [selectedPageId, setSelectedPageId] = useState(defaultPageId);
-  const [selectedDevice, setSelectedDevice] = useState("envy-04237218B0");
+  const [selectedPageId] = useState(defaultPageId);
+  const [selectedEquipmentId, setSelectedEquipmentId] = useState(
+    equipmentOptions[0]?.id ?? ""
+  );
   const [activeSection, setActiveSection] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -1619,6 +1854,10 @@ export default function PointThemeDemoPage() {
     (selectedPageId && pageLookup[selectedPageId]) ||
     (defaultPageId && pageLookup[defaultPageId]) ||
     null;
+
+  const activeEquipment = useMemo(() => {
+    return equipmentOptions.find((eq) => eq.id === selectedEquipmentId) || equipmentOptions[0];
+  }, [selectedEquipmentId]);
 
   useEffect(() => {
     assertSchemaExpectations(activePage);
@@ -1712,33 +1951,19 @@ export default function PointThemeDemoPage() {
       <div className="max-w-[1400px] mx-auto flex gap-4">
         {/* Left sidebar / nav - sticky table of contents */}
         <aside className="w-64 shrink-0 rounded-xl border border-slate-300 bg-white shadow-sm p-4 flex flex-col gap-4 h-screen sticky top-0 overflow-y-auto">
-          {/* Device selector */}
+          {/* Equipment selector */}
           <div>
             <label className="text-[11px] text-slate-500 uppercase font-medium mb-1 block">
-              Device
+              Equipment
             </label>
             <select
               className="w-full rounded border border-slate-300 bg-white px-2 py-2 text-sm text-slate-800"
-              value={selectedDevice}
-              onChange={(event) => setSelectedDevice(event.target.value)}
+              value={selectedEquipmentId}
+              onChange={(event) => setSelectedEquipmentId(event.target.value)}
             >
-              <option value="envy-04237218B0">⭐ Envy - 04237218B0</option>
-            </select>
-          </div>
-
-          {/* Theme selector */}
-          <div>
-            <label className="text-[11px] text-slate-500 uppercase font-medium mb-1 block">
-              Theme
-            </label>
-            <select
-              className="w-full rounded border border-slate-300 bg-white px-2 py-2 text-sm text-slate-800"
-              value={selectedPageId}
-              onChange={(event) => setSelectedPageId(event.target.value)}
-            >
-              {pageRegistry.map((page) => (
-                <option key={page.id} value={page.id}>
-                  {page.label}
+              {equipmentOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
                 </option>
               ))}
             </select>
@@ -1859,6 +2084,7 @@ export default function PointThemeDemoPage() {
                   themeId={themeId}
                   searchQuery={searchQuery}
                   pointMatchesSearch={pointMatchesSearch}
+                  equipment={activeEquipment}
                 />
               );
             })}

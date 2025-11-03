@@ -589,7 +589,7 @@ export const pointTransforms: PointTransform[] = [
         "theme": "Battery",
         "section": "Grid Charge"
       },
-      "title": "Grid Charge Windows (Placeholder.  I'll break this up later.)",
+      "title": "Grid Charge Windows",
       "help": "During these times, your battery will continue to charge from solar power normally, but will also use additional power from the grid to charge the battery.",
       "entries": {
         "StartTime1_h": { "name": "Window 1 Start Hour", "range": { "min": 0, "max": 23 } },

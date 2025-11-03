@@ -2340,7 +2340,8 @@
                       "Element": "ACChargingPlan"
                     }
                   },
-                  "uuid": "ACCharge.ACChargingPlan"
+                  "uuid": "ACCharge.ACChargingPlan",
+                  "widget": "timerange-multi"
                 }
               ],
               "collapsedByDefault": false,
@@ -4463,7 +4464,7 @@
                   "uuid": "ACCoupledPV.ACCoupledPV"
                 },
                 {
-                  "title": "AC Coupled PV SOC Limits",
+                  "title": "AC Coupled PV Start/Stop SOC",
                   "help": "Defines the battery state-of-charge thresholds that control when the inverter allows AC Coupled PV charging to start and stop.",
                   "element_type": "Attribute",
                   "access": "RW",

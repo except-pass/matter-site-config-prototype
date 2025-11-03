@@ -5,6 +5,7 @@ export type WidgetType =
   | "datetime"      // Date and time picker
   | "time"          // Time-only picker
   | "timerange"     // Start and end time picker
+  | "timerange-multi" // Multiple start/end windows stacked together
   | "default";      // Default field-by-field UI
 
 export type TimeEncoding =
@@ -57,6 +58,12 @@ export const widgetConfigs: WidgetConfig[] = [
   {
     uuid: "BatteryTOUDischarge.TOUDischargingPlan3",
     widget: "timerange",
+  },
+
+  // Grid Charge windows - stacked time range pickers
+  {
+    uuid: "ACCharge.ACChargingPlan",
+    widget: "timerange-multi",
   },
 
   // Add more widget configs as needed
