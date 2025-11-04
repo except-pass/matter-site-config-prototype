@@ -64,9 +64,6 @@ interface PointEntry {
 }
 
 interface PointRow {
-  theme: string;
-  section: string;
-  subsection: string;
   point_uuid: string;
   point_title: string;
   point_help: string;
@@ -159,12 +156,9 @@ for (const row of masterRows) {
   }
 
   // Points with entries
-  const pointKey = `${row.theme}|${row.section}|${row.subsection}|${row.point_uuid}`;
+  const pointKey = row.point_uuid;
   if (!points.has(pointKey)) {
     points.set(pointKey, {
-      theme: row.theme,
-      section: row.section,
-      subsection: row.subsection,
       point_uuid: row.point_uuid,
       point_title: row.point_title,
       point_help: row.point_help,
@@ -257,9 +251,6 @@ const pointsCsv = stringify(
   {
     header: true,
     columns: [
-      'theme',
-      'section',
-      'subsection',
       'point_uuid',
       'point_title',
       'point_help',

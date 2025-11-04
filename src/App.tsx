@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getWidgetConfig } from "./transforms/widgetConfig.js";
 
+// Declare global variable injected by Vite
+declare const __THEME_FILE__: string | undefined;
+
 // -----------------------------------------------------------------------------
 // Point Theme Schema (3-level hierarchy)
 // Page -> themes[] -> sections[] -> subsections[] -> points[]
@@ -103,10 +106,9 @@ interface EquipmentOption {
 // -----------------------------------------------------------------------------
 // Page catalogue loaded from JSON files under src/themes
 // -----------------------------------------------------------------------------
-const pageModules = import.meta.glob<PageDef>("./themes/*.json", {
-  eager: true,
-  import: "default"
-});
+
+// Check if a specific theme file is specified via CLI
+const THEME_FILE = typeof __THEME_FILE__ !== 'undefined' ? __THEME_FILE__ : undefined;
 
 type PageRegistryEntry = {
   id: string;
@@ -114,6 +116,21 @@ type PageRegistryEntry = {
   filename: string;
   data: PageDef;
 };
+
+// Load pages - either from specific file or glob pattern
+let pageModules: Record<string, PageDef>;
+
+if (THEME_FILE) {
+  // For CLI-specified files, we'll load them dynamically in the component
+  // Set empty modules here, will be populated via fetch
+  pageModules = {};
+} else {
+  // Default: load all JSON files from themes directory
+  pageModules = import.meta.glob<PageDef>("./themes/*.json", {
+    eager: true,
+    import: "default"
+  });
+}
 
 const pageRegistry: PageRegistryEntry[] = Object.entries(pageModules)
   .map(([path, data]) => {
@@ -1832,7 +1849,94 @@ function ThemeBlock({
 // Page Layout
 // -----------------------------------------------------------------------------
 export default function PointThemeDemoPage() {
-  const defaultPageId = pageRegistry[0]?.id ?? "";
+  const [loadedPageRegistry, setLoadedPageRegistry] = useState<PageRegistryEntry[]>(pageRegistry);
+  const [loadedPageLookup, setLoadedPageLookup] = useState<Record<string, PageDef>>(pageLookup);
+  const [isLoading, setIsLoading] = useState<boolean>(!!THEME_FILE);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  // Load theme file dynamically if specified via CLI
+  useEffect(() => {
+    if (!THEME_FILE) return;
+
+    const loadThemeFile = async () => {
+      try {
+        setIsLoading(true);
+        setLoadError(null);
+        
+        // Normalize the file path for fetch
+        // Account for Vite's base path
+        const basePath = '/matter-site-config-prototype';
+        let fetchPath = THEME_FILE;
+        
+        // Remove base path if user included it
+        if (fetchPath.startsWith(basePath)) {
+          fetchPath = fetchPath.substring(basePath.length);
+        }
+        
+        // Handle relative paths
+        if (fetchPath.startsWith('./') || fetchPath.startsWith('../')) {
+          // Relative path - convert to absolute URL path
+          // Remove leading ./ or ../ and ensure it starts with /
+          fetchPath = fetchPath.replace(/^\.\.?\//, '/');
+          if (!fetchPath.startsWith('/')) {
+            fetchPath = '/' + fetchPath;
+          }
+        } else if (!fetchPath.startsWith('/') && !fetchPath.startsWith('http://') && !fetchPath.startsWith('https://')) {
+          // Assume it's a relative path without ./ prefix
+          fetchPath = '/' + fetchPath;
+        }
+        
+        // Prepend base path for fetch
+        fetchPath = basePath + fetchPath;
+        
+        console.log('Fetching theme file from:', fetchPath);
+        
+        // Fetch the JSON file
+        const response = await fetch(fetchPath);
+        if (!response.ok) {
+          const text = await response.text();
+          console.error('Failed to fetch theme file. Response:', text.substring(0, 200));
+          throw new Error(`Failed to load theme file: ${response.statusText} (${response.status})`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          const text = await response.text();
+          console.error('Response is not JSON. Content-Type:', contentType);
+          console.error('Response body (first 200 chars):', text.substring(0, 200));
+          throw new Error(`Expected JSON but got ${contentType || 'unknown content type'}`);
+        }
+        
+        const data: PageDef = await response.json();
+        
+        // Extract filename from path
+        const filename = THEME_FILE.split("/").pop() ?? THEME_FILE.split("\\").pop() ?? "theme";
+        const id = filename.replace(/\.json$/i, "");
+        const label = data.pageName?.trim() || id;
+        
+        // Create registry entry
+        const entry: PageRegistryEntry = {
+          id,
+          label,
+          filename,
+          data
+        };
+        
+        // Update state
+        setLoadedPageRegistry([entry]);
+        setLoadedPageLookup({ [id]: data });
+      } catch (error) {
+        console.error('Error loading theme file:', error);
+        setLoadError(error instanceof Error ? error.message : 'Failed to load theme file');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadThemeFile();
+  }, []);
+
+  const defaultPageId = loadedPageRegistry[0]?.id ?? "";
   const [selectedPageId] = useState(defaultPageId);
   const [selectedEquipmentId, setSelectedEquipmentId] = useState(
     equipmentOptions[0]?.id ?? ""
@@ -1851,8 +1955,8 @@ export default function PointThemeDemoPage() {
   );
 
   const activePage: PageDef | null =
-    (selectedPageId && pageLookup[selectedPageId]) ||
-    (defaultPageId && pageLookup[defaultPageId]) ||
+    (selectedPageId && loadedPageLookup[selectedPageId]) ||
+    (defaultPageId && loadedPageLookup[defaultPageId]) ||
     null;
 
   const activeEquipment = useMemo(() => {
@@ -1933,6 +2037,30 @@ export default function PointThemeDemoPage() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [activeSection]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-100 text-slate-900 p-4 md:p-6">
+        <div className="max-w-xl mx-auto bg-white border border-slate-300 rounded-xl shadow-sm p-6 text-sm text-slate-700">
+          Loading theme file...
+        </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="min-h-screen bg-slate-100 text-slate-900 p-4 md:p-6">
+        <div className="max-w-xl mx-auto bg-white border border-red-300 rounded-xl shadow-sm p-6 text-sm text-red-700">
+          <div className="font-semibold mb-2">Error loading theme file</div>
+          <div>{loadError}</div>
+          <div className="mt-4 text-xs text-slate-500">
+            File path: <code className="rounded bg-slate-100 px-1 py-0.5">{THEME_FILE}</code>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!activePage) {
     return (

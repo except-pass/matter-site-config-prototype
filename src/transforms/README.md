@@ -94,9 +94,11 @@ The project uses a **two-file approach** for easier maintenance:
 
 ### 1. points.csv (Edited by non-developers in Excel/Sheets)
 One line per point_uuid containing all point metadata:
-- Location: `theme`, `section`, `subsection`
-- Point data: `point_uuid`, `point_title`, `point_help`, `point_element_type`, `point_access`, `point_readOnly`, etc.
-- Entries: All entries as a JSON array in the `entries` column
+- `point_uuid` - Unique identifier for the point
+- Point metadata: `point_title`, `point_help`, `point_element_type`, `point_access`, `point_readOnly`, etc.
+- `entries` - All entries as a JSON array
+
+**No location information** (theme/section/subsection) is stored here - that's defined in `hierarchy.yaml`
 
 ### 2. hierarchy.yaml (Edited by developers)
 Defines the structure, ordering, and display properties:
@@ -119,10 +121,12 @@ themes:
 ```
 
 **Key Benefits:**
-- **Rename themes/sections**: Only update `hierarchy.yaml` and find/replace in `points.csv`
+- **Rename themes/sections**: Only update `hierarchy.yaml` (one place!)
 - **Reorder**: Just rearrange items in `hierarchy.yaml`
+- **Move points**: Just move the point_uuid in `hierarchy.yaml`
 - **Non-devs edit content**: Work in Excel on `points.csv` without touching structure
 - **Devs control structure**: Maintain `hierarchy.yaml` with clean YAML syntax
+- **Clean separation**: Point data and hierarchy are completely independent
 
 ### Working with the files:
 

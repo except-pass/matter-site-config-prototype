@@ -23,9 +23,6 @@ interface PointEntry {
 }
 
 interface Point {
-  theme: string;
-  section: string;
-  subsection: string;
   point_uuid: string;
   point_title: string;
   point_help: string;
@@ -122,8 +119,7 @@ console.log(`Loaded hierarchy with ${hierarchy.themes.length} themes and ${point
 // Create a map for quick point lookup
 const pointMap = new Map<string, Point>();
 for (const point of points) {
-  const key = `${point.theme}|${point.section}|${point.subsection}|${point.point_uuid}`;
-  pointMap.set(key, point);
+  pointMap.set(point.point_uuid, point);
 }
 
 // Helper function to convert point entry to JSON format
@@ -242,11 +238,10 @@ for (const themeSpec of hierarchy.themes) {
 
       // Get points for this subsection from the hierarchy
       for (const pointUuid of subsectionSpec.points) {
-        const key = `${themeSpec.name}|${sectionSpec.name}|${subsectionSpec.name || ''}|${pointUuid}`;
-        const pointData = pointMap.get(key);
+        const pointData = pointMap.get(pointUuid);
 
         if (!pointData) {
-          console.warn(`Warning: Point ${pointUuid} not found in points.csv (theme: ${themeSpec.name}, section: ${sectionSpec.name}, subsection: ${subsectionSpec.name || 'none'})`);
+          console.warn(`Warning: Point ${pointUuid} not found in points.csv`);
           continue;
         }
 
