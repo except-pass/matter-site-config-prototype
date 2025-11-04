@@ -127,7 +127,6 @@ Desktop.ini
 
 # PR Report outputs
 pr_report_*.md
-*.csv
 !master.csv
 !points.csv
 /components/web-fmp/docker-compose.debug.yaml

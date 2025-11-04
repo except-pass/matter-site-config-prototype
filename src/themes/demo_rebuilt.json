@@ -227,7 +227,7 @@
                 },
                 {
                   "title": "Reset to Factory Defaults",
-                  "help": "Restores all inverter configuration parameters to their original factory values. Use with caution — this cannot be undone.",
+                  "help": "Restores all inverter configuration parameters to their original factory values. Use with caution â€” this cannot be undone.",
                   "element_type": "service",
                   "access": "INVOKE",
                   "readOnly": false,
@@ -244,7 +244,7 @@
                 },
                 {
                   "title": "Inverter Power Control",
-                  "help": "Turns the inverter output on or off.\n\n• **Standby:** AC output is disabled, but control circuits remain powered.\n• **Power On:** Enables AC output and normal inverter operation.",
+                  "help": "Turns the inverter output on or off.\r\n\r\nâ€¢ **Standby:** AC output is disabled, but control circuits remain powered.\r\nâ€¢ **Power On:** Enables AC output and normal inverter operation.",
                   "element_type": "service",
                   "access": "INVOKE",
                   "readOnly": false,
@@ -532,7 +532,7 @@
                 },
                 {
                   "title": "System Type",
-                  "help": "Defines how this inverter participates in a multi-inverter or multi-phase system.\n\n• No Parallel: Single inverter system.\n• Single-phase Parallel (Master / Secondary): Multiple inverters on one phase.\n• Three-phase Parallel (Master): Multiple inverters forming R/S/T phases.",
+                  "help": "Defines how this inverter participates in a multi-inverter or multi-phase system.\r\n\r\nâ€¢ No Parallel: Single inverter system.\r\nâ€¢ Single-phase Parallel (Master / Secondary): Multiple inverters on one phase.\r\nâ€¢ Three-phase Parallel (Master): Multiple inverters forming R/S/T phases.",
                   "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -1103,7 +1103,7 @@
                 },
                 {
                   "title": "Battery Control Type",
-                  "help": "Determines how the inverter regulates both charging and discharging.\n\nSOC: Uses battery state of charge thresholds to start and stop charge/discharge.\n\nVolt: Uses DC voltage limits instead.",
+                  "help": "Determines how the inverter regulates both charging and discharging.\r\n\r\nSOC: Uses battery state of charge thresholds to start and stop charge/discharge.\r\n\r\nVolt: Uses DC voltage limits instead.",
                   "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -3096,8 +3096,8 @@
                         "1": "Enable"
                       },
                       "friendly_meanings": {
-                        "0": "Inactive — No PF control",
-                        "1": "Active — Constant PF"
+                        "0": "Inactive â€” No PF control",
+                        "1": "Active â€” Constant PF"
                       }
                     }
                   ],
@@ -3771,7 +3771,7 @@
                 },
                 {
                   "title": "Over-Frequency Droop: Deadband",
-                  "help": "Over Frequency Droop dbOF — Deadband around nominal frequency before active power reduction begins.",
+                  "help": "Over Frequency Droop dbOF â€” Deadband around nominal frequency before active power reduction begins.",
                   "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
@@ -3795,7 +3795,7 @@
                 },
                 {
                   "title": "Over-Frequency Droop: Gain (k)",
-                  "help": "Over Frequency Droop kOF — Slope (gain k) of active power reduction versus frequency rise above nominal.",
+                  "help": "Over Frequency Droop kOF â€” Slope (gain k) of active power reduction versus frequency rise above nominal.",
                   "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
@@ -3819,7 +3819,7 @@
                 },
                 {
                   "title": "Under-Frequency Droop: Deadband",
-                  "help": "Under Frequency Droop dbUF — Deadband around nominal frequency before active power increase/response begins.",
+                  "help": "Under Frequency Droop dbUF â€” Deadband around nominal frequency before active power increase/response begins.",
                   "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
@@ -3843,7 +3843,7 @@
                 },
                 {
                   "title": "Under-Frequency Droop: Gain (k)",
-                  "help": "Under Frequency Droop kUF — Slope (gain k) of active power response versus frequency drop below nominal.",
+                  "help": "Under Frequency Droop kUF â€” Slope (gain k) of active power response versus frequency drop below nominal.",
                   "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
@@ -3971,7 +3971,7 @@
               "points": [
                 {
                   "title": "Generator Port Connection",
-                  "help": "If using a generator, select which port it's connected to — either the GEN port or the Grid Input port (sometimes called microgrid mode). If no generator is installed, leave this setting on GEN port.",
+                  "help": "If using a generator, select which port it's connected to â€” either the GEN port or the Grid Input port (sometimes called microgrid mode). If no generator is installed, leave this setting on GEN port.",
                   "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,

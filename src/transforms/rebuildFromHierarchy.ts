@@ -1,8 +1,8 @@
 import fs from 'fs';
-import { parse } from 'csv-parse/sync';
 import * as yaml from 'yaml';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import XLSX from 'xlsx';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -67,6 +67,12 @@ interface CsvRow {
   MEP: string;
   Cluster: string;
   Element: string;
+  Read: string;
+  ReadResponse: string;
+  Write: string;
+  WriteResponse: string;
+  Invoke: string;
+  InvokeResponse: string;
   arg: string;
   name: string;
   dtype: string;
@@ -112,6 +118,12 @@ interface Point {
   point_protocol_MEP: string;
   point_protocol_Cluster: string;
   point_protocol_Element: string;
+  point_Read: string;
+  point_ReadResponse: string;
+  point_Write: string;
+  point_WriteResponse: string;
+  point_Invoke: string;
+  point_InvokeResponse: string;
   entries: string;
 }
 
@@ -190,12 +202,20 @@ console.log('Reading hierarchy.yaml...');
 const hierarchyContent = fs.readFileSync('hierarchy.yaml', 'utf-8');
 const hierarchy = yaml.parse(hierarchyContent);
 
-// Read matter.csv
-console.log('Reading matter.csv...');
-const csvRows: CsvRow[] = parse(fs.readFileSync('matter.csv', 'utf-8'), {
-  columns: true,
-  skip_empty_lines: true,
-});
+// Read matter.xlsx
+console.log('Reading matter.xlsx...');
+const workbook = XLSX.readFile('matter.xlsx');
+const matterSheet = workbook.Sheets['matter'];
+
+if (!matterSheet) {
+  throw new Error('Sheet "matter" not found in matter.xlsx');
+}
+
+// Convert Excel sheet to JSON array
+const csvRows: CsvRow[] = XLSX.utils.sheet_to_json(matterSheet, {
+  defval: '', // Default value for empty cells
+  raw: false, // Convert all values to strings
+}) as CsvRow[];
 
 // Group rows by command_id and build Point objects
 const points: Point[] = [];
@@ -234,6 +254,12 @@ for (const [pointCommandId, rows] of pointGroups.entries()) {
     point_protocol_MEP: firstRow.MEP || '',
     point_protocol_Cluster: firstRow.Cluster || '',
     point_protocol_Element: firstRow.Element || '',
+    point_Read: firstRow.Read || '',
+    point_ReadResponse: firstRow.ReadResponse || '',
+    point_Write: firstRow.Write || '',
+    point_WriteResponse: firstRow.WriteResponse || '',
+    point_Invoke: firstRow.Invoke || '',
+    point_InvokeResponse: firstRow.InvokeResponse || '',
     entries: '', // Will be populated below
   };
   
