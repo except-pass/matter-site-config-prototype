@@ -22,6 +22,8 @@ interface EnvySpecificPoint {
   element_type?: string;
   access?: string;
   readOnly?: boolean;
+  widget?: string;
+  showInvokeButton?: boolean;
   entries: Array<{
     name?: string;
     arg: string;
@@ -987,6 +989,11 @@ function convertEnvySpecificPointToJson(def: EnvySpecificPoint): JsonPoint {
     command_id: def.command_id,
   };
 
+  // Copy widget if present
+  if (def.widget) {
+    jsonPoint.widget = def.widget;
+  }
+
   // Copy scalefactor from entry to modbus protocol if present
   if (def.protocol.modbus && entries.length > 0 && entries[0].scalefactor !== undefined) {
     (jsonPoint.protocol as any).modbus.scale_factor = entries[0].scalefactor;
@@ -994,6 +1001,10 @@ function convertEnvySpecificPointToJson(def: EnvySpecificPoint): JsonPoint {
 
   if (def.invokeButtonText) {
     jsonPoint.invokeButtonText = def.invokeButtonText;
+  }
+
+  if (def.showInvokeButton !== undefined) {
+    jsonPoint.showInvokeButton = def.showInvokeButton;
   }
 
   return jsonPoint;

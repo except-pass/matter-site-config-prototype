@@ -1258,7 +1258,8 @@ function PointCard({
     // Convert enum friendly values based on protocol
     // Modbus: use wire values (keys like "0")
     // Matter: use semantic values (strings like "Meter")
-    const useWireValues = point.protocol.modbus !== undefined;
+    // CGI: use wire values (numbers like 0)
+    const useWireValues = point.protocol.modbus !== undefined || point.protocol.cgi !== undefined;
 
     point.entries.forEach((entry) => {
       if (entry.dtype !== 'enum' || !entry.meanings) {
@@ -1302,7 +1303,39 @@ function PointCard({
 
     let payload: any = {};
 
-    if (point.protocol.matter) {
+    // Check for generator-exercise widget first (before other protocol checks)
+    if (point.element_type === "custom" && point.widget === "generator-exercise" && point.protocol?.cgi) {
+      // Special handling for generator-exercise widget (CGI protocol)
+      // Enum conversion above should have already converted DayOfWeek to wire value (number)
+      const dayOfWeek = normalizedArguments.DayOfWeek !== '' && normalizedArguments.DayOfWeek !== null && normalizedArguments.DayOfWeek !== undefined
+        ? (typeof normalizedArguments.DayOfWeek === 'number' ? normalizedArguments.DayOfWeek : parseInt(String(normalizedArguments.DayOfWeek), 10))
+        : 0;
+      const hour = normalizedArguments.Hour !== '' && normalizedArguments.Hour !== null && normalizedArguments.Hour !== undefined 
+        ? (typeof normalizedArguments.Hour === 'number' ? normalizedArguments.Hour : parseInt(String(normalizedArguments.Hour), 10))
+        : 0;
+      const minute = normalizedArguments.Minute !== '' && normalizedArguments.Minute !== null && normalizedArguments.Minute !== undefined
+        ? (typeof normalizedArguments.Minute === 'number' ? normalizedArguments.Minute : parseInt(String(normalizedArguments.Minute), 10))
+        : 0;
+
+      // Generate cron expression (minute hour day-of-month month day-of-week)
+      // Note: day-of-week in cron is 0-6 (Sunday=0), which matches our enum
+      const cronTimer = `${minute} ${hour} * * ${dayOfWeek}`;
+
+      payload = {
+        version: "1.0",
+        requestId: Date.now(),
+        method: "Invoke",
+        endPoint: "LuaPlugin",
+        timeout: 5,
+        data: {
+          Cluster: point.protocol.cgi.Cluster,
+          MEP: point.protocol.cgi.MEP,
+          cronTimer: cronTimer,
+          Element: point.protocol.cgi.Element,
+          thingId: activeThingId
+        }
+      };
+    } else if (point.protocol?.matter) {
       // Check if entries have individual protocol definitions (for multi-element widgets)
       const hasEntryProtocols = point.entries.some(e => e.protocol?.matter);
 
@@ -1406,29 +1439,6 @@ function PointCard({
           }
         };
       }
-    } else if (point.element_type === "custom" && point.widget === "generator-exercise" && point.protocol.cgi) {
-      // Special handling for generator-exercise widget (CGI protocol)
-      const dayOfWeek = normalizedArguments.DayOfWeek !== '' ? normalizedArguments.DayOfWeek : 0;
-      const hour = normalizedArguments.Hour !== '' ? normalizedArguments.Hour : 0;
-      const minute = normalizedArguments.Minute !== '' ? normalizedArguments.Minute : 0;
-
-      // Generate cron expression
-      const cronTimer = `${minute} ${hour} * * ${dayOfWeek}`;
-
-      payload = {
-        version: "1.0",
-        requestId: Date.now(),
-        method: "Invoke",
-        endPoint: "LuaPlugin",
-        timeout: 5,
-        data: {
-          Cluster: point.protocol.cgi.Cluster,
-          MEP: point.protocol.cgi.MEP,
-          cronTimer: cronTimer,
-          Element: point.protocol.cgi.Element,
-          thingId: activeThingId
-        }
-      };
     }
 
     setDialogPayload(payload);

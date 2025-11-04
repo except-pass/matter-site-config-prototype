@@ -4262,14 +4262,16 @@
                       "dtype": "Number",
                       "description": "",
                       "longdescription": "",
-                      "unit": "V"
+                      "unit": "V",
+                      "scalefactor": 0.1
                     }
                   ],
                   "protocol": {
                     "modbus": {
                       "address": 194,
                       "register_type": 3,
-                      "size": 1
+                      "size": 1,
+                      "scale_factor": 0.1
                     }
                   },
                   "command_id": "Modbus.GenChgStartVolt"
@@ -4287,14 +4289,16 @@
                       "dtype": "Number",
                       "description": "",
                       "longdescription": "",
-                      "unit": "V"
+                      "unit": "V",
+                      "scalefactor": 0.1
                     }
                   ],
                   "protocol": {
                     "modbus": {
                       "address": 195,
                       "register_type": 3,
-                      "size": 1
+                      "size": 1,
+                      "scale_factor": 0.1
                     }
                   },
                   "command_id": "Modbus.GenChgEndVolt"
@@ -4359,7 +4363,8 @@
                       "Element": "GeneratorExercise"
                     }
                   },
-                  "command_id": "CGI.GeneratorExercise"
+                  "command_id": "CGI.GeneratorExercise",
+                  "widget": "generator-exercise"
                 }
               ]
             }

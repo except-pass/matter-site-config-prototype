@@ -192,6 +192,7 @@ points:
         arg: GenChgStartVolt
         dtype: uint16
         unit: V
+        scalefactor: 0.1
     protocol:
       modbus:
         address: 194
@@ -213,6 +214,7 @@ points:
         arg: GenChgEndVolt
         dtype: uint16
         unit: V
+        scalefactor: 0.1
     protocol:
       modbus:
         address: 195
