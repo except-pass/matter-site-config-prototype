@@ -10,7 +10,7 @@ themes:
               - Basic.WorkMode
               - Basic.GridLossWarningClear
               - Basic.PowerStatus
-              - Basic.AllToDefault
+              - uuid: Basic.AllToDefault
               - Basic.PowerControl
       - name: Power Limits
         subsections:
