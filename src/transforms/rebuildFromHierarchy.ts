@@ -2,6 +2,30 @@ import fs from 'fs';
 import { parse } from 'csv-parse/sync';
 import * as yaml from 'yaml';
 
+interface CsvRow {
+  point_uuid: string;
+  point_title: string;
+  point_help: string;
+  point_element_type: string;
+  point_access: string;
+  point_widget: string;
+  point_protocol_MEP: string;
+  point_protocol_Cluster: string;
+  point_protocol_Element: string;
+  arg: string;
+  name: string;
+  dtype: string;
+  description: string;
+  longdescription: string;
+  unit: string;
+  range_min: string;
+  range_max: string;
+  less_than: string;
+  greater_than: string;
+  meanings: string;
+  friendly_meanings: string;
+}
+
 interface PointEntry {
   entry_order: string;
   entry_name: string;
@@ -110,10 +134,107 @@ const hierarchy = yaml.parse(hierarchyContent);
 
 // Read points.csv
 console.log('Reading points.csv...');
-const points: Point[] = parse(fs.readFileSync('points.csv', 'utf-8'), {
+const csvRows: CsvRow[] = parse(fs.readFileSync('points.csv', 'utf-8'), {
   columns: true,
   skip_empty_lines: true,
 });
+
+// Group rows by point_uuid and build Point objects
+const points: Point[] = [];
+const pointGroups = new Map<string, CsvRow[]>();
+
+// Group rows by point_uuid (carry forward point_uuid from first row)
+let currentPointUuid = '';
+for (const row of csvRows) {
+  // If point_uuid is filled, start a new point group
+  if (row.point_uuid && row.point_uuid.trim()) {
+    currentPointUuid = row.point_uuid.trim();
+  }
+  
+  // Skip rows without a current point_uuid (shouldn't happen, but safety check)
+  if (!currentPointUuid) {
+    console.warn(`Warning: Row without point_uuid found: ${JSON.stringify(row)}`);
+    continue;
+  }
+  
+  if (!pointGroups.has(currentPointUuid)) {
+    pointGroups.set(currentPointUuid, []);
+  }
+  pointGroups.get(currentPointUuid)!.push(row);
+}
+
+// Convert grouped rows to Point objects
+for (const [pointUuid, rows] of pointGroups.entries()) {
+  // Get point-level fields from first row
+  const firstRow = rows[0];
+  const point: Point = {
+    point_uuid: pointUuid,
+    point_title: firstRow.point_title || '',
+    point_help: firstRow.point_help || '',
+    point_element_type: firstRow.point_element_type || '',
+    point_access: firstRow.point_access || '',
+    point_widget: firstRow.point_widget || '',
+    point_protocol_MEP: firstRow.point_protocol_MEP || '',
+    point_protocol_Cluster: firstRow.point_protocol_Cluster || '',
+    point_protocol_Element: firstRow.point_protocol_Element || '',
+    entries: '', // Will be populated below
+  };
+  
+  // Convert entry rows to PointEntry objects
+  const entries: PointEntry[] = rows.map((row, index) => {
+    // Parse meanings from comma-separated labels (numbers are implied starting from 0)
+    let meanings = '';
+    let friendly_meanings = '';
+    
+    if (row.meanings) {
+      try {
+        const labels = row.meanings.split(',').map(l => l.trim()).filter(l => l);
+        const meaningsObj: Record<string, string> = {};
+        labels.forEach((label, idx) => {
+          meaningsObj[String(idx)] = label; // Assign number starting from 0
+        });
+        meanings = JSON.stringify(meaningsObj);
+      } catch (e) {
+        meanings = '';
+      }
+    }
+    
+    if (row.friendly_meanings) {
+      try {
+        const labels = row.friendly_meanings.split(',').map(l => l.trim()).filter(l => l);
+        const friendlyObj: Record<string, string> = {};
+        labels.forEach((label, idx) => {
+          friendlyObj[String(idx)] = label; // Assign number starting from 0
+        });
+        friendly_meanings = JSON.stringify(friendlyObj);
+      } catch (e) {
+        friendly_meanings = '';
+      }
+    }
+    
+    return {
+      entry_order: String(index + 1), // Order comes from row order
+      entry_name: row.name || '',
+      entry_arg: row.arg || '',
+      entry_dtype: row.dtype || '',
+      entry_description: row.description || '',
+      entry_longdescription: row.longdescription || '',
+      entry_unit: row.unit || '',
+      entry_value: '', // Not in new format
+      entry_range_min: row.range_min || '',
+      entry_range_max: row.range_max || '',
+      entry_less_than: row.less_than || '',
+      entry_greater_than: row.greater_than || '',
+      entry_meanings: meanings,
+      entry_friendly_meanings: friendly_meanings,
+    };
+  });
+  
+  // Store entries as JSON string (for compatibility with existing code)
+  point.entries = JSON.stringify(entries);
+  
+  points.push(point);
+}
 
 console.log(`Loaded hierarchy with ${hierarchy.themes.length} themes and ${points.length} points`);
 
@@ -317,6 +438,8 @@ for (const themeSpec of hierarchy.themes) {
             // Collect entries from multiple points
             // First pass: build arg mapping for constraint updates
             const argMap = new Map<string, string>(); // old arg -> new arg
+            const finalArgs = new Set<string>(); // All final arg names that will be in the combined point
+            
             for (const entrySpec of combineSpec.entries || []) {
               const sourcePointData = pointMap.get(entrySpec.point);
               if (!sourcePointData) continue;
@@ -327,8 +450,70 @@ for (const themeSpec of hierarchy.themes) {
               
               const oldArg = sourceEntry.entry_arg;
               const newArg = entrySpec.arg || oldArg;
+              finalArgs.add(newArg);
+              
               if (oldArg !== newArg) {
                 argMap.set(oldArg, newArg);
+              }
+            }
+            
+            // Second pass: map constraints that reference entries in the same point
+            // but check if those referenced entries exist in finalArgs (directly or via mapping)
+            for (const entrySpec of combineSpec.entries || []) {
+              const sourcePointData = pointMap.get(entrySpec.point);
+              if (!sourcePointData) continue;
+              
+              const sourceEntries: PointEntry[] = JSON.parse(sourcePointData.entries);
+              const sourceEntry = sourceEntries.find(e => e.entry_arg === entrySpec.entry);
+              if (!sourceEntry) continue;
+              
+              // Check if constraint references another entry that will be in the final combined point
+              if (sourceEntry.entry_less_than) {
+                // Check if this constraint arg matches any entry spec's entry arg OR final arg
+                for (const otherEntrySpec of combineSpec.entries || []) {
+                  const otherPointData = pointMap.get(otherEntrySpec.point);
+                  if (!otherPointData) continue;
+                  const otherEntries: PointEntry[] = JSON.parse(otherPointData.entries);
+                  // Check if constraint matches this entry spec's entry arg
+                  if (otherEntrySpec.entry === sourceEntry.entry_less_than) {
+                    const otherNewArg = otherEntrySpec.arg || sourceEntry.entry_less_than;
+                    if (finalArgs.has(otherNewArg)) {
+                      argMap.set(sourceEntry.entry_less_than, otherNewArg);
+                      break;
+                    }
+                  }
+                  // Also check if constraint matches any entry in that point
+                  const otherEntry = otherEntries.find(e => e.entry_arg === sourceEntry.entry_less_than);
+                  if (otherEntry) {
+                    const otherNewArg = otherEntrySpec.arg || otherEntry.entry_arg;
+                    if (finalArgs.has(otherNewArg)) {
+                      argMap.set(sourceEntry.entry_less_than, otherNewArg);
+                      break;
+                    }
+                  }
+                }
+              }
+              if (sourceEntry.entry_greater_than) {
+                for (const otherEntrySpec of combineSpec.entries || []) {
+                  const otherPointData = pointMap.get(otherEntrySpec.point);
+                  if (!otherPointData) continue;
+                  const otherEntries: PointEntry[] = JSON.parse(otherPointData.entries);
+                  if (otherEntrySpec.entry === sourceEntry.entry_greater_than) {
+                    const otherNewArg = otherEntrySpec.arg || sourceEntry.entry_greater_than;
+                    if (finalArgs.has(otherNewArg)) {
+                      argMap.set(sourceEntry.entry_greater_than, otherNewArg);
+                      break;
+                    }
+                  }
+                  const otherEntry = otherEntries.find(e => e.entry_arg === sourceEntry.entry_greater_than);
+                  if (otherEntry) {
+                    const otherNewArg = otherEntrySpec.arg || otherEntry.entry_arg;
+                    if (finalArgs.has(otherNewArg)) {
+                      argMap.set(sourceEntry.entry_greater_than, otherNewArg);
+                      break;
+                    }
+                  }
+                }
               }
             }
             
@@ -370,12 +555,40 @@ for (const themeSpec of hierarchy.themes) {
                 jsonEntry.arg = entrySpec.arg;
               }
               
-              // Update constraints to reference the new arg names
-              if (typeof jsonEntry.less_than === 'string' && argMap.has(jsonEntry.less_than)) {
-                jsonEntry.less_than = argMap.get(jsonEntry.less_than)!;
+              // Override constraints if specified in hierarchy.yaml
+              if (entrySpec.less_than !== undefined) {
+                jsonEntry.less_than = entrySpec.less_than;
               }
-              if (typeof jsonEntry.greater_than === 'string' && argMap.has(jsonEntry.greater_than)) {
-                jsonEntry.greater_than = argMap.get(jsonEntry.greater_than)!;
+              if (entrySpec.greater_than !== undefined) {
+                jsonEntry.greater_than = entrySpec.greater_than;
+              }
+              
+              // Update constraints to reference the new arg names (only if not explicitly overridden)
+              // Check if constraint references a final arg directly, or needs mapping
+              if (typeof jsonEntry.less_than === 'string' && entrySpec.less_than === undefined) {
+                const constraintArg = jsonEntry.less_than;
+                // First check if it's already a final arg
+                if (finalArgs.has(constraintArg)) {
+                  // Already correct - keep it
+                } else if (argMap.has(constraintArg)) {
+                  // Map to new arg name
+                  jsonEntry.less_than = argMap.get(constraintArg)!;
+                } else {
+                  // Constraint doesn't reference any entry in the combined point - remove it
+                  jsonEntry.less_than = undefined;
+                }
+              }
+              if (typeof jsonEntry.greater_than === 'string' && entrySpec.greater_than === undefined) {
+                const constraintArg = jsonEntry.greater_than;
+                if (finalArgs.has(constraintArg)) {
+                  // Already correct - keep it
+                } else if (argMap.has(constraintArg)) {
+                  // Map to new arg name
+                  jsonEntry.greater_than = argMap.get(constraintArg)!;
+                } else {
+                  // Constraint doesn't reference any entry in the combined point - remove it
+                  jsonEntry.greater_than = undefined;
+                }
               }
               
               // Use protocol from hierarchy.yaml if specified (supports shorthand 'element' or full 'protocol')

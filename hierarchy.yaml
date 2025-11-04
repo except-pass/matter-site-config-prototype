@@ -100,10 +100,12 @@ themes:
                       entry: SOC
                       arg: StartSOC
                       element: ACChgStartSOC
+                      less_than: StopSOC
                     - point: ACCharge.ACChgStopSOC
                       entry: SOC
                       arg: StopSOC
                       element: ACChgStopSOC
+                      greater_than: StartSOC
               - uuid: ACCharge.ACChargingPlan
                 widget: timerange-multi
   - name: Grid
