@@ -17,9 +17,9 @@ interface PointEntry {
   entry_greater_than: string;
   entry_meanings: string;
   entry_friendly_meanings: string;
-  entry_protocol_MEP: string;
-  entry_protocol_Cluster: string;
-  entry_protocol_Element: string;
+  entry_protocol_MEP?: string; // Deprecated: entry protocol is now specified in hierarchy.yaml when combining entries
+  entry_protocol_Cluster?: string;
+  entry_protocol_Element?: string;
 }
 
 interface Point {
@@ -163,7 +163,8 @@ function convertEntryToJson(entry: PointEntry): JsonEntry {
     }
   }
 
-  // Add protocol if present
+  // Note: entry protocol is deprecated in CSV. It should be specified in hierarchy.yaml when combining entries.
+  // For backward compatibility, still check CSV, but this will be removed.
   if (entry.entry_protocol_MEP && entry.entry_protocol_Cluster && entry.entry_protocol_Element) {
     jsonEntry.protocol = {
       matter: {
@@ -174,6 +175,27 @@ function convertEntryToJson(entry: PointEntry): JsonEntry {
     };
   }
 
+  return jsonEntry;
+}
+
+// Helper function to convert entry with optional protocol override
+function convertEntryToJsonWithProtocol(
+  entry: PointEntry,
+  protocolOverride?: { MEP?: string; Cluster?: string; Element?: string }
+): JsonEntry {
+  const jsonEntry = convertEntryToJson(entry);
+  
+  // Override protocol if specified in hierarchy.yaml
+  if (protocolOverride) {
+    jsonEntry.protocol = {
+      matter: {
+        MEP: protocolOverride.MEP || '',
+        Cluster: protocolOverride.Cluster || '',
+        Element: protocolOverride.Element || '',
+      },
+    };
+  }
+  
   return jsonEntry;
 }
 
@@ -276,51 +298,205 @@ for (const themeSpec of hierarchy.themes) {
         let showInvokeButtonFromHierarchy: boolean | undefined;
         
         if (typeof pointSpec === 'string') {
-          pointUuid = pointSpec;
-        } else if (typeof pointSpec === 'object' && pointSpec.uuid) {
-          pointUuid = pointSpec.uuid;
-          widgetFromHierarchy = pointSpec.widget;
-          
-          // Handle readOnly - can be boolean or string
-          if (pointSpec.readOnly !== undefined) {
-            readOnlyFromHierarchy = typeof pointSpec.readOnly === 'boolean' 
-              ? pointSpec.readOnly 
-              : (pointSpec.readOnly === 'true' || pointSpec.readOnly === '1' || pointSpec.readOnly === true);
+          // Format 1: Simple string
+          const pointData = pointMap.get(pointSpec);
+          if (!pointData) {
+            console.warn(`Warning: Point ${pointSpec} not found in points.csv`);
+            continue;
           }
-          
-          if (pointSpec.invokeButtonText !== undefined) {
-            invokeButtonTextFromHierarchy = pointSpec.invokeButtonText;
-          }
-          
-          if (pointSpec.showInvokeButton !== undefined) {
-            showInvokeButtonFromHierarchy = typeof pointSpec.showInvokeButton === 'boolean'
-              ? pointSpec.showInvokeButton
-              : (pointSpec.showInvokeButton === 'true' || pointSpec.showInvokeButton === '1' || pointSpec.showInvokeButton === true);
+          subsection.points.push(convertPointToJson(pointData));
+        } else if (typeof pointSpec === 'object') {
+          if (pointSpec.combine) {
+            // Format 3: Combined entries from multiple points
+            const combineSpec = pointSpec.combine;
+            const combinedEntries: JsonEntry[] = [];
+            let baseProtocol: { MEP: string; Cluster: string; Element: string } | undefined;
+            let baseAccess: string | undefined;
+            let baseElementType: string | undefined;
+            
+            // Collect entries from multiple points
+            // First pass: build arg mapping for constraint updates
+            const argMap = new Map<string, string>(); // old arg -> new arg
+            for (const entrySpec of combineSpec.entries || []) {
+              const sourcePointData = pointMap.get(entrySpec.point);
+              if (!sourcePointData) continue;
+              
+              const sourceEntries: PointEntry[] = JSON.parse(sourcePointData.entries);
+              const sourceEntry = sourceEntries.find(e => e.entry_arg === entrySpec.entry);
+              if (!sourceEntry) continue;
+              
+              const oldArg = sourceEntry.entry_arg;
+              const newArg = entrySpec.arg || oldArg;
+              if (oldArg !== newArg) {
+                argMap.set(oldArg, newArg);
+              }
+            }
+            
+            for (const entrySpec of combineSpec.entries || []) {
+              const sourcePointUuid = entrySpec.point;
+              const sourceEntryArg = entrySpec.entry;
+              
+              const sourcePointData = pointMap.get(sourcePointUuid);
+              if (!sourcePointData) {
+                console.warn(`Warning: Point ${sourcePointUuid} not found in points.csv for combined entry`);
+                continue;
+              }
+              
+              // Use first point's protocol/access/element_type as base
+              if (!baseProtocol) {
+                baseProtocol = {
+                  MEP: sourcePointData.point_protocol_MEP,
+                  Cluster: sourcePointData.point_protocol_Cluster,
+                  Element: sourcePointData.point_protocol_Element,
+                };
+                baseAccess = sourcePointData.point_access;
+                baseElementType = sourcePointData.point_element_type;
+              }
+              
+              // Find the specific entry
+              const sourceEntries: PointEntry[] = JSON.parse(sourcePointData.entries);
+              const sourceEntry = sourceEntries.find(e => e.entry_arg === sourceEntryArg);
+              
+              if (!sourceEntry) {
+                console.warn(`Warning: Entry ${sourceEntryArg} not found in point ${sourcePointUuid}`);
+                continue;
+              }
+              
+              // Convert entry to JSON format
+              const jsonEntry = convertEntryToJson(sourceEntry);
+              
+              // Override arg if specified (for disambiguating entries with same arg name)
+              if (entrySpec.arg) {
+                jsonEntry.arg = entrySpec.arg;
+              }
+              
+              // Update constraints to reference the new arg names
+              if (typeof jsonEntry.less_than === 'string' && argMap.has(jsonEntry.less_than)) {
+                jsonEntry.less_than = argMap.get(jsonEntry.less_than)!;
+              }
+              if (typeof jsonEntry.greater_than === 'string' && argMap.has(jsonEntry.greater_than)) {
+                jsonEntry.greater_than = argMap.get(jsonEntry.greater_than)!;
+              }
+              
+              // Use protocol from hierarchy.yaml if specified (supports shorthand 'element' or full 'protocol')
+              const protocolOverride = entrySpec.protocol || (entrySpec.element ? { Element: entrySpec.element } : undefined);
+              if (protocolOverride) {
+                jsonEntry.protocol = {
+                  matter: {
+                    MEP: protocolOverride.MEP || baseProtocol?.MEP || '',
+                    Cluster: protocolOverride.Cluster || baseProtocol?.Cluster || '',
+                    Element: protocolOverride.Element || '',
+                  },
+                };
+              }
+              
+              combinedEntries.push(jsonEntry);
+            }
+            
+            if (combinedEntries.length === 0) {
+              console.warn(`Warning: No valid entries found for combined point`);
+              continue;
+            }
+            
+            // Normalize ranges for dual sliders - find common range if all entries are Number type with ranges
+            const numberEntriesWithRanges = combinedEntries.filter(e => e.dtype === 'Number' && e.range);
+            if (numberEntriesWithRanges.length === combinedEntries.length && numberEntriesWithRanges.length >= 2) {
+              // Find the intersection of all ranges (common min/max)
+              const allMins = numberEntriesWithRanges.map(e => e.range!.min!);
+              const allMaxs = numberEntriesWithRanges.map(e => e.range!.max!);
+              const commonMin = Math.max(...allMins);
+              const commonMax = Math.min(...allMaxs);
+              
+              // Only normalize if there's a valid intersection
+              if (commonMin <= commonMax) {
+                // Update all entries to use the common range
+                combinedEntries.forEach(entry => {
+                  if (entry.dtype === 'Number' && entry.range) {
+                    entry.range = { min: commonMin, max: commonMax };
+                  }
+                });
+              }
+            }
+            
+            // Create combined point
+            const combinedPoint: JsonPoint = {
+              title: combineSpec.title || 'Combined Point',
+              help: combineSpec.help || '',
+              element_type: combineSpec.element_type || baseElementType || 'Attribute',
+              access: combineSpec.access || baseAccess || 'RW',
+              readOnly: combineSpec.readOnly !== undefined 
+                ? (typeof combineSpec.readOnly === 'boolean' ? combineSpec.readOnly : combineSpec.readOnly === 'true' || combineSpec.readOnly === '1')
+                : (baseAccess === 'R'),
+              entries: combinedEntries,
+              protocol: {
+                matter: baseProtocol || { MEP: '', Cluster: '', Element: '' }
+              },
+              uuid: combineSpec.uuid || `combined-${Date.now()}`,
+            };
+            
+            if (combineSpec.widget) combinedPoint.widget = combineSpec.widget;
+            if (combineSpec.invokeButtonText) combinedPoint.invokeButtonText = combineSpec.invokeButtonText;
+            if (combineSpec.showInvokeButton !== undefined) {
+              combinedPoint.showInvokeButton = typeof combineSpec.showInvokeButton === 'boolean'
+                ? combineSpec.showInvokeButton
+                : (combineSpec.showInvokeButton === 'true' || combineSpec.showInvokeButton === '1');
+            }
+            
+            subsection.points.push(combinedPoint);
+          } else if (pointSpec.uuid) {
+            // Format 2: Object with UI properties
+            const pointUuid = pointSpec.uuid;
+            let widgetFromHierarchy: string | undefined;
+            let readOnlyFromHierarchy: boolean | undefined;
+            let invokeButtonTextFromHierarchy: string | undefined;
+            let showInvokeButtonFromHierarchy: boolean | undefined;
+            
+            widgetFromHierarchy = pointSpec.widget;
+            
+            // Handle readOnly - can be boolean or string
+            if (pointSpec.readOnly !== undefined) {
+              readOnlyFromHierarchy = typeof pointSpec.readOnly === 'boolean' 
+                ? pointSpec.readOnly 
+                : (pointSpec.readOnly === 'true' || pointSpec.readOnly === '1' || pointSpec.readOnly === true);
+            }
+            
+            if (pointSpec.invokeButtonText !== undefined) {
+              invokeButtonTextFromHierarchy = pointSpec.invokeButtonText;
+            }
+            
+            if (pointSpec.showInvokeButton !== undefined) {
+              showInvokeButtonFromHierarchy = typeof pointSpec.showInvokeButton === 'boolean'
+                ? pointSpec.showInvokeButton
+                : (pointSpec.showInvokeButton === 'true' || pointSpec.showInvokeButton === '1' || pointSpec.showInvokeButton === true);
+            }
+
+            const pointData = pointMap.get(pointUuid);
+
+            if (!pointData) {
+              console.warn(`Warning: Point ${pointUuid} not found in points.csv`);
+              continue;
+            }
+
+            // Warn if trying to override read-only behavior for protocol read-only points
+            if (pointData.point_access === "R" && readOnlyFromHierarchy === false) {
+              console.warn(`Warning: Point ${pointUuid} has access="R" (protocol read-only) and cannot be made writable via hierarchy.yaml. Ignoring readOnly: false.`);
+            }
+
+            subsection.points.push(convertPointToJson(
+              pointData,
+              widgetFromHierarchy,
+              readOnlyFromHierarchy,
+              invokeButtonTextFromHierarchy,
+              showInvokeButtonFromHierarchy
+            ));
+          } else {
+            console.warn(`Warning: Invalid point spec format: ${JSON.stringify(pointSpec)}`);
+            continue;
           }
         } else {
           console.warn(`Warning: Invalid point spec format: ${JSON.stringify(pointSpec)}`);
           continue;
         }
-
-        const pointData = pointMap.get(pointUuid);
-
-        if (!pointData) {
-          console.warn(`Warning: Point ${pointUuid} not found in points.csv`);
-          continue;
-        }
-
-        // Warn if trying to override read-only behavior for protocol read-only points
-        if (pointData.point_access === "R" && readOnlyFromHierarchy === false) {
-          console.warn(`Warning: Point ${pointUuid} has access="R" (protocol read-only) and cannot be made writable via hierarchy.yaml. Ignoring readOnly: false.`);
-        }
-
-        subsection.points.push(convertPointToJson(
-          pointData,
-          widgetFromHierarchy,
-          readOnlyFromHierarchy,
-          invokeButtonTextFromHierarchy,
-          showInvokeButtonFromHierarchy
-        ));
       }
 
       section.subsections.push(subsection);

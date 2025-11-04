@@ -456,46 +456,6 @@
           ]
         },
         {
-          "sectionTitle": "Grid Charge",
-          "subsections": [
-            {
-              "title": null,
-              "visibility": "default",
-              "collapsedByDefault": false,
-              "points": [
-                {
-                  "title": "AC Chg Stop SOC",
-                  "help": "Attribute in ACCharge cluster",
-                  "element_type": "Attribute",
-                  "access": "RW",
-                  "readOnly": false,
-                  "entries": [
-                    {
-                      "name": "SOC",
-                      "arg": "SOC",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 90
-                      }
-                    }
-                  ],
-                  "protocol": {
-                    "matter": {
-                      "MEP": "HybridInverter",
-                      "Cluster": "ACCharge",
-                      "Element": "ACChgStopSOC"
-                    }
-                  },
-                  "uuid": "ACCharge.ACChgStopSOC"
-                }
-              ]
-            }
-          ]
-        },
-        {
           "sectionTitle": "Parallel",
           "subsections": [
             {
@@ -1865,47 +1825,6 @@
                   "uuid": "ACCharge.ACChargePower"
                 },
                 {
-                  "title": "Grid Charge SOC Range",
-                  "help": "Defines when grid charging starts and stops based on battery state of charge (SOC). Charging starts when SOC falls below Start SOC and stops when it reaches Stop SOC.",
-                  "element_type": "Attribute",
-                  "access": "RW",
-                  "readOnly": false,
-                  "entries": [
-                    {
-                      "name": "Start SOC (%)",
-                      "arg": "SOC",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 100
-                      },
-                      "less_than": null
-                    },
-                    {
-                      "name": "Stop SOC (%)",
-                      "arg": "StopSOC",
-                      "dtype": "Number",
-                      "description": "",
-                      "longdescription": "",
-                      "range": {
-                        "min": 0,
-                        "max": 100
-                      },
-                      "greater_than": null
-                    }
-                  ],
-                  "protocol": {
-                    "matter": {
-                      "MEP": "HybridInverter",
-                      "Cluster": "ACCharge",
-                      "Element": "ACChgStartSOC"
-                    }
-                  },
-                  "uuid": "ACCharge.ACChgStartSOC"
-                },
-                {
                   "title": "Grid Charge Control Type",
                   "help": "Select whether grid charging follows a time schedule or SOC/voltage thresholds.",
                   "element_type": "Attribute",
@@ -1936,6 +1855,60 @@
                     }
                   },
                   "uuid": "ACCharge.ACChargeType"
+                },
+                {
+                  "title": "Grid Charge SOC Range",
+                  "help": "Defines when grid charging starts and stops based on battery state of charge (SOC). Charging starts when SOC falls below Start SOC and stops when it reaches Stop SOC.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start SOC (%)",
+                      "arg": "StartSOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 90
+                      },
+                      "less_than": null,
+                      "protocol": {
+                        "matter": {
+                          "MEP": "HybridInverter",
+                          "Cluster": "ACCharge",
+                          "Element": "ACChgStartSOC"
+                        }
+                      }
+                    },
+                    {
+                      "name": "SOC",
+                      "arg": "StopSOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 90
+                      },
+                      "protocol": {
+                        "matter": {
+                          "MEP": "HybridInverter",
+                          "Cluster": "ACCharge",
+                          "Element": "ACChgStopSOC"
+                        }
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChgStartSOC"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChgSOCRange"
                 },
                 {
                   "title": "Grid Charge Windows",

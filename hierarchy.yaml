@@ -25,10 +25,6 @@ themes:
               - FeedInGrid.FeedInGridStatus
               - FeedInGrid.FeedInGridMaxPower
               - FeedInGrid.FastZeroExportStatus
-      - name: Grid Charge
-        subsections:
-          - points:
-              - ACCharge.ACChgStopSOC
       - name: Parallel
         subsections:
           - points:
@@ -92,10 +88,22 @@ themes:
       - name: Grid Charge
         subsections:
           - points:
-              - ACCharge.ACChargeStatus
+              - ACCharge.ACChargeStatus              
               - ACCharge.ACChargePower
-              - ACCharge.ACChgStartSOC
               - ACCharge.ACChargeType
+              - combine:
+                  title: "Grid Charge SOC Range"
+                  help: "Defines when grid charging starts and stops based on battery state of charge (SOC). Charging starts when SOC falls below Start SOC and stops when it reaches Stop SOC."
+                  uuid: "ACCharge.ACChgSOCRange"
+                  entries:
+                    - point: ACCharge.ACChgStartSOC
+                      entry: SOC
+                      arg: StartSOC
+                      element: ACChgStartSOC
+                    - point: ACCharge.ACChgStopSOC
+                      entry: SOC
+                      arg: StopSOC
+                      element: ACChgStopSOC
               - uuid: ACCharge.ACChargingPlan
                 widget: timerange-multi
   - name: Grid
