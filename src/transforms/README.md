@@ -39,6 +39,32 @@ npx tsx src/transforms/csvToJson.ts master.csv src/themes/demo.json
 
 > **Note:** Modbus points remain managed in `additional_modbus.json` and are not yet exported into the CSV.
 
+### `splitMasterCsv.ts`
+
+Splits `master.csv` into `points.csv` (one line per point_uuid with all point data and entries as JSON):
+
+```bash
+npx tsx src/transforms/splitMasterCsv.ts
+```
+
+### `createHierarchy.ts`
+
+Creates `hierarchy.yaml` from the existing order CSV files (theme_order, section_order, subsection_order, point_order):
+
+```bash
+npx tsx src/transforms/createHierarchy.ts
+```
+
+### `rebuildFromHierarchy.ts`
+
+Rebuilds `demo.json` from `hierarchy.yaml` + `points.csv`:
+
+```bash
+npx tsx src/transforms/rebuildFromHierarchy.ts
+```
+
+This generates `src/themes/demo_rebuilt.json` which can be compared with the original.
+
 **Adding New Transformations:**
 
 Edit `pointTransforms.ts` and add entries to the `pointTransforms` array:
@@ -60,6 +86,57 @@ export const pointTransforms: PointTransform[] = [
     },
   },
 ];
+```
+
+## Data File Structure
+
+The project uses a **two-file approach** for easier maintenance:
+
+### 1. points.csv (Edited by non-developers in Excel/Sheets)
+One line per point_uuid containing all point metadata:
+- Location: `pageName`, `theme`, `section`, `subsection`
+- Point data: `point_uuid`, `point_title`, `point_help`, `point_element_type`, `point_access`, `point_readOnly`, etc.
+- Entries: All entries as a JSON array in the `entries` column
+
+### 2. hierarchy.yaml (Edited by developers)
+Defines the structure, ordering, and display properties:
+```yaml
+pageName: Envy 48V
+themes:
+  - name: Inverter
+    sections:
+      - name: Basic Setup
+        subsections:
+          - points:
+              - Basic.SystemTime
+              - Basic.OperatingMode
+              # ... more points in order
+      - name: Power Limits
+        subsections:
+          - collapsedByDefault: true
+            points:
+              - LimitActivePower.LimitActivePowerStatus
+              # ...
+```
+
+**Key Benefits:**
+- **Rename themes/sections**: Only update `hierarchy.yaml` and find/replace in `points.csv`
+- **Reorder**: Just rearrange items in `hierarchy.yaml`
+- **Non-devs edit content**: Work in Excel on `points.csv` without touching structure
+- **Devs control structure**: Maintain `hierarchy.yaml` with clean YAML syntax
+
+### Working with the files:
+
+```bash
+# Create hierarchy.yaml and points.csv from master.csv
+npx tsx src/transforms/splitMasterCsv.ts
+npx tsx src/transforms/createHierarchy.ts
+
+# Rebuild demo.json from hierarchy.yaml + points.csv
+npx tsx src/transforms/rebuildFromHierarchy.ts
+
+# Or rebuild demo.json from single master.csv (legacy)
+npx tsx src/transforms/csvToJson.ts master.csv src/themes/demo.json
 ```
 
 ## Workflow

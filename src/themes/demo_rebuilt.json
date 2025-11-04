@@ -1,0 +1,4155 @@
+{
+  "pageName": "Envy 48V",
+  "themes": [
+    {
+      "themeName": "Inverter",
+      "sections": [
+        {
+          "sectionTitle": "Basic Setup",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "System Time",
+                  "help": "Attribute in Basic cluster",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Year",
+                      "arg": "Year",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 99
+                      }
+                    },
+                    {
+                      "name": "Mon",
+                      "arg": "Mon",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 1,
+                        "max": 12
+                      }
+                    },
+                    {
+                      "name": "Day",
+                      "arg": "Day",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 1,
+                        "max": 31
+                      }
+                    },
+                    {
+                      "name": "Hour",
+                      "arg": "Hour",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Min",
+                      "arg": "Min",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "Sec",
+                      "arg": "Sec",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Basic",
+                      "Element": "SystemTime"
+                    }
+                  },
+                  "uuid": "Basic.SystemTime",
+                  "widget": "datetime"
+                },
+                {
+                  "title": "Grid Interaction",
+                  "help": "Select whether the inverter operates independently of the grid, or is connected to the grid. If off-grid, you should also ignore grid-loss warnings.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Off-grid",
+                        "1": "Grid-tied"
+                      },
+                      "friendly_meanings": {
+                        "0": "Off-Grid.  There is no available power grid",
+                        "1": "Grid-Tied. Grid power is available."
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Basic",
+                      "Element": "OperatingMode"
+                    }
+                  },
+                  "uuid": "Basic.OperatingMode"
+                },
+                {
+                  "title": "Operating Mode",
+                  "help": "Select how solar power is prioritized. Self-consumption: PV powers the home first, then charges the battery, and exports last (if allowed). Export first: PV powers the home, then exports to grid, and charges the battery last. Backup power: PV charges the battery first to build reserve, then powers the home, and exports last (if allowed). If a battery schedule is running (PV Charge Only, Discharge Only, or Grid Charge), the inverter will follow that schedule during those times instead of this operating mode. When the scheduled period ends, the inverter will return to the selected operating mode.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Self used mode",
+                        "1": "Feed-in priority mode",
+                        "2": "Back-up mode"
+                      },
+                      "friendly_meanings": {
+                        "0": "Self-consumption",
+                        "1": "Export first",
+                        "2": "Backup power"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Basic",
+                      "Element": "WorkMode"
+                    }
+                  },
+                  "uuid": "Basic.WorkMode"
+                },
+                {
+                  "title": "Ignore Grid-Loss Warning",
+                  "help": "When enabled, the inverter will not treat the absence of grid power as an alarm. Use this mode for permanently off-grid systems where grid connection is unavailable.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Grid-Loss Behavior",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Treat as Alarm",
+                        "1": "Ignore (Off-Grid Mode)"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Basic",
+                      "Element": "GridLossWarningClear"
+                    }
+                  },
+                  "uuid": "Basic.GridLossWarningClear"
+                },
+                {
+                  "title": "Power Status",
+                  "help": "Put the inverter into standby mode to stop operation or make configuration changes. While in standby, the inverter will not generate PV power or charge/discharge the battery. If grid power is available, it be used to supply the loads. If the grid is unavailable, the building will not have power.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "State",
+                      "arg": "State",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Standby",
+                        "1": "Other"
+                      },
+                      "friendly_meanings": {
+                        "0": "Standby",
+                        "1": "Running"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Basic",
+                      "Element": "PowerStatus"
+                    }
+                  },
+                  "uuid": "Basic.PowerStatus"
+                },
+                {
+                  "title": "Reset to Factory Defaults",
+                  "help": "Restores all inverter configuration parameters to their original factory values. Use with caution — this cannot be undone.",
+                  "element_type": "Service",
+                  "access": "INVOKE",
+                  "readOnly": false,
+                  "entries": [],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Basic",
+                      "Element": "AllToDefault"
+                    }
+                  },
+                  "uuid": "Basic.AllToDefault",
+                  "invokeButtonText": "Reset Now"
+                },
+                {
+                  "title": "Inverter Power Control",
+                  "help": "Turns the inverter output on or off.\n\n• **Standby:** AC output is disabled, but control circuits remain powered.\n• **Power On:** Enables AC output and normal inverter operation.",
+                  "element_type": "Service",
+                  "access": "INVOKE",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Power State",
+                      "arg": "State",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Standby",
+                        "1": "PowerOn"
+                      },
+                      "friendly_meanings": {
+                        "0": "Standby",
+                        "1": "Power On"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Basic",
+                      "Element": "PowerControl"
+                    }
+                  },
+                  "uuid": "Basic.PowerControl"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Power Limits",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Limit Power Output",
+                  "help": "Shows whether power output limiting is currently active. When not limited, the inverter can deliver its full available power (subject only to natural hardware limits). When limited, an external or configured cap is applied to restrict inverter output to the specified Power Limit.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Not limited - full output",
+                        "1": "Limit output power"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "LimitActivePower",
+                      "Element": "LimitActivePowerStatus"
+                    }
+                  },
+                  "uuid": "LimitActivePower.LimitActivePowerStatus"
+                },
+                {
+                  "title": "Power Limit",
+                  "help": "The inverter's present active-power output limit as a percentage of its rated capacity. If power limiting is active, the inverter will limit its output power to this percentage of its rated capacity.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Power Limit (%)",
+                      "arg": "Power",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "LimitActivePower",
+                      "Element": "ActivePowerPercent"
+                    }
+                  },
+                  "uuid": "LimitActivePower.ActivePowerPercent"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Selling Power",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Allow Selling Power to Grid",
+                  "help": "Allows the inverter to sell/export power back to the utility grid. Enable this only if local regulations and interconnect agreements permit grid export.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": " ",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Not allowed",
+                        "1": "Allowed"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "FeedInGrid",
+                      "Element": "FeedInGridStatus"
+                    }
+                  },
+                  "uuid": "FeedInGrid.FeedInGridStatus"
+                },
+                {
+                  "title": "Max Power Sold to Grid",
+                  "help": "Sets the maximum power the inverter is allowed to sell/export to the grid. Use this to meet utility export limits or site commissioning requirements.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Power (kW)",
+                      "arg": "Power",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "FeedInGrid",
+                      "Element": "FeedInGridMaxPower"
+                    }
+                  },
+                  "uuid": "FeedInGrid.FeedInGridMaxPower"
+                },
+                {
+                  "title": "Prevent Grid Export: Strict Mode",
+                  "help": "Keeps power export at or near zero by adjusting inverter output in real time. When enabled, the inverter supplies only local (on-site) loads and will not send power back to the grid. This mode is required when grid export is not allowed. Ensure the CTs are installed on the grid connection point and  not on the inverter's load side, so the inverter can correctly detect and prevent export.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Fast Zero Export",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable strict mode",
+                        "1": "Enable strict mode"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "FeedInGrid",
+                      "Element": "FastZeroExportStatus"
+                    }
+                  },
+                  "uuid": "FeedInGrid.FastZeroExportStatus"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Grid Charge",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "AC Chg Stop SOC",
+                  "help": "Attribute in ACCharge cluster",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "SOC",
+                      "arg": "SOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 90
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChgStopSOC"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChgStopSOC"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Parallel",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Parallel unit ID",
+                  "help": "The Unit ID (also known as the unit ID, slave ID, or node ID) for this inverter. The primary inverter should use address 1, and any secondary inverters should use 2 or higher. This sets the modbus address that inverters use to communicate with each other. Each inverter that communicates on the same Modbus communication line must have a unique address, but addresses do not need to be globally unique across separate, unconnected systems.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Address",
+                      "arg": "Addr",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 1,
+                        "max": 255
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Parallel",
+                      "Element": "ModbusAddr"
+                    }
+                  },
+                  "uuid": "Parallel.ModbusAddr"
+                },
+                {
+                  "title": "System Type",
+                  "help": "Defines how this inverter participates in a multi-inverter or multi-phase system.\n\n• No Parallel: Single inverter system.\n• Single-phase Parallel (Master / Secondary): Multiple inverters on one phase.\n• Three-phase Parallel (Master): Multiple inverters forming R/S/T phases.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Parallel Role / Topology",
+                      "arg": "Type",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "no parallel (single one)",
+                        "1": "Single-phase parallel(Master)",
+                        "2": "Secondary",
+                        "3": "Three phase parallel(Master)"
+                      },
+                      "friendly_meanings": {
+                        "0": "No Parallel (Single Inverter)",
+                        "1": "Single-Phase Parallel (Master)",
+                        "2": "Single-Phase Parallel (Secondary)",
+                        "3": "Three-Phase Parallel (Master)"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Parallel",
+                      "Element": "SystemType"
+                    }
+                  },
+                  "uuid": "Parallel.SystemType"
+                },
+                {
+                  "title": "Assigned Phase",
+                  "help": "Selects which output phase this inverter is responsible for in a three-phase system. R, S, and T correspond to L1, L2, and L3.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Phase",
+                      "arg": "Phase",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "R",
+                        "1": "S",
+                        "2": "T"
+                      },
+                      "friendly_meanings": {
+                        "0": "R",
+                        "1": "S",
+                        "2": "T"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Parallel",
+                      "Element": "ComposedPhase"
+                    }
+                  },
+                  "uuid": "Parallel.ComposedPhase"
+                },
+                {
+                  "title": "Clear Detected Phases",
+                  "help": "Clears the detected phases for this inverter.",
+                  "element_type": "Attribute",
+                  "access": "W",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Phase",
+                      "arg": "Phase",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Clear"
+                      },
+                      "friendly_meanings": {
+                        "0": "Clear"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Parallel",
+                      "Element": "ClearDetectedPhases"
+                    }
+                  },
+                  "uuid": "Parallel.ClearDetectedPhases"
+                },
+                {
+                  "title": "Detected Grid Phases",
+                  "help": "Attribute in Parallel cluster",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Phase",
+                      "arg": "Phase",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "None",
+                        "1": "R",
+                        "2": "S",
+                        "3": "T"
+                      },
+                      "friendly_meanings": {
+                        "0": "None",
+                        "1": "R",
+                        "2": "S",
+                        "3": "T"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Parallel",
+                      "Element": "DetectedGridPhases"
+                    }
+                  },
+                  "uuid": "Parallel.DetectedGridPhases"
+                },
+                {
+                  "title": "Share Battery",
+                  "help": "Allows inverters in a parallel group to use a common battery bank instead of keeping batteries isolated per inverter.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Installation Method",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Inverters have Separate Batteries",
+                        "1": "Inverters Share a Common Battery Bank"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Parallel",
+                      "Element": "ShareBatteryStatus"
+                    }
+                  },
+                  "uuid": "Parallel.ShareBatteryStatus"
+                },
+                {
+                  "title": "Inverters in parallel",
+                  "help": "Total number of inverters detected in this parallel system.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Num",
+                      "arg": "Num",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Parallel",
+                      "Element": "ParallelNum"
+                    }
+                  },
+                  "uuid": "Parallel.ParallelNum"
+                },
+                {
+                  "title": "Inverter Role",
+                  "help": "Reports whether this inverter is acting as Primary (sometimes called the Master) or Secondary in the current parallel configuration.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Role",
+                      "arg": "Role",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Master",
+                        "1": "Slave"
+                      },
+                      "friendly_meanings": {
+                        "0": "Primary",
+                        "1": "Secondary"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Parallel",
+                      "Element": "Role"
+                    }
+                  },
+                  "uuid": "Parallel.Role"
+                },
+                {
+                  "title": "Reported Phase",
+                  "help": "Reports which phase (R / S / T) this inverter is currently serving in the parallel system.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Phase",
+                      "arg": "Phase",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "R",
+                        "1": "S",
+                        "2": "T"
+                      },
+                      "friendly_meanings": {
+                        "0": "R",
+                        "1": "S",
+                        "2": "T"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Parallel",
+                      "Element": "ParallelPhase"
+                    }
+                  },
+                  "uuid": "Parallel.ParallelPhase"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Current Transformer (CT) Settings",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "CT Ratio",
+                  "help": "Select the current transformer (CT) ratio used for metering electric current on the grid port connection. This must match the CT hardware rating so that current and power readings are accurate.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "CT Ratio",
+                      "arg": "Direction",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "1/1000",
+                        "1": "1/2000",
+                        "2": "1/3000",
+                        "3": "1/4000",
+                        "4": "1/6000"
+                      },
+                      "friendly_meanings": {
+                        "0": "1/1000",
+                        "1": "1/2000",
+                        "2": "1/3000",
+                        "3": "1/4000",
+                        "4": "1/6000"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Measurement",
+                      "Element": "CTSampleRatio"
+                    }
+                  },
+                  "uuid": "Measurement.CTSampleRatio"
+                },
+                {
+                  "title": "CT Direction",
+                  "help": "Sets the CT installation direction. You may choose to reverse this if your inverter is reading import when power is actually flowing out to the grid (export) or vice versa.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Direction",
+                      "arg": "Direction",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Normal",
+                        "1": "Reversed"
+                      },
+                      "friendly_meanings": {
+                        "0": "Normal",
+                        "1": "Reversed"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Measurement",
+                      "Element": "CTDirection"
+                    }
+                  },
+                  "uuid": "Measurement.CTDirection"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "themeName": "Battery",
+      "sections": [
+        {
+          "sectionTitle": "Setup",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Battery Type",
+                  "help": "Specifies the chemistry or general type of connected battery. Choose **No Battery** for standalone PV or grid-tie operation, **Lead-acid** for flooded or AGM batteries, or **Lithium-ion** for managed BMS packs.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Type",
+                      "arg": "Type",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "NoBattery",
+                        "1": "Lead-acid",
+                        "2": "Lithom-ion"
+                      },
+                      "friendly_meanings": {
+                        "0": "No Battery",
+                        "1": "Lead-acid",
+                        "2": "Lithium-ion"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBase",
+                      "Element": "BatteryType"
+                    }
+                  },
+                  "uuid": "BatteryBase.BatteryType"
+                },
+                {
+                  "title": "Battery Brand",
+                  "help": "Selects the manufacturer profile for the connected battery. This may pre-configure recommended voltage and SOC limits for optimal operation.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Brand",
+                      "arg": "Brand",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Fortress"
+                      },
+                      "friendly_meanings": {
+                        "0": "Fortress"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBase",
+                      "Element": "BatteryBrand"
+                    }
+                  },
+                  "uuid": "BatteryBase.BatteryBrand"
+                },
+                {
+                  "title": "Absorb Voltage",
+                  "help": "Sets the voltage used during the absorb (bulk-to-float transition) phase. Increasing this value raises the upper charge threshold for lead-acid batteries.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Voltage (Vdc)",
+                      "arg": "Volt",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBase",
+                      "Element": "AbsorbVoltage"
+                    }
+                  },
+                  "uuid": "BatteryBase.AbsorbVoltage"
+                },
+                {
+                  "title": "Float Voltage",
+                  "help": "Defines the voltage maintained once the battery is fully charged. This helps prevent overcharging while keeping the battery topped off.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Voltage (Vdc)",
+                      "arg": "Volt",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBase",
+                      "Element": "FloatVoltage"
+                    }
+                  },
+                  "uuid": "BatteryBase.FloatVoltage"
+                },
+                {
+                  "title": "Start Derating Voltage",
+                  "help": "Voltage threshold where the inverter begins reducing charge or discharge current to protect the battery as it approaches full or low state.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Voltage (Vdc)",
+                      "arg": "Volt",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBase",
+                      "Element": "VbatStartDerating"
+                    }
+                  },
+                  "uuid": "BatteryBase.VbatStartDerating"
+                },
+                {
+                  "title": "Battery Control Type",
+                  "help": "Determines how the inverter regulates both charging and discharging.\n\nSOC: Uses battery state of charge thresholds to start and stop charge/discharge.\n\nVolt: Uses DC voltage limits instead.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Charge Control",
+                      "arg": "ChargeCtrlType",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "SOC",
+                        "1": "Volt"
+                      },
+                      "friendly_meanings": {
+                        "0": "SOC",
+                        "1": "Volt"
+                      }
+                    },
+                    {
+                      "name": "Discharge Control",
+                      "arg": "DisChargeCtrlType",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "SOC",
+                        "1": "Volt"
+                      },
+                      "friendly_meanings": {
+                        "0": "SOC",
+                        "1": "Volt"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBase",
+                      "Element": "ChaDisChaCtrlType"
+                    }
+                  },
+                  "uuid": "BatteryBase.ChaDisChaCtrlType"
+                },
+                {
+                  "title": "Charge Limit (SOC)",
+                  "help": "Sets the maximum state of charge (SOC) the battery will be charged to. Once the battery reaches this level, charging stops to prevent overcharging and extend lifespan.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "SOC (%)",
+                      "arg": "SOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBase",
+                      "Element": "ChargeLimitSoc"
+                    }
+                  },
+                  "uuid": "BatteryBase.ChargeLimitSoc"
+                },
+                {
+                  "title": "Max Battery Current",
+                  "help": "Sets the maximum charging and discharging current allowed for the connected inverter. Choose the preset that matches your inverter model to automatically apply the correct limits.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Max Charge Preset",
+                      "arg": "MaxChargingCurrent",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Envy12K",
+                        "1": "Envy10K",
+                        "2": "Envy8K"
+                      },
+                      "friendly_meanings": {
+                        "0": "Envy12K",
+                        "1": "Envy10K",
+                        "2": "Envy8K"
+                      }
+                    },
+                    {
+                      "name": "Max Discharge Preset",
+                      "arg": "MaxDischargingCurrent",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Envy12K",
+                        "1": "Envy10K",
+                        "2": "Envy8K"
+                      },
+                      "friendly_meanings": {
+                        "0": "Envy12K",
+                        "1": "Envy10K",
+                        "2": "Envy8K"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBase",
+                      "Element": "MaxChaDisChaCurrent"
+                    }
+                  },
+                  "uuid": "BatteryBase.MaxChaDisChaCurrent"
+                },
+                {
+                  "title": "On-Grid Battery Cutoff SOC",
+                  "help": "Sets the minimum state of charge (SOC) the battery will discharge to while grid power is available. Below this level, the inverter will stop discharging and switch to grid power to protect battery capacity.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "SOC (%)",
+                      "arg": "SOC",
+                      "dtype": "Number",
+                      "description": "Recommended: between 21-90%.  Must be higher than the Off-Grid Battery Cutoff SOC.",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBase",
+                      "Element": "OnGridCutOffSoc"
+                    }
+                  },
+                  "uuid": "BatteryBase.OnGridCutOffSoc"
+                },
+                {
+                  "title": "Off-Grid Battery Cutoff SOC",
+                  "help": "Sets the minimum state of charge (SOC) the battery will discharge to when operating off-grid. Once the battery reaches this level, the inverter stops discharging to prevent deep discharge and maintain battery health.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "SOC (%)",
+                      "arg": "SOC",
+                      "dtype": "Number",
+                      "description": "Recommended: between 20-89%.  Must be lower than the On-Grid Battery Cutoff SOC.",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBase",
+                      "Element": "OffGridCutOffSoc"
+                    }
+                  },
+                  "uuid": "BatteryBase.OffGridCutOffSoc"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Battery Backup",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Battery Backup Mode",
+                  "help": "Enables or disables battery-backup operation. When enabled, the inverter reserves part of the battery capacity to power critical loads during a grid outage.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": " ",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable Backup Mode",
+                        "1": "Enable Backup Mode"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBackup",
+                      "Element": "BatteryBackupMode"
+                    }
+                  },
+                  "uuid": "BatteryBackup.BatteryBackupMode"
+                },
+                {
+                  "title": "Battery Reserve SOC",
+                  "help": "While Battery Backup Mode is enabled, the battery will stop discharging once it reaches this level. When Backup Mode is disabled, normal operation applies and discharge will continue down to the On-Grid or Off-Grid Battery Cutoff SOC.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "SOC (%)",
+                      "arg": "SOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryBackup",
+                      "Element": "BatteryReserveSOC"
+                    }
+                  },
+                  "uuid": "BatteryBackup.BatteryReserveSOC"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Battery Scheduling",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Battery Scheduling",
+                  "help": "This is a special scheduling mode designed for certain time-of-use (TOU) utility rates or other custom situations. In most circumstances, we recomment allowing your system to  manage charging and discharging automatically without setting a schedule.  You don't need to set a schedule unless you have a specific reason to charge or discharge at exact times.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Scheduling",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable Scheduling",
+                        "1": "Enable the 'PV Charge Only' and 'Discharge Only' scheduling modes"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryScheduling",
+                      "Element": "BatteryScheduling"
+                    }
+                  },
+                  "uuid": "BatteryScheduling.BatteryScheduling"
+                }
+              ]
+            },
+            {
+              "title": "PV Charge Only",
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Max Battery Charge Power During 'PV Charge Only' Periods",
+                  "help": "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods in kW. Set this limit to control the power level at which the battery will charge from the grid during PV charge only periods",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Power (kW)",
+                      "arg": "Power",
+                      "dtype": "Number",
+                      "description": "Should not exceed the inverter's rated power",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryTOUCharge",
+                      "Element": "TOUMaximumChargingPower"
+                    }
+                  },
+                  "uuid": "BatteryTOUCharge.TOUMaximumChargingPower"
+                },
+                {
+                  "title": "Schedule Window 1 for PV Charge Only",
+                  "help": "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start Hour (0-23)",
+                      "arg": "StartTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Start Minute (0-59)",
+                      "arg": "StartTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "End Hour (0-23)",
+                      "arg": "EndTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "End Minute (0-59)",
+                      "arg": "EndTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryTOUCharge",
+                      "Element": "TOUChargingPlan1"
+                    }
+                  },
+                  "uuid": "BatteryTOUCharge.TOUChargingPlan1",
+                  "widget": "timerange"
+                },
+                {
+                  "title": "Schedule Window 2 for PV Charge Only",
+                  "help": "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start Hour (0-23)",
+                      "arg": "StartTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Start Minute (0-59)",
+                      "arg": "StartTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "End Hour (0-23)",
+                      "arg": "EndTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "End Minute (0-59)",
+                      "arg": "EndTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryTOUCharge",
+                      "Element": "TOUChargingPlan2"
+                    }
+                  },
+                  "uuid": "BatteryTOUCharge.TOUChargingPlan2",
+                  "widget": "timerange"
+                },
+                {
+                  "title": "Schedule Window 3 for PV Charge Only",
+                  "help": "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start Hour (0-23)",
+                      "arg": "StartTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Start Minute (0-59)",
+                      "arg": "StartTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "End Hour (0-23)",
+                      "arg": "EndTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "End Minute (0-59)",
+                      "arg": "EndTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryTOUCharge",
+                      "Element": "TOUChargingPlan3"
+                    }
+                  },
+                  "uuid": "BatteryTOUCharge.TOUChargingPlan3",
+                  "widget": "timerange"
+                }
+              ]
+            },
+            {
+              "title": "Discharge Only",
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Max Inverter Output Power During 'Discharge Only' Periods",
+                  "help": "Sets the maximum discharging power during scheduled Time-of-Use (TOU) discharge periods in kW. Limit this to control how much battery power is exported to loads or grid during those windows.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Power (kW)",
+                      "arg": "Power",
+                      "dtype": "Number",
+                      "description": "Should not exceed the inverter's rated power",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryTOUDischarge",
+                      "Element": "TOUMaximumDischargingPower"
+                    }
+                  },
+                  "uuid": "BatteryTOUDischarge.TOUMaximumDischargingPower"
+                },
+                {
+                  "title": "TOU Discharge Stop SOC",
+                  "help": "Sets the minimum state of charge (SOC) that the battery will discharge to during 'Discharge Only' operation. Once this level is reached, discharging stops to preserve reserve capacity for later use or backup.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "SOC (%)",
+                      "arg": "SOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryTOUDischarge",
+                      "Element": "DischargingStopSoc"
+                    }
+                  },
+                  "uuid": "BatteryTOUDischarge.DischargingStopSoc"
+                },
+                {
+                  "title": "Schedule Window 1 for Discharge Only",
+                  "help": "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start Hour (0-23)",
+                      "arg": "StartTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Start Minute (0-59)",
+                      "arg": "StartTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "End Hour (0-23)",
+                      "arg": "EndTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "End Minute (0-59)",
+                      "arg": "EndTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryTOUDischarge",
+                      "Element": "TOUDischargingPlan1"
+                    }
+                  },
+                  "uuid": "BatteryTOUDischarge.TOUDischargingPlan1",
+                  "widget": "timerange"
+                },
+                {
+                  "title": "Schedule Window 2 for Discharge Only",
+                  "help": "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start Hour (0-23)",
+                      "arg": "StartTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Start Minute (0-59)",
+                      "arg": "StartTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "End Hour (0-23)",
+                      "arg": "EndTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "End Minute (0-59)",
+                      "arg": "EndTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryTOUDischarge",
+                      "Element": "TOUDischargingPlan2"
+                    }
+                  },
+                  "uuid": "BatteryTOUDischarge.TOUDischargingPlan2",
+                  "widget": "timerange"
+                },
+                {
+                  "title": "Schedule Window 3 for Discharge Only",
+                  "help": "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start Hour (0-23)",
+                      "arg": "StartTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Start Minute (0-59)",
+                      "arg": "StartTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "End Hour (0-23)",
+                      "arg": "EndTime_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "End Minute (0-59)",
+                      "arg": "EndTime_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BatteryTOUDischarge",
+                      "Element": "TOUDischargingPlan3"
+                    }
+                  },
+                  "uuid": "BatteryTOUDischarge.TOUDischargingPlan3",
+                  "widget": "timerange"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Grid Charge",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Allow Battery Charging from Grid",
+                  "help": "Enables the battery to charge from the utility grid.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Grid Charge",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Do not charge the battery from grid power",
+                        "1": "Allowed"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChargeStatus"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChargeStatus"
+                },
+                {
+                  "title": "Grid Charge Power Limit",
+                  "help": "Sets the maximum power the inverter will draw from the grid for charging. This cap applies when Grid Charge is enabled (and within any configured time windows).",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Max Grid Charge Power (W)",
+                      "arg": "Power",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChargePower"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChargePower"
+                },
+                {
+                  "title": "Grid Charge SOC Range",
+                  "help": "Defines when grid charging starts and stops based on battery state of charge (SOC). Charging starts when SOC falls below Start SOC and stops when it reaches Stop SOC.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start SOC (%)",
+                      "arg": "SOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      },
+                      "less_than": null
+                    },
+                    {
+                      "name": "Stop SOC (%)",
+                      "arg": "StopSOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      },
+                      "greater_than": null
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChgStartSOC"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChgStartSOC"
+                },
+                {
+                  "title": "Grid Charge Control Type",
+                  "help": "Select whether grid charging follows a time schedule or SOC/voltage thresholds.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Control Type",
+                      "arg": "Type",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "according to time",
+                        "1": "according to SOC/Volt"
+                      },
+                      "friendly_meanings": {
+                        "0": "By Time Schedule",
+                        "1": "By SOC/Voltage"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChargeType"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChargeType"
+                },
+                {
+                  "title": "Grid Charge Windows",
+                  "help": "During these times, your battery will continue to charge from solar power normally, but will also use additional power from the grid to charge the battery.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Window 1 Start Hour",
+                      "arg": "StartTime1_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 1 Start Minute",
+                      "arg": "StartTime1_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "Window 1 End Hour",
+                      "arg": "EndTime1_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 1 End Minute",
+                      "arg": "EndTime1_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "Window 2 Start Hour",
+                      "arg": "StartTime2_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 2 Start Minute",
+                      "arg": "StartTime2_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "Window 2 End Hour",
+                      "arg": "EndTime2_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 2 End Minute",
+                      "arg": "EndTime2_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "Window 3 Start Hour",
+                      "arg": "StartTime3_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 3 Start Minute",
+                      "arg": "StartTime3_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    },
+                    {
+                      "name": "Window 3 End Hour",
+                      "arg": "EndTime3_h",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Window 3 End Minute",
+                      "arg": "EndTime3_m",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCharge",
+                      "Element": "ACChargingPlan"
+                    }
+                  },
+                  "uuid": "ACCharge.ACChargingPlan",
+                  "widget": "timerange-multi"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "themeName": "Grid",
+      "sections": [
+        {
+          "sectionTitle": "Setup",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Grid Parameters",
+                  "help": "This setting changes the conditions under which the inverter will connect or disconnect from the utility grid. Different areas have different rules about when this equipment is allowed to disconnect and when it must ride through. Choose the code required by the local utility or AHJ.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Code",
+                      "arg": "Code",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Default(UL-240-18)",
+                        "1": "California(Rule 21)",
+                        "2": "Hawaii(Rule 14)",
+                        "3": "Puerto Rico LUMA",
+                        "4": "KIUC"
+                      },
+                      "friendly_meanings": {
+                        "0": "Default UL-1741 / IEEE 1547",
+                        "1": "California (Rule 21)",
+                        "2": "Hawaii (Rule 14)",
+                        "3": "Puerto Rico (LUMA)",
+                        "4": "KIUC"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridBase",
+                      "Element": "GridRegulation"
+                    }
+                  },
+                  "uuid": "GridBase.GridRegulation"
+                },
+                {
+                  "title": "Grid Type",
+                  "help": "Choose wiring configuration of the site.  This helps configure the system to match the power service at the site.  Note the voltage you enter here must match the EPS Voltage.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Service Type",
+                      "arg": "Type",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Split240V/120V",
+                        "1": "3phase208V/120V",
+                        "2": "Single240V",
+                        "3": "Single230V",
+                        "4": "Split200V/100V"
+                      },
+                      "friendly_meanings": {
+                        "0": "Split 240V / 120V",
+                        "1": "3-Phase 208V / 120V",
+                        "2": "Single 240V",
+                        "3": "Single 230V",
+                        "4": "Split 200V / 100V"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridBase",
+                      "Element": "GridType"
+                    }
+                  },
+                  "uuid": "GridBase.GridType"
+                },
+                {
+                  "title": "Grid Frequency",
+                  "help": "Sets the nominal grid frequency for the installation. Use 60 Hz for North America and most split-phase installs; use 50 Hz for regions that operate at 230 V single-phase.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Frequency (Hz)",
+                      "arg": "Freq",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "50",
+                        "1": "60"
+                      },
+                      "friendly_meanings": {
+                        "0": "50 Hz",
+                        "1": "60 Hz"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridBase",
+                      "Element": "GridFreq"
+                    }
+                  },
+                  "uuid": "GridBase.GridFreq"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Grid Protection",
+          "subsections": [
+            {
+              "title": "Grid Protection Parameters",
+              "visibility": "default",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Grid Voltage Limits (Stage 1)",
+                  "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Upper Limit (Vac)",
+                      "arg": "GridVoltLimitHigh",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Lower Limit (Vac)",
+                      "arg": "GridVoltLimitLow",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridVoltLimit1"
+                    }
+                  },
+                  "uuid": "GridProtection.GridVoltLimit1"
+                },
+                {
+                  "title": "Grid Voltage Limits (Stage 2)",
+                  "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Upper Limit (Vac)",
+                      "arg": "GridVoltLimitHigh",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Lower Limit (Vac)",
+                      "arg": "GridVoltLimitLow",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridVoltLimit2"
+                    }
+                  },
+                  "uuid": "GridProtection.GridVoltLimit2"
+                },
+                {
+                  "title": "Grid Voltage Limits (Stage 3)",
+                  "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Upper Limit (Vac)",
+                      "arg": "GridVoltLimitHigh",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Lower Limit (Vac)",
+                      "arg": "GridVoltLimitLow",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridVoltLimit3"
+                    }
+                  },
+                  "uuid": "GridProtection.GridVoltLimit3"
+                },
+                {
+                  "title": "Grid Frequency Limits (Stage 1)",
+                  "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Upper Limit (Hz)",
+                      "arg": "GridFreqLimitHigh",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Lower Limit (Hz)",
+                      "arg": "GridFreqLimitLow",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridFreqLimit1"
+                    }
+                  },
+                  "uuid": "GridProtection.GridFreqLimit1"
+                },
+                {
+                  "title": "Grid Frequency Limits (Stage 2)",
+                  "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Upper Limit (Hz)",
+                      "arg": "GridFreqLimitHigh",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Lower Limit (Hz)",
+                      "arg": "GridFreqLimitLow",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridFreqLimit2"
+                    }
+                  },
+                  "uuid": "GridProtection.GridFreqLimit2"
+                },
+                {
+                  "title": "Grid Frequency Limits (Stage 3)",
+                  "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Upper Limit (Hz)",
+                      "arg": "GridFreqLimitHigh",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Lower Limit (Hz)",
+                      "arg": "GridFreqLimitLow",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridFreqLimit3"
+                    }
+                  },
+                  "uuid": "GridProtection.GridFreqLimit3"
+                },
+                {
+                  "title": "Grid Voltage Trip Time",
+                  "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects from the grid.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Low Voltage Trip Delay (ms)",
+                      "arg": "GridVoltLimitLowTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "High Voltage Trip Delay (ms)",
+                      "arg": "GridVoltLimitHighTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridVoltLimit1Time"
+                    }
+                  },
+                  "uuid": "GridProtection.GridVoltLimit1Time"
+                },
+                {
+                  "title": "Grid Voltage Trip Time (Stage 2)",
+                  "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects from the grid.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Low Voltage Trip Delay (ms)",
+                      "arg": "GridVoltLimitLowTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "High Voltage Trip Delay (ms)",
+                      "arg": "GridVoltLimitHighTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridVoltLimit2Time"
+                    }
+                  },
+                  "uuid": "GridProtection.GridVoltLimit2Time"
+                },
+                {
+                  "title": "Grid Voltage Trip Time (Stage 3)",
+                  "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects from the grid.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Low Voltage Trip Delay (ms)",
+                      "arg": "GridVoltLimitLowTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "High Voltage Trip Delay (ms)",
+                      "arg": "GridVoltLimitHighTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridVoltLimit3Time"
+                    }
+                  },
+                  "uuid": "GridProtection.GridVoltLimit3Time"
+                },
+                {
+                  "title": "Grid Frequency Trip Time (Stage 1)",
+                  "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects from the grid.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "High Frequency Trip Delay (ms)",
+                      "arg": "GridFreqLimitHighTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Low Frequency Trip Delay (ms)",
+                      "arg": "GridFreqLimitLowTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridFreqLimit1Time"
+                    }
+                  },
+                  "uuid": "GridProtection.GridFreqLimit1Time"
+                },
+                {
+                  "title": "Grid Frequency Trip Time (Stage 2)",
+                  "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects from the grid.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "High Frequency Trip Delay (ms)",
+                      "arg": "GridFreqLimitHighTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Low Frequency Trip Delay (ms)",
+                      "arg": "GridFreqLimitLowTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridFreqLimit2Time"
+                    }
+                  },
+                  "uuid": "GridProtection.GridFreqLimit2Time"
+                },
+                {
+                  "title": "Grid Frequency Trip Time (Stage 3)",
+                  "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects from the grid.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "High Frequency Trip Delay (ms)",
+                      "arg": "GridFreqLimitHighTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Low Frequency Trip Delay (ms)",
+                      "arg": "GridFreqLimitLowTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridProtection",
+                      "Element": "GridFreqLimit3Time"
+                    }
+                  },
+                  "uuid": "GridProtection.GridFreqLimit3Time"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Grid Connection",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Permit to Operate",
+                  "help": "Shows whether the inverter is permitted to operate in grid-connected mode.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Permit Status",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Not Permitted",
+                        "1": "Permitted"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridConnection",
+                      "Element": "PermitServiceStatus"
+                    }
+                  },
+                  "uuid": "GridConnection.PermitServiceStatus"
+                },
+                {
+                  "title": "Ramp Rate",
+                  "help": "How quickly inverter output is allowed to increase.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Ramp Rate (%/sec)",
+                      "arg": "Rate",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridConnection",
+                      "Element": "RampRate"
+                    }
+                  },
+                  "uuid": "GridConnection.RampRate"
+                },
+                {
+                  "title": "Applicable Grid Voltage Range",
+                  "help": "Voltage window within which grid connection is permitted. Outside this range the inverter will not connect or will disconnect.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Lower Limit (Vac)",
+                      "arg": "ApplicableVoltageLow",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Upper Limit (Vac)",
+                      "arg": "ApplicableVoltageHigh",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridConnection",
+                      "Element": "ApplicableVoltage"
+                    }
+                  },
+                  "uuid": "GridConnection.ApplicableVoltage"
+                },
+                {
+                  "title": "Applicable Grid Frequency Range",
+                  "help": "Frequency window within which grid connection is permitted. Outside this range the inverter will not connect or will disconnect.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Lower Limit (Hz)",
+                      "arg": "ApplicableFrequencyLow",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Upper Limit (Hz)",
+                      "arg": "ApplicableFrequencyHigh",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridConnection",
+                      "Element": "ApplicableFrequency"
+                    }
+                  },
+                  "uuid": "GridConnection.ApplicableFrequency"
+                },
+                {
+                  "title": "Connection Delay Times",
+                  "help": "Delays applied before initial grid connection and after a grid disturbance clears (reconnection). These timers help meet interconnection standards.  The connection delay is how long the inverter will wait after first being powered on.  Reconnection delay is how long the inverter will wait after a grid disturbance or outage clears.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Connection Delay (s)",
+                      "arg": "ConnectionDelayTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Reconnection Delay (s)",
+                      "arg": "ReconnectionDelayTime",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "GridConnection",
+                      "Element": "DelayTime"
+                    }
+                  },
+                  "uuid": "GridConnection.DelayTime"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Grid Support",
+          "subsections": [
+            {
+              "title": "Constant Power Factor",
+              "visibility": "default",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Power Factor Mode",
+                  "help": "Shows whether constant power-factor control is active.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Status",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Inactive — No PF control",
+                        "1": "Active — Constant PF"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ConstantPowerFactorMode",
+                      "Element": "ConstantPowerFactorModeStatus"
+                    }
+                  },
+                  "uuid": "ConstantPowerFactorMode.ConstantPowerFactorModeStatus"
+                },
+                {
+                  "title": "Power Factor Setpoint",
+                  "help": "The target power factor and excitation. Under-excited = lagging (absorbing vars); Over-excited = leading (supplying vars).",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Excitation",
+                      "arg": "Excited",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Under-excited",
+                        "1": "Over-excited"
+                      },
+                      "friendly_meanings": {
+                        "0": "Under-excited",
+                        "1": "Over-excited"
+                      }
+                    },
+                    {
+                      "name": "Power Factor (PF)",
+                      "arg": "PowerFactor",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ConstantPowerFactorMode",
+                      "Element": "ConstantPowerFactor"
+                    }
+                  },
+                  "uuid": "ConstantPowerFactorMode.ConstantPowerFactor"
+                }
+              ]
+            },
+            {
+              "title": "Constant Reactive Power",
+              "visibility": "default",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Reactive Power Mode",
+                  "help": "Shows whether constant reactive-power control is active.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Excitation",
+                      "arg": "Excited",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Under-excited",
+                        "1": "Over-excited"
+                      },
+                      "friendly_meanings": {
+                        "0": "Under-excited",
+                        "1": "Over-excited"
+                      }
+                    },
+                    {
+                      "name": "Status",
+                      "arg": "Status",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Inactive - no reactive power control",
+                        "1": "Active - reactive power control"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ConstantReactivePowerMode",
+                      "Element": "ConstantReactivePowerModeStatus"
+                    }
+                  },
+                  "uuid": "ConstantReactivePowerMode.ConstantReactivePowerModeStatus"
+                },
+                {
+                  "title": "Reactive Power Setpoint",
+                  "help": "Displays the reactive-power target as a percentage of rated power (vars). Excitation determines whether vars are supplied (leading) or absorbed (lagging).",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Reactive Power (%)",
+                      "arg": "Power",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ConstantReactivePowerMode",
+                      "Element": "ReactivePowerPercentCMD"
+                    }
+                  },
+                  "uuid": "ConstantReactivePowerMode.ReactivePowerPercentCMD"
+                }
+              ]
+            },
+            {
+              "title": "Volt-VAR (Voltage-Reactive Power)",
+              "visibility": "default",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Volt-VAR Mode",
+                  "help": "Shows whether Volt-VAR (voltage-reactive power) control is active. This value is read-only and reflects the current configuration or utility command.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Inactive - no Volt-VAR control",
+                        "1": "Active - Volt-VAR control"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageReactivePowerMode",
+                      "Element": "VoltageReactivePowerMode"
+                    }
+                  },
+                  "uuid": "VoltageReactivePowerMode.VoltageReactivePowerMode"
+                },
+                {
+                  "title": "Autonomous Vref Adjustment",
+                  "help": "Indicates whether the inverter autonomously adjusts its reference voltage (Vref).",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Autonomous Adjustment",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageReactivePowerMode",
+                      "Element": "AutonomousVrefAdjustment"
+                    }
+                  },
+                  "uuid": "VoltageReactivePowerMode.AutonomousVrefAdjustment"
+                },
+                {
+                  "title": "Reference Voltage (Vref)",
+                  "help": "Voltage reference used for Volt-VAR calculations.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Vref",
+                      "arg": "Verf",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageReactivePowerMode",
+                      "Element": "Verf"
+                    }
+                  },
+                  "uuid": "VoltageReactivePowerMode.Verf"
+                },
+                {
+                  "title": "Vref Adjustment Time Constant",
+                  "help": "Time constant applied when adjusting Vref.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Time Constant",
+                      "arg": "Time",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageReactivePowerMode",
+                      "Element": "VrefAdjustmentTimeConstant"
+                    }
+                  },
+                  "uuid": "VoltageReactivePowerMode.VrefAdjustmentTimeConstant"
+                },
+                {
+                  "title": "Volt-VAR Voltage Breakpoints",
+                  "help": "Voltage points (V1-V4) that define the Volt-VAR curve breakpoints.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "V1 (Voltage Point 1)",
+                      "arg": "V1",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "V2 (Voltage Point 2)",
+                      "arg": "V2",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "V3 (Voltage Point 3)",
+                      "arg": "V3",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "V4 (Voltage Point 4)",
+                      "arg": "V4",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageReactivePowerMode",
+                      "Element": "UnderOverVoltage"
+                    }
+                  },
+                  "uuid": "VoltageReactivePowerMode.UnderOverVoltage"
+                },
+                {
+                  "title": "Reactive Power Setpoint Q1",
+                  "help": "Reactive power at voltage point V1 on the Volt-VAR curve.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Q1 (Reactive Setpoint 1)",
+                      "arg": "Q1",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageReactivePowerMode",
+                      "Element": "Q1"
+                    }
+                  },
+                  "uuid": "VoltageReactivePowerMode.Q1"
+                },
+                {
+                  "title": "Reactive Power Setpoint Q2",
+                  "help": "Reactive power at voltage point V2 on the Volt-VAR curve.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Q2 (Reactive Setpoint 2)",
+                      "arg": "Q2",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageReactivePowerMode",
+                      "Element": "Q2"
+                    }
+                  },
+                  "uuid": "VoltageReactivePowerMode.Q2"
+                },
+                {
+                  "title": "Reactive Power Setpoint Q3",
+                  "help": "Reactive power at voltage point V3 on the Volt-VAR curve.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Q3 (Reactive Setpoint 3)",
+                      "arg": "Q3",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageReactivePowerMode",
+                      "Element": "Q3"
+                    }
+                  },
+                  "uuid": "VoltageReactivePowerMode.Q3"
+                },
+                {
+                  "title": "Reactive Power Setpoint Q4",
+                  "help": "Reactive power at voltage point V4 on the Volt-VAR curve.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Q4 (Reactive Setpoint 4)",
+                      "arg": "Q4",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageReactivePowerMode",
+                      "Element": "Q4"
+                    }
+                  },
+                  "uuid": "VoltageReactivePowerMode.Q4"
+                },
+                {
+                  "title": "Open-Loop Response Time",
+                  "help": "Response time used for open-loop Volt-VAR changes.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Response Time",
+                      "arg": "Time",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageReactivePowerMode",
+                      "Element": "OpenLoopResponseTime"
+                    }
+                  },
+                  "uuid": "VoltageReactivePowerMode.OpenLoopResponseTime"
+                }
+              ]
+            },
+            {
+              "title": "P-Q Mode (Active-Reactive Power)",
+              "visibility": "default",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "P-Q Mode Status",
+                  "help": "Shows whether Active/Reactive Power (P-Q) control mode is enabled.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Inactive - no P-Q control",
+                        "1": "Active - P-Q control"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ActivePowerReactivePowerMode",
+                      "Element": "PQModeStatus"
+                    }
+                  },
+                  "uuid": "ActivePowerReactivePowerMode.PQModeStatus"
+                },
+                {
+                  "title": "P-Q Curve Points",
+                  "help": "Breakpoint setpoints for the Active/Reactive Power (P-Q) characteristic.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "P1 Setpoint",
+                      "arg": "P1",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "P2 Setpoint",
+                      "arg": "P2",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "P3 Setpoint",
+                      "arg": "P3",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ActivePowerReactivePowerMode",
+                      "Element": "P_QP"
+                    }
+                  },
+                  "uuid": "ActivePowerReactivePowerMode.P_QP"
+                }
+              ]
+            },
+            {
+              "title": "Volt-Watt (Voltage-Active Power)",
+              "visibility": "default",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Volt-Watt Mode",
+                  "help": "Shows whether Volt-Watt (voltage-active power) control is enabled.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Inactive - no Volt-Watt control",
+                        "1": "Active - Volt-Watt control"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageActivePowerMode",
+                      "Element": "VoltageActivePowerMode"
+                    }
+                  },
+                  "uuid": "VoltageActivePowerMode.VoltageActivePowerMode"
+                },
+                {
+                  "title": "Volt-Watt Voltage Breakpoints",
+                  "help": "Voltage points that define the Volt-Watt curve.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "V1 (Voltage Point 1)",
+                      "arg": "VoltWattV1",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "V2 (Voltage Point 2)",
+                      "arg": "VoltWattV2",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageActivePowerMode",
+                      "Element": "VoltWattV"
+                    }
+                  },
+                  "uuid": "VoltageActivePowerMode.VoltWattV"
+                },
+                {
+                  "title": "Volt-Watt Power Setpoint",
+                  "help": "Power setpoint at voltage breakpoint V2 on the Volt-Watt curve.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "P2 Setpoint",
+                      "arg": "VoltWattP2",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageActivePowerMode",
+                      "Element": "VoltWattP2"
+                    }
+                  },
+                  "uuid": "VoltageActivePowerMode.VoltWattP2"
+                },
+                {
+                  "title": "Open-Loop Response Time",
+                  "help": "Response time used for open-loop Volt-Watt changes.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Response Time",
+                      "arg": "Time",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "VoltageActivePowerMode",
+                      "Element": "OpenLoopResponseTime"
+                    }
+                  },
+                  "uuid": "VoltageActivePowerMode.OpenLoopResponseTime"
+                }
+              ]
+            },
+            {
+              "title": "Freq-Watt (Frequency-Active Power)",
+              "visibility": "default",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Frequency-Active Power Mode",
+                  "help": "Indicates whether frequency-power (Freq-Watt) control is currently enabled.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "FrequencyActivePowerMode",
+                      "Element": "FrequencyActivePowerModeStatus"
+                    }
+                  },
+                  "uuid": "FrequencyActivePowerMode.FrequencyActivePowerModeStatus"
+                },
+                {
+                  "title": "Open-Loop Response Time",
+                  "help": "Response time applied to open-loop frequency-power adjustments.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Response Time",
+                      "arg": "Time",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "FrequencyActivePowerMode",
+                      "Element": "OpenLoopResponseTime"
+                    }
+                  },
+                  "uuid": "FrequencyActivePowerMode.OpenLoopResponseTime"
+                },
+                {
+                  "title": "Over-Frequency Droop: Deadband",
+                  "help": "Over Frequency Droop dbOF — Deadband around nominal frequency before active power reduction begins.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Deadband (Hz)",
+                      "arg": "Frequency",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "FrequencyActivePowerMode",
+                      "Element": "OverFrequencyDroop_dbOF"
+                    }
+                  },
+                  "uuid": "FrequencyActivePowerMode.OverFrequencyDroop_dbOF"
+                },
+                {
+                  "title": "Over-Frequency Droop: Gain (k)",
+                  "help": "Over Frequency Droop kOF — Slope (gain k) of active power reduction versus frequency rise above nominal.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Gain k (slope)",
+                      "arg": "Frequency",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "FrequencyActivePowerMode",
+                      "Element": "OverFrequencyDroop_kOF"
+                    }
+                  },
+                  "uuid": "FrequencyActivePowerMode.OverFrequencyDroop_kOF"
+                },
+                {
+                  "title": "Under-Frequency Droop: Deadband",
+                  "help": "Under Frequency Droop dbUF — Deadband around nominal frequency before active power increase/response begins.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Deadband (Hz)",
+                      "arg": "Frequency",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "FrequencyActivePowerMode",
+                      "Element": "UnderFrequencyDroop_dbUF"
+                    }
+                  },
+                  "uuid": "FrequencyActivePowerMode.UnderFrequencyDroop_dbUF"
+                },
+                {
+                  "title": "Under-Frequency Droop: Gain (k)",
+                  "help": "Under Frequency Droop kUF — Slope (gain k) of active power response versus frequency drop below nominal.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Gain k (slope)",
+                      "arg": "Frequency",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "FrequencyActivePowerMode",
+                      "Element": "UnderFrequencyDroop_kUF"
+                    }
+                  },
+                  "uuid": "FrequencyActivePowerMode.UnderFrequencyDroop_kUF"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "themeName": "Backup Power",
+      "sections": [
+        {
+          "sectionTitle": "Backup Power",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Off-Grid Output",
+                  "help": "Controls whether the inverter provides AC output when operating without the utility grid. Disable to prevent output in off-grid mode.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": " ",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BackupPower",
+                      "Element": "OffGridOutput"
+                    }
+                  },
+                  "uuid": "BackupPower.OffGridOutput"
+                },
+                {
+                  "title": "Backup (EPS) Output Voltage",
+                  "help": "Selects the AC output voltage when operating in backup (EPS) mode. Match this to your local service voltage for proper compatibility with connected loads.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Voltage (Vac)",
+                      "arg": "Voltage",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "208",
+                        "1": "220",
+                        "2": "230",
+                        "3": "240",
+                        "4": "277"
+                      },
+                      "friendly_meanings": {
+                        "0": "208 V",
+                        "1": "220 V",
+                        "2": "230 V",
+                        "3": "240 V",
+                        "4": "277 V"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "BackupPower",
+                      "Element": "EPSVoltage"
+                    }
+                  },
+                  "uuid": "BackupPower.EPSVoltage"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "themeName": "Generator",
+      "sections": [
+        {
+          "sectionTitle": "Generator",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Generator Port Connection",
+                  "help": "If using a generator, select which port it's connected to — either the GEN port or the Grid Input port (sometimes called microgrid mode). If no generator is installed, leave this setting on GEN port.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Generator connected to",
+                      "arg": "Port",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "GeneratorPort",
+                        "1": "GridPort"
+                      },
+                      "friendly_meanings": {
+                        "0": "GEN port (also select if not using generator).",
+                        "1": "Grid port (aka microgrid mode)"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Generator",
+                      "Element": "LinkedPort"
+                    }
+                  },
+                  "uuid": "Generator.LinkedPort"
+                },
+                {
+                  "title": "Battery Charge Current Limit",
+                  "help": "Sets the maximum DC current the inverter will send to the battery when charging from the generator.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Charge Current (Adc)",
+                      "arg": "Current",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Generator",
+                      "Element": "BatteryChargeCurrentLimit"
+                    }
+                  },
+                  "uuid": "Generator.BatteryChargeCurrentLimit"
+                },
+                {
+                  "title": "Generator Rated Power",
+                  "help": "Specify the generator's continuous rated output power.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Rated Power (kW)",
+                      "arg": "Power",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Generator",
+                      "Element": "GeneratorRatedPower"
+                    }
+                  },
+                  "uuid": "Generator.GeneratorRatedPower"
+                },
+                {
+                  "title": "Generator Cool-Down Time",
+                  "help": "Sets the time the generator continues running after charging stops to allow for safe cooling.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Cool-Down Time (min)",
+                      "arg": "Time",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Generator",
+                      "Element": "GeneratorCoolDownTime"
+                    }
+                  },
+                  "uuid": "Generator.GeneratorCoolDownTime"
+                },
+                {
+                  "title": "Generator Start/Stop SOC",
+                  "help": "Configures the battery state of charge thresholds for automatic generator control. The generator will start when battery SOC drops to StartSOC and stop when it reaches StopSOC.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start SOC (%)",
+                      "arg": "StartSOC",
+                      "dtype": "Number",
+                      "description": "Generator starts when battery drops to this level",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 90
+                      },
+                      "less_than": null
+                    },
+                    {
+                      "name": "Stop SOC (%)",
+                      "arg": "StopSOC",
+                      "dtype": "Number",
+                      "description": "Generator stops when battery charges to this level",
+                      "longdescription": "",
+                      "range": {
+                        "min": 5,
+                        "max": 100
+                      },
+                      "greater_than": null
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Generator",
+                      "Element": "GeneratorSOC"
+                    }
+                  },
+                  "uuid": "Generator.GeneratorSOC"
+                },
+                {
+                  "title": "Generator Contactor Status",
+                  "help": "Indicates the current state of the generator control contactor.",
+                  "element_type": "Attribute",
+                  "access": "R",
+                  "readOnly": true,
+                  "entries": [
+                    {
+                      "name": "Contactor State",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "OFF",
+                        "1": "ON"
+                      },
+                      "friendly_meanings": {
+                        "0": "Closed / On",
+                        "1": "Open / Off"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Generator",
+                      "Element": "GenDryContact"
+                    }
+                  },
+                  "uuid": "Generator.GenDryContact"
+                },
+                {
+                  "title": "Battery Quick Charge with Generator",
+                  "help": "Start the generator to charge the battery.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": " ",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Stop quick charge",
+                        "1": "Start quick charge"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Generator",
+                      "Element": "StartGeneratorExercise"
+                    }
+                  },
+                  "uuid": "Generator.StartGeneratorExercise"
+                },
+                {
+                  "title": "Generator Boost",
+                  "help": "Enables dynamic adjustment of generator charging power for faster battery recovery when needed.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": " ",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Generator",
+                      "Element": "GeneratorBoost"
+                    }
+                  },
+                  "uuid": "Generator.GeneratorBoost"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "themeName": "AC Coupled PV",
+      "sections": [
+        {
+          "sectionTitle": "AC Coupled PV",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "AC Coupled PV",
+                  "help": "Enable this option when connecting a grid-tied solar inverter (AC Coupled PV) to the system. Disable when no AC Coupled PV is present.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "AC Coupled PV Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCoupledPV",
+                      "Element": "ACCoupledPV"
+                    }
+                  },
+                  "uuid": "ACCoupledPV.ACCoupledPV"
+                },
+                {
+                  "title": "AC Coupled PV Start/Stop SOC",
+                  "help": "Defines the battery state-of-charge thresholds that control when the inverter allows AC Coupled PV charging to start and stop.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start SOC (%)",
+                      "arg": "StartSOC",
+                      "dtype": "Number",
+                      "description": "AC Coupled PV begins charging when SOC drops to this level",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      },
+                      "less_than": null
+                    },
+                    {
+                      "name": "Stop SOC (%)",
+                      "arg": "StopSOC",
+                      "dtype": "Number",
+                      "description": "AC Coupled PV stops charging when SOC reaches this level",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      },
+                      "greater_than": null
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "ACCoupledPV",
+                      "Element": "ACCouplePVSOC"
+                    }
+                  },
+                  "uuid": "ACCoupledPV.ACCouplePVSOC"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "themeName": "Smart Load",
+      "sections": [
+        {
+          "sectionTitle": "Smart Load",
+          "subsections": [
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Use Smart Load",
+                  "help": "Powers non-essential loads only when excess solar or battery energy is available. Enable this to automatically use surplus energy for optional circuits.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Disabled",
+                        "1": "Enabled"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "LoadShedding",
+                      "Element": "SmartLoad"
+                    }
+                  },
+                  "uuid": "LoadShedding.SmartLoad"
+                },
+                {
+                  "title": "Smart Load On-Grid Behavior",
+                  "help": "Determines Smart Load behavior while the system is connected to the grid. When enabled, the Smart Load remains powered even if normal control conditions are not met. (AKA: **On-Grid Always On**.)",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "On-Grid Always-On Mode",
+                      "arg": "Mode",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Disable",
+                        "1": "Enable"
+                      },
+                      "friendly_meanings": {
+                        "0": "Follow normal rules",
+                        "1": "Always On When Grid Present"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "LoadShedding",
+                      "Element": "OnGridAlwaysOn"
+                    }
+                  },
+                  "uuid": "LoadShedding.OnGridAlwaysOn"
+                },
+                {
+                  "title": "Smart Load Start Power",
+                  "help": "Defines when the Smart Load turns on. The Smart Load port is energized once PV power exceeds this threshold **and** the battery SOC is above the start limit.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "PV Power Above (W)",
+                      "arg": "Power",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "LoadShedding",
+                      "Element": "StartPVPower"
+                    }
+                  },
+                  "uuid": "LoadShedding.StartPVPower"
+                },
+                {
+                  "title": "Smart Load SOC Limits",
+                  "help": "Defines the battery state-of-charge limits that control the Smart Load. The Smart Load turns on when SOC rises above the start limit **and** PV power exceeds the start power limit.  Smart load turns off when SOC falls below the stop limit.",
+                  "element_type": "Attribute",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Start When Battery SOC Is Above (%)",
+                      "arg": "OnSOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      },
+                      "less_than": null
+                    },
+                    {
+                      "name": "Stop When Battery SOC Is Below (%)",
+                      "arg": "OffSOC",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 100
+                      },
+                      "greater_than": null
+                    }
+                  ],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "LoadShedding",
+                      "Element": "SmartLoadSOC"
+                    }
+                  },
+                  "uuid": "LoadShedding.SmartLoadSOC"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

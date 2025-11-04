@@ -11,10 +11,13 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "csv-parse": "^6.1.0",
+    "csv-stringify": "^6.6.0",
     "node-jq": "^6.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@types/node": "^24.9.2",

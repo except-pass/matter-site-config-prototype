@@ -1,0 +1,206 @@
+pageName: Envy 48V
+themes:
+  - name: Inverter
+    sections:
+      - name: Basic Setup
+        subsections:
+          - points:
+              - Basic.SystemTime
+              - Basic.OperatingMode
+              - Basic.WorkMode
+              - Basic.GridLossWarningClear
+              - Basic.PowerStatus
+              - Basic.AllToDefault
+              - Basic.PowerControl
+      - name: Power Limits
+        subsections:
+          - points:
+              - LimitActivePower.LimitActivePowerStatus
+              - LimitActivePower.ActivePowerPercent
+      - name: Selling Power
+        subsections:
+          - points:
+              - FeedInGrid.FeedInGridStatus
+              - FeedInGrid.FeedInGridMaxPower
+              - FeedInGrid.FastZeroExportStatus
+      - name: Grid Charge
+        subsections:
+          - points:
+              - ACCharge.ACChgStopSOC
+      - name: Parallel
+        subsections:
+          - points:
+              - Parallel.ModbusAddr
+              - Parallel.SystemType
+              - Parallel.ComposedPhase
+              - Parallel.ClearDetectedPhases
+              - Parallel.DetectedGridPhases
+              - Parallel.ShareBatteryStatus
+              - Parallel.ParallelNum
+              - Parallel.Role
+              - Parallel.ParallelPhase
+      - name: Current Transformer (CT) Settings
+        subsections:
+          - points:
+              - Measurement.CTSampleRatio
+              - Measurement.CTDirection
+  - name: Battery
+    sections:
+      - name: Setup
+        subsections:
+          - points:
+              - BatteryBase.BatteryType
+              - BatteryBase.BatteryBrand
+              - BatteryBase.AbsorbVoltage
+              - BatteryBase.FloatVoltage
+              - BatteryBase.VbatStartDerating
+              - BatteryBase.ChaDisChaCtrlType
+              - BatteryBase.ChargeLimitSoc
+              - BatteryBase.MaxChaDisChaCurrent
+              - BatteryBase.OnGridCutOffSoc
+              - BatteryBase.OffGridCutOffSoc
+      - name: Battery Backup
+        subsections:
+          - points:
+              - BatteryBackup.BatteryBackupMode
+              - BatteryBackup.BatteryReserveSOC
+      - name: Battery Scheduling
+        subsections:
+          - points:
+              - BatteryScheduling.BatteryScheduling
+          - points:
+              - BatteryTOUCharge.TOUMaximumChargingPower
+              - BatteryTOUCharge.TOUChargingPlan1
+              - BatteryTOUCharge.TOUChargingPlan2
+              - BatteryTOUCharge.TOUChargingPlan3
+            name: PV Charge Only
+          - points:
+              - BatteryTOUDischarge.TOUMaximumDischargingPower
+              - BatteryTOUDischarge.DischargingStopSoc
+              - BatteryTOUDischarge.TOUDischargingPlan1
+              - BatteryTOUDischarge.TOUDischargingPlan2
+              - BatteryTOUDischarge.TOUDischargingPlan3
+            name: Discharge Only
+      - name: Grid Charge
+        subsections:
+          - points:
+              - ACCharge.ACChargeStatus
+              - ACCharge.ACChargePower
+              - ACCharge.ACChgStartSOC
+              - ACCharge.ACChargeType
+              - ACCharge.ACChargingPlan
+  - name: Grid
+    sections:
+      - name: Setup
+        subsections:
+          - points:
+              - GridBase.GridRegulation
+              - GridBase.GridType
+              - GridBase.GridFreq
+      - name: Grid Protection
+        subsections:
+          - points:
+              - GridProtection.GridVoltLimit1
+              - GridProtection.GridVoltLimit2
+              - GridProtection.GridVoltLimit3
+              - GridProtection.GridFreqLimit1
+              - GridProtection.GridFreqLimit2
+              - GridProtection.GridFreqLimit3
+              - GridProtection.GridVoltLimit1Time
+              - GridProtection.GridVoltLimit2Time
+              - GridProtection.GridVoltLimit3Time
+              - GridProtection.GridFreqLimit1Time
+              - GridProtection.GridFreqLimit2Time
+              - GridProtection.GridFreqLimit3Time
+            name: Grid Protection Parameters
+            collapsedByDefault: true
+      - name: Grid Connection
+        subsections:
+          - points:
+              - GridConnection.PermitServiceStatus
+              - GridConnection.RampRate
+              - GridConnection.ApplicableVoltage
+              - GridConnection.ApplicableFrequency
+              - GridConnection.DelayTime
+      - name: Grid Support
+        subsections:
+          - points:
+              - ConstantPowerFactorMode.ConstantPowerFactorModeStatus
+              - ConstantPowerFactorMode.ConstantPowerFactor
+            name: Constant Power Factor
+            collapsedByDefault: true
+          - points:
+              - ConstantReactivePowerMode.ConstantReactivePowerModeStatus
+              - ConstantReactivePowerMode.ReactivePowerPercentCMD
+            name: Constant Reactive Power
+            collapsedByDefault: true
+          - points:
+              - VoltageReactivePowerMode.VoltageReactivePowerMode
+              - VoltageReactivePowerMode.AutonomousVrefAdjustment
+              - VoltageReactivePowerMode.Verf
+              - VoltageReactivePowerMode.VrefAdjustmentTimeConstant
+              - VoltageReactivePowerMode.UnderOverVoltage
+              - VoltageReactivePowerMode.Q1
+              - VoltageReactivePowerMode.Q2
+              - VoltageReactivePowerMode.Q3
+              - VoltageReactivePowerMode.Q4
+              - VoltageReactivePowerMode.OpenLoopResponseTime
+            name: Volt-VAR (Voltage-Reactive Power)
+            collapsedByDefault: true
+          - points:
+              - ActivePowerReactivePowerMode.PQModeStatus
+              - ActivePowerReactivePowerMode.P_QP
+            name: P-Q Mode (Active-Reactive Power)
+            collapsedByDefault: true
+          - points:
+              - VoltageActivePowerMode.VoltageActivePowerMode
+              - VoltageActivePowerMode.VoltWattV
+              - VoltageActivePowerMode.VoltWattP2
+              - VoltageActivePowerMode.OpenLoopResponseTime
+            name: Volt-Watt (Voltage-Active Power)
+            collapsedByDefault: true
+          - points:
+              - FrequencyActivePowerMode.FrequencyActivePowerModeStatus
+              - FrequencyActivePowerMode.OpenLoopResponseTime
+              - FrequencyActivePowerMode.OverFrequencyDroop_dbOF
+              - FrequencyActivePowerMode.OverFrequencyDroop_kOF
+              - FrequencyActivePowerMode.UnderFrequencyDroop_dbUF
+              - FrequencyActivePowerMode.UnderFrequencyDroop_kUF
+            name: Freq-Watt (Frequency-Active Power)
+            collapsedByDefault: true
+  - name: Backup Power
+    sections:
+      - name: Backup Power
+        subsections:
+          - points:
+              - BackupPower.OffGridOutput
+              - BackupPower.EPSVoltage
+  - name: Generator
+    sections:
+      - name: Generator
+        subsections:
+          - points:
+              - Generator.LinkedPort
+              - Generator.BatteryChargeCurrentLimit
+              - Generator.GeneratorRatedPower
+              - Generator.GeneratorCoolDownTime
+              - Generator.GeneratorSOC
+              - Generator.GenDryContact
+              - Generator.StartGeneratorExercise
+              - Generator.GeneratorBoost
+  - name: AC Coupled PV
+    sections:
+      - name: AC Coupled PV
+        subsections:
+          - points:
+              - ACCoupledPV.ACCoupledPV
+              - ACCoupledPV.ACCouplePVSOC
+  - name: Smart Load
+    sections:
+      - name: Smart Load
+        subsections:
+          - points:
+              - LoadShedding.SmartLoad
+              - LoadShedding.OnGridAlwaysOn
+              - LoadShedding.StartPVPower
+              - LoadShedding.SmartLoadSOC
