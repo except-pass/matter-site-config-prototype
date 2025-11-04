@@ -11,7 +11,9 @@ themes:
               - Basic.GridLossWarningClear
               - Basic.PowerStatus
               - uuid: Basic.AllToDefault
-              - Basic.PowerControl
+                invokeButtonText: "Reset Now"
+              - uuid: Basic.PowerControl
+                showInvokeButton: false
       - name: Power Limits
         subsections:
           - points:

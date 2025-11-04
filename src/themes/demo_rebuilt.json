@@ -272,7 +272,8 @@
                       "Element": "PowerControl"
                     }
                   },
-                  "uuid": "Basic.PowerControl"
+                  "uuid": "Basic.PowerControl",
+                  "showInvokeButton": false
                 }
               ]
             }

@@ -69,6 +69,7 @@ interface JsonPoint {
   access: string;
   readOnly: boolean;
   invokeButtonText?: string;
+  showInvokeButton?: boolean;
   widget?: string;
   entries: JsonEntry[];
   protocol: {
@@ -181,7 +182,8 @@ function convertPointToJson(
   pointData: Point,
   widgetFromHierarchy?: string,
   readOnlyFromHierarchy?: boolean,
-  invokeButtonTextFromHierarchy?: string
+  invokeButtonTextFromHierarchy?: string,
+  showInvokeButtonFromHierarchy?: boolean
 ): JsonPoint {
   // Parse entries
   const entries: PointEntry[] = JSON.parse(pointData.entries);
@@ -217,10 +219,13 @@ function convertPointToJson(
     uuid: pointData.point_uuid,
   };
 
-  // Add optional fields - invokeButtonText is a UI concern, only from hierarchy.yaml
-  // The CSV column is ignored (kept for backward compatibility with existing CSV files)
+  // Add optional fields - invokeButtonText and showInvokeButton are UI concerns, only from hierarchy.yaml
   if (invokeButtonTextFromHierarchy !== undefined) {
     jsonPoint.invokeButtonText = invokeButtonTextFromHierarchy;
+  }
+  
+  if (showInvokeButtonFromHierarchy !== undefined) {
+    jsonPoint.showInvokeButton = showInvokeButtonFromHierarchy;
   }
   
   // Widget priority: hierarchy.yaml > points.csv
@@ -263,11 +268,12 @@ for (const themeSpec of hierarchy.themes) {
         // Support both formats:
         // - Simple string: "Basic.SystemTime"
         // - Object with UI properties: 
-        //   { uuid: "Basic.SystemTime", widget: "datetime", readOnly: true, invokeButtonText: "Start" }
+        //   { uuid: "Basic.SystemTime", widget: "datetime", readOnly: true, invokeButtonText: "Start", showInvokeButton: false }
         let pointUuid: string;
         let widgetFromHierarchy: string | undefined;
         let readOnlyFromHierarchy: boolean | undefined;
         let invokeButtonTextFromHierarchy: string | undefined;
+        let showInvokeButtonFromHierarchy: boolean | undefined;
         
         if (typeof pointSpec === 'string') {
           pointUuid = pointSpec;
@@ -284,6 +290,12 @@ for (const themeSpec of hierarchy.themes) {
           
           if (pointSpec.invokeButtonText !== undefined) {
             invokeButtonTextFromHierarchy = pointSpec.invokeButtonText;
+          }
+          
+          if (pointSpec.showInvokeButton !== undefined) {
+            showInvokeButtonFromHierarchy = typeof pointSpec.showInvokeButton === 'boolean'
+              ? pointSpec.showInvokeButton
+              : (pointSpec.showInvokeButton === 'true' || pointSpec.showInvokeButton === '1' || pointSpec.showInvokeButton === true);
           }
         } else {
           console.warn(`Warning: Invalid point spec format: ${JSON.stringify(pointSpec)}`);
@@ -306,7 +318,8 @@ for (const themeSpec of hierarchy.themes) {
           pointData,
           widgetFromHierarchy,
           readOnlyFromHierarchy,
-          invokeButtonTextFromHierarchy
+          invokeButtonTextFromHierarchy,
+          showInvokeButtonFromHierarchy
         ));
       }
 

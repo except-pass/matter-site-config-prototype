@@ -75,6 +75,7 @@ interface PointDef {
   uuid: string;
   widget?: "datetime" | "time" | "timerange" | "timerange-multi" | "default";
   invokeButtonText?: string; // Custom text for invoke button (defaults to "Invoke")
+  showInvokeButton?: boolean; // Set to false to hide the invoke button (default: true, UI-only override)
 }
 
 interface SubsectionDef {
@@ -1523,7 +1524,7 @@ function PointCard({
         </div>
       )}
 
-      {isInvoke && point.element_type !== "GeneratorExercise" && (
+      {isInvoke && point.element_type !== "GeneratorExercise" && (point.showInvokeButton !== false) && (
         <div className="mt-4 flex items-center gap-2">
           <button
             type="button"
