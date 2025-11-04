@@ -303,12 +303,14 @@ function EntryField({
   entry,
   value,
   onChange,
-  readOnly
+  readOnly,
+  point
 }: {
   entry: EntryDef;
   value: any;
   onChange: (next: any) => void;
   readOnly: boolean;
+  point?: PointDef;
 }) {
   const commonClasses =
     "w-full rounded border border-slate-300 bg-white px-2 py-1 text-sm text-slate-800 disabled:bg-slate-100 disabled:text-slate-500";
@@ -446,6 +448,32 @@ function EntryField({
 
   const isNumber = entry.dtype === 'Number';
   const hasRange = isNumber && entry.range !== undefined;
+  
+  // For modbus points with scale_factor, convert between wire value (integer) and display value
+  const isModbus = point?.protocol?.modbus !== undefined;
+  const scaleFactor = point?.protocol?.modbus?.scale_factor;
+  const needsScaleConversion = isModbus && scaleFactor !== undefined && isNumber;
+  
+  // Convert wire value to display value for display
+  const displayValue = needsScaleConversion && value !== null && value !== undefined && value !== ''
+    ? Number(value) * scaleFactor
+    : value;
+  
+  // Convert display value back to wire value (integer) when editing
+  const handleValueChange = (raw: string) => {
+    if (isNumber) {
+      const displayVal = raw === '' ? '' : Number(raw);
+      if (needsScaleConversion && displayVal !== '') {
+        // Convert display value to wire value: display / scale_factor, round to integer
+        const wireValue = Math.round(displayVal / scaleFactor);
+        onChange(wireValue);
+      } else {
+        onChange(displayVal);
+      }
+    } else {
+      onChange(raw);
+    }
+  };
 
   return (
     <div className={containerClasses}>
@@ -460,17 +488,10 @@ function EntryField({
           type={isNumber ? 'number' : 'text'}
           className={hasRange ? "w-20 rounded border border-slate-300 bg-white px-2 py-1 text-sm text-slate-800 disabled:bg-slate-100 disabled:text-slate-500" : commonClasses}
           disabled={readOnly}
-          value={value ?? ''}
+          value={displayValue ?? ''}
           min={entry.range?.min}
           max={entry.range?.max}
-          onChange={(e) => {
-            const raw = e.target.value;
-            if (isNumber) {
-              onChange(raw === '' ? '' : Number(raw));
-            } else {
-              onChange(raw);
-            }
-          }}
+          onChange={(e) => handleValueChange(e.target.value)}
         />
         {hasRange && (
           <div className="flex-1 flex items-center gap-2">
@@ -479,10 +500,18 @@ function EntryField({
               type="range"
               className="flex-1"
               disabled={readOnly}
-              value={value ?? entry.range!.min}
-              min={entry.range!.min}
-              max={entry.range!.max}
-              onChange={(e) => onChange(Number(e.target.value))}
+              value={displayValue ?? entry.range!.min}
+              min={entry.range?.min}
+              max={entry.range?.max}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                if (needsScaleConversion) {
+                  const wireValue = Math.round(val / scaleFactor);
+                  onChange(wireValue);
+                } else {
+                  onChange(val);
+                }
+              }}
             />
             <span className="text-[10px] text-slate-400 font-mono">{entry.range!.max}</span>
           </div>
@@ -1332,13 +1361,16 @@ function PointCard({
 
       if (isWrite) {
         // Get the first value from normalizedArguments (for write operations)
+        // Note: normalizedArguments already contains wire values (integers) for modbus with scale_factor
+        // because EntryField converts display values to wire values when editing
         const firstEntryArg = point.entries[0]?.arg;
         let writeValue = firstEntryArg ? normalizedArguments[firstEntryArg] : 0;
 
-        // Apply scale factor if present
-        // If scale_factor is 0.1, a display value of 50 becomes 500 (50 / 0.1)
-        if (point.protocol.modbus.scale_factor && typeof writeValue === 'number') {
-          writeValue = Math.round(writeValue / point.protocol.modbus.scale_factor);
+        // Scale factor conversion is already handled in EntryField when editing
+        // The value in normalizedArguments is already the wire value (integer)
+        // But we still need to ensure it's an integer for modbus
+        if (point.protocol.modbus && typeof writeValue === 'number') {
+          writeValue = Math.round(writeValue);
         }
 
         payload = {
@@ -1518,6 +1550,7 @@ function PointCard({
               entry={entry}
               value={formState[entry.arg]}
               readOnly={readOnly}
+              point={point}
               onChange={(val) => handleFieldChange(entry.arg, val)}
             />
           ))}

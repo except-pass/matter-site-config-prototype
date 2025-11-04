@@ -30,6 +30,7 @@ interface AdditionalModbusPoint {
     longdescription?: string;
     unit?: string;
     value?: string | number | null;
+    scalefactor?: number;
     range?: { min?: number; max?: number };
     meanings?: Record<string, string | number>;
     friendly_meanings?: Record<string, string | number>;
@@ -124,6 +125,7 @@ interface JsonEntry {
   longdescription: string;
   unit?: string;
   value?: string;
+  scalefactor?: number;
   range?: {
     min?: number;
     max?: number;
@@ -891,6 +893,7 @@ function convertAdditionalModbusPointToJson(def: AdditionalModbusPoint): JsonPoi
 
     if (entry.unit !== undefined) jsonEntry.unit = entry.unit;
     if (entry.value !== undefined && entry.value !== null) jsonEntry.value = String(entry.value);
+    if (entry.scalefactor !== undefined) jsonEntry.scalefactor = entry.scalefactor;
     if (entry.range) {
       jsonEntry.range = {};
       if (entry.range.min !== undefined) jsonEntry.range.min = entry.range.min;
@@ -936,6 +939,11 @@ function convertAdditionalModbusPointToJson(def: AdditionalModbusPoint): JsonPoi
     protocol: def.protocol as any, // modbus or cgi protocol
     command_id: def.command_id,
   };
+
+  // Copy scalefactor from entry to modbus protocol if present
+  if (def.protocol.modbus && entries.length > 0 && entries[0].scalefactor !== undefined) {
+    (jsonPoint.protocol as any).modbus.scale_factor = entries[0].scalefactor;
+  }
 
   if (def.invokeButtonText) {
     jsonPoint.invokeButtonText = def.invokeButtonText;
