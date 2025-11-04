@@ -1,4 +1,4 @@
-point_uuid,point_title,point_help,point_element_type,point_access,point_widget,MEP,Cluster,Element,arg,name,dtype,description,longdescription,unit,range_min,range_max,less_than,greater_than,meanings,friendly_meanings
+point_command_id,point_title,point_help,point_element_type,point_access,point_widget,MEP,Cluster,Element,arg,name,dtype,description,longdescription,unit,range_min,range_max,less_than,greater_than,meanings,friendly_meanings
 Basic.SystemTime,System Time,Attribute in Basic cluster,Attribute,RW,datetime,HybridInverter,Basic,SystemTime,Year,Year,Number,,,,0,99,,,,
 ,,,,,,,,,Mon,Mon,Number,,,,1,12,,,,
 ,,,,,,,,,Day,Day,Number,,,,1,31,,,,

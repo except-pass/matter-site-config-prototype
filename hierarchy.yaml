@@ -2,17 +2,18 @@ themes:
   - name: Inverter
     sections:
       - name: Basic Setup
+        section_id: inverter.basic
         subsections:
           - points:
-              - uuid: Basic.SystemTime
+              - command_id: Basic.SystemTime
                 widget: datetime
               - Basic.OperatingMode
               - Basic.WorkMode
               - Basic.GridLossWarningClear
               - Basic.PowerStatus
-              - uuid: Basic.AllToDefault
+              - command_id: Basic.AllToDefault
                 invokeButtonText: "Reset Now"
-              - uuid: Basic.PowerControl
+              - command_id: Basic.PowerControl
                 showInvokeButton: false
       - name: Power Limits
         subsections:
@@ -38,8 +39,10 @@ themes:
               - Parallel.Role
               - Parallel.ParallelPhase
       - name: Current Transformer (CT) Settings
+        section_id: inverter.measurement
         subsections:
-          - points:
+          - subsection_id: ct-settings
+            points:
               - Measurement.CTSampleRatio
               - Measurement.CTDirection
   - name: Battery
@@ -68,21 +71,21 @@ themes:
               - BatteryScheduling.BatteryScheduling
           - points:
               - BatteryTOUCharge.TOUMaximumChargingPower
-              - uuid: BatteryTOUCharge.TOUChargingPlan1
+              - command_id: BatteryTOUCharge.TOUChargingPlan1
                 widget: timerange
-              - uuid: BatteryTOUCharge.TOUChargingPlan2
+              - command_id: BatteryTOUCharge.TOUChargingPlan2
                 widget: timerange
-              - uuid: BatteryTOUCharge.TOUChargingPlan3
+              - command_id: BatteryTOUCharge.TOUChargingPlan3
                 widget: timerange
             name: PV Charge Only
           - points:
               - BatteryTOUDischarge.TOUMaximumDischargingPower
               - BatteryTOUDischarge.DischargingStopSoc
-              - uuid: BatteryTOUDischarge.TOUDischargingPlan1
+              - command_id: BatteryTOUDischarge.TOUDischargingPlan1
                 widget: timerange
-              - uuid: BatteryTOUDischarge.TOUDischargingPlan2
+              - command_id: BatteryTOUDischarge.TOUDischargingPlan2
                 widget: timerange
-              - uuid: BatteryTOUDischarge.TOUDischargingPlan3
+              - command_id: BatteryTOUDischarge.TOUDischargingPlan3
                 widget: timerange
             name: Discharge Only
       - name: Grid Charge
@@ -94,7 +97,7 @@ themes:
               - combine:
                   title: "Grid Charge SOC Range"
                   help: "Defines when grid charging starts and stops based on battery state of charge (SOC). Charging starts when SOC falls below Start SOC and stops when it reaches Stop SOC."
-                  uuid: "ACCharge.ACChgSOCRange"
+                  command_id: "ACCharge.ACChgSOCRange"
                   entries:
                     - point: ACCharge.ACChgStartSOC
                       entry: SOC
@@ -106,7 +109,7 @@ themes:
                       arg: StopSOC
                       element: ACChgStopSOC
                       greater_than: StartSOC
-              - uuid: ACCharge.ACChargingPlan
+              - command_id: ACCharge.ACChargingPlan
                 widget: timerange-multi
   - name: Grid
     sections:

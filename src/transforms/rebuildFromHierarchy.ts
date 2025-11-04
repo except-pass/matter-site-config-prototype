@@ -1,9 +1,64 @@
 import fs from 'fs';
 import { parse } from 'csv-parse/sync';
 import * as yaml from 'yaml';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+interface AdditionalModbusPoint {
+  theme?: string;
+  theme_id?: string; // Optional ID to reference theme from hierarchy.yaml
+  section?: string;
+  section_id?: string; // Optional ID to reference section from hierarchy.yaml
+  subsection?: string | null;
+  subsection_id?: string; // Optional ID to reference subsection from hierarchy.yaml
+  visibility?: "default" | "advanced";
+  collapsedByDefault?: boolean;
+  title?: string;
+  help?: string;
+  command_id: string;
+  invokeButtonText?: string;
+  element_type?: string;
+  access?: string;
+  readOnly?: boolean;
+  entries: Array<{
+    name?: string;
+    arg: string;
+    dtype?: string;
+    description?: string;
+    longdescription?: string;
+    unit?: string;
+    value?: string | number | null;
+    range?: { min?: number; max?: number };
+    meanings?: Record<string, string | number>;
+    friendly_meanings?: Record<string, string | number>;
+    greater_than?: string;
+    less_than?: string;
+    protocol?: {
+      matter?: {
+        MEP?: string;
+        Cluster?: string;
+        Element?: string;
+      };
+    };
+  }>;
+  protocol: {
+    modbus?: {
+      address: number;
+      register_type: number | string;
+      size: number;
+    };
+    cgi?: {
+      MEP: string;
+      Cluster: string;
+      Element: string;
+    };
+  };
+}
 
 interface CsvRow {
-  point_uuid: string;
+  point_command_id: string;
   point_title: string;
   point_help: string;
   point_element_type: string;
@@ -47,7 +102,7 @@ interface PointEntry {
 }
 
 interface Point {
-  point_uuid: string;
+  point_command_id: string;
   point_title: string;
   point_help: string;
   point_element_type: string;
@@ -103,7 +158,7 @@ interface JsonPoint {
       Element: string;
     };
   };
-  uuid: string;
+  command_id: string;
 }
 
 interface JsonSubsection {
@@ -111,16 +166,19 @@ interface JsonSubsection {
   visibility: string;
   collapsedByDefault: boolean;
   points: JsonPoint[];
+  subsection_id?: string; // Optional ID for referencing from additional_modbus.json
 }
 
 interface JsonSection {
   sectionTitle: string;
   subsections: JsonSubsection[];
+  section_id?: string; // Optional ID for referencing from additional_modbus.json
 }
 
 interface JsonTheme {
   themeName: string;
   sections: JsonSection[];
+  theme_id?: string; // Optional ID for referencing from additional_modbus.json
 }
 
 interface JsonOutput {
@@ -139,36 +197,36 @@ const csvRows: CsvRow[] = parse(fs.readFileSync('points.csv', 'utf-8'), {
   skip_empty_lines: true,
 });
 
-// Group rows by point_uuid and build Point objects
+// Group rows by point_command_id and build Point objects
 const points: Point[] = [];
 const pointGroups = new Map<string, CsvRow[]>();
 
-// Group rows by point_uuid (carry forward point_uuid from first row)
-let currentPointUuid = '';
+// Group rows by point_command_id (carry forward point_command_id from first row)
+let currentPointCommandId = '';
 for (const row of csvRows) {
-  // If point_uuid is filled, start a new point group
-  if (row.point_uuid && row.point_uuid.trim()) {
-    currentPointUuid = row.point_uuid.trim();
+  // If point_command_id is filled, start a new point group
+  if (row.point_command_id && row.point_command_id.trim()) {
+    currentPointCommandId = row.point_command_id.trim();
   }
   
-  // Skip rows without a current point_uuid (shouldn't happen, but safety check)
-  if (!currentPointUuid) {
-    console.warn(`Warning: Row without point_uuid found: ${JSON.stringify(row)}`);
+  // Skip rows without a current point_command_id (shouldn't happen, but safety check)
+  if (!currentPointCommandId) {
+    console.warn(`Warning: Row without point_command_id found: ${JSON.stringify(row)}`);
     continue;
   }
   
-  if (!pointGroups.has(currentPointUuid)) {
-    pointGroups.set(currentPointUuid, []);
+  if (!pointGroups.has(currentPointCommandId)) {
+    pointGroups.set(currentPointCommandId, []);
   }
-  pointGroups.get(currentPointUuid)!.push(row);
+  pointGroups.get(currentPointCommandId)!.push(row);
 }
 
 // Convert grouped rows to Point objects
-for (const [pointUuid, rows] of pointGroups.entries()) {
+for (const [pointCommandId, rows] of pointGroups.entries()) {
   // Get point-level fields from first row
   const firstRow = rows[0];
   const point: Point = {
-    point_uuid: pointUuid,
+    point_command_id: pointCommandId,
     point_title: firstRow.point_title || '',
     point_help: firstRow.point_help || '',
     point_element_type: firstRow.point_element_type || '',
@@ -252,7 +310,7 @@ console.log(`Loaded hierarchy with ${hierarchy.themes.length} themes and ${point
 // Create a map for quick point lookup
 const pointMap = new Map<string, Point>();
 for (const point of points) {
-  pointMap.set(point.point_uuid, point);
+  pointMap.set(point.point_command_id, point);
 }
 
 // Helper function to convert point entry to JSON format
@@ -386,7 +444,7 @@ function convertPointToJson(
         Element: pointData.point_protocol_Element,
       },
     },
-    uuid: pointData.point_uuid,
+    command_id: pointData.point_command_id,
   };
 
   // Add optional fields - invokeButtonText and showInvokeButton are UI concerns, only from hierarchy.yaml
@@ -418,12 +476,22 @@ for (const themeSpec of hierarchy.themes) {
     themeName: themeSpec.name,
     sections: [],
   };
+  
+  // Store theme_id if provided
+  if (themeSpec.theme_id) {
+    theme.theme_id = themeSpec.theme_id;
+  }
 
   for (const sectionSpec of themeSpec.sections) {
     const section: JsonSection = {
       sectionTitle: sectionSpec.name,
       subsections: [],
     };
+    
+    // Store section_id if provided
+    if (sectionSpec.section_id) {
+      section.section_id = sectionSpec.section_id;
+    }
 
     for (const subsectionSpec of sectionSpec.subsections) {
       const subsection: JsonSubsection = {
@@ -432,14 +500,19 @@ for (const themeSpec of hierarchy.themes) {
         collapsedByDefault: subsectionSpec.collapsedByDefault || false,
         points: [],
       };
+      
+      // Store subsection_id if provided
+      if (subsectionSpec.subsection_id) {
+        subsection.subsection_id = subsectionSpec.subsection_id;
+      }
 
       // Get points for this subsection from the hierarchy
       for (const pointSpec of subsectionSpec.points) {
         // Support both formats:
         // - Simple string: "Basic.SystemTime"
         // - Object with UI properties: 
-        //   { uuid: "Basic.SystemTime", widget: "datetime", readOnly: true, invokeButtonText: "Start", showInvokeButton: false }
-        let pointUuid: string;
+        //   { command_id: "Basic.SystemTime", widget: "datetime", readOnly: true, invokeButtonText: "Start", showInvokeButton: false }
+        let pointCommandId: string;
         let widgetFromHierarchy: string | undefined;
         let readOnlyFromHierarchy: boolean | undefined;
         let invokeButtonTextFromHierarchy: string | undefined;
@@ -671,7 +744,7 @@ for (const themeSpec of hierarchy.themes) {
               protocol: {
                 matter: baseProtocol || { MEP: '', Cluster: '', Element: '' }
               },
-              uuid: combineSpec.uuid || `combined-${Date.now()}`,
+              command_id: combineSpec.command_id || `combined-${Date.now()}`,
             };
             
             if (combineSpec.widget) combinedPoint.widget = combineSpec.widget;
@@ -683,9 +756,9 @@ for (const themeSpec of hierarchy.themes) {
             }
             
             subsection.points.push(combinedPoint);
-          } else if (pointSpec.uuid) {
+          } else if (pointSpec.command_id) {
             // Format 2: Object with UI properties
-            const pointUuid = pointSpec.uuid;
+            const pointCommandId = pointSpec.command_id;
             let widgetFromHierarchy: string | undefined;
             let readOnlyFromHierarchy: boolean | undefined;
             let invokeButtonTextFromHierarchy: string | undefined;
@@ -710,16 +783,16 @@ for (const themeSpec of hierarchy.themes) {
                 : (pointSpec.showInvokeButton === 'true' || pointSpec.showInvokeButton === '1' || pointSpec.showInvokeButton === true);
             }
 
-            const pointData = pointMap.get(pointUuid);
+            const pointData = pointMap.get(pointCommandId);
 
             if (!pointData) {
-              console.warn(`Warning: Point ${pointUuid} not found in points.csv`);
+              console.warn(`Warning: Point ${pointCommandId} not found in points.csv`);
               continue;
             }
 
             // Warn if trying to override read-only behavior for protocol read-only points
             if (pointData.point_access === "R" && readOnlyFromHierarchy === false) {
-              console.warn(`Warning: Point ${pointUuid} has access="R" (protocol read-only) and cannot be made writable via hierarchy.yaml. Ignoring readOnly: false.`);
+              console.warn(`Warning: Point ${pointCommandId} has access="R" (protocol read-only) and cannot be made writable via hierarchy.yaml. Ignoring readOnly: false.`);
             }
 
             subsection.points.push(convertPointToJson(
@@ -748,8 +821,297 @@ for (const themeSpec of hierarchy.themes) {
   output.themes.push(theme);
 }
 
-// Write the output
-const outputJson = JSON.stringify(output, null, 2);
-fs.writeFileSync('src/themes/demo_rebuilt.json', outputJson);
+// Load additional Modbus points from additional_modbus.json or additional_modbus.yaml
+function loadAdditionalModbusPoints(): AdditionalModbusPoint[] {
+  // Try YAML first, then JSON
+  const yamlPath = path.resolve(__dirname, 'additional_modbus.yaml');
+  const jsonPath = path.resolve(__dirname, 'additional_modbus.json');
+  
+  if (fs.existsSync(yamlPath)) {
+    try {
+      const raw = fs.readFileSync(yamlPath, 'utf-8');
+      const parsed = yaml.parse(raw);
+      
+      if (Array.isArray(parsed)) {
+        return parsed.filter((entry): entry is AdditionalModbusPoint => typeof entry?.command_id === 'string');
+      }
+      
+      if (Array.isArray(parsed?.points)) {
+        return parsed.points.filter((entry: AdditionalModbusPoint) => typeof entry?.command_id === 'string');
+      }
+    } catch (error) {
+      console.warn('Warning: Failed to load additional Modbus points from YAML:', error);
+    }
+  }
+  
+  if (fs.existsSync(jsonPath)) {
+    try {
+      const raw = fs.readFileSync(jsonPath, 'utf-8');
+      const parsed = JSON.parse(raw);
+      
+      if (Array.isArray(parsed)) {
+        return parsed.filter((entry): entry is AdditionalModbusPoint => typeof entry?.command_id === 'string');
+      }
+      
+      if (Array.isArray(parsed?.points)) {
+        return parsed.points.filter((entry: AdditionalModbusPoint) => typeof entry?.command_id === 'string');
+      }
+    } catch (error) {
+      console.warn('Warning: Failed to load additional Modbus points from JSON:', error);
+    }
+  }
+  
+  return [];
+}
+
+// Convert AdditionalModbusPoint to JsonPoint
+function convertAdditionalModbusPointToJson(def: AdditionalModbusPoint): JsonPoint {
+  const access = (def.access || 'RW').toUpperCase();
+  const readOnly = def.readOnly ?? access === 'R';
+  const elementType = def.element_type || 'Register';
+
+  const entries: JsonEntry[] = (def.entries || []).map((entry) => {
+    // Normalize dtype
+    let dtype = entry.dtype || 'String';
+    if (dtype.startsWith('enum')) {
+      dtype = 'enum';
+    } else if (dtype.includes('number') || dtype.includes('int') || dtype.includes('uint') || dtype.includes('float')) {
+      dtype = 'Number';
+    } else if (dtype === 'string') {
+      dtype = 'String';
+    }
+
+    const jsonEntry: JsonEntry = {
+      name: entry.name || entry.arg,
+      arg: entry.arg,
+      dtype: dtype,
+      description: entry.description || '',
+      longdescription: entry.longdescription || '',
+    };
+
+    if (entry.unit !== undefined) jsonEntry.unit = entry.unit;
+    if (entry.value !== undefined && entry.value !== null) jsonEntry.value = String(entry.value);
+    if (entry.range) {
+      jsonEntry.range = {};
+      if (entry.range.min !== undefined) jsonEntry.range.min = entry.range.min;
+      if (entry.range.max !== undefined) jsonEntry.range.max = entry.range.max;
+    }
+    if (entry.meanings) {
+      const meaningsObj: Record<string, string> = {};
+      Object.entries(entry.meanings).forEach(([key, value]) => {
+        meaningsObj[String(key)] = String(value);
+      });
+      jsonEntry.meanings = meaningsObj;
+    }
+    if (entry.friendly_meanings) {
+      const friendlyObj: Record<string, string> = {};
+      Object.entries(entry.friendly_meanings).forEach(([key, value]) => {
+        friendlyObj[String(key)] = String(value);
+      });
+      jsonEntry.friendly_meanings = friendlyObj;
+    }
+    if (entry.less_than) {
+      // Try to parse as number, otherwise keep as string
+      const lessThanNum = parseFloat(entry.less_than);
+      jsonEntry.less_than = isNaN(lessThanNum) ? entry.less_than : lessThanNum;
+    }
+    if (entry.greater_than) {
+      const greaterThanNum = parseFloat(entry.greater_than);
+      jsonEntry.greater_than = isNaN(greaterThanNum) ? entry.greater_than : greaterThanNum;
+    }
+    if (entry.protocol?.matter) {
+      jsonEntry.protocol = { matter: entry.protocol.matter };
+    }
+
+    return jsonEntry;
+  });
+
+  const jsonPoint: JsonPoint = {
+    title: def.title || def.command_id.split('.').pop() || 'Untitled',
+    help: def.help || '',
+    element_type: elementType,
+    access: access,
+    readOnly: readOnly,
+    entries: entries,
+    protocol: def.protocol as any, // modbus or cgi protocol
+    command_id: def.command_id,
+  };
+
+  if (def.invokeButtonText) {
+    jsonPoint.invokeButtonText = def.invokeButtonText;
+  }
+
+  return jsonPoint;
+}
+
+// Merge additional Modbus points into the output structure
+function mergeAdditionalModbusPoints(output: JsonOutput, additionalPoints: AdditionalModbusPoint[]) {
+  if (!Array.isArray(additionalPoints) || additionalPoints.length === 0) {
+    return;
+  }
+
+  // Helper function to normalize names (case-insensitive matching)
+  function normalizeName(raw: string): string {
+    if (!raw) return '';
+    return raw.trim().toLowerCase();
+  }
+
+  // Helper function to find theme by ID or name
+  function findTheme(id?: string, name?: string): JsonTheme | undefined {
+    if (id) {
+      const byId = output.themes.find((t) => t.theme_id === id);
+      if (byId) return byId;
+    }
+    if (name) {
+      const normalized = normalizeName(name);
+      return output.themes.find((t) => normalizeName(t.themeName) === normalized);
+    }
+    return undefined;
+  }
+
+  // Helper function to find section by ID or name
+  function findSection(theme: JsonTheme, id?: string, sectionTitle?: string): JsonSection | undefined {
+    if (id) {
+      const byId = theme.sections.find((s) => s.section_id === id);
+      if (byId) return byId;
+    }
+    if (sectionTitle) {
+      const normalized = normalizeName(sectionTitle);
+      return theme.sections.find((s) => normalizeName(s.sectionTitle) === normalized);
+    }
+    return undefined;
+  }
+
+  // Helper function to find subsection by ID or title
+  function findSubsection(section: JsonSection, id?: string, subsectionTitle?: string | null): JsonSubsection | undefined {
+    // If ID is provided, try to find by ID first
+    if (id) {
+      const byId = section.subsections.find((ss) => ss.subsection_id === id);
+      if (byId) return byId;
+    }
+    // Only match by title if title was explicitly provided (not inferred from ID)
+    // If subsectionTitle is undefined, that means it wasn't provided, so don't match by title
+    if (subsectionTitle !== undefined) {
+      return section.subsections.find((ss) => {
+        const current = ss.title ?? null;
+        if (current === null && subsectionTitle === null) return true;
+        if (typeof current !== 'string' || typeof subsectionTitle !== 'string') return false;
+        return normalizeName(current) === normalizeName(subsectionTitle);
+      });
+    }
+    return undefined;
+  }
+
+  // Remove existing points with same command_id
+  function removeExistingPoints(commandId: string): number {
+    let removed = 0;
+    output.themes.forEach((theme) => {
+      theme.sections.forEach((section) => {
+        section.subsections.forEach((subsection) => {
+          if (!Array.isArray(subsection.points)) return;
+          for (let i = subsection.points.length - 1; i >= 0; i -= 1) {
+            if (subsection.points[i]?.command_id === commandId) {
+              subsection.points.splice(i, 1);
+              removed += 1;
+            }
+          }
+        });
+      });
+    });
+    return removed;
+  }
+
+  additionalPoints.forEach((definition) => {
+    if (!definition?.command_id) {
+      return;
+    }
+
+    removeExistingPoints(definition.command_id);
+
+    // Try to find theme by ID first, then by name
+    // If theme_id is provided but theme name is not, use theme_id as fallback name
+    // If neither is provided, default to 'Inverter'
+    const themeName = definition.theme || definition.theme_id || 'Inverter';
+    let theme = findTheme(definition.theme_id, themeName);
+    if (!theme) {
+      // Create new theme if it doesn't exist
+      theme = { themeName, sections: [] };
+      if (definition.theme_id) {
+        theme.theme_id = definition.theme_id;
+      }
+      output.themes.push(theme);
+    }
+
+    // Try to find section by ID first, then by name
+    // If section_id is provided but section name is not, use section_id as fallback name
+    // If neither is provided, default to 'Modbus'
+    const sectionTitle = definition.section || definition.section_id || 'Modbus';
+    let section = findSection(theme, definition.section_id, sectionTitle);
+    if (!section) {
+      // Create new section if it doesn't exist
+      section = { sectionTitle, subsections: [] };
+      if (definition.section_id) {
+        section.section_id = definition.section_id;
+      }
+      theme.sections.push(section);
+    }
+
+    // Try to find subsection by ID first, then by title
+    // Important: If subsection_id is provided but subsection (name) is not,
+    // we should NOT match by title (null), only by ID
+    // This prevents merging into existing unnamed subsections
+    const subsectionTitle = definition.subsection === undefined
+      ? undefined // Don't match by title if subsection wasn't explicitly provided
+      : definition.subsection === null
+        ? null // Explicitly null means unnamed subsection
+        : definition.subsection; // Explicitly provided name
+
+    let subsection = findSubsection(section, definition.subsection_id, subsectionTitle);
+    if (!subsection) {
+      // Create new subsection if it doesn't exist
+      // Use null for title if only ID was provided (unnamed subsection)
+      const finalSubsectionTitle = definition.subsection === undefined
+        ? (definition.subsection_id ? null : undefined) // If only ID provided, use null (unnamed)
+        : definition.subsection; // Use the explicitly provided value (can be null or string)
+      
+      subsection = {
+        title: finalSubsectionTitle !== undefined ? finalSubsectionTitle : null,
+        visibility: definition.visibility || 'default',
+        collapsedByDefault: definition.collapsedByDefault ?? false,
+        points: [],
+      };
+      if (definition.subsection_id) {
+        subsection.subsection_id = definition.subsection_id;
+      }
+      section.subsections.push(subsection);
+    } else {
+      // Update existing subsection properties if provided
+      if (definition.visibility) {
+        subsection.visibility = definition.visibility;
+      }
+      if (definition.collapsedByDefault !== undefined) {
+        subsection.collapsedByDefault = definition.collapsedByDefault;
+      }
+      if (!Array.isArray(subsection.points)) {
+        subsection.points = [];
+      }
+    }
+
+    const newPoint = convertAdditionalModbusPointToJson(definition);
+    subsection.points.push(newPoint);
+  });
+}
+
+// Load and merge additional Modbus points
+const additionalModbusPoints = loadAdditionalModbusPoints();
+if (additionalModbusPoints.length > 0) {
+  console.log(`Loading ${additionalModbusPoints.length} additional Modbus points...`);
+  mergeAdditionalModbusPoints(output, additionalModbusPoints);
+  console.log(`Merged ${additionalModbusPoints.length} additional Modbus points`);
+}
+
+// Write the final output
+const finalOutputJson = JSON.stringify(output, null, 2);
+fs.writeFileSync('src/themes/demo_rebuilt.json', finalOutputJson);
 console.log('Rebuilt demo_rebuilt.json successfully!');
-console.log(`Output: ${output.themes.length} themes, ${output.themes.reduce((sum, t) => sum + t.sections.length, 0)} sections`);
+console.log(`Final output: ${output.themes.length} themes, ${output.themes.reduce((sum, t) => sum + t.sections.length, 0)} sections, ${output.themes.reduce((sum, t) => sum + t.sections.reduce((s, sec) => s + sec.subsections.reduce((ss, sub) => ss + sub.points.length, 0), 0), 0)} points`);

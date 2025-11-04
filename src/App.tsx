@@ -72,7 +72,7 @@ interface PointDef {
       Element: string;
     };
   };
-  uuid: string;
+  command_id: string;
   widget?: "datetime" | "time" | "timerange" | "timerange-multi" | "default";
   invokeButtonText?: string; // Custom text for invoke button (defaults to "Invoke")
   showInvokeButton?: boolean; // Set to false to hide the invoke button (default: true, UI-only override)
@@ -1449,7 +1449,7 @@ function PointCard({
             className="flex items-center gap-1 text-slate-600 hover:text-slate-900"
             title="Refresh from device"
             onClick={() => {
-              console.log("refresh", point.uuid);
+              console.log("refresh", point.command_id);
 
               // Mock read behavior for GeneratorExercise
               if (point.element_type === "GeneratorExercise") {
@@ -1624,7 +1624,7 @@ function SubsectionBlock({
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredPoints.map(({ point, searchResult }) => (
             <PointCard
-              key={point.uuid}
+              key={point.command_id}
               point={point}
               helpTextMatch={searchResult.helpTextMatch}
               equipment={equipment}
@@ -1652,7 +1652,7 @@ function SubsectionBlock({
         <div className="p-4 border-t border-slate-200 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredPoints.map(({ point, searchResult }) => (
             <PointCard
-              key={point.uuid}
+              key={point.command_id}
               point={point}
               helpTextMatch={searchResult.helpTextMatch}
               equipment={equipment}
@@ -2232,8 +2232,8 @@ function assertSchemaExpectations(page: PageDef | null) {
   const firstPoint =
     page.themes?.[0]?.sections?.[0]?.subsections?.[0]?.points?.[0] || null;
   if (firstPoint) {
-    if (!firstPoint.uuid) {
-      console.error("[SchemaTest] firstPoint.uuid missing");
+    if (!firstPoint.command_id) {
+      console.error("[SchemaTest] firstPoint.command_id missing");
     }
     if (!firstPoint.protocol) {
       console.error("[SchemaTest] firstPoint.protocol missing");

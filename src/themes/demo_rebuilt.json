@@ -92,7 +92,7 @@
                       "Element": "SystemTime"
                     }
                   },
-                  "uuid": "Basic.SystemTime",
+                  "command_id": "Basic.SystemTime",
                   "widget": "datetime"
                 },
                 {
@@ -125,7 +125,7 @@
                       "Element": "OperatingMode"
                     }
                   },
-                  "uuid": "Basic.OperatingMode"
+                  "command_id": "Basic.OperatingMode"
                 },
                 {
                   "title": "Operating Mode",
@@ -159,7 +159,7 @@
                       "Element": "WorkMode"
                     }
                   },
-                  "uuid": "Basic.WorkMode"
+                  "command_id": "Basic.WorkMode"
                 },
                 {
                   "title": "Ignore Grid-Loss Warning",
@@ -191,7 +191,7 @@
                       "Element": "GridLossWarningClear"
                     }
                   },
-                  "uuid": "Basic.GridLossWarningClear"
+                  "command_id": "Basic.GridLossWarningClear"
                 },
                 {
                   "title": "Power Status",
@@ -223,7 +223,7 @@
                       "Element": "PowerStatus"
                     }
                   },
-                  "uuid": "Basic.PowerStatus"
+                  "command_id": "Basic.PowerStatus"
                 },
                 {
                   "title": "Reset to Factory Defaults",
@@ -239,7 +239,7 @@
                       "Element": "AllToDefault"
                     }
                   },
-                  "uuid": "Basic.AllToDefault",
+                  "command_id": "Basic.AllToDefault",
                   "invokeButtonText": "Reset Now"
                 },
                 {
@@ -272,12 +272,13 @@
                       "Element": "PowerControl"
                     }
                   },
-                  "uuid": "Basic.PowerControl",
+                  "command_id": "Basic.PowerControl",
                   "showInvokeButton": false
                 }
               ]
             }
-          ]
+          ],
+          "section_id": "inverter.basic"
         },
         {
           "sectionTitle": "Power Limits",
@@ -317,7 +318,7 @@
                       "Element": "LimitActivePowerStatus"
                     }
                   },
-                  "uuid": "LimitActivePower.LimitActivePowerStatus"
+                  "command_id": "LimitActivePower.LimitActivePowerStatus"
                 },
                 {
                   "title": "Power Limit",
@@ -345,7 +346,7 @@
                       "Element": "ActivePowerPercent"
                     }
                   },
-                  "uuid": "LimitActivePower.ActivePowerPercent"
+                  "command_id": "LimitActivePower.ActivePowerPercent"
                 }
               ]
             }
@@ -389,7 +390,7 @@
                       "Element": "FeedInGridStatus"
                     }
                   },
-                  "uuid": "FeedInGrid.FeedInGridStatus"
+                  "command_id": "FeedInGrid.FeedInGridStatus"
                 },
                 {
                   "title": "Max Power Sold to Grid",
@@ -417,7 +418,7 @@
                       "Element": "FeedInGridMaxPower"
                     }
                   },
-                  "uuid": "FeedInGrid.FeedInGridMaxPower"
+                  "command_id": "FeedInGrid.FeedInGridMaxPower"
                 },
                 {
                   "title": "Prevent Grid Export: Strict Mode",
@@ -449,7 +450,7 @@
                       "Element": "FastZeroExportStatus"
                     }
                   },
-                  "uuid": "FeedInGrid.FastZeroExportStatus"
+                  "command_id": "FeedInGrid.FastZeroExportStatus"
                 }
               ]
             }
@@ -489,7 +490,7 @@
                       "Element": "ModbusAddr"
                     }
                   },
-                  "uuid": "Parallel.ModbusAddr"
+                  "command_id": "Parallel.ModbusAddr"
                 },
                 {
                   "title": "System Type",
@@ -525,7 +526,7 @@
                       "Element": "SystemType"
                     }
                   },
-                  "uuid": "Parallel.SystemType"
+                  "command_id": "Parallel.SystemType"
                 },
                 {
                   "title": "Assigned Phase",
@@ -559,7 +560,7 @@
                       "Element": "ComposedPhase"
                     }
                   },
-                  "uuid": "Parallel.ComposedPhase"
+                  "command_id": "Parallel.ComposedPhase"
                 },
                 {
                   "title": "Clear Detected Phases",
@@ -589,7 +590,7 @@
                       "Element": "ClearDetectedPhases"
                     }
                   },
-                  "uuid": "Parallel.ClearDetectedPhases"
+                  "command_id": "Parallel.ClearDetectedPhases"
                 },
                 {
                   "title": "Detected Grid Phases",
@@ -625,7 +626,7 @@
                       "Element": "DetectedGridPhases"
                     }
                   },
-                  "uuid": "Parallel.DetectedGridPhases"
+                  "command_id": "Parallel.DetectedGridPhases"
                 },
                 {
                   "title": "Share Battery",
@@ -657,7 +658,7 @@
                       "Element": "ShareBatteryStatus"
                     }
                   },
-                  "uuid": "Parallel.ShareBatteryStatus"
+                  "command_id": "Parallel.ShareBatteryStatus"
                 },
                 {
                   "title": "Inverters in parallel",
@@ -681,7 +682,7 @@
                       "Element": "ParallelNum"
                     }
                   },
-                  "uuid": "Parallel.ParallelNum"
+                  "command_id": "Parallel.ParallelNum"
                 },
                 {
                   "title": "Inverter Role",
@@ -713,7 +714,7 @@
                       "Element": "Role"
                     }
                   },
-                  "uuid": "Parallel.Role"
+                  "command_id": "Parallel.Role"
                 },
                 {
                   "title": "Reported Phase",
@@ -747,7 +748,7 @@
                       "Element": "ParallelPhase"
                     }
                   },
-                  "uuid": "Parallel.ParallelPhase"
+                  "command_id": "Parallel.ParallelPhase"
                 }
               ]
             }
@@ -797,7 +798,7 @@
                       "Element": "CTSampleRatio"
                     }
                   },
-                  "uuid": "Measurement.CTSampleRatio"
+                  "command_id": "Measurement.CTSampleRatio"
                 },
                 {
                   "title": "CT Direction",
@@ -829,7 +830,127 @@
                       "Element": "CTDirection"
                     }
                   },
-                  "uuid": "Measurement.CTDirection"
+                  "command_id": "Measurement.CTDirection"
+                }
+              ],
+              "subsection_id": "ct-settings"
+            },
+            {
+              "title": null,
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Meter Measurement Source",
+                  "help": "The inverter can either read CTs directly, or read a stand-alone electric meter.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Meter Type",
+                      "arg": "MeterType",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Meter",
+                        "1": "CTs"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 1,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.MeterType"
+                }
+              ],
+              "subsection_id": "measurement-advanced"
+            }
+          ],
+          "section_id": "inverter.measurement"
+        },
+        {
+          "sectionTitle": "Basic",
+          "subsections": [
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Dry Contact Reuse",
+                  "help": "Selects how the inverter's dry contact relay is reused. It can be configured for various control functions such as grid export limitation, smart load control, or dark start.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Dry Contact Reuse",
+                      "arg": "DryContactReuse",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "None",
+                        "1": "Rapid Shutdown (RSD)",
+                        "2": "Black Start",
+                        "3": "Smart Load",
+                        "4": "Non-critical Load"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 999,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.DryContactReuse"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "PV",
+          "subsections": [
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "PV Sell to Grid",
+                  "help": "You may disable solar power export to the utility grid. This setting supports NEM3 compatibility.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "PV Sell to Grid",
+                      "arg": "PVSellToGrid",
+                      "dtype": "bitfield16",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "7": "Enable export of PV power to the grid"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 3,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.PVSellToGrid"
                 }
               ]
             }
@@ -880,7 +1001,7 @@
                       "Element": "BatteryType"
                     }
                   },
-                  "uuid": "BatteryBase.BatteryType"
+                  "command_id": "BatteryBase.BatteryType"
                 },
                 {
                   "title": "Battery Brand",
@@ -910,7 +1031,7 @@
                       "Element": "BatteryBrand"
                     }
                   },
-                  "uuid": "BatteryBase.BatteryBrand"
+                  "command_id": "BatteryBase.BatteryBrand"
                 },
                 {
                   "title": "Absorb Voltage",
@@ -934,7 +1055,7 @@
                       "Element": "AbsorbVoltage"
                     }
                   },
-                  "uuid": "BatteryBase.AbsorbVoltage"
+                  "command_id": "BatteryBase.AbsorbVoltage"
                 },
                 {
                   "title": "Float Voltage",
@@ -958,7 +1079,7 @@
                       "Element": "FloatVoltage"
                     }
                   },
-                  "uuid": "BatteryBase.FloatVoltage"
+                  "command_id": "BatteryBase.FloatVoltage"
                 },
                 {
                   "title": "Start Derating Voltage",
@@ -982,7 +1103,7 @@
                       "Element": "VbatStartDerating"
                     }
                   },
-                  "uuid": "BatteryBase.VbatStartDerating"
+                  "command_id": "BatteryBase.VbatStartDerating"
                 },
                 {
                   "title": "Battery Control Type",
@@ -1029,7 +1150,7 @@
                       "Element": "ChaDisChaCtrlType"
                     }
                   },
-                  "uuid": "BatteryBase.ChaDisChaCtrlType"
+                  "command_id": "BatteryBase.ChaDisChaCtrlType"
                 },
                 {
                   "title": "Charge Limit (SOC)",
@@ -1057,7 +1178,7 @@
                       "Element": "ChargeLimitSoc"
                     }
                   },
-                  "uuid": "BatteryBase.ChargeLimitSoc"
+                  "command_id": "BatteryBase.ChargeLimitSoc"
                 },
                 {
                   "title": "Max Battery Current",
@@ -1108,7 +1229,7 @@
                       "Element": "MaxChaDisChaCurrent"
                     }
                   },
-                  "uuid": "BatteryBase.MaxChaDisChaCurrent"
+                  "command_id": "BatteryBase.MaxChaDisChaCurrent"
                 },
                 {
                   "title": "On-Grid Battery Cutoff SOC",
@@ -1136,7 +1257,7 @@
                       "Element": "OnGridCutOffSoc"
                     }
                   },
-                  "uuid": "BatteryBase.OnGridCutOffSoc"
+                  "command_id": "BatteryBase.OnGridCutOffSoc"
                 },
                 {
                   "title": "Off-Grid Battery Cutoff SOC",
@@ -1164,7 +1285,7 @@
                       "Element": "OffGridCutOffSoc"
                     }
                   },
-                  "uuid": "BatteryBase.OffGridCutOffSoc"
+                  "command_id": "BatteryBase.OffGridCutOffSoc"
                 }
               ]
             }
@@ -1208,7 +1329,7 @@
                       "Element": "BatteryBackupMode"
                     }
                   },
-                  "uuid": "BatteryBackup.BatteryBackupMode"
+                  "command_id": "BatteryBackup.BatteryBackupMode"
                 },
                 {
                   "title": "Battery Reserve SOC",
@@ -1236,7 +1357,7 @@
                       "Element": "BatteryReserveSOC"
                     }
                   },
-                  "uuid": "BatteryBackup.BatteryReserveSOC"
+                  "command_id": "BatteryBackup.BatteryReserveSOC"
                 }
               ]
             }
@@ -1280,7 +1401,7 @@
                       "Element": "BatteryScheduling"
                     }
                   },
-                  "uuid": "BatteryScheduling.BatteryScheduling"
+                  "command_id": "BatteryScheduling.BatteryScheduling"
                 }
               ]
             },
@@ -1315,7 +1436,7 @@
                       "Element": "TOUMaximumChargingPower"
                     }
                   },
-                  "uuid": "BatteryTOUCharge.TOUMaximumChargingPower"
+                  "command_id": "BatteryTOUCharge.TOUMaximumChargingPower"
                 },
                 {
                   "title": "Schedule Window 1 for PV Charge Only",
@@ -1376,7 +1497,7 @@
                       "Element": "TOUChargingPlan1"
                     }
                   },
-                  "uuid": "BatteryTOUCharge.TOUChargingPlan1",
+                  "command_id": "BatteryTOUCharge.TOUChargingPlan1",
                   "widget": "timerange"
                 },
                 {
@@ -1438,7 +1559,7 @@
                       "Element": "TOUChargingPlan2"
                     }
                   },
-                  "uuid": "BatteryTOUCharge.TOUChargingPlan2",
+                  "command_id": "BatteryTOUCharge.TOUChargingPlan2",
                   "widget": "timerange"
                 },
                 {
@@ -1500,7 +1621,7 @@
                       "Element": "TOUChargingPlan3"
                     }
                   },
-                  "uuid": "BatteryTOUCharge.TOUChargingPlan3",
+                  "command_id": "BatteryTOUCharge.TOUChargingPlan3",
                   "widget": "timerange"
                 }
               ]
@@ -1536,7 +1657,7 @@
                       "Element": "TOUMaximumDischargingPower"
                     }
                   },
-                  "uuid": "BatteryTOUDischarge.TOUMaximumDischargingPower"
+                  "command_id": "BatteryTOUDischarge.TOUMaximumDischargingPower"
                 },
                 {
                   "title": "TOU Discharge Stop SOC",
@@ -1564,7 +1685,7 @@
                       "Element": "DischargingStopSoc"
                     }
                   },
-                  "uuid": "BatteryTOUDischarge.DischargingStopSoc"
+                  "command_id": "BatteryTOUDischarge.DischargingStopSoc"
                 },
                 {
                   "title": "Schedule Window 1 for Discharge Only",
@@ -1625,7 +1746,7 @@
                       "Element": "TOUDischargingPlan1"
                     }
                   },
-                  "uuid": "BatteryTOUDischarge.TOUDischargingPlan1",
+                  "command_id": "BatteryTOUDischarge.TOUDischargingPlan1",
                   "widget": "timerange"
                 },
                 {
@@ -1687,7 +1808,7 @@
                       "Element": "TOUDischargingPlan2"
                     }
                   },
-                  "uuid": "BatteryTOUDischarge.TOUDischargingPlan2",
+                  "command_id": "BatteryTOUDischarge.TOUDischargingPlan2",
                   "widget": "timerange"
                 },
                 {
@@ -1749,8 +1870,67 @@
                       "Element": "TOUDischargingPlan3"
                     }
                   },
-                  "uuid": "BatteryTOUDischarge.TOUDischargingPlan3",
+                  "command_id": "BatteryTOUDischarge.TOUDischargingPlan3",
                   "widget": "timerange"
+                }
+              ]
+            },
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Discharge only Control Style",
+                  "help": "Selects how 'discharge only' is controlled. 'Discharge only' can stop when a voltage limit is reached or when a target state of charge (SOC) is reached.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Control Style",
+                      "arg": "DischargeOnlyControlStyle",
+                      "dtype": "bitfield16",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "4": "Enable SOC control (disable for voltage control)"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 120,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.DischargeOnlyControlStyle"
+                },
+                {
+                  "title": "Discharge only Stop Voltage",
+                  "help": "Sets the battery voltage at which discharge only will stop.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Discharge only Stop Voltage",
+                      "arg": "DischargeOnlyStopVoltage",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "unit": "V"
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 202,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.DischargeOnlyStopVoltage"
                 }
               ]
             }
@@ -1794,7 +1974,7 @@
                       "Element": "ACChargeStatus"
                     }
                   },
-                  "uuid": "ACCharge.ACChargeStatus"
+                  "command_id": "ACCharge.ACChargeStatus"
                 },
                 {
                   "title": "Grid Charge Power Limit",
@@ -1822,7 +2002,7 @@
                       "Element": "ACChargePower"
                     }
                   },
-                  "uuid": "ACCharge.ACChargePower"
+                  "command_id": "ACCharge.ACChargePower"
                 },
                 {
                   "title": "Grid Charge Control Type",
@@ -1854,7 +2034,7 @@
                       "Element": "ACChargeType"
                     }
                   },
-                  "uuid": "ACCharge.ACChargeType"
+                  "command_id": "ACCharge.ACChargeType"
                 },
                 {
                   "title": "Grid Charge SOC Range",
@@ -1909,7 +2089,7 @@
                       "Element": "ACChgStartSOC"
                     }
                   },
-                  "uuid": "ACCharge.ACChgSOCRange"
+                  "command_id": "ACCharge.ACChgSOCRange"
                 },
                 {
                   "title": "Grid Charge Windows",
@@ -2058,8 +2238,159 @@
                       "Element": "ACChargingPlan"
                     }
                   },
-                  "uuid": "ACCharge.ACChargingPlan",
+                  "command_id": "ACCharge.ACChargingPlan",
                   "widget": "timerange-multi"
+                }
+              ]
+            },
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Grid Charge Control Style",
+                  "help": "Selects how grid charging is controlled. Charging can follow a time schedule, stop when a voltage limit is reached, or stop when a target state of charge (SOC) is reached.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Control Style",
+                      "arg": "GridChargeControlStyle",
+                      "dtype": "bitfield16",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "1": "Charge based on time",
+                        "2": "Stop charging at voltage limit",
+                        "3": "Stop charging at SOC limit"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 120,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.GridChargeControlStyle"
+                },
+                {
+                  "title": "Grid Charging Start Voltage",
+                  "help": "Sets the battery voltage at which grid charging will stop.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Grid Charging Start Voltage",
+                      "arg": "GridChargingStartVoltage",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "unit": "V"
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 158,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.GridChargingStartVoltage"
+                },
+                {
+                  "title": "Grid Charging Stop Voltage",
+                  "help": "Sets the maximum battery voltage during grid charging. Once this voltage is reached, the inverter will stop charging from the grid to protect the battery and prevent overvoltage.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Grid Charging Stop Voltage",
+                      "arg": "GridChargingStopVoltage",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "unit": "V"
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 159,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.GridChargingStopVoltage"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Battery Base",
+          "subsections": [
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Max Charge Current",
+                  "help": "Instead of using the presets, you may set the charge current directly in amps.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Charge Current (A)",
+                      "arg": "ChargeCurr",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "unit": "A",
+                      "range": {
+                        "min": 0
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 101,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.ChargeCurr"
+                },
+                {
+                  "title": "Battery Voltage Correction",
+                  "help": " ",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Battery Voltage Correction",
+                      "arg": "BatteryVoltageCorrection",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "unit": "V"
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 999,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.DischgCurr"
                 }
               ]
             }
@@ -2114,7 +2445,7 @@
                       "Element": "GridRegulation"
                     }
                   },
-                  "uuid": "GridBase.GridRegulation"
+                  "command_id": "GridBase.GridRegulation"
                 },
                 {
                   "title": "Grid Type",
@@ -2152,7 +2483,7 @@
                       "Element": "GridType"
                     }
                   },
-                  "uuid": "GridBase.GridType"
+                  "command_id": "GridBase.GridType"
                 },
                 {
                   "title": "Grid Frequency",
@@ -2184,7 +2515,7 @@
                       "Element": "GridFreq"
                     }
                   },
-                  "uuid": "GridBase.GridFreq"
+                  "command_id": "GridBase.GridFreq"
                 }
               ]
             }
@@ -2227,7 +2558,7 @@
                       "Element": "GridVoltLimit1"
                     }
                   },
-                  "uuid": "GridProtection.GridVoltLimit1"
+                  "command_id": "GridProtection.GridVoltLimit1"
                 },
                 {
                   "title": "Grid Voltage Limits (Stage 2)",
@@ -2258,7 +2589,7 @@
                       "Element": "GridVoltLimit2"
                     }
                   },
-                  "uuid": "GridProtection.GridVoltLimit2"
+                  "command_id": "GridProtection.GridVoltLimit2"
                 },
                 {
                   "title": "Grid Voltage Limits (Stage 3)",
@@ -2289,7 +2620,7 @@
                       "Element": "GridVoltLimit3"
                     }
                   },
-                  "uuid": "GridProtection.GridVoltLimit3"
+                  "command_id": "GridProtection.GridVoltLimit3"
                 },
                 {
                   "title": "Grid Frequency Limits (Stage 1)",
@@ -2320,7 +2651,7 @@
                       "Element": "GridFreqLimit1"
                     }
                   },
-                  "uuid": "GridProtection.GridFreqLimit1"
+                  "command_id": "GridProtection.GridFreqLimit1"
                 },
                 {
                   "title": "Grid Frequency Limits (Stage 2)",
@@ -2351,7 +2682,7 @@
                       "Element": "GridFreqLimit2"
                     }
                   },
-                  "uuid": "GridProtection.GridFreqLimit2"
+                  "command_id": "GridProtection.GridFreqLimit2"
                 },
                 {
                   "title": "Grid Frequency Limits (Stage 3)",
@@ -2382,7 +2713,7 @@
                       "Element": "GridFreqLimit3"
                     }
                   },
-                  "uuid": "GridProtection.GridFreqLimit3"
+                  "command_id": "GridProtection.GridFreqLimit3"
                 },
                 {
                   "title": "Grid Voltage Trip Time",
@@ -2413,7 +2744,7 @@
                       "Element": "GridVoltLimit1Time"
                     }
                   },
-                  "uuid": "GridProtection.GridVoltLimit1Time"
+                  "command_id": "GridProtection.GridVoltLimit1Time"
                 },
                 {
                   "title": "Grid Voltage Trip Time (Stage 2)",
@@ -2444,7 +2775,7 @@
                       "Element": "GridVoltLimit2Time"
                     }
                   },
-                  "uuid": "GridProtection.GridVoltLimit2Time"
+                  "command_id": "GridProtection.GridVoltLimit2Time"
                 },
                 {
                   "title": "Grid Voltage Trip Time (Stage 3)",
@@ -2475,7 +2806,7 @@
                       "Element": "GridVoltLimit3Time"
                     }
                   },
-                  "uuid": "GridProtection.GridVoltLimit3Time"
+                  "command_id": "GridProtection.GridVoltLimit3Time"
                 },
                 {
                   "title": "Grid Frequency Trip Time (Stage 1)",
@@ -2506,7 +2837,7 @@
                       "Element": "GridFreqLimit1Time"
                     }
                   },
-                  "uuid": "GridProtection.GridFreqLimit1Time"
+                  "command_id": "GridProtection.GridFreqLimit1Time"
                 },
                 {
                   "title": "Grid Frequency Trip Time (Stage 2)",
@@ -2537,7 +2868,7 @@
                       "Element": "GridFreqLimit2Time"
                     }
                   },
-                  "uuid": "GridProtection.GridFreqLimit2Time"
+                  "command_id": "GridProtection.GridFreqLimit2Time"
                 },
                 {
                   "title": "Grid Frequency Trip Time (Stage 3)",
@@ -2568,7 +2899,7 @@
                       "Element": "GridFreqLimit3Time"
                     }
                   },
-                  "uuid": "GridProtection.GridFreqLimit3Time"
+                  "command_id": "GridProtection.GridFreqLimit3Time"
                 }
               ]
             }
@@ -2612,7 +2943,7 @@
                       "Element": "PermitServiceStatus"
                     }
                   },
-                  "uuid": "GridConnection.PermitServiceStatus"
+                  "command_id": "GridConnection.PermitServiceStatus"
                 },
                 {
                   "title": "Ramp Rate",
@@ -2636,7 +2967,7 @@
                       "Element": "RampRate"
                     }
                   },
-                  "uuid": "GridConnection.RampRate"
+                  "command_id": "GridConnection.RampRate"
                 },
                 {
                   "title": "Applicable Grid Voltage Range",
@@ -2667,7 +2998,7 @@
                       "Element": "ApplicableVoltage"
                     }
                   },
-                  "uuid": "GridConnection.ApplicableVoltage"
+                  "command_id": "GridConnection.ApplicableVoltage"
                 },
                 {
                   "title": "Applicable Grid Frequency Range",
@@ -2698,7 +3029,7 @@
                       "Element": "ApplicableFrequency"
                     }
                   },
-                  "uuid": "GridConnection.ApplicableFrequency"
+                  "command_id": "GridConnection.ApplicableFrequency"
                 },
                 {
                   "title": "Connection Delay Times",
@@ -2729,7 +3060,7 @@
                       "Element": "DelayTime"
                     }
                   },
-                  "uuid": "GridConnection.DelayTime"
+                  "command_id": "GridConnection.DelayTime"
                 }
               ]
             }
@@ -2773,7 +3104,7 @@
                       "Element": "ConstantPowerFactorModeStatus"
                     }
                   },
-                  "uuid": "ConstantPowerFactorMode.ConstantPowerFactorModeStatus"
+                  "command_id": "ConstantPowerFactorMode.ConstantPowerFactorModeStatus"
                 },
                 {
                   "title": "Power Factor Setpoint",
@@ -2812,7 +3143,7 @@
                       "Element": "ConstantPowerFactor"
                     }
                   },
-                  "uuid": "ConstantPowerFactorMode.ConstantPowerFactor"
+                  "command_id": "ConstantPowerFactorMode.ConstantPowerFactor"
                 }
               ]
             },
@@ -2866,7 +3197,7 @@
                       "Element": "ConstantReactivePowerModeStatus"
                     }
                   },
-                  "uuid": "ConstantReactivePowerMode.ConstantReactivePowerModeStatus"
+                  "command_id": "ConstantReactivePowerMode.ConstantReactivePowerModeStatus"
                 },
                 {
                   "title": "Reactive Power Setpoint",
@@ -2890,7 +3221,7 @@
                       "Element": "ReactivePowerPercentCMD"
                     }
                   },
-                  "uuid": "ConstantReactivePowerMode.ReactivePowerPercentCMD"
+                  "command_id": "ConstantReactivePowerMode.ReactivePowerPercentCMD"
                 }
               ]
             },
@@ -2929,7 +3260,7 @@
                       "Element": "VoltageReactivePowerMode"
                     }
                   },
-                  "uuid": "VoltageReactivePowerMode.VoltageReactivePowerMode"
+                  "command_id": "VoltageReactivePowerMode.VoltageReactivePowerMode"
                 },
                 {
                   "title": "Autonomous Vref Adjustment",
@@ -2961,7 +3292,7 @@
                       "Element": "AutonomousVrefAdjustment"
                     }
                   },
-                  "uuid": "VoltageReactivePowerMode.AutonomousVrefAdjustment"
+                  "command_id": "VoltageReactivePowerMode.AutonomousVrefAdjustment"
                 },
                 {
                   "title": "Reference Voltage (Vref)",
@@ -2985,7 +3316,7 @@
                       "Element": "Verf"
                     }
                   },
-                  "uuid": "VoltageReactivePowerMode.Verf"
+                  "command_id": "VoltageReactivePowerMode.Verf"
                 },
                 {
                   "title": "Vref Adjustment Time Constant",
@@ -3009,7 +3340,7 @@
                       "Element": "VrefAdjustmentTimeConstant"
                     }
                   },
-                  "uuid": "VoltageReactivePowerMode.VrefAdjustmentTimeConstant"
+                  "command_id": "VoltageReactivePowerMode.VrefAdjustmentTimeConstant"
                 },
                 {
                   "title": "Volt-VAR Voltage Breakpoints",
@@ -3054,7 +3385,7 @@
                       "Element": "UnderOverVoltage"
                     }
                   },
-                  "uuid": "VoltageReactivePowerMode.UnderOverVoltage"
+                  "command_id": "VoltageReactivePowerMode.UnderOverVoltage"
                 },
                 {
                   "title": "Reactive Power Setpoint Q1",
@@ -3078,7 +3409,7 @@
                       "Element": "Q1"
                     }
                   },
-                  "uuid": "VoltageReactivePowerMode.Q1"
+                  "command_id": "VoltageReactivePowerMode.Q1"
                 },
                 {
                   "title": "Reactive Power Setpoint Q2",
@@ -3102,7 +3433,7 @@
                       "Element": "Q2"
                     }
                   },
-                  "uuid": "VoltageReactivePowerMode.Q2"
+                  "command_id": "VoltageReactivePowerMode.Q2"
                 },
                 {
                   "title": "Reactive Power Setpoint Q3",
@@ -3126,7 +3457,7 @@
                       "Element": "Q3"
                     }
                   },
-                  "uuid": "VoltageReactivePowerMode.Q3"
+                  "command_id": "VoltageReactivePowerMode.Q3"
                 },
                 {
                   "title": "Reactive Power Setpoint Q4",
@@ -3150,7 +3481,7 @@
                       "Element": "Q4"
                     }
                   },
-                  "uuid": "VoltageReactivePowerMode.Q4"
+                  "command_id": "VoltageReactivePowerMode.Q4"
                 },
                 {
                   "title": "Open-Loop Response Time",
@@ -3174,7 +3505,7 @@
                       "Element": "OpenLoopResponseTime"
                     }
                   },
-                  "uuid": "VoltageReactivePowerMode.OpenLoopResponseTime"
+                  "command_id": "VoltageReactivePowerMode.OpenLoopResponseTime"
                 }
               ]
             },
@@ -3213,7 +3544,7 @@
                       "Element": "PQModeStatus"
                     }
                   },
-                  "uuid": "ActivePowerReactivePowerMode.PQModeStatus"
+                  "command_id": "ActivePowerReactivePowerMode.PQModeStatus"
                 },
                 {
                   "title": "P-Q Curve Points",
@@ -3251,7 +3582,7 @@
                       "Element": "P_QP"
                     }
                   },
-                  "uuid": "ActivePowerReactivePowerMode.P_QP"
+                  "command_id": "ActivePowerReactivePowerMode.P_QP"
                 }
               ]
             },
@@ -3290,7 +3621,7 @@
                       "Element": "VoltageActivePowerMode"
                     }
                   },
-                  "uuid": "VoltageActivePowerMode.VoltageActivePowerMode"
+                  "command_id": "VoltageActivePowerMode.VoltageActivePowerMode"
                 },
                 {
                   "title": "Volt-Watt Voltage Breakpoints",
@@ -3321,7 +3652,7 @@
                       "Element": "VoltWattV"
                     }
                   },
-                  "uuid": "VoltageActivePowerMode.VoltWattV"
+                  "command_id": "VoltageActivePowerMode.VoltWattV"
                 },
                 {
                   "title": "Volt-Watt Power Setpoint",
@@ -3345,7 +3676,7 @@
                       "Element": "VoltWattP2"
                     }
                   },
-                  "uuid": "VoltageActivePowerMode.VoltWattP2"
+                  "command_id": "VoltageActivePowerMode.VoltWattP2"
                 },
                 {
                   "title": "Open-Loop Response Time",
@@ -3369,7 +3700,7 @@
                       "Element": "OpenLoopResponseTime"
                     }
                   },
-                  "uuid": "VoltageActivePowerMode.OpenLoopResponseTime"
+                  "command_id": "VoltageActivePowerMode.OpenLoopResponseTime"
                 }
               ]
             },
@@ -3408,7 +3739,7 @@
                       "Element": "FrequencyActivePowerModeStatus"
                     }
                   },
-                  "uuid": "FrequencyActivePowerMode.FrequencyActivePowerModeStatus"
+                  "command_id": "FrequencyActivePowerMode.FrequencyActivePowerModeStatus"
                 },
                 {
                   "title": "Open-Loop Response Time",
@@ -3432,7 +3763,7 @@
                       "Element": "OpenLoopResponseTime"
                     }
                   },
-                  "uuid": "FrequencyActivePowerMode.OpenLoopResponseTime"
+                  "command_id": "FrequencyActivePowerMode.OpenLoopResponseTime"
                 },
                 {
                   "title": "Over-Frequency Droop: Deadband",
@@ -3456,7 +3787,7 @@
                       "Element": "OverFrequencyDroop_dbOF"
                     }
                   },
-                  "uuid": "FrequencyActivePowerMode.OverFrequencyDroop_dbOF"
+                  "command_id": "FrequencyActivePowerMode.OverFrequencyDroop_dbOF"
                 },
                 {
                   "title": "Over-Frequency Droop: Gain (k)",
@@ -3480,7 +3811,7 @@
                       "Element": "OverFrequencyDroop_kOF"
                     }
                   },
-                  "uuid": "FrequencyActivePowerMode.OverFrequencyDroop_kOF"
+                  "command_id": "FrequencyActivePowerMode.OverFrequencyDroop_kOF"
                 },
                 {
                   "title": "Under-Frequency Droop: Deadband",
@@ -3504,7 +3835,7 @@
                       "Element": "UnderFrequencyDroop_dbUF"
                     }
                   },
-                  "uuid": "FrequencyActivePowerMode.UnderFrequencyDroop_dbUF"
+                  "command_id": "FrequencyActivePowerMode.UnderFrequencyDroop_dbUF"
                 },
                 {
                   "title": "Under-Frequency Droop: Gain (k)",
@@ -3528,7 +3859,7 @@
                       "Element": "UnderFrequencyDroop_kUF"
                     }
                   },
-                  "uuid": "FrequencyActivePowerMode.UnderFrequencyDroop_kUF"
+                  "command_id": "FrequencyActivePowerMode.UnderFrequencyDroop_kUF"
                 }
               ]
             }
@@ -3577,7 +3908,7 @@
                       "Element": "OffGridOutput"
                     }
                   },
-                  "uuid": "BackupPower.OffGridOutput"
+                  "command_id": "BackupPower.OffGridOutput"
                 },
                 {
                   "title": "Backup (EPS) Output Voltage",
@@ -3615,7 +3946,7 @@
                       "Element": "EPSVoltage"
                     }
                   },
-                  "uuid": "BackupPower.EPSVoltage"
+                  "command_id": "BackupPower.EPSVoltage"
                 }
               ]
             }
@@ -3664,7 +3995,7 @@
                       "Element": "LinkedPort"
                     }
                   },
-                  "uuid": "Generator.LinkedPort"
+                  "command_id": "Generator.LinkedPort"
                 },
                 {
                   "title": "Battery Charge Current Limit",
@@ -3688,7 +4019,7 @@
                       "Element": "BatteryChargeCurrentLimit"
                     }
                   },
-                  "uuid": "Generator.BatteryChargeCurrentLimit"
+                  "command_id": "Generator.BatteryChargeCurrentLimit"
                 },
                 {
                   "title": "Generator Rated Power",
@@ -3716,7 +4047,7 @@
                       "Element": "GeneratorRatedPower"
                     }
                   },
-                  "uuid": "Generator.GeneratorRatedPower"
+                  "command_id": "Generator.GeneratorRatedPower"
                 },
                 {
                   "title": "Generator Cool-Down Time",
@@ -3740,7 +4071,7 @@
                       "Element": "GeneratorCoolDownTime"
                     }
                   },
-                  "uuid": "Generator.GeneratorCoolDownTime"
+                  "command_id": "Generator.GeneratorCoolDownTime"
                 },
                 {
                   "title": "Generator Start/Stop SOC",
@@ -3781,7 +4112,7 @@
                       "Element": "GeneratorSOC"
                     }
                   },
-                  "uuid": "Generator.GeneratorSOC"
+                  "command_id": "Generator.GeneratorSOC"
                 },
                 {
                   "title": "Generator Contactor Status",
@@ -3813,7 +4144,7 @@
                       "Element": "GenDryContact"
                     }
                   },
-                  "uuid": "Generator.GenDryContact"
+                  "command_id": "Generator.GenDryContact"
                 },
                 {
                   "title": "Battery Quick Charge with Generator",
@@ -3845,7 +4176,7 @@
                       "Element": "StartGeneratorExercise"
                     }
                   },
-                  "uuid": "Generator.StartGeneratorExercise"
+                  "command_id": "Generator.StartGeneratorExercise"
                 },
                 {
                   "title": "Generator Boost",
@@ -3877,7 +4208,154 @@
                       "Element": "GeneratorBoost"
                     }
                   },
-                  "uuid": "Generator.GeneratorBoost"
+                  "command_id": "Generator.GeneratorBoost"
+                }
+              ]
+            },
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Generator Charge Mode",
+                  "help": "Selects how the generator charges the battery. When enabled, the generator will charge the battery automatically based on voltage or SOC.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Generator Charge Mode",
+                      "arg": "GenChg",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Based on SOC",
+                        "1": "Based on Voltage"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 999,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.GenChg"
+                },
+                {
+                  "title": "Generator Charge Start Voltage",
+                  "help": "Sets the battery voltage at which the generator begins charging. Effective when generator charging by voltage is enabled.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Generator Charge Start Voltage",
+                      "arg": "GenChgStartVolt",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "unit": "V"
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 194,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.GenChgStartVolt"
+                },
+                {
+                  "title": "Generator Charge End Voltage",
+                  "help": "Sets the battery voltage at which the generator stops charging. Effective when generator charging by voltage is enabled.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Generator Charge End Voltage",
+                      "arg": "GenChgEndVolt",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "unit": "V"
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 195,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.GenChgEndVolt"
+                }
+              ]
+            },
+            {
+              "title": "Generator Exercise",
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "Generator Exercise Schedule",
+                  "help": "Configure a recurring schedule for generator exercise runs. Select the day of the week and time when the generator should run automatically.",
+                  "element_type": "GeneratorExercise",
+                  "access": "INVOKE",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Day of Week",
+                      "arg": "DayOfWeek",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "Sunday",
+                        "1": "Monday",
+                        "2": "Tuesday",
+                        "3": "Wednesday",
+                        "4": "Thursday",
+                        "5": "Friday",
+                        "6": "Saturday"
+                      }
+                    },
+                    {
+                      "name": "Hour",
+                      "arg": "Hour",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 23
+                      }
+                    },
+                    {
+                      "name": "Minute",
+                      "arg": "Minute",
+                      "dtype": "Number",
+                      "description": "",
+                      "longdescription": "",
+                      "range": {
+                        "min": 0,
+                        "max": 59
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "cgi": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Plan",
+                      "Element": "GeneratorExercise"
+                    }
+                  },
+                  "command_id": "CGI.GeneratorExercise"
                 }
               ]
             }
@@ -3926,7 +4404,7 @@
                       "Element": "ACCoupledPV"
                     }
                   },
-                  "uuid": "ACCoupledPV.ACCoupledPV"
+                  "command_id": "ACCoupledPV.ACCoupledPV"
                 },
                 {
                   "title": "AC Coupled PV Start/Stop SOC",
@@ -3967,7 +4445,7 @@
                       "Element": "ACCouplePVSOC"
                     }
                   },
-                  "uuid": "ACCoupledPV.ACCouplePVSOC"
+                  "command_id": "ACCoupledPV.ACCouplePVSOC"
                 }
               ]
             }
@@ -4016,7 +4494,7 @@
                       "Element": "SmartLoad"
                     }
                   },
-                  "uuid": "LoadShedding.SmartLoad"
+                  "command_id": "LoadShedding.SmartLoad"
                 },
                 {
                   "title": "Smart Load On-Grid Behavior",
@@ -4048,7 +4526,7 @@
                       "Element": "OnGridAlwaysOn"
                     }
                   },
-                  "uuid": "LoadShedding.OnGridAlwaysOn"
+                  "command_id": "LoadShedding.OnGridAlwaysOn"
                 },
                 {
                   "title": "Smart Load Start Power",
@@ -4076,7 +4554,7 @@
                       "Element": "StartPVPower"
                     }
                   },
-                  "uuid": "LoadShedding.StartPVPower"
+                  "command_id": "LoadShedding.StartPVPower"
                 },
                 {
                   "title": "Smart Load SOC Limits",
@@ -4117,7 +4595,7 @@
                       "Element": "SmartLoadSOC"
                     }
                   },
-                  "uuid": "LoadShedding.SmartLoadSOC"
+                  "command_id": "LoadShedding.SmartLoadSOC"
                 }
               ]
             }
