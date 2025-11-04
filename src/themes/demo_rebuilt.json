@@ -276,6 +276,44 @@
                   "showInvokeButton": false
                 }
               ]
+            },
+            {
+              "title": "Advanced",
+              "visibility": "advanced",
+              "collapsedByDefault": true,
+              "points": [
+                {
+                  "title": "Dry Contact Reuse",
+                  "help": "Selects how the inverter's dry contact relay is reused. It can be configured for various control functions such as grid export limitation, smart load control, or dark start.",
+                  "element_type": "Register",
+                  "access": "RW",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Dry Contact Reuse",
+                      "arg": "DryContactReuse",
+                      "dtype": "enum",
+                      "description": "",
+                      "longdescription": "",
+                      "meanings": {
+                        "0": "None",
+                        "1": "Rapid Shutdown (RSD)",
+                        "2": "Black Start",
+                        "3": "Smart Load",
+                        "4": "Non-critical Load"
+                      }
+                    }
+                  ],
+                  "protocol": {
+                    "modbus": {
+                      "address": 999,
+                      "register_type": 3,
+                      "size": 1
+                    }
+                  },
+                  "command_id": "Modbus.DryContactReuse"
+                }
+              ]
             }
           ],
           "section_id": "inverter.basic"
@@ -873,49 +911,6 @@
             }
           ],
           "section_id": "inverter.measurement"
-        },
-        {
-          "sectionTitle": "Basic",
-          "subsections": [
-            {
-              "title": "Advanced",
-              "visibility": "advanced",
-              "collapsedByDefault": true,
-              "points": [
-                {
-                  "title": "Dry Contact Reuse",
-                  "help": "Selects how the inverter's dry contact relay is reused. It can be configured for various control functions such as grid export limitation, smart load control, or dark start.",
-                  "element_type": "Register",
-                  "access": "RW",
-                  "readOnly": false,
-                  "entries": [
-                    {
-                      "name": "Dry Contact Reuse",
-                      "arg": "DryContactReuse",
-                      "dtype": "enum",
-                      "description": "",
-                      "longdescription": "",
-                      "meanings": {
-                        "0": "None",
-                        "1": "Rapid Shutdown (RSD)",
-                        "2": "Black Start",
-                        "3": "Smart Load",
-                        "4": "Non-critical Load"
-                      }
-                    }
-                  ],
-                  "protocol": {
-                    "modbus": {
-                      "address": 999,
-                      "register_type": 3,
-                      "size": 1
-                    }
-                  },
-                  "command_id": "Modbus.DryContactReuse"
-                }
-              ]
-            }
-          ]
         },
         {
           "sectionTitle": "PV",

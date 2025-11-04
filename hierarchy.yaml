@@ -1,5 +1,6 @@
 themes:
   - name: Inverter
+    theme_id: inverter
     sections:
       - name: Basic Setup
         section_id: inverter.basic
