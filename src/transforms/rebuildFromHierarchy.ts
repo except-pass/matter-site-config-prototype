@@ -28,8 +28,8 @@ interface Point {
   point_help: string;
   point_element_type: string;
   point_access: string;
-  point_readOnly: string;
-  point_invokeButtonText: string;
+  point_readOnly?: string; // Deprecated: readOnly is now a UI concern in hierarchy.yaml
+  point_invokeButtonText?: string; // Deprecated: invokeButtonText is now a UI concern in hierarchy.yaml
   point_widget: string;
   point_protocol_MEP: string;
   point_protocol_Cluster: string;
@@ -177,7 +177,12 @@ function convertEntryToJson(entry: PointEntry): JsonEntry {
 }
 
 // Helper function to convert point to JSON format
-function convertPointToJson(pointData: Point): JsonPoint {
+function convertPointToJson(
+  pointData: Point,
+  widgetFromHierarchy?: string,
+  readOnlyFromHierarchy?: boolean,
+  invokeButtonTextFromHierarchy?: string
+): JsonPoint {
   // Parse entries
   const entries: PointEntry[] = JSON.parse(pointData.entries);
 
@@ -187,12 +192,20 @@ function convertPointToJson(pointData: Point): JsonPoint {
     .map(convertEntryToJson);
 
   // Create the point
+  // Note: readOnly behavior:
+  // - If access === "R" (protocol read-only), it's ALWAYS read-only (can't override)
+  // - If access === "RW" or "Invoke", can optionally set readOnly: true in hierarchy.yaml for UI-only override
+  const isProtocolReadOnly = pointData.point_access === "R";
+  const readOnly = isProtocolReadOnly 
+    ? true  // Protocol read-only is always read-only
+    : (readOnlyFromHierarchy !== undefined ? readOnlyFromHierarchy : false);  // RW points can be overridden
+  
   const jsonPoint: JsonPoint = {
     title: pointData.point_title,
     help: pointData.point_help,
     element_type: pointData.point_element_type,
     access: pointData.point_access,
-    readOnly: pointData.point_readOnly === 'true' || pointData.point_readOnly === '1',
+    readOnly: readOnly,
     entries: jsonEntries,
     protocol: {
       matter: {
@@ -204,9 +217,18 @@ function convertPointToJson(pointData: Point): JsonPoint {
     uuid: pointData.point_uuid,
   };
 
-  // Add optional fields
-  if (pointData.point_invokeButtonText) jsonPoint.invokeButtonText = pointData.point_invokeButtonText;
-  if (pointData.point_widget) jsonPoint.widget = pointData.point_widget;
+  // Add optional fields - invokeButtonText is a UI concern, only from hierarchy.yaml
+  // The CSV column is ignored (kept for backward compatibility with existing CSV files)
+  if (invokeButtonTextFromHierarchy !== undefined) {
+    jsonPoint.invokeButtonText = invokeButtonTextFromHierarchy;
+  }
+  
+  // Widget priority: hierarchy.yaml > points.csv
+  if (widgetFromHierarchy) {
+    jsonPoint.widget = widgetFromHierarchy;
+  } else if (pointData.point_widget) {
+    jsonPoint.widget = pointData.point_widget;
+  }
 
   return jsonPoint;
 }
@@ -237,7 +259,37 @@ for (const themeSpec of hierarchy.themes) {
       };
 
       // Get points for this subsection from the hierarchy
-      for (const pointUuid of subsectionSpec.points) {
+      for (const pointSpec of subsectionSpec.points) {
+        // Support both formats:
+        // - Simple string: "Basic.SystemTime"
+        // - Object with UI properties: 
+        //   { uuid: "Basic.SystemTime", widget: "datetime", readOnly: true, invokeButtonText: "Start" }
+        let pointUuid: string;
+        let widgetFromHierarchy: string | undefined;
+        let readOnlyFromHierarchy: boolean | undefined;
+        let invokeButtonTextFromHierarchy: string | undefined;
+        
+        if (typeof pointSpec === 'string') {
+          pointUuid = pointSpec;
+        } else if (typeof pointSpec === 'object' && pointSpec.uuid) {
+          pointUuid = pointSpec.uuid;
+          widgetFromHierarchy = pointSpec.widget;
+          
+          // Handle readOnly - can be boolean or string
+          if (pointSpec.readOnly !== undefined) {
+            readOnlyFromHierarchy = typeof pointSpec.readOnly === 'boolean' 
+              ? pointSpec.readOnly 
+              : (pointSpec.readOnly === 'true' || pointSpec.readOnly === '1' || pointSpec.readOnly === true);
+          }
+          
+          if (pointSpec.invokeButtonText !== undefined) {
+            invokeButtonTextFromHierarchy = pointSpec.invokeButtonText;
+          }
+        } else {
+          console.warn(`Warning: Invalid point spec format: ${JSON.stringify(pointSpec)}`);
+          continue;
+        }
+
         const pointData = pointMap.get(pointUuid);
 
         if (!pointData) {
@@ -245,7 +297,17 @@ for (const themeSpec of hierarchy.themes) {
           continue;
         }
 
-        subsection.points.push(convertPointToJson(pointData));
+        // Warn if trying to override read-only behavior for protocol read-only points
+        if (pointData.point_access === "R" && readOnlyFromHierarchy === false) {
+          console.warn(`Warning: Point ${pointUuid} has access="R" (protocol read-only) and cannot be made writable via hierarchy.yaml. Ignoring readOnly: false.`);
+        }
+
+        subsection.points.push(convertPointToJson(
+          pointData,
+          widgetFromHierarchy,
+          readOnlyFromHierarchy,
+          invokeButtonTextFromHierarchy
+        ));
       }
 
       section.subsections.push(subsection);

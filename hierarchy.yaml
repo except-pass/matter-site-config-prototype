@@ -4,7 +4,8 @@ themes:
       - name: Basic Setup
         subsections:
           - points:
-              - Basic.SystemTime
+              - uuid: Basic.SystemTime
+                widget: datetime
               - Basic.OperatingMode
               - Basic.WorkMode
               - Basic.GridLossWarningClear
@@ -69,16 +70,22 @@ themes:
               - BatteryScheduling.BatteryScheduling
           - points:
               - BatteryTOUCharge.TOUMaximumChargingPower
-              - BatteryTOUCharge.TOUChargingPlan1
-              - BatteryTOUCharge.TOUChargingPlan2
-              - BatteryTOUCharge.TOUChargingPlan3
+              - uuid: BatteryTOUCharge.TOUChargingPlan1
+                widget: timerange
+              - uuid: BatteryTOUCharge.TOUChargingPlan2
+                widget: timerange
+              - uuid: BatteryTOUCharge.TOUChargingPlan3
+                widget: timerange
             name: PV Charge Only
           - points:
               - BatteryTOUDischarge.TOUMaximumDischargingPower
               - BatteryTOUDischarge.DischargingStopSoc
-              - BatteryTOUDischarge.TOUDischargingPlan1
-              - BatteryTOUDischarge.TOUDischargingPlan2
-              - BatteryTOUDischarge.TOUDischargingPlan3
+              - uuid: BatteryTOUDischarge.TOUDischargingPlan1
+                widget: timerange
+              - uuid: BatteryTOUDischarge.TOUDischargingPlan2
+                widget: timerange
+              - uuid: BatteryTOUDischarge.TOUDischargingPlan3
+                widget: timerange
             name: Discharge Only
       - name: Grid Charge
         subsections:
@@ -87,7 +94,8 @@ themes:
               - ACCharge.ACChargePower
               - ACCharge.ACChgStartSOC
               - ACCharge.ACChargeType
-              - ACCharge.ACChargingPlan
+              - uuid: ACCharge.ACChargingPlan
+                widget: timerange-multi
   - name: Grid
     sections:
       - name: Setup

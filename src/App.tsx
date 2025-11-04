@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getWidgetConfig } from "./transforms/widgetConfig.js";
 
 // Declare global variable injected by Vite
 declare const __THEME_FILE__: string | undefined;
@@ -695,24 +694,6 @@ function DualHandleSlider({
 // Time encoding/decoding utilities
 // -----------------------------------------------------------------------------
 
-/**
- * Pack hour and minute into int16 (high byte = hour, low byte = minute)
- * Example: packTime(14, 30) => 0x0E1E => 3614
- */
-function packTime(hour: number, minute: number): number {
-  return (hour << 8) | minute;
-}
-
-/**
- * Unpack int16 into hour and minute (high byte = hour, low byte = minute)
- * Example: unpackTime(3614) => { hour: 14, minute: 30 }
- */
-function unpackTime(packedValue: number): { hour: number; minute: number } {
-  const hour = (packedValue >> 8) & 0xFF;
-  const minute = packedValue & 0xFF;
-  return { hour, minute };
-}
-
 const ZERO_TIME = '00:00';
 
 function TimeInputField({
@@ -772,26 +753,13 @@ function DateTimeWidget({
   readOnly: boolean;
   onChange: (argName: string, value: any) => void;
 }) {
-  const widgetConfig = getWidgetConfig(point.uuid);
-  const isPacked = widgetConfig?.encoding === "packed_hm";
   const secEntry = point.entries.find(e => e.arg === "Sec");
 
   // Convert to/from datetime-local input format
   const toDateTimeLocal = () => {
-    let hour = 0;
-    let min = 0;
-
-    if (isPacked && widgetConfig?.packedTimeEntry) {
-      // Unpack from single int16 entry
-      const packedValue = formState[widgetConfig.packedTimeEntry] ?? 0;
-      const unpacked = unpackTime(packedValue);
-      hour = unpacked.hour;
-      min = unpacked.minute;
-    } else {
-      // Read from separate entries
-      hour = formState.Hour ?? 0;
-      min = formState.Min ?? 0;
-    }
+    // Read from separate entries
+    const hour = formState.Hour ?? 0;
+    const min = formState.Min ?? 0;
 
     const year = (formState.Year ?? 0) + 2000; // Convert 2-digit to 4-digit
     const month = String(formState.Mon ?? 1).padStart(2, '0');
@@ -810,16 +778,10 @@ function DateTimeWidget({
     onChange("Mon", dt.getMonth() + 1);
     onChange("Day", dt.getDate());
 
-    if (isPacked && widgetConfig?.packedTimeEntry) {
-      // Pack into single int16 entry
-      const packed = packTime(hour, min);
-      onChange(widgetConfig.packedTimeEntry, packed);
-    } else {
-      // Write to separate entries
-      onChange("Hour", hour);
-      onChange("Min", min);
-      if (secEntry) onChange("Sec", 0);
-    }
+    // Write to separate entries
+    onChange("Hour", hour);
+    onChange("Min", min);
+    if (secEntry) onChange("Sec", 0);
   };
 
   return (
@@ -847,9 +809,6 @@ function TimeRangeWidget({
   readOnly: boolean;
   onChange: (argName: string, value: any) => void;
 }) {
-  const widgetConfig = getWidgetConfig(point.uuid);
-  const isPacked = widgetConfig?.encoding === "packed_hm";
-
   // Find start and end time entries (for separate encoding)
   const startHourEntry = point.entries.find(e => e.arg.includes("StartHour") || e.arg.includes("Start_hour") || e.arg.includes("StartTime_h"));
   const startMinEntry = point.entries.find(e => e.arg.includes("StartMin") || e.arg.includes("Start_minute") || e.arg.includes("StartTime_m"));
@@ -857,11 +816,7 @@ function TimeRangeWidget({
   const endMinEntry = point.entries.find(e => e.arg.includes("EndMin") || e.arg.includes("End_minute") || e.arg.includes("EndTime_m"));
 
   const getStartTime = (): string => {
-    if (isPacked && widgetConfig?.packedStartEntry) {
-      const packedValue = formState[widgetConfig.packedStartEntry] ?? 0;
-      const { hour, minute } = unpackTime(packedValue);
-      return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-    } else if (startHourEntry && startMinEntry) {
+    if (startHourEntry && startMinEntry) {
       const hour = String(formState[startHourEntry.arg] ?? 0).padStart(2, '0');
       const min = String(formState[startMinEntry.arg] ?? 0).padStart(2, '0');
       return `${hour}:${min}`;
@@ -870,11 +825,7 @@ function TimeRangeWidget({
   };
 
   const getEndTime = (): string => {
-    if (isPacked && widgetConfig?.packedEndEntry) {
-      const packedValue = formState[widgetConfig.packedEndEntry] ?? 0;
-      const { hour, minute } = unpackTime(packedValue);
-      return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-    } else if (endHourEntry && endMinEntry) {
+    if (endHourEntry && endMinEntry) {
       const hour = String(formState[endHourEntry.arg] ?? 0).padStart(2, '0');
       const min = String(formState[endMinEntry.arg] ?? 0).padStart(2, '0');
       return `${hour}:${min}`;
@@ -887,10 +838,7 @@ function TimeRangeWidget({
     const hour = parseInt(hourStr, 10);
     const min = parseInt(minStr, 10);
 
-    if (isPacked && widgetConfig?.packedStartEntry) {
-      const packed = packTime(hour, min);
-      onChange(widgetConfig.packedStartEntry, packed);
-    } else if (startHourEntry && startMinEntry) {
+    if (startHourEntry && startMinEntry) {
       onChange(startHourEntry.arg, hour);
       onChange(startMinEntry.arg, min);
     }
@@ -901,10 +849,7 @@ function TimeRangeWidget({
     const hour = parseInt(hourStr, 10);
     const min = parseInt(minStr, 10);
 
-    if (isPacked && widgetConfig?.packedEndEntry) {
-      const packed = packTime(hour, min);
-      onChange(widgetConfig.packedEndEntry, packed);
-    } else if (endHourEntry && endMinEntry) {
+    if (endHourEntry && endMinEntry) {
       onChange(endHourEntry.arg, hour);
       onChange(endMinEntry.arg, min);
     }
@@ -950,20 +895,6 @@ function MultiTimeRangeWidget({
   readOnly: boolean;
   onChange: (argName: string, value: any) => void;
 }) {
-  const widgetConfig = getWidgetConfig(point.uuid);
-  const isPacked = widgetConfig?.encoding === "packed_hm";
-
-  if (isPacked) {
-    // Packed multi-range encoding is not supported yet; fall back to single widget
-    return (
-      <TimeRangeWidget
-        point={point}
-        formState={formState}
-        readOnly={readOnly}
-        onChange={onChange}
-      />
-    );
-  }
 
   type WindowConfig = {
     id: number;
@@ -1476,6 +1407,9 @@ function PointCard({
     : "";
   const isInvoke = normalizedAccess === "invoke";
 
+  // readOnly is set in JSON:
+  // - Always true for access === "R" (protocol read-only)
+  // - Can be true for RW/Invoke points if specified in hierarchy.yaml (UI-only override)
   const readOnly = point.readOnly || point.access === "R";
   const setButtonAppearance = readOnly
     ? "border-slate-300 bg-slate-100 text-slate-400 cursor-not-allowed"
