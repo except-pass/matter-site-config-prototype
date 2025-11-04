@@ -21,6 +21,24 @@ npx tsx src/transforms/applyTransforms.ts src/themes/demo.json
 npx tsx src/transforms/applyTransforms.ts src/themes/demo.json src/themes/demo-transformed.json
 ```
 
+### `exportMatterCsv.ts`
+
+Flattens the current `demo.json` into an editable CSV that becomes the canonical source for Matter protocol points. Modbus-only entries are skipped.
+
+```bash
+npx tsx src/transforms/exportMatterCsv.ts src/themes/demo.json master.csv
+```
+
+### `csvToJson.ts`
+
+Rebuilds `demo.json` directly from `master.csv`, restoring the same point metadata captured in the CSV.
+
+```bash
+npx tsx src/transforms/csvToJson.ts master.csv src/themes/demo.json
+```
+
+> **Note:** Modbus points remain managed in `additional_modbus.json` and are not yet exported into the CSV.
+
 **Adding New Transformations:**
 
 Edit `pointTransforms.ts` and add entries to the `pointTransforms` array:

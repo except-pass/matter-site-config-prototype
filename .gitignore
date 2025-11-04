@@ -128,6 +128,7 @@ Desktop.ini
 # PR Report outputs
 pr_report_*.md
 *.csv
+!master.csv
 /components/web-fmp/docker-compose.debug.yaml
 .act_home/
 # Equipment points matcher library (entire directory)
