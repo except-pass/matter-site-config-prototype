@@ -64,7 +64,6 @@ interface PointEntry {
 }
 
 interface PointRow {
-  pageName: string;
   theme: string;
   section: string;
   subsection: string;
@@ -125,10 +124,9 @@ for (const row of masterRows) {
   }
 
   // Section order
-  const sectionKey = `${row.pageName}|${row.theme}|${row.section}`;
+  const sectionKey = `${row.theme}|${row.section}`;
   if (!sections.has(sectionKey)) {
     sections.set(sectionKey, {
-      pageName: row.pageName,
       theme: row.theme,
       section: row.section,
       section_order: row.section_order,
@@ -136,10 +134,9 @@ for (const row of masterRows) {
   }
 
   // Subsection order
-  const subsectionKey = `${row.pageName}|${row.theme}|${row.section}|${row.subsection}`;
+  const subsectionKey = `${row.theme}|${row.section}|${row.subsection}`;
   if (!subsections.has(subsectionKey)) {
     subsections.set(subsectionKey, {
-      pageName: row.pageName,
       theme: row.theme,
       section: row.section,
       subsection: row.subsection,
@@ -150,10 +147,9 @@ for (const row of masterRows) {
   }
 
   // Point order
-  const pointOrderKey = `${row.pageName}|${row.theme}|${row.section}|${row.subsection}|${row.point_uuid}`;
+  const pointOrderKey = `${row.theme}|${row.section}|${row.subsection}|${row.point_uuid}`;
   if (!pointOrders.has(pointOrderKey)) {
     pointOrders.set(pointOrderKey, {
-      pageName: row.pageName,
       theme: row.theme,
       section: row.section,
       subsection: row.subsection,
@@ -163,10 +159,9 @@ for (const row of masterRows) {
   }
 
   // Points with entries
-  const pointKey = `${row.pageName}|${row.theme}|${row.section}|${row.subsection}|${row.point_uuid}`;
+  const pointKey = `${row.theme}|${row.section}|${row.subsection}|${row.point_uuid}`;
   if (!points.has(pointKey)) {
     points.set(pointKey, {
-      pageName: row.pageName,
       theme: row.theme,
       section: row.section,
       subsection: row.subsection,
@@ -228,7 +223,7 @@ const sectionOrderCsv = stringify(
   Array.from(sections.values()),
   {
     header: true,
-    columns: ['pageName', 'theme', 'section', 'section_order'],
+    columns: ['theme', 'section', 'section_order'],
   }
 );
 fs.writeFileSync('section_order.csv', sectionOrderCsv);
@@ -239,7 +234,7 @@ const subsectionOrderCsv = stringify(
   Array.from(subsections.values()),
   {
     header: true,
-    columns: ['pageName', 'theme', 'section', 'subsection', 'subsection_order', 'subsection_visibility', 'subsection_collapsedByDefault'],
+    columns: ['theme', 'section', 'subsection', 'subsection_order', 'subsection_visibility', 'subsection_collapsedByDefault'],
   }
 );
 fs.writeFileSync('subsection_order.csv', subsectionOrderCsv);
@@ -250,7 +245,7 @@ const pointOrderCsv = stringify(
   Array.from(pointOrders.values()),
   {
     header: true,
-    columns: ['pageName', 'theme', 'section', 'subsection', 'point_uuid', 'point_order'],
+    columns: ['theme', 'section', 'subsection', 'point_uuid', 'point_order'],
   }
 );
 fs.writeFileSync('point_order.csv', pointOrderCsv);
@@ -262,7 +257,6 @@ const pointsCsv = stringify(
   {
     header: true,
     columns: [
-      'pageName',
       'theme',
       'section',
       'subsection',

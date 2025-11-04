@@ -94,14 +94,13 @@ The project uses a **two-file approach** for easier maintenance:
 
 ### 1. points.csv (Edited by non-developers in Excel/Sheets)
 One line per point_uuid containing all point metadata:
-- Location: `pageName`, `theme`, `section`, `subsection`
+- Location: `theme`, `section`, `subsection`
 - Point data: `point_uuid`, `point_title`, `point_help`, `point_element_type`, `point_access`, `point_readOnly`, etc.
 - Entries: All entries as a JSON array in the `entries` column
 
 ### 2. hierarchy.yaml (Edited by developers)
 Defines the structure, ordering, and display properties:
 ```yaml
-pageName: Envy 48V
 themes:
   - name: Inverter
     sections:

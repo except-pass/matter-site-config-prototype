@@ -23,7 +23,6 @@ interface PointEntry {
 }
 
 interface Point {
-  pageName: string;
   theme: string;
   section: string;
   subsection: string;
@@ -103,7 +102,6 @@ interface JsonTheme {
 }
 
 interface JsonOutput {
-  pageName: string;
   themes: JsonTheme[];
 }
 
@@ -219,7 +217,6 @@ function convertPointToJson(pointData: Point): JsonPoint {
 
 // Build the JSON structure from hierarchy
 const output: JsonOutput = {
-  pageName: hierarchy.pageName,
   themes: [],
 };
 

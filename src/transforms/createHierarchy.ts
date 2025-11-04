@@ -8,14 +8,12 @@ interface ThemeOrder {
 }
 
 interface SectionOrder {
-  pageName: string;
   theme: string;
   section: string;
   section_order: string;
 }
 
 interface SubsectionOrder {
-  pageName: string;
   theme: string;
   section: string;
   subsection: string;
@@ -25,7 +23,6 @@ interface SubsectionOrder {
 }
 
 interface PointOrder {
-  pageName: string;
   theme: string;
   section: string;
   subsection: string;
@@ -52,12 +49,8 @@ const pointOrders: PointOrder[] = parse(fs.readFileSync('point_order.csv', 'utf-
   skip_empty_lines: true,
 });
 
-// Get page name
-const pageName = sectionOrders[0]?.pageName || 'Unknown';
-
 // Build hierarchy
 const hierarchy: any = {
-  pageName,
   themes: [],
 };
 
