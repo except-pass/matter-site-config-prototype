@@ -54,7 +54,7 @@ interface EntryDef {
 interface PointDef {
   title: string;
   help?: string;
-  element_type: string; // Attribute | Service | GeneratorExercise
+  element_type: string; // attribute | service | custom
   access: string; // R | RW | Invoke
   readOnly?: boolean;
   entries: EntryDef[];
@@ -73,7 +73,7 @@ interface PointDef {
     };
   };
   command_id: string;
-  widget?: "datetime" | "time" | "timerange" | "timerange-multi" | "default";
+  widget?: "datetime" | "time" | "timerange" | "timerange-multi" | "generator-exercise" | "default";
   invokeButtonText?: string; // Custom text for invoke button (defaults to "Invoke")
   showInvokeButton?: boolean; // Set to false to hide the invoke button (default: true, UI-only override)
 }
@@ -186,8 +186,8 @@ const equipmentOptions: EquipmentOption[] = [
 function buildInitialPointState(point: PointDef): EntryValue {
   const obj: EntryValue = {};
 
-  // Special handling for GeneratorExercise - start with empty values
-  if (point.element_type === "GeneratorExercise") {
+  // Special handling for generator-exercise widget - start with empty values
+  if (point.widget === "generator-exercise") {
     point.entries.forEach((entry) => {
       if (entry.dtype === 'enum') {
         obj[entry.arg] = '';
@@ -1335,7 +1335,7 @@ function PointCard({
         requestId: Date.now(),
         endPoint: "Matter",
         method:
-          point.element_type === "Service" || point.access === "Invoke"
+          point.element_type === "service" || point.access === "Invoke"
             ? "Invoke"
             : "Write",
         data: {
@@ -1406,8 +1406,8 @@ function PointCard({
           }
         };
       }
-    } else if (point.element_type === "GeneratorExercise" && point.protocol.cgi) {
-      // Special handling for GeneratorExercise element type (CGI protocol)
+    } else if (point.element_type === "custom" && point.widget === "generator-exercise" && point.protocol.cgi) {
+      // Special handling for generator-exercise widget (CGI protocol)
       const dayOfWeek = normalizedArguments.DayOfWeek !== '' ? normalizedArguments.DayOfWeek : 0;
       const hour = normalizedArguments.Hour !== '' ? normalizedArguments.Hour : 0;
       const minute = normalizedArguments.Minute !== '' ? normalizedArguments.Minute : 0;
@@ -1483,8 +1483,8 @@ function PointCard({
             onClick={() => {
               console.log("refresh", point.command_id);
 
-              // Mock read behavior for GeneratorExercise
-              if (point.element_type === "GeneratorExercise") {
+              // Mock read behavior for generator-exercise widget
+              if (point.widget === "generator-exercise") {
                 // Populate with sensible mock data: Wednesday at 10:00 AM
                 setFormState({
                   DayOfWeek: 3,  // Wednesday
@@ -1529,7 +1529,7 @@ function PointCard({
           readOnly={readOnly}
           onChange={handleFieldChange}
         />
-      ) : point.element_type === "GeneratorExercise" ? (
+      ) : point.widget === "generator-exercise" ? (
         <GeneratorExerciseWidget
           formState={formState}
           readOnly={readOnly}
@@ -1557,7 +1557,7 @@ function PointCard({
         </div>
       )}
 
-      {isInvoke && point.element_type !== "GeneratorExercise" && (point.showInvokeButton !== false) && (
+      {isInvoke && point.widget !== "generator-exercise" && (point.showInvokeButton !== false) && (
         <div className="mt-4 flex items-center gap-2">
           <button
             type="button"
@@ -2141,7 +2141,7 @@ export default function PointThemeDemoPage() {
           <div className="flex flex-col md:flex-row md:items-start gap-3 md:gap-4">
             <div className="flex-1 flex flex-col gap-2">
               <div className="text-xl font-semibold text-slate-900 leading-tight">
-                {activePage.pageName} – Site Config
+                Site Configuration
               </div>
               <div className="flex items-center gap-2">
                 <div className="relative flex-1 max-w-md">

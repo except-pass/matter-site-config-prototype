@@ -14,7 +14,7 @@
                 {
                   "title": "System Time",
                   "help": "Attribute in Basic cluster",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -98,7 +98,7 @@
                 {
                   "title": "Grid Interaction",
                   "help": "Select whether the inverter operates independently of the grid, or is connected to the grid. If off-grid, you should also ignore grid-loss warnings.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -130,7 +130,7 @@
                 {
                   "title": "Operating Mode",
                   "help": "Select how solar power is prioritized. Self-consumption: PV powers the home first, then charges the battery, and exports last (if allowed). Export first: PV powers the home, then exports to grid, and charges the battery last. Backup power: PV charges the battery first to build reserve, then powers the home, and exports last (if allowed). If a battery schedule is running (PV Charge Only, Discharge Only, or Grid Charge), the inverter will follow that schedule during those times instead of this operating mode. When the scheduled period ends, the inverter will return to the selected operating mode.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -164,7 +164,7 @@
                 {
                   "title": "Ignore Grid-Loss Warning",
                   "help": "When enabled, the inverter will not treat the absence of grid power as an alarm. Use this mode for permanently off-grid systems where grid connection is unavailable.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -196,7 +196,7 @@
                 {
                   "title": "Power Status",
                   "help": "Put the inverter into standby mode to stop operation or make configuration changes. While in standby, the inverter will not generate PV power or charge/discharge the battery. If grid power is available, it be used to supply the loads. If the grid is unavailable, the building will not have power.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -228,7 +228,7 @@
                 {
                   "title": "Reset to Factory Defaults",
                   "help": "Restores all inverter configuration parameters to their original factory values. Use with caution — this cannot be undone.",
-                  "element_type": "Service",
+                  "element_type": "service",
                   "access": "INVOKE",
                   "readOnly": false,
                   "entries": [],
@@ -245,7 +245,7 @@
                 {
                   "title": "Inverter Power Control",
                   "help": "Turns the inverter output on or off.\n\n• **Standby:** AC output is disabled, but control circuits remain powered.\n• **Power On:** Enables AC output and normal inverter operation.",
-                  "element_type": "Service",
+                  "element_type": "service",
                   "access": "INVOKE",
                   "readOnly": false,
                   "entries": [
@@ -285,7 +285,7 @@
                 {
                   "title": "Dry Contact Reuse",
                   "help": "Selects how the inverter's dry contact relay is reused. It can be configured for various control functions such as grid export limitation, smart load control, or dark start.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -329,7 +329,7 @@
                 {
                   "title": "Limit Power Output",
                   "help": "Shows whether power output limiting is currently active. When not limited, the inverter can deliver its full available power (subject only to natural hardware limits). When limited, an external or configured cap is applied to restrict inverter output to the specified Power Limit.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -361,7 +361,7 @@
                 {
                   "title": "Power Limit",
                   "help": "The inverter's present active-power output limit as a percentage of its rated capacity. If power limiting is active, the inverter will limit its output power to this percentage of its rated capacity.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -401,7 +401,7 @@
                 {
                   "title": "Allow Selling Power to Grid",
                   "help": "Allows the inverter to sell/export power back to the utility grid. Enable this only if local regulations and interconnect agreements permit grid export.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -433,7 +433,7 @@
                 {
                   "title": "Max Power Sold to Grid",
                   "help": "Sets the maximum power the inverter is allowed to sell/export to the grid. Use this to meet utility export limits or site commissioning requirements.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -461,7 +461,7 @@
                 {
                   "title": "Prevent Grid Export: Strict Mode",
                   "help": "Keeps power export at or near zero by adjusting inverter output in real time. When enabled, the inverter supplies only local (on-site) loads and will not send power back to the grid. This mode is required when grid export is not allowed. Ensure the CTs are installed on the grid connection point and  not on the inverter's load side, so the inverter can correctly detect and prevent export.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -505,7 +505,7 @@
                 {
                   "title": "Parallel unit ID",
                   "help": "The Unit ID (also known as the unit ID, slave ID, or node ID) for this inverter. The primary inverter should use address 1, and any secondary inverters should use 2 or higher. This sets the modbus address that inverters use to communicate with each other. Each inverter that communicates on the same Modbus communication line must have a unique address, but addresses do not need to be globally unique across separate, unconnected systems.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -533,7 +533,7 @@
                 {
                   "title": "System Type",
                   "help": "Defines how this inverter participates in a multi-inverter or multi-phase system.\n\n• No Parallel: Single inverter system.\n• Single-phase Parallel (Master / Secondary): Multiple inverters on one phase.\n• Three-phase Parallel (Master): Multiple inverters forming R/S/T phases.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -569,7 +569,7 @@
                 {
                   "title": "Assigned Phase",
                   "help": "Selects which output phase this inverter is responsible for in a three-phase system. R, S, and T correspond to L1, L2, and L3.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -603,7 +603,7 @@
                 {
                   "title": "Clear Detected Phases",
                   "help": "Clears the detected phases for this inverter.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "W",
                   "readOnly": false,
                   "entries": [
@@ -633,7 +633,7 @@
                 {
                   "title": "Detected Grid Phases",
                   "help": "Attribute in Parallel cluster",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -669,7 +669,7 @@
                 {
                   "title": "Share Battery",
                   "help": "Allows inverters in a parallel group to use a common battery bank instead of keeping batteries isolated per inverter.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -701,7 +701,7 @@
                 {
                   "title": "Inverters in parallel",
                   "help": "Total number of inverters detected in this parallel system.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -725,7 +725,7 @@
                 {
                   "title": "Inverter Role",
                   "help": "Reports whether this inverter is acting as Primary (sometimes called the Master) or Secondary in the current parallel configuration.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -757,7 +757,7 @@
                 {
                   "title": "Reported Phase",
                   "help": "Reports which phase (R / S / T) this inverter is currently serving in the parallel system.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -803,7 +803,7 @@
                 {
                   "title": "CT Ratio",
                   "help": "Select the current transformer (CT) ratio used for metering electric current on the grid port connection. This must match the CT hardware rating so that current and power readings are accurate.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -841,7 +841,7 @@
                 {
                   "title": "CT Direction",
                   "help": "Sets the CT installation direction. You may choose to reverse this if your inverter is reading import when power is actually flowing out to the grid (export) or vice versa.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -881,7 +881,7 @@
                 {
                   "title": "Meter Measurement Source",
                   "help": "The inverter can either read CTs directly, or read a stand-alone electric meter.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -923,7 +923,7 @@
                 {
                   "title": "PV Sell to Grid",
                   "help": "You may disable solar power export to the utility grid. This setting supports NEM3 compatibility.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -968,7 +968,7 @@
                 {
                   "title": "Battery Type",
                   "help": "Specifies the chemistry or general type of connected battery. Choose **No Battery** for standalone PV or grid-tie operation, **Lead-acid** for flooded or AGM batteries, or **Lithium-ion** for managed BMS packs.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1002,7 +1002,7 @@
                 {
                   "title": "Battery Brand",
                   "help": "Selects the manufacturer profile for the connected battery. This may pre-configure recommended voltage and SOC limits for optimal operation.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1032,7 +1032,7 @@
                 {
                   "title": "Absorb Voltage",
                   "help": "Sets the voltage used during the absorb (bulk-to-float transition) phase. Increasing this value raises the upper charge threshold for lead-acid batteries.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1056,7 +1056,7 @@
                 {
                   "title": "Float Voltage",
                   "help": "Defines the voltage maintained once the battery is fully charged. This helps prevent overcharging while keeping the battery topped off.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1080,7 +1080,7 @@
                 {
                   "title": "Start Derating Voltage",
                   "help": "Voltage threshold where the inverter begins reducing charge or discharge current to protect the battery as it approaches full or low state.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1104,7 +1104,7 @@
                 {
                   "title": "Battery Control Type",
                   "help": "Determines how the inverter regulates both charging and discharging.\n\nSOC: Uses battery state of charge thresholds to start and stop charge/discharge.\n\nVolt: Uses DC voltage limits instead.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1151,7 +1151,7 @@
                 {
                   "title": "Charge Limit (SOC)",
                   "help": "Sets the maximum state of charge (SOC) the battery will be charged to. Once the battery reaches this level, charging stops to prevent overcharging and extend lifespan.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1179,7 +1179,7 @@
                 {
                   "title": "Max Battery Current",
                   "help": "Sets the maximum charging and discharging current allowed for the connected inverter. Choose the preset that matches your inverter model to automatically apply the correct limits.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1230,7 +1230,7 @@
                 {
                   "title": "On-Grid Battery Cutoff SOC",
                   "help": "Sets the minimum state of charge (SOC) the battery will discharge to while grid power is available. Below this level, the inverter will stop discharging and switch to grid power to protect battery capacity.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1258,7 +1258,7 @@
                 {
                   "title": "Off-Grid Battery Cutoff SOC",
                   "help": "Sets the minimum state of charge (SOC) the battery will discharge to when operating off-grid. Once the battery reaches this level, the inverter stops discharging to prevent deep discharge and maintain battery health.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1298,7 +1298,7 @@
                 {
                   "title": "Battery Backup Mode",
                   "help": "Enables or disables battery-backup operation. When enabled, the inverter reserves part of the battery capacity to power critical loads during a grid outage.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1330,7 +1330,7 @@
                 {
                   "title": "Battery Reserve SOC",
                   "help": "While Battery Backup Mode is enabled, the battery will stop discharging once it reaches this level. When Backup Mode is disabled, normal operation applies and discharge will continue down to the On-Grid or Off-Grid Battery Cutoff SOC.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1370,7 +1370,7 @@
                 {
                   "title": "Battery Scheduling",
                   "help": "This is a special scheduling mode designed for certain time-of-use (TOU) utility rates or other custom situations. In most circumstances, we recomment allowing your system to  manage charging and discharging automatically without setting a schedule.  You don't need to set a schedule unless you have a specific reason to charge or discharge at exact times.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1409,7 +1409,7 @@
                 {
                   "title": "Max Battery Charge Power During 'PV Charge Only' Periods",
                   "help": "Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods in kW. Set this limit to control the power level at which the battery will charge from the grid during PV charge only periods",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1437,7 +1437,7 @@
                 {
                   "title": "Schedule Window 1 for PV Charge Only",
                   "help": "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1499,7 +1499,7 @@
                 {
                   "title": "Schedule Window 2 for PV Charge Only",
                   "help": "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1561,7 +1561,7 @@
                 {
                   "title": "Schedule Window 3 for PV Charge Only",
                   "help": "During these times your battery will charge from solar power and not discharge to power your home unless there is a grid power outage",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1630,7 +1630,7 @@
                 {
                   "title": "Max Inverter Output Power During 'Discharge Only' Periods",
                   "help": "Sets the maximum discharging power during scheduled Time-of-Use (TOU) discharge periods in kW. Limit this to control how much battery power is exported to loads or grid during those windows.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1658,7 +1658,7 @@
                 {
                   "title": "TOU Discharge Stop SOC",
                   "help": "Sets the minimum state of charge (SOC) that the battery will discharge to during 'Discharge Only' operation. Once this level is reached, discharging stops to preserve reserve capacity for later use or backup.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1686,7 +1686,7 @@
                 {
                   "title": "Schedule Window 1 for Discharge Only",
                   "help": "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1748,7 +1748,7 @@
                 {
                   "title": "Schedule Window 2 for Discharge Only",
                   "help": "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1810,7 +1810,7 @@
                 {
                   "title": "Schedule Window 3 for Discharge Only",
                   "help": "During these times, your battery will discharge at a steady rate and not charge from solar power.  Solar power will be used in your home and sold to the grid as allowed",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1879,7 +1879,7 @@
                 {
                   "title": "Discharge only Control Style",
                   "help": "Selects how 'discharge only' is controlled. 'Discharge only' can stop when a voltage limit is reached or when a target state of charge (SOC) is reached.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1906,7 +1906,7 @@
                 {
                   "title": "Discharge only Stop Voltage",
                   "help": "Sets the battery voltage at which discharge only will stop.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1945,7 +1945,7 @@
                 {
                   "title": "Allow Battery Charging from Grid",
                   "help": "Enables the battery to charge from the utility grid.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -1977,7 +1977,7 @@
                 {
                   "title": "Grid Charge Power Limit",
                   "help": "Sets the maximum power the inverter will draw from the grid for charging. This cap applies when Grid Charge is enabled (and within any configured time windows).",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2005,7 +2005,7 @@
                 {
                   "title": "Grid Charge Control Type",
                   "help": "Select whether grid charging follows a time schedule or SOC/voltage thresholds.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2037,7 +2037,7 @@
                 {
                   "title": "Grid Charge SOC Range",
                   "help": "Defines when grid charging starts and stops based on battery state of charge (SOC). Charging starts when SOC falls below Start SOC and stops when it reaches Stop SOC.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2092,7 +2092,7 @@
                 {
                   "title": "Grid Charge Windows",
                   "help": "During these times, your battery will continue to charge from solar power normally, but will also use additional power from the grid to charge the battery.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2249,7 +2249,7 @@
                 {
                   "title": "Grid Charge Control Style",
                   "help": "Selects how grid charging is controlled. Charging can follow a time schedule, stop when a voltage limit is reached, or stop when a target state of charge (SOC) is reached.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2278,7 +2278,7 @@
                 {
                   "title": "Grid Charging Start Voltage",
                   "help": "Sets the battery voltage at which grid charging will stop.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2305,7 +2305,7 @@
                 {
                   "title": "Grid Charging Stop Voltage",
                   "help": "Sets the maximum battery voltage during grid charging. Once this voltage is reached, the inverter will stop charging from the grid to protect the battery and prevent overvoltage.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2344,7 +2344,7 @@
                 {
                   "title": "Max Charge Current",
                   "help": "Instead of using the presets, you may set the charge current directly in amps.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2372,7 +2372,7 @@
                 {
                   "title": "Battery Voltage Correction",
                   "help": " ",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2416,7 +2416,7 @@
                 {
                   "title": "Grid Parameters",
                   "help": "This setting changes the conditions under which the inverter will connect or disconnect from the utility grid. Different areas have different rules about when this equipment is allowed to disconnect and when it must ride through. Choose the code required by the local utility or AHJ.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2454,7 +2454,7 @@
                 {
                   "title": "Grid Type",
                   "help": "Choose wiring configuration of the site.  This helps configure the system to match the power service at the site.  Note the voltage you enter here must match the EPS Voltage.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2492,7 +2492,7 @@
                 {
                   "title": "Grid Frequency",
                   "help": "Sets the nominal grid frequency for the installation. Use 60 Hz for North America and most split-phase installs; use 50 Hz for regions that operate at 230 V single-phase.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2536,7 +2536,7 @@
                 {
                   "title": "Grid Voltage Limits (Stage 1)",
                   "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2567,7 +2567,7 @@
                 {
                   "title": "Grid Voltage Limits (Stage 2)",
                   "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2598,7 +2598,7 @@
                 {
                   "title": "Grid Voltage Limits (Stage 3)",
                   "help": "Voltage trip window. If grid voltage rises above or falls below these thresholds for longer than the threshold time allows, the inverter will disconnect from the grid.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2629,7 +2629,7 @@
                 {
                   "title": "Grid Frequency Limits (Stage 1)",
                   "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2660,7 +2660,7 @@
                 {
                   "title": "Grid Frequency Limits (Stage 2)",
                   "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2691,7 +2691,7 @@
                 {
                   "title": "Grid Frequency Limits (Stage 3)",
                   "help": "Sets the upper and lower grid frequency thresholds. If grid frequency goes outside this range, the inverter will disconnect from the grid to protect the system and comply with grid safety standards.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2722,7 +2722,7 @@
                 {
                   "title": "Grid Voltage Trip Time",
                   "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects from the grid.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2753,7 +2753,7 @@
                 {
                   "title": "Grid Voltage Trip Time (Stage 2)",
                   "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects from the grid.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2784,7 +2784,7 @@
                 {
                   "title": "Grid Voltage Trip Time (Stage 3)",
                   "help": "Defines how long the grid voltage must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects from the grid.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2815,7 +2815,7 @@
                 {
                   "title": "Grid Frequency Trip Time (Stage 1)",
                   "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 1) before the inverter disconnects from the grid.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2846,7 +2846,7 @@
                 {
                   "title": "Grid Frequency Trip Time (Stage 2)",
                   "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 2) before the inverter disconnects from the grid.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2877,7 +2877,7 @@
                 {
                   "title": "Grid Frequency Trip Time (Stage 3)",
                   "help": "Defines how long the grid frequency must remain below the lower limit or above the upper limit (Stage 3) before the inverter disconnects from the grid.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -2920,7 +2920,7 @@
                 {
                   "title": "Permit to Operate",
                   "help": "Shows whether the inverter is permitted to operate in grid-connected mode.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -2952,7 +2952,7 @@
                 {
                   "title": "Ramp Rate",
                   "help": "How quickly inverter output is allowed to increase.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -2976,7 +2976,7 @@
                 {
                   "title": "Applicable Grid Voltage Range",
                   "help": "Voltage window within which grid connection is permitted. Outside this range the inverter will not connect or will disconnect.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3007,7 +3007,7 @@
                 {
                   "title": "Applicable Grid Frequency Range",
                   "help": "Frequency window within which grid connection is permitted. Outside this range the inverter will not connect or will disconnect.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3038,7 +3038,7 @@
                 {
                   "title": "Connection Delay Times",
                   "help": "Delays applied before initial grid connection and after a grid disturbance clears (reconnection). These timers help meet interconnection standards.  The connection delay is how long the inverter will wait after first being powered on.  Reconnection delay is how long the inverter will wait after a grid disturbance or outage clears.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3081,7 +3081,7 @@
                 {
                   "title": "Power Factor Mode",
                   "help": "Shows whether constant power-factor control is active.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3113,7 +3113,7 @@
                 {
                   "title": "Power Factor Setpoint",
                   "help": "The target power factor and excitation. Under-excited = lagging (absorbing vars); Over-excited = leading (supplying vars).",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3159,7 +3159,7 @@
                 {
                   "title": "Reactive Power Mode",
                   "help": "Shows whether constant reactive-power control is active.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3206,7 +3206,7 @@
                 {
                   "title": "Reactive Power Setpoint",
                   "help": "Displays the reactive-power target as a percentage of rated power (vars). Excitation determines whether vars are supplied (leading) or absorbed (lagging).",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3237,7 +3237,7 @@
                 {
                   "title": "Volt-VAR Mode",
                   "help": "Shows whether Volt-VAR (voltage-reactive power) control is active. This value is read-only and reflects the current configuration or utility command.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3269,7 +3269,7 @@
                 {
                   "title": "Autonomous Vref Adjustment",
                   "help": "Indicates whether the inverter autonomously adjusts its reference voltage (Vref).",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3301,7 +3301,7 @@
                 {
                   "title": "Reference Voltage (Vref)",
                   "help": "Voltage reference used for Volt-VAR calculations.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3325,7 +3325,7 @@
                 {
                   "title": "Vref Adjustment Time Constant",
                   "help": "Time constant applied when adjusting Vref.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3349,7 +3349,7 @@
                 {
                   "title": "Volt-VAR Voltage Breakpoints",
                   "help": "Voltage points (V1-V4) that define the Volt-VAR curve breakpoints.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3394,7 +3394,7 @@
                 {
                   "title": "Reactive Power Setpoint Q1",
                   "help": "Reactive power at voltage point V1 on the Volt-VAR curve.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3418,7 +3418,7 @@
                 {
                   "title": "Reactive Power Setpoint Q2",
                   "help": "Reactive power at voltage point V2 on the Volt-VAR curve.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3442,7 +3442,7 @@
                 {
                   "title": "Reactive Power Setpoint Q3",
                   "help": "Reactive power at voltage point V3 on the Volt-VAR curve.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3466,7 +3466,7 @@
                 {
                   "title": "Reactive Power Setpoint Q4",
                   "help": "Reactive power at voltage point V4 on the Volt-VAR curve.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3490,7 +3490,7 @@
                 {
                   "title": "Open-Loop Response Time",
                   "help": "Response time used for open-loop Volt-VAR changes.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3521,7 +3521,7 @@
                 {
                   "title": "P-Q Mode Status",
                   "help": "Shows whether Active/Reactive Power (P-Q) control mode is enabled.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3553,7 +3553,7 @@
                 {
                   "title": "P-Q Curve Points",
                   "help": "Breakpoint setpoints for the Active/Reactive Power (P-Q) characteristic.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3598,7 +3598,7 @@
                 {
                   "title": "Volt-Watt Mode",
                   "help": "Shows whether Volt-Watt (voltage-active power) control is enabled.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3630,7 +3630,7 @@
                 {
                   "title": "Volt-Watt Voltage Breakpoints",
                   "help": "Voltage points that define the Volt-Watt curve.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3661,7 +3661,7 @@
                 {
                   "title": "Volt-Watt Power Setpoint",
                   "help": "Power setpoint at voltage breakpoint V2 on the Volt-Watt curve.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3685,7 +3685,7 @@
                 {
                   "title": "Open-Loop Response Time",
                   "help": "Response time used for open-loop Volt-Watt changes.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3716,7 +3716,7 @@
                 {
                   "title": "Frequency-Active Power Mode",
                   "help": "Indicates whether frequency-power (Freq-Watt) control is currently enabled.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3748,7 +3748,7 @@
                 {
                   "title": "Open-Loop Response Time",
                   "help": "Response time applied to open-loop frequency-power adjustments.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3772,7 +3772,7 @@
                 {
                   "title": "Over-Frequency Droop: Deadband",
                   "help": "Over Frequency Droop dbOF — Deadband around nominal frequency before active power reduction begins.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3796,7 +3796,7 @@
                 {
                   "title": "Over-Frequency Droop: Gain (k)",
                   "help": "Over Frequency Droop kOF — Slope (gain k) of active power reduction versus frequency rise above nominal.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3820,7 +3820,7 @@
                 {
                   "title": "Under-Frequency Droop: Deadband",
                   "help": "Under Frequency Droop dbUF — Deadband around nominal frequency before active power increase/response begins.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3844,7 +3844,7 @@
                 {
                   "title": "Under-Frequency Droop: Gain (k)",
                   "help": "Under Frequency Droop kUF — Slope (gain k) of active power response versus frequency drop below nominal.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -3885,7 +3885,7 @@
                 {
                   "title": "Off-Grid Output",
                   "help": "Controls whether the inverter provides AC output when operating without the utility grid. Disable to prevent output in off-grid mode.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -3917,7 +3917,7 @@
                 {
                   "title": "Backup (EPS) Output Voltage",
                   "help": "Selects the AC output voltage when operating in backup (EPS) mode. Match this to your local service voltage for proper compatibility with connected loads.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -3972,7 +3972,7 @@
                 {
                   "title": "Generator Port Connection",
                   "help": "If using a generator, select which port it's connected to — either the GEN port or the Grid Input port (sometimes called microgrid mode). If no generator is installed, leave this setting on GEN port.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4004,7 +4004,7 @@
                 {
                   "title": "Battery Charge Current Limit",
                   "help": "Sets the maximum DC current the inverter will send to the battery when charging from the generator.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4028,7 +4028,7 @@
                 {
                   "title": "Generator Rated Power",
                   "help": "Specify the generator's continuous rated output power.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4056,7 +4056,7 @@
                 {
                   "title": "Generator Cool-Down Time",
                   "help": "Sets the time the generator continues running after charging stops to allow for safe cooling.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4080,7 +4080,7 @@
                 {
                   "title": "Generator Start/Stop SOC",
                   "help": "Configures the battery state of charge thresholds for automatic generator control. The generator will start when battery SOC drops to StartSOC and stop when it reaches StopSOC.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4121,7 +4121,7 @@
                 {
                   "title": "Generator Contactor Status",
                   "help": "Indicates the current state of the generator control contactor.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
                   "entries": [
@@ -4153,7 +4153,7 @@
                 {
                   "title": "Battery Quick Charge with Generator",
                   "help": "Start the generator to charge the battery.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4185,7 +4185,7 @@
                 {
                   "title": "Generator Boost",
                   "help": "Enables dynamic adjustment of generator charging power for faster battery recovery when needed.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4224,7 +4224,7 @@
                 {
                   "title": "Generator Charge Mode",
                   "help": "Selects how the generator charges the battery. When enabled, the generator will charge the battery automatically based on voltage or SOC.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4252,7 +4252,7 @@
                 {
                   "title": "Generator Charge Start Voltage",
                   "help": "Sets the battery voltage at which the generator begins charging. Effective when generator charging by voltage is enabled.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4277,7 +4277,7 @@
                 {
                   "title": "Generator Charge End Voltage",
                   "help": "Sets the battery voltage at which the generator stops charging. Effective when generator charging by voltage is enabled.",
-                  "element_type": "Register",
+                  "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4309,7 +4309,7 @@
                 {
                   "title": "Generator Exercise Schedule",
                   "help": "Configure a recurring schedule for generator exercise runs. Select the day of the week and time when the generator should run automatically.",
-                  "element_type": "GeneratorExercise",
+                  "element_type": "custom",
                   "access": "INVOKE",
                   "readOnly": false,
                   "entries": [
@@ -4381,7 +4381,7 @@
                 {
                   "title": "AC Coupled PV",
                   "help": "Enable this option when connecting a grid-tied solar inverter (AC Coupled PV) to the system. Disable when no AC Coupled PV is present.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4413,7 +4413,7 @@
                 {
                   "title": "AC Coupled PV Start/Stop SOC",
                   "help": "Defines the battery state-of-charge thresholds that control when the inverter allows AC Coupled PV charging to start and stop.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4471,7 +4471,7 @@
                 {
                   "title": "Use Smart Load",
                   "help": "Powers non-essential loads only when excess solar or battery energy is available. Enable this to automatically use surplus energy for optional circuits.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4503,7 +4503,7 @@
                 {
                   "title": "Smart Load On-Grid Behavior",
                   "help": "Determines Smart Load behavior while the system is connected to the grid. When enabled, the Smart Load remains powered even if normal control conditions are not met. (AKA: **On-Grid Always On**.)",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4535,7 +4535,7 @@
                 {
                   "title": "Smart Load Start Power",
                   "help": "Defines when the Smart Load turns on. The Smart Load port is energized once PV power exceeds this threshold **and** the battery SOC is above the start limit.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [
@@ -4563,7 +4563,7 @@
                 {
                   "title": "Smart Load SOC Limits",
                   "help": "Defines the battery state-of-charge limits that control the Smart Load. The Smart Load turns on when SOC rises above the start limit **and** PV power exceeds the start power limit.  Smart load turns off when SOC falls below the stop limit.",
-                  "element_type": "Attribute",
+                  "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
                   "entries": [

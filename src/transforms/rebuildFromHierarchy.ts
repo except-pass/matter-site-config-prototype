@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-interface AdditionalModbusPoint {
+interface EnvySpecificPoint {
   theme?: string;
   theme_id?: string; // Optional ID to reference theme from hierarchy.yaml
   section?: string;
@@ -59,12 +59,11 @@ interface AdditionalModbusPoint {
 }
 
 interface CsvRow {
-  point_command_id: string;
-  point_title: string;
-  point_help: string;
-  point_element_type: string;
-  point_access: string;
-  point_widget: string;
+  command_id: string;
+  title: string;
+  help: string;
+  element_type: string;
+  access: string;
   MEP: string;
   Cluster: string;
   Element: string;
@@ -110,7 +109,6 @@ interface Point {
   point_access: string;
   point_readOnly?: string; // Deprecated: readOnly is now a UI concern in hierarchy.yaml
   point_invokeButtonText?: string; // Deprecated: invokeButtonText is now a UI concern in hierarchy.yaml
-  point_widget: string;
   point_protocol_MEP: string;
   point_protocol_Cluster: string;
   point_protocol_Element: string;
@@ -168,19 +166,19 @@ interface JsonSubsection {
   visibility: string;
   collapsedByDefault: boolean;
   points: JsonPoint[];
-  subsection_id?: string; // Optional ID for referencing from additional_modbus.json
+  subsection_id?: string; // Optional ID for referencing from envy_specific.yaml
 }
 
 interface JsonSection {
   sectionTitle: string;
   subsections: JsonSubsection[];
-  section_id?: string; // Optional ID for referencing from additional_modbus.json
+  section_id?: string; // Optional ID for referencing from envy_specific.yaml
 }
 
 interface JsonTheme {
   themeName: string;
   sections: JsonSection[];
-  theme_id?: string; // Optional ID for referencing from additional_modbus.json
+  theme_id?: string; // Optional ID for referencing from envy_specific.yaml
 }
 
 interface JsonOutput {
@@ -192,28 +190,28 @@ console.log('Reading hierarchy.yaml...');
 const hierarchyContent = fs.readFileSync('hierarchy.yaml', 'utf-8');
 const hierarchy = yaml.parse(hierarchyContent);
 
-// Read points.csv
-console.log('Reading points.csv...');
-const csvRows: CsvRow[] = parse(fs.readFileSync('points.csv', 'utf-8'), {
+// Read matter.csv
+console.log('Reading matter.csv...');
+const csvRows: CsvRow[] = parse(fs.readFileSync('matter.csv', 'utf-8'), {
   columns: true,
   skip_empty_lines: true,
 });
 
-// Group rows by point_command_id and build Point objects
+// Group rows by command_id and build Point objects
 const points: Point[] = [];
 const pointGroups = new Map<string, CsvRow[]>();
 
-// Group rows by point_command_id (carry forward point_command_id from first row)
+// Group rows by command_id (carry forward command_id from first row)
 let currentPointCommandId = '';
 for (const row of csvRows) {
-  // If point_command_id is filled, start a new point group
-  if (row.point_command_id && row.point_command_id.trim()) {
-    currentPointCommandId = row.point_command_id.trim();
+  // If command_id is filled, start a new point group
+  if (row.command_id && row.command_id.trim()) {
+    currentPointCommandId = row.command_id.trim();
   }
   
-  // Skip rows without a current point_command_id (shouldn't happen, but safety check)
+  // Skip rows without a current command_id (shouldn't happen, but safety check)
   if (!currentPointCommandId) {
-    console.warn(`Warning: Row without point_command_id found: ${JSON.stringify(row)}`);
+    console.warn(`Warning: Row without command_id found: ${JSON.stringify(row)}`);
     continue;
   }
   
@@ -229,11 +227,10 @@ for (const [pointCommandId, rows] of pointGroups.entries()) {
   const firstRow = rows[0];
   const point: Point = {
     point_command_id: pointCommandId,
-    point_title: firstRow.point_title || '',
-    point_help: firstRow.point_help || '',
-    point_element_type: firstRow.point_element_type || '',
-    point_access: firstRow.point_access || '',
-    point_widget: firstRow.point_widget || '',
+    point_title: firstRow.title || '',
+    point_help: firstRow.help || '',
+    point_element_type: firstRow.element_type || '',
+    point_access: firstRow.access || '',
     point_protocol_MEP: firstRow.MEP || '',
     point_protocol_Cluster: firstRow.Cluster || '',
     point_protocol_Element: firstRow.Element || '',
@@ -403,7 +400,7 @@ function convertEntryToJsonWithProtocol(
       },
     };
   }
-  
+
   return jsonEntry;
 }
 
@@ -432,10 +429,23 @@ function convertPointToJson(
     ? true  // Protocol read-only is always read-only
     : (readOnlyFromHierarchy !== undefined ? readOnlyFromHierarchy : false);  // RW points can be overridden
   
+  // Normalize element_type: should be attribute, service, or custom
+  // Convert Attribute -> attribute, Service -> service
+  // If element_type is GeneratorExercise (or other custom types), convert to "custom"
+  let normalizedElementType = (pointData.point_element_type || 'attribute').toLowerCase();
+  if (normalizedElementType === 'generatorexercise') {
+    normalizedElementType = 'custom';
+  }
+  
+  // If element_type is custom but no widget specified, warn
+  if (normalizedElementType === 'custom' && !widgetFromHierarchy) {
+    console.warn(`Warning: Point ${pointData.point_command_id} has element_type="custom" but no widget specified in hierarchy.yaml`);
+  }
+  
   const jsonPoint: JsonPoint = {
     title: pointData.point_title,
     help: pointData.point_help,
-    element_type: pointData.point_element_type,
+    element_type: normalizedElementType,
     access: pointData.point_access,
     readOnly: readOnly,
     entries: jsonEntries,
@@ -458,11 +468,9 @@ function convertPointToJson(
     jsonPoint.showInvokeButton = showInvokeButtonFromHierarchy;
   }
   
-  // Widget priority: hierarchy.yaml > points.csv
+  // Widget priority: hierarchy.yaml only (widgets are UI concerns, not protocol concerns)
   if (widgetFromHierarchy) {
     jsonPoint.widget = widgetFromHierarchy;
-  } else if (pointData.point_widget) {
-    jsonPoint.widget = pointData.point_widget;
   }
 
   return jsonPoint;
@@ -524,7 +532,7 @@ for (const themeSpec of hierarchy.themes) {
           // Format 1: Simple string
           const pointData = pointMap.get(pointSpec);
           if (!pointData) {
-            console.warn(`Warning: Point ${pointSpec} not found in points.csv`);
+            console.warn(`Warning: Point ${pointSpec} not found in matter.csv`);
             continue;
           }
           subsection.points.push(convertPointToJson(pointData));
@@ -625,7 +633,7 @@ for (const themeSpec of hierarchy.themes) {
               
               const sourcePointData = pointMap.get(sourcePointUuid);
               if (!sourcePointData) {
-                console.warn(`Warning: Point ${sourcePointUuid} not found in points.csv for combined entry`);
+                console.warn(`Warning: Point ${sourcePointUuid} not found in matter.csv for combined entry`);
                 continue;
               }
               
@@ -734,10 +742,17 @@ for (const themeSpec of hierarchy.themes) {
             }
             
             // Create combined point
+            // Normalize element_type
+            let normalizedElementType = combineSpec.element_type || baseElementType || 'attribute';
+            normalizedElementType = normalizedElementType.toLowerCase();
+            if (normalizedElementType === 'generatorexercise') {
+              normalizedElementType = 'custom';
+            }
+            
             const combinedPoint: JsonPoint = {
               title: combineSpec.title || 'Combined Point',
               help: combineSpec.help || '',
-              element_type: combineSpec.element_type || baseElementType || 'Attribute',
+              element_type: normalizedElementType,
               access: combineSpec.access || baseAccess || 'RW',
               readOnly: combineSpec.readOnly !== undefined 
                 ? (typeof combineSpec.readOnly === 'boolean' ? combineSpec.readOnly : combineSpec.readOnly === 'true' || combineSpec.readOnly === '1')
@@ -787,8 +802,8 @@ for (const themeSpec of hierarchy.themes) {
 
             const pointData = pointMap.get(pointCommandId);
 
-            if (!pointData) {
-              console.warn(`Warning: Point ${pointCommandId} not found in points.csv`);
+        if (!pointData) {
+              console.warn(`Warning: Point ${pointCommandId} not found in matter.csv`);
               continue;
             }
 
@@ -823,11 +838,11 @@ for (const themeSpec of hierarchy.themes) {
   output.themes.push(theme);
 }
 
-// Load additional Modbus points from additional_modbus.json or additional_modbus.yaml
-function loadAdditionalModbusPoints(): AdditionalModbusPoint[] {
+// Load Envy-specific points from envy_specific.yaml or envy_specific.json
+function loadEnvySpecificPoints(): EnvySpecificPoint[] {
   // Try YAML first, then JSON
-  const yamlPath = path.resolve(__dirname, 'additional_modbus.yaml');
-  const jsonPath = path.resolve(__dirname, 'additional_modbus.json');
+  const yamlPath = path.resolve(__dirname, 'envy_specific.yaml');
+  const jsonPath = path.resolve(__dirname, 'envy_specific.json');
   
   if (fs.existsSync(yamlPath)) {
     try {
@@ -835,14 +850,14 @@ function loadAdditionalModbusPoints(): AdditionalModbusPoint[] {
       const parsed = yaml.parse(raw);
       
       if (Array.isArray(parsed)) {
-        return parsed.filter((entry): entry is AdditionalModbusPoint => typeof entry?.command_id === 'string');
+        return parsed.filter((entry): entry is EnvySpecificPoint => typeof entry?.command_id === 'string');
       }
       
       if (Array.isArray(parsed?.points)) {
-        return parsed.points.filter((entry: AdditionalModbusPoint) => typeof entry?.command_id === 'string');
+        return parsed.points.filter((entry: EnvySpecificPoint) => typeof entry?.command_id === 'string');
       }
     } catch (error) {
-      console.warn('Warning: Failed to load additional Modbus points from YAML:', error);
+      console.warn('Warning: Failed to load Envy-specific points from YAML:', error);
     }
   }
   
@@ -852,25 +867,31 @@ function loadAdditionalModbusPoints(): AdditionalModbusPoint[] {
       const parsed = JSON.parse(raw);
       
       if (Array.isArray(parsed)) {
-        return parsed.filter((entry): entry is AdditionalModbusPoint => typeof entry?.command_id === 'string');
+        return parsed.filter((entry): entry is EnvySpecificPoint => typeof entry?.command_id === 'string');
       }
       
       if (Array.isArray(parsed?.points)) {
-        return parsed.points.filter((entry: AdditionalModbusPoint) => typeof entry?.command_id === 'string');
+        return parsed.points.filter((entry: EnvySpecificPoint) => typeof entry?.command_id === 'string');
       }
     } catch (error) {
-      console.warn('Warning: Failed to load additional Modbus points from JSON:', error);
+      console.warn('Warning: Failed to load Envy-specific points from JSON:', error);
     }
   }
   
   return [];
 }
 
-// Convert AdditionalModbusPoint to JsonPoint
-function convertAdditionalModbusPointToJson(def: AdditionalModbusPoint): JsonPoint {
+// Convert EnvySpecificPoint to JsonPoint
+function convertEnvySpecificPointToJson(def: EnvySpecificPoint): JsonPoint {
   const access = (def.access || 'RW').toUpperCase();
   const readOnly = def.readOnly ?? access === 'R';
-  const elementType = def.element_type || 'Register';
+  
+  // Normalize element_type: should be attribute, service, or custom
+  // Default to 'custom' for Modbus points (Register is a legacy term)
+  let elementType = (def.element_type || 'custom').toLowerCase();
+  if (elementType === 'register' || elementType === 'generatorexercise') {
+    elementType = 'custom';
+  }
 
   const entries: JsonEntry[] = (def.entries || []).map((entry) => {
     // Normalize dtype
@@ -952,9 +973,9 @@ function convertAdditionalModbusPointToJson(def: AdditionalModbusPoint): JsonPoi
   return jsonPoint;
 }
 
-// Merge additional Modbus points into the output structure
-function mergeAdditionalModbusPoints(output: JsonOutput, additionalPoints: AdditionalModbusPoint[]) {
-  if (!Array.isArray(additionalPoints) || additionalPoints.length === 0) {
+// Merge Envy-specific points into the output structure
+function mergeEnvySpecificPoints(output: JsonOutput, envyPoints: EnvySpecificPoint[]) {
+  if (!Array.isArray(envyPoints) || envyPoints.length === 0) {
     return;
   }
 
@@ -1029,7 +1050,7 @@ function mergeAdditionalModbusPoints(output: JsonOutput, additionalPoints: Addit
     return removed;
   }
 
-  additionalPoints.forEach((definition) => {
+  envyPoints.forEach((definition) => {
     if (!definition?.command_id) {
       return;
     }
@@ -1105,17 +1126,17 @@ function mergeAdditionalModbusPoints(output: JsonOutput, additionalPoints: Addit
       }
     }
 
-    const newPoint = convertAdditionalModbusPointToJson(definition);
+    const newPoint = convertEnvySpecificPointToJson(definition);
     subsection.points.push(newPoint);
   });
 }
 
-// Load and merge additional Modbus points
-const additionalModbusPoints = loadAdditionalModbusPoints();
-if (additionalModbusPoints.length > 0) {
-  console.log(`Loading ${additionalModbusPoints.length} additional Modbus points...`);
-  mergeAdditionalModbusPoints(output, additionalModbusPoints);
-  console.log(`Merged ${additionalModbusPoints.length} additional Modbus points`);
+// Load and merge Envy-specific points
+const envySpecificPoints = loadEnvySpecificPoints();
+if (envySpecificPoints.length > 0) {
+  console.log(`Loading ${envySpecificPoints.length} Envy-specific points...`);
+  mergeEnvySpecificPoints(output, envySpecificPoints);
+  console.log(`Merged ${envySpecificPoints.length} Envy-specific points`);
 }
 
 // Write the final output
