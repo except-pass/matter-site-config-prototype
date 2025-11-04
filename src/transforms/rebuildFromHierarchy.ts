@@ -9,9 +9,9 @@ interface CsvRow {
   point_element_type: string;
   point_access: string;
   point_widget: string;
-  point_protocol_MEP: string;
-  point_protocol_Cluster: string;
-  point_protocol_Element: string;
+  MEP: string;
+  Cluster: string;
+  Element: string;
   arg: string;
   name: string;
   dtype: string;
@@ -73,8 +73,8 @@ interface JsonEntry {
     min?: number;
     max?: number;
   };
-  less_than?: number;
-  greater_than?: number;
+  less_than?: number | string;
+  greater_than?: number | string;
   meanings?: Record<string, string>;
   friendly_meanings?: Record<string, string>;
   protocol?: {
@@ -174,61 +174,72 @@ for (const [pointUuid, rows] of pointGroups.entries()) {
     point_element_type: firstRow.point_element_type || '',
     point_access: firstRow.point_access || '',
     point_widget: firstRow.point_widget || '',
-    point_protocol_MEP: firstRow.point_protocol_MEP || '',
-    point_protocol_Cluster: firstRow.point_protocol_Cluster || '',
-    point_protocol_Element: firstRow.point_protocol_Element || '',
+    point_protocol_MEP: firstRow.MEP || '',
+    point_protocol_Cluster: firstRow.Cluster || '',
+    point_protocol_Element: firstRow.Element || '',
     entries: '', // Will be populated below
   };
   
   // Convert entry rows to PointEntry objects
-  const entries: PointEntry[] = rows.map((row, index) => {
-    // Parse meanings from comma-separated labels (numbers are implied starting from 0)
-    let meanings = '';
-    let friendly_meanings = '';
-    
-    if (row.meanings) {
-      try {
-        const labels = row.meanings.split(',').map(l => l.trim()).filter(l => l);
-        const meaningsObj: Record<string, string> = {};
-        labels.forEach((label, idx) => {
-          meaningsObj[String(idx)] = label; // Assign number starting from 0
-        });
-        meanings = JSON.stringify(meaningsObj);
-      } catch (e) {
-        meanings = '';
+  const entries: PointEntry[] = rows
+    .map((row, index) => {
+      // Skip rows where all entry fields are empty (points with no entries)
+      const hasEntryData = row.arg || row.name || row.dtype || row.description || 
+                          row.longdescription || row.unit || row.range_min || row.range_max ||
+                          row.less_than || row.greater_than || row.meanings || row.friendly_meanings;
+      
+      if (!hasEntryData) {
+        return null; // Skip empty entries
       }
-    }
-    
-    if (row.friendly_meanings) {
-      try {
-        const labels = row.friendly_meanings.split(',').map(l => l.trim()).filter(l => l);
-        const friendlyObj: Record<string, string> = {};
-        labels.forEach((label, idx) => {
-          friendlyObj[String(idx)] = label; // Assign number starting from 0
-        });
-        friendly_meanings = JSON.stringify(friendlyObj);
-      } catch (e) {
-        friendly_meanings = '';
+      
+      // Parse meanings from comma-separated labels (numbers are implied starting from 0)
+      let meanings = '';
+      let friendly_meanings = '';
+      
+      if (row.meanings) {
+        try {
+          const labels = row.meanings.split(',').map(l => l.trim()).filter(l => l);
+          const meaningsObj: Record<string, string> = {};
+          labels.forEach((label, idx) => {
+            meaningsObj[String(idx)] = label.trim(); // Strip whitespace from each label
+          });
+          meanings = JSON.stringify(meaningsObj);
+        } catch (e) {
+          meanings = '';
+        }
       }
-    }
-    
-    return {
-      entry_order: String(index + 1), // Order comes from row order
-      entry_name: row.name || '',
-      entry_arg: row.arg || '',
-      entry_dtype: row.dtype || '',
-      entry_description: row.description || '',
-      entry_longdescription: row.longdescription || '',
-      entry_unit: row.unit || '',
-      entry_value: '', // Not in new format
-      entry_range_min: row.range_min || '',
-      entry_range_max: row.range_max || '',
-      entry_less_than: row.less_than || '',
-      entry_greater_than: row.greater_than || '',
-      entry_meanings: meanings,
-      entry_friendly_meanings: friendly_meanings,
-    };
-  });
+      
+      if (row.friendly_meanings) {
+        try {
+          const labels = row.friendly_meanings.split(',').map(l => l.trim()).filter(l => l);
+          const friendlyObj: Record<string, string> = {};
+          labels.forEach((label, idx) => {
+            friendlyObj[String(idx)] = label.trim(); // Strip whitespace from each label
+          });
+          friendly_meanings = JSON.stringify(friendlyObj);
+        } catch (e) {
+          friendly_meanings = '';
+        }
+      }
+      
+      return {
+        entry_order: String(index + 1), // Order comes from row order
+        entry_name: row.name || '',
+        entry_arg: row.arg || '',
+        entry_dtype: row.dtype || '',
+        entry_description: row.description || '',
+        entry_longdescription: row.longdescription || '',
+        entry_unit: row.unit || '',
+        entry_value: '', // Not in new format
+        entry_range_min: row.range_min || '',
+        entry_range_max: row.range_max || '',
+        entry_less_than: row.less_than || '',
+        entry_greater_than: row.greater_than || '',
+        entry_meanings: meanings,
+        entry_friendly_meanings: friendly_meanings,
+      };
+    })
+    .filter((entry): entry is PointEntry => entry !== null); // Remove null entries
   
   // Store entries as JSON string (for compatibility with existing code)
   point.entries = JSON.stringify(entries);
@@ -265,8 +276,24 @@ function convertEntryToJson(entry: PointEntry): JsonEntry {
     if (entry.entry_range_max) jsonEntry.range.max = parseFloat(entry.entry_range_max);
   }
 
-  if (entry.entry_less_than) jsonEntry.less_than = parseFloat(entry.entry_less_than);
-  if (entry.entry_greater_than) jsonEntry.greater_than = parseFloat(entry.entry_greater_than);
+  if (entry.entry_less_than) {
+    // Try to parse as number, otherwise keep as string (for arg references)
+    const lessThanNum = parseFloat(entry.entry_less_than);
+    if (!isNaN(lessThanNum)) {
+      jsonEntry.less_than = lessThanNum;
+    } else {
+      jsonEntry.less_than = entry.entry_less_than; // Keep as string for arg references
+    }
+  }
+  if (entry.entry_greater_than) {
+    // Try to parse as number, otherwise keep as string (for arg references)
+    const greaterThanNum = parseFloat(entry.entry_greater_than);
+    if (!isNaN(greaterThanNum)) {
+      jsonEntry.greater_than = greaterThanNum;
+    } else {
+      jsonEntry.greater_than = entry.entry_greater_than; // Keep as string for arg references
+    }
+  }
 
   // Parse meanings
   if (entry.entry_meanings) {

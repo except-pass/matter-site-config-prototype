@@ -226,6 +226,23 @@
                   "uuid": "Basic.PowerStatus"
                 },
                 {
+                  "title": "Reset to Factory Defaults",
+                  "help": "Restores all inverter configuration parameters to their original factory values. Use with caution — this cannot be undone.",
+                  "element_type": "Service",
+                  "access": "INVOKE",
+                  "readOnly": false,
+                  "entries": [],
+                  "protocol": {
+                    "matter": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Basic",
+                      "Element": "AllToDefault"
+                    }
+                  },
+                  "uuid": "Basic.AllToDefault",
+                  "invokeButtonText": "Reset Now"
+                },
+                {
                   "title": "Inverter Power Control",
                   "help": "Turns the inverter output on or off.\n\n• **Standby:** AC output is disabled, but control circuits remain powered.\n• **Power On:** Enables AC output and normal inverter operation.",
                   "element_type": "Service",
@@ -3742,7 +3759,7 @@
                         "min": 0,
                         "max": 90
                       },
-                      "less_than": null
+                      "less_than": "StopSOC"
                     },
                     {
                       "name": "Stop SOC (%)",
@@ -3754,7 +3771,7 @@
                         "min": 5,
                         "max": 100
                       },
-                      "greater_than": null
+                      "greater_than": "StartSOC"
                     }
                   ],
                   "protocol": {
@@ -3928,7 +3945,7 @@
                         "min": 0,
                         "max": 100
                       },
-                      "less_than": null
+                      "less_than": "StopSOC"
                     },
                     {
                       "name": "Stop SOC (%)",
@@ -3940,7 +3957,7 @@
                         "min": 0,
                         "max": 100
                       },
-                      "greater_than": null
+                      "greater_than": "StartSOC"
                     }
                   ],
                   "protocol": {
@@ -4078,7 +4095,7 @@
                         "min": 0,
                         "max": 100
                       },
-                      "less_than": null
+                      "less_than": "OffSOC"
                     },
                     {
                       "name": "Stop When Battery SOC Is Below (%)",
@@ -4090,7 +4107,7 @@
                         "min": 0,
                         "max": 100
                       },
-                      "greater_than": null
+                      "greater_than": "OnSOC"
                     }
                   ],
                   "protocol": {
