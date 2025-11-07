@@ -2,60 +2,7 @@
 
 This directory contains TypeScript scripts to apply cosmetic transformations to the generated theme JSON files.
 
-## Scripts
-
-### `applyTransforms.ts`
-
-Applies comprehensive transformations to points in the theme JSON. Can modify:
-- Point titles
-- Point help text
-- Entry names
-- Entry descriptions
-
-**Usage:**
-```bash
-# Transform a file (overwrites by default)
-npx tsx src/transforms/applyTransforms.ts src/themes/demo.json
-
-# Transform and save to a different file
-npx tsx src/transforms/applyTransforms.ts src/themes/demo.json src/themes/demo-transformed.json
-```
-
-### `exportMatterCsv.ts`
-
-Flattens the current `demo.json` into an editable CSV that becomes the canonical source for Matter protocol points. Modbus-only entries are skipped.
-
-```bash
-npx tsx src/transforms/exportMatterCsv.ts src/themes/demo.json master.csv
-```
-
-### `csvToJson.ts`
-
-Rebuilds `demo.json` directly from `master.csv`, restoring the same point metadata captured in the CSV.
-
-```bash
-npx tsx src/transforms/csvToJson.ts master.csv src/themes/demo.json
-```
-
-> **Note:** Modbus points remain managed in `additional_modbus.json` and are not yet exported into the CSV.
-
-### `splitMasterCsv.ts`
-
-Splits `master.csv` into `points.csv` (one line per point_uuid with all point data and entries as JSON):
-
-```bash
-npx tsx src/transforms/splitMasterCsv.ts
-```
-
-### `createHierarchy.ts`
-
-Creates `hierarchy.yaml` from the existing order CSV files (theme_order, section_order, subsection_order, point_order):
-
-```bash
-npx tsx src/transforms/createHierarchy.ts
-```
-
-### `rebuildFromHierarchy.ts`
+## `rebuildFromHierarchy.ts` - The Build Script
 
 Rebuilds `demo.json` from `hierarchy.yaml` + `points.csv`:
 
@@ -63,7 +10,7 @@ Rebuilds `demo.json` from `hierarchy.yaml` + `points.csv`:
 npx tsx src/transforms/rebuildFromHierarchy.ts
 ```
 
-This generates `src/themes/demo_rebuilt.json` which can be compared with the original.
+This generates `src/themes/demo_rebuilt.json`.  `rebuildFromHierarchy.ts` expects exactly files named `hierarchy.yaml` and `matter.xlsx` (with a sheet named `matter`) in the current directory.
 
 **Adding New Transformations:**
 
@@ -92,13 +39,13 @@ export const pointTransforms: PointTransform[] = [
 
 The project uses a **two-file approach** for easier maintenance:
 
-### 1. points.csv (Edited by non-developers in Excel/Sheets)
-One line per point_uuid containing all point metadata:
+### 1. points.csv (Edited by non-developers in Excel)
+One line per entry containing all point metadata:
 - `point_uuid` - Unique identifier for the point
 - Point metadata: `point_title`, `point_help`, `point_element_type`, `point_access`, `point_readOnly`, etc.
 - `entries` - All entries as a JSON array
 
-**No location information** (theme/section/subsection) is stored here - that's defined in `hierarchy.yaml`
+**No ui organization** (theme/section/subsection) stored here - that's defined in `hierarchy.yaml`
 
 ### 2. hierarchy.yaml (Edited by developers)
 Defines the structure, ordering, and display properties:
@@ -121,79 +68,10 @@ themes:
 ```
 
 **Key Benefits:**
-- **Rename themes/sections**: Only update `hierarchy.yaml` (one place!)
+- **Rename themes/sections**: Only update `hierarchy.yaml`
 - **Reorder**: Just rearrange items in `hierarchy.yaml`
-- **Move points**: Just move the point_uuid in `hierarchy.yaml`
+- **Move points**: Just move the command_id in `hierarchy.yaml`
 - **Non-devs edit content**: Work in Excel on `points.csv` without touching structure
 - **Devs control structure**: Maintain `hierarchy.yaml` with clean YAML syntax
 - **Clean separation**: Point data and hierarchy are completely independent
 
-### Working with the files:
-
-```bash
-# Create hierarchy.yaml and points.csv from master.csv
-npx tsx src/transforms/splitMasterCsv.ts
-npx tsx src/transforms/createHierarchy.ts
-
-# Rebuild demo.json from hierarchy.yaml + points.csv
-npx tsx src/transforms/rebuildFromHierarchy.ts
-
-# Or rebuild demo.json from single master.csv (legacy)
-npx tsx src/transforms/csvToJson.ts master.csv src/themes/demo.json
-```
-
-## Workflow
-
-### Option 1: All-in-one (Recommended)
-
-Use the combined script to generate and transform in one step:
-
-```bash
-npx tsx src/transforms/generateAndTransform.ts Envy_48V_Matter_V2.1.6_Doc.xlsx src/themes/demo.json
-```
-
-Then build and run:
-```bash
-npm run dev
-```
-
-### Option 2: Step-by-step
-
-1. Generate the base theme JSON:
-   ```bash
-   npx tsx generatePointTheme.ts Envy_48V_Matter_V2.1.6_Doc.xlsx > src/themes/demo.json
-   ```
-
-2. Apply transformations:
-   ```bash
-   npx tsx src/transforms/applyTransforms.ts src/themes/demo.json
-   ```
-
-3. Build and run the frontend:
-   ```bash
-   npm run dev
-   ```
-
-## Creating New Transforms
-
-To add a new type of transformation:
-
-1. Create a new file like `yourTransform.ts`
-2. Export transformation functions
-3. Use node-jq for complex JSON queries if needed
-4. Follow the pattern from `applyTitleTransforms.ts`
-
-Example structure:
-```typescript
-import jq from "node-jq";
-
-export async function yourTransform(data: any): Promise<any> {
-  // Use jq for complex queries
-  const result = await jq.run('.themes[] | select(.themeName == "Battery")', data);
-
-  // Apply your transformations
-  // ...
-
-  return transformedData;
-}
-```

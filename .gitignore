@@ -112,8 +112,6 @@ Desktop.ini
 
 # Crash logs
 *.stackdump
-/components/justfile
-/components/justfile
 
 ## Terraform
 
@@ -125,32 +123,4 @@ Desktop.ini
 
 .zip
 
-# PR Report outputs
-pr_report_*.md
-!master.csv
-!points.csv
-/components/web-fmp/docker-compose.debug.yaml
-.act_home/
-# Equipment points matcher library (entire directory)
-/components/manager-homeowner/src/imported/libs/equipment_points_matcher/
-
-# Generated files (entire directories)
-/components/manager-homeowner/src/generated/
-/components/manager-homeowner/src/imported/protos/
-/components/manager-homeowner/tests/integration/generated/manager-homeowner/google/protobuf/wrappers.ts
-/components/manager-homeowner/tests/integration/generated/manager-homeowner/homeowner.ts
-/components/manager-homeowner/tests/integration/generated/ra-physical/google/protobuf/empty.ts
-/components/manager-homeowner/tests/integration/generated/ra-physical/ra_physical_product.ts
-/components/manager-homeowner/tests/integration/generated/ra-physical/ra_physical_site.ts
-/components/manager-homeowner/tests/integration/generated/ra-physical/ra_physical_utility_company.ts
-/components/manager-homeowner/tests/integration/generated/ra-telemetry/sunspec.ts
-/components/manager-homeowner/tests/integration/generated/ra-user/google/protobuf/empty.ts
-/components/manager-homeowner/tests/integration/generated/ra-user/google/protobuf/timestamp.ts
-/components/manager-homeowner/tests/integration/generated/ra-user/google/protobuf/wrappers.ts
-/components/manager-homeowner/tests/integration/generated/ra-user/ra_user_user.ts
-/components/manager-homeowner/tests/integration/generated/utility-obol/google/protobuf/timestamp.ts
-/components/manager-homeowner/tests/integration/generated/utility-obol/google/protobuf/wrappers.ts
-/components/manager-homeowner/tests/integration/generated/utility-obol/org.ts
-/components/manager-homeowner/tests/integration/generated/utility-obol/permission.ts
-/components/manager-homeowner/tests/integration/generated/utility-obol/site.ts
-/components/manager-homeowner/tests/integration/generated/utility-obol/user.ts
+ss40k_inverter.yaml

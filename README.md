@@ -29,7 +29,7 @@ These files are combined by `rebuildFromHierarchy.ts` to generate `demo_rebuilt.
 - `element_type` - `attribute`, `service`, or `custom`
 - `access` - `R`, `RW`, or `INVOKE`
 - `MEP`, `Cluster`, `Element` - Matter protocol identifiers
-- **Entry-level fields** (see below): `arg`, `name`, `dtype`, `unit`, `range_min/max`, `meanings`, `friendly_meanings`, etc.
+- **"Entry"-level fields** (see below): `arg`, `name`, `dtype`, `unit`, `range_min/max`, `meanings`, `friendly_meanings`, etc.
 
 **Entry-Level Fields**:
 
@@ -75,6 +75,9 @@ Basic.SystemTime,System Time,Attribute in Basic cluster,attribute,RW,HybridInver
 ,,,,,,,,Mon,Mon,Number,,,1,12,,
 Basic.OperatingMode,Grid Interaction,Select grid mode,attribute,RW,HybridInverter,Basic,OperatingMode,Mode,Mode,enum,,,,,,"Off-grid,Grid-tied","Off-Grid.  There is no available power grid,Grid-Tied. Grid power is available."
 ```
+
+**Telemetry Mapping**:
+(Almost) every Matter point has a corresponding telemetry point, and most are in the "04" model (e.g. 40104 for the inverter).  This linkage is documented in the matter.xlsx file.  The intention is that the UI can read all the telemetry points from the database to pre-populate the UI with the most recent values.  This should greatly reduce the load time for the UI.
 
 **Design Philosophy**: 
 - Protocol-focused: Contains only data that matters at the firmware/protocol level

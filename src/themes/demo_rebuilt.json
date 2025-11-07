@@ -13,7 +13,7 @@
               "points": [
                 {
                   "title": "System Time",
-                  "help": "Attribute in Basic cluster",
+                  "help": "Date and time the inverter will use to run schedules",
                   "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -3703,7 +3703,7 @@
                   "readOnly": true,
                   "entries": [
                     {
-                      "name": "Response Time",
+                      "name": "VoltWattOpenLoopResponseTime",
                       "arg": "Time",
                       "dtype": "Number",
                       "description": "",
