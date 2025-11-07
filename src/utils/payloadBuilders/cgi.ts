@@ -1,5 +1,4 @@
 import { PointDef, EntryValue } from '../../types/schema';
-import { getEnumWireValue } from '../enumConversion';
 
 export interface CGIPayload {
   version: string;

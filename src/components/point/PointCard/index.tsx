@@ -111,7 +111,6 @@ export function PointCard({
 
       <CommandPreviewModal
         title="Command Preview"
-        description={`This is the payload that would be sent to the device for ${point.title}.`}
         payload={commandModal.data}
         isOpen={commandModal.isOpen}
         onClose={commandModal.close}
@@ -119,10 +118,10 @@ export function PointCard({
 
       <CommandPreviewModal
         title="Read Command Preview"
-        description={`This is the payload that would be sent to read ${point.title} from the device.`}
         payload={refreshModal.data}
         isOpen={refreshModal.isOpen}
         onClose={refreshModal.close}
+        type="refresh"
       />
     </div>
   );

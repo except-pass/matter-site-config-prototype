@@ -444,27 +444,6 @@ function convertEntryToJson(entry: PointEntry): JsonEntry {
   return jsonEntry;
 }
 
-// Helper function to convert entry with optional protocol override
-function convertEntryToJsonWithProtocol(
-  entry: PointEntry,
-  protocolOverride?: { MEP?: string; Cluster?: string; Element?: string }
-): JsonEntry {
-  const jsonEntry = convertEntryToJson(entry);
-  
-  // Override protocol if specified in hierarchy.yaml
-  if (protocolOverride) {
-    jsonEntry.protocol = {
-      matter: {
-        MEP: protocolOverride.MEP || '',
-        Cluster: protocolOverride.Cluster || '',
-        Element: protocolOverride.Element || '',
-      },
-    };
-  }
-
-  return jsonEntry;
-}
-
 // Helper function to convert point to JSON format
 function convertPointToJson(
   pointData: Point,
@@ -598,14 +577,6 @@ for (const themeSpec of hierarchy.themes) {
         // - Simple string: "Basic.SystemTime"
         // - Object with UI properties:
         //   { command_id: "Basic.SystemTime", widget: "datetime", readOnly: true, invokeButtonText: "Start", showInvokeButton: false, showHistory: false, showRefresh: false, showSetButton: true }
-        let pointCommandId: string;
-        let widgetFromHierarchy: string | undefined;
-        let readOnlyFromHierarchy: boolean | undefined;
-        let invokeButtonTextFromHierarchy: string | undefined;
-        let showInvokeButtonFromHierarchy: boolean | undefined;
-        let showHistoryFromHierarchy: boolean | undefined;
-        let showRefreshFromHierarchy: boolean | undefined;
-        let showSetButtonFromHierarchy: boolean | undefined;
         
         if (typeof pointSpec === 'string') {
           // Format 1: Simple string
@@ -876,6 +847,7 @@ for (const themeSpec of hierarchy.themes) {
             let showInvokeButtonFromHierarchy: boolean | undefined;
             let showHistoryFromHierarchy: boolean | undefined;
             let showRefreshFromHierarchy: boolean | undefined;
+            let showSetButtonFromHierarchy: boolean | undefined;
 
             widgetFromHierarchy = pointSpec.widget;
 
@@ -1022,7 +994,7 @@ function convertEnvySpecificPointToJson(def: EnvySpecificPoint): JsonPoint {
     }
 
     const jsonEntry: JsonEntry = {
-      name: entry.name || entry.arg,
+      name: entry.name ?? '',
       arg: entry.arg,
       dtype: dtype,
       description: entry.description || '',
@@ -1061,7 +1033,13 @@ function convertEnvySpecificPointToJson(def: EnvySpecificPoint): JsonPoint {
       jsonEntry.greater_than = isNaN(greaterThanNum) ? entry.greater_than : greaterThanNum;
     }
     if (entry.protocol?.matter) {
-      jsonEntry.protocol = { matter: entry.protocol.matter };
+      jsonEntry.protocol = {
+        matter: {
+          MEP: entry.protocol.matter.MEP || '',
+          Cluster: entry.protocol.matter.Cluster || '',
+          Element: entry.protocol.matter.Element || '',
+        }
+      };
     }
 
     return jsonEntry;

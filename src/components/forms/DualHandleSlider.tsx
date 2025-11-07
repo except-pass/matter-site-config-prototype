@@ -113,7 +113,7 @@ export function DualHandleSlider({
             <div key={entry.arg} className="flex flex-col gap-1">
               <div className={`text-[11px] uppercase font-semibold flex items-center gap-1.5 ${color.text}`}>
                 <span className={`w-2 h-2 rounded-full ${color.bg}`}></span>
-                <span>{entry.name}</span>
+                <span>{entry.name ?? ''}</span>
                 {entry.unit && (
                   <span className="text-[10px] text-slate-400 uppercase ml-auto">{entry.unit}</span>
                 )}
@@ -181,7 +181,7 @@ export function DualHandleSlider({
                         zIndex: 1,
                         boxShadow: activeIndex === idx ? '0 0 0 3px rgba(0,0,0,0.1)' : undefined,
                       }}
-                      title={`${entry.name}: ${value}`}
+                      title={entry.name ? `${entry.name}: ${value}` : String(value)}
                     />
                   </div>
                 </div>

@@ -47,14 +47,9 @@ export function assertSchemaExpectations(page: PageDef | null) {
           }
 
           point.entries.forEach((entry: any, eIdx: number) => {
-            if (!entry.name) {
-              console.error(
-                `[SchemaTest] entry ${eIdx} in point ${point.title} is missing a name`
-              );
-            }
-
             const allowed = ['enum', 'String', 'Number'];
-            if (!allowed.includes(entry.dtype)) {
+            const isBitfield = entry.dtype && typeof entry.dtype === 'string' && entry.dtype.startsWith('bitfield');
+            if (!allowed.includes(entry.dtype) && !isBitfield) {
               console.error(
                 `[SchemaTest] entry ${entry.name ?? eIdx} in point ${point.title} has unsupported dtype ${entry.dtype}`
               );

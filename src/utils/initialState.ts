@@ -75,7 +75,7 @@ export function buildInitialPointState(point: PointDef): EntryValue {
       return;
     }
 
-    // Handle bitfield types (bitfield8, bitfield16, bitfield32)
+    // Handle bitfield types (bitfield16, bitfield32)
     if (entry.dtype && entry.dtype.startsWith('bitfield')) {
       // Initialize as an object mapping bit positions to boolean states
       // Start with all bits unchecked

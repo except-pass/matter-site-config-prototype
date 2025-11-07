@@ -35,7 +35,7 @@ export function EntryField({
     return (
       <div className={containerClasses}>
         <div className="text-slate-600 text-[11px] uppercase font-medium flex items-center justify-between">
-          <span>{entry.name}</span>
+          <span>{entry.name ?? ''}</span>
           {entry.unit && (
             <span className="text-[10px] text-slate-400 uppercase">{entry.unit}</span>
           )}
@@ -122,7 +122,7 @@ export function EntryField({
     return (
       <div className={containerClasses}>
         <div className="text-slate-600 text-[11px] uppercase font-medium flex items-center justify-between">
-          <span>{entry.name}</span>
+          <span>{entry.name ?? ''}</span>
           {entry.unit && (
             <span className="text-[10px] text-slate-400 uppercase">{entry.unit}</span>
           )}

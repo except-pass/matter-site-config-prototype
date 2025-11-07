@@ -53,8 +53,6 @@ export function buildModbusWritePayload(
   normalizedArguments: EntryValue,
   slaveId: number
 ): ModbusPayload {
-  const registerType = point.protocol.modbus!.register_type;
-
   // Map register type to Modbus function code
   // For writing: 6 = write single register, 16 = write multiple registers
   const functionCode = point.protocol.modbus!.size > 1 ? 16 : 6;

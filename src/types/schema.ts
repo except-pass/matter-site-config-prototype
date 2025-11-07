@@ -20,9 +20,9 @@ export interface EntryValue {
 }
 
 export interface EntryDef {
-  name: string;
+  name?: string; // Optional - displays as blank if missing
   arg: string; // protocol argument key
-  dtype: 'enum' | 'String' | 'Number';
+  dtype: 'enum' | 'String' | 'Number' | 'bitfield16' | 'bitfield32' | string; // string fallback for runtime bitfield types
   value?: string | number;
   unit?: string;
   description?: string;
