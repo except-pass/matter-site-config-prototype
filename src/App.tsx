@@ -49,6 +49,12 @@ interface EntryDef {
       Element?: string;
     };
   };
+  telemetry?: {
+    model?: string;
+    block?: string;
+    point?: string;
+    bitsplit_map?: string;
+  };
 }
 
 interface PointDef {
@@ -76,6 +82,9 @@ interface PointDef {
   widget?: "datetime" | "time" | "timerange" | "timerange-multi" | "generator-exercise" | "default";
   invokeButtonText?: string; // Custom text for invoke button (defaults to "Invoke")
   showInvokeButton?: boolean; // Set to false to hide the invoke button (default: true, UI-only override)
+  showHistory?: boolean; // Set to false to hide the history button (default: true for points with telemetry)
+  showRefresh?: boolean; // Set to false to hide the refresh button (default: true for non-invoke points)
+  showSetButton?: boolean; // Set to true to show the set button on invoke commands (default: false for invoke, true for others)
 }
 
 interface SubsectionDef {
@@ -290,6 +299,10 @@ const InfoIcon = ({ onClick }: { onClick?: () => void }) => (
 
 const RefreshIcon = () => (
   <span className="text-slate-500 text-xs">⟳</span>
+);
+
+const ClockIcon = () => (
+  <span className="text-slate-500 text-xs">🕐</span>
 );
 
 const ReadOnlyBadge = () => (
@@ -1219,6 +1232,109 @@ function HelpModal({
 }
 
 // -----------------------------------------------------------------------------
+// TelemetryHistoryModal - displays telemetry point information
+// -----------------------------------------------------------------------------
+function TelemetryHistoryModal({
+  point,
+  isOpen,
+  onClose
+}: {
+  point: PointDef;
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  // Build telemetry point identifiers
+  const telemetryPoints: string[] = [];
+
+  point.entries.forEach((entry) => {
+    if (entry.telemetry?.model && entry.telemetry?.point) {
+      const pointId = `${entry.telemetry.model}.${entry.telemetry.point}`;
+      if (!telemetryPoints.includes(pointId)) {
+        telemetryPoints.push(pointId);
+      }
+    }
+  });
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/10  p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-xl shadow-2xl w-full max-w-lg border border-slate-300 overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-start justify-between p-5 border-b border-slate-200 bg-slate-50">
+          <div className="flex items-center gap-2">
+            <span className="text-slate-500 text-xl">🕐</span>
+            <h2 className="text-lg font-semibold text-slate-900">Historical Data</h2>
+          </div>
+          <button
+            type="button"
+            className="text-slate-400 hover:text-slate-600 transition-colors text-xl leading-none -mt-1"
+            onClick={onClose}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-5 max-h-[60vh] overflow-y-auto">
+          <div className="text-sm text-slate-700 leading-relaxed mb-4">
+            In the real UI, this button would link you to the historical data page showing the last 24 hours of data for the following telemetry points:
+          </div>
+
+          {telemetryPoints.length > 0 ? (
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <div className="text-xs font-semibold text-slate-600 uppercase mb-2">
+                Telemetry Points
+              </div>
+              <div className="flex flex-col gap-2">
+                {telemetryPoints.map((pointId, idx) => (
+                  <div key={idx} className="font-mono text-sm text-emerald-600 bg-white border border-emerald-200 rounded px-3 py-2">
+                    {pointId}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
+              No telemetry points configured for this setting.
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="flex justify-end p-4 border-t border-slate-200 bg-slate-50">
+          <button
+            type="button"
+            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
 // PointCard - card for a single logical point ("DATE & TIME", etc.)
 // -----------------------------------------------------------------------------
 function PointCard({
@@ -1237,6 +1353,9 @@ function PointCard({
   const [showDialog, setShowDialog] = useState(false);
   const [dialogPayload, setDialogPayload] = useState<any>(null);
   const [showHelpModal, setShowHelpModal] = useState(false);
+  const [showTelemetryModal, setShowTelemetryModal] = useState(false);
+  const [showRefreshDialog, setShowRefreshDialog] = useState(false);
+  const [refreshPayload, setRefreshPayload] = useState<any>(null);
 
   const fallbackThingId = equipmentOptions[0]?.thingId ?? {
     Type: "Inverter",
@@ -1249,6 +1368,87 @@ function PointCard({
 
   const handleFieldChange = (argName: string, nextVal: any) => {
     setFormState((prev) => ({ ...prev, [argName]: nextVal }));
+  };
+
+  // Build a mock Read command payload for preview when clicking "Refresh"
+  const handleRefresh = () => {
+    let payload: any = {};
+
+    // Special handling for generator-exercise widget (CGI protocol)
+    if (point.element_type === "custom" && point.widget === "generator-exercise" && point.protocol?.cgi) {
+      payload = {
+        version: "1.0",
+        requestId: Date.now(),
+        method: "Read",
+        endPoint: "LuaPlugin",
+        timeout: 5,
+        data: {
+          Cluster: point.protocol.cgi.Cluster,
+          MEP: point.protocol.cgi.MEP,
+          Element: point.protocol.cgi.Element,
+          thingId: activeThingId
+        }
+      };
+    } else if (point.protocol?.matter) {
+      // Check if entries have individual protocol definitions (for multi-element widgets)
+      const hasEntryProtocols = point.entries.some(e => e.protocol?.matter);
+
+      let elements;
+      if (hasEntryProtocols) {
+        // Build multiple Element objects, one per entry with protocol (no arguments for Read)
+        elements = point.entries
+          .filter(entry => entry.protocol?.matter)
+          .map(entry => ({
+            MEP: entry.protocol!.matter!.MEP || point.protocol.matter.MEP,
+            Cluster: entry.protocol!.matter!.Cluster || point.protocol.matter.Cluster,
+            Element: entry.protocol!.matter!.Element || point.protocol.matter.Element,
+          }));
+      } else {
+        // Legacy single-element behavior (no arguments for Read)
+        elements = [
+          {
+            MEP: point.protocol.matter.MEP,
+            Cluster: point.protocol.matter.Cluster,
+            Element: point.protocol.matter.Element,
+          }
+        ];
+      }
+
+      payload = {
+        version: "1.0",
+        timeout: 60,
+        requestId: Date.now(),
+        endPoint: "Matter",
+        method: "Read",
+        data: {
+          Elements: elements,
+          thingId: activeThingId
+        }
+      };
+    } else if (point.protocol.modbus) {
+      const registerType = point.protocol.modbus.register_type;
+      // For read operations: use function based on register type
+      const functionCode = registerType === 3 ? 3 : 4;
+
+      payload = {
+        version: "1.0",
+        requestId: Date.now(),
+        endPoint: "Modbus",
+        method: "Read",
+        timeout: 5,
+        data: {
+          type: "RTU",
+          uartPort: 1,
+          slaveId: activeSlaveId,
+          address: point.protocol.modbus.address,
+          function: functionCode,
+          registerNumber: point.protocol.modbus.size
+        }
+      };
+    }
+
+    setRefreshPayload(payload);
+    setShowRefreshDialog(true);
   };
 
   // Build a mock command payload for preview when clicking "Set"
@@ -1448,7 +1648,7 @@ function PointCard({
   const normalizedAccess = typeof point.access === "string"
     ? point.access.trim().toLowerCase()
     : "";
-  const isInvoke = normalizedAccess === "invoke";
+  const isInvoke = normalizedAccess === "invoke" || point.element_type === "service";
 
   // readOnly is set in JSON:
   // - Always true for access === "R" (protocol read-only)
@@ -1457,6 +1657,21 @@ function PointCard({
   const setButtonAppearance = readOnly
     ? "border-slate-300 bg-slate-100 text-slate-400 cursor-not-allowed"
     : "border-slate-400 bg-white text-slate-700 hover:bg-slate-50";
+
+  // Check if this point has any linked telemetry points
+  const hasTelemetry = point.entries.some(entry =>
+    entry.telemetry?.model && entry.telemetry?.point
+  );
+
+  // For invoke commands, hide history, refresh, and set buttons by default (can be overridden in hierarchy.yaml)
+  // Also hide history button if there's no linked telemetry data
+  const shouldShowHistory = point.showHistory !== undefined
+    ? point.showHistory
+    : (hasTelemetry && !isInvoke);
+  const shouldShowRefresh = isInvoke ? (point.showRefresh === true) : (point.showRefresh !== false);
+  const shouldShowSetButton = point.showSetButton !== undefined
+    ? point.showSetButton
+    : !isInvoke;
 
   // Detect if this point should use a multi-handle slider
   const rangedNumberEntries = point.entries.filter(
@@ -1487,33 +1702,35 @@ function PointCard({
         </div>
 
         <div className="flex items-center gap-2 text-xs">
-          <button
-            className="flex items-center gap-1 text-slate-600 hover:text-slate-900"
-            title="Refresh from device"
-            onClick={() => {
-              console.log("refresh", point.command_id);
+          {shouldShowHistory && (
+            <button
+              className="flex items-center gap-1 text-slate-600 hover:text-slate-900"
+              title="View historical data"
+              onClick={() => setShowTelemetryModal(true)}
+            >
+              <ClockIcon />
+            </button>
+          )}
 
-              // Mock read behavior for generator-exercise widget
-              if (point.widget === "generator-exercise") {
-                // Populate with sensible mock data: Wednesday at 10:00 AM
-                setFormState({
-                  DayOfWeek: 3,  // Wednesday
-                  Hour: 10,
-                  Minute: 0
-                });
-              }
-            }}
-          >
-            <RefreshIcon />
-          </button>
+          {shouldShowRefresh && (
+            <button
+              className="flex items-center gap-1 text-slate-600 hover:text-slate-900"
+              title="Refresh from device"
+              onClick={handleRefresh}
+            >
+              <RefreshIcon />
+            </button>
+          )}
 
-          <button
-            className={`border text-xs font-medium rounded px-2 py-1 leading-none transition ${setButtonAppearance}`}
-            disabled={readOnly}
-            onClick={handleSet}
-          >
-            Set
-          </button>
+          {shouldShowSetButton && (
+            <button
+              className={`border text-xs font-medium rounded px-2 py-1 leading-none transition ${setButtonAppearance}`}
+              disabled={readOnly}
+              onClick={handleSet}
+            >
+              Set
+            </button>
+          )}
         </div>
       </div>
 
@@ -1622,6 +1839,48 @@ function PointCard({
         isOpen={showHelpModal}
         onClose={() => setShowHelpModal(false)}
       />
+
+      {/* telemetry history modal */}
+      <TelemetryHistoryModal
+        point={point}
+        isOpen={showTelemetryModal}
+        onClose={() => setShowTelemetryModal(false)}
+      />
+
+      {/* refresh dialog modal */}
+      {showRefreshDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-4 border border-slate-300">
+            <div className="flex items-start justify-between mb-3">
+              <div className="text-slate-800 font-semibold text-sm">
+                Read Command Preview
+              </div>
+              <button
+                className="text-slate-500 hover:text-slate-800 text-sm"
+                onClick={() => setShowRefreshDialog(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="text-[11px] text-slate-600 mb-2 leading-relaxed">
+              This is the payload that would be sent to read
+              <span className="font-medium"> {point.title}</span> from the device.
+            </div>
+
+            <pre className="text-[11px] leading-snug bg-slate-50 border border-slate-200 rounded p-2 overflow-x-auto text-slate-700 whitespace-pre-wrap">{JSON.stringify(refreshPayload, null, 2)}</pre>
+
+            <div className="mt-4 flex justify-end">
+              <button
+                className="text-xs border border-slate-400 rounded px-3 py-1 bg-white hover:bg-slate-50 text-slate-700"
+                onClick={() => setShowRefreshDialog(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

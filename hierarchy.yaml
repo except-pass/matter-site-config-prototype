@@ -15,7 +15,10 @@ themes:
               - command_id: Basic.AllToDefault
                 invokeButtonText: "Reset Now"
               - command_id: Basic.PowerControl
+                showSetButton: true
                 showInvokeButton: false
+                showHistory: true
+                showRefresh: true
       - name: Power Limits
         subsections:
           - points:

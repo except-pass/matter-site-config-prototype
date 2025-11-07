@@ -230,6 +230,8 @@ points:
     widget: generator-exercise
     access: Invoke
     readOnly: false
+    showSetButton: true
+    showRefresh: true
     entries:
       - name: Day of Week
         arg: DayOfWeek

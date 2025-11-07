@@ -24,6 +24,9 @@ interface EnvySpecificPoint {
   readOnly?: boolean;
   widget?: string;
   showInvokeButton?: boolean;
+  showHistory?: boolean;
+  showRefresh?: boolean;
+  showSetButton?: boolean;
   entries: Array<{
     name?: string;
     arg: string;
@@ -87,6 +90,10 @@ interface CsvRow {
   greater_than: string;
   meanings: string;
   friendly_meanings: string;
+  telemetry_model: string;
+  telemetry_block: string;
+  telemetry_point: string;
+  telemetry_bitsplit_map: string;
 }
 
 interface PointEntry {
@@ -107,6 +114,10 @@ interface PointEntry {
   entry_protocol_MEP?: string; // Deprecated: entry protocol is now specified in hierarchy.yaml when combining entries
   entry_protocol_Cluster?: string;
   entry_protocol_Element?: string;
+  entry_telemetry_model: string;
+  entry_telemetry_block: string;
+  entry_telemetry_point: string;
+  entry_telemetry_bitsplit_map: string;
 }
 
 interface Point {
@@ -153,6 +164,12 @@ interface JsonEntry {
       Element: string;
     };
   };
+  telemetry?: {
+    model?: string;
+    block?: string;
+    point?: string;
+    bitsplit_map?: string;
+  };
 }
 
 interface JsonPoint {
@@ -163,6 +180,9 @@ interface JsonPoint {
   readOnly: boolean;
   invokeButtonText?: string;
   showInvokeButton?: boolean;
+  showHistory?: boolean;
+  showRefresh?: boolean;
+  showSetButton?: boolean;
   widget?: string;
   entries: JsonEntry[];
   protocol: {
@@ -322,6 +342,10 @@ for (const [pointCommandId, rows] of pointGroups.entries()) {
         entry_greater_than: row.greater_than || '',
         entry_meanings: meanings,
         entry_friendly_meanings: friendly_meanings,
+        entry_telemetry_model: row.telemetry_model || '',
+        entry_telemetry_block: row.telemetry_block || '',
+        entry_telemetry_point: row.telemetry_point || '',
+        entry_telemetry_bitsplit_map: row.telemetry_bitsplit_map || '',
       };
     })
     .filter((entry): entry is PointEntry => entry !== null); // Remove null entries
@@ -408,6 +432,15 @@ function convertEntryToJson(entry: PointEntry): JsonEntry {
     };
   }
 
+  // Add telemetry fields if available
+  if (entry.entry_telemetry_model || entry.entry_telemetry_block || entry.entry_telemetry_point || entry.entry_telemetry_bitsplit_map) {
+    jsonEntry.telemetry = {};
+    if (entry.entry_telemetry_model) jsonEntry.telemetry.model = entry.entry_telemetry_model;
+    if (entry.entry_telemetry_block) jsonEntry.telemetry.block = entry.entry_telemetry_block;
+    if (entry.entry_telemetry_point) jsonEntry.telemetry.point = entry.entry_telemetry_point;
+    if (entry.entry_telemetry_bitsplit_map) jsonEntry.telemetry.bitsplit_map = entry.entry_telemetry_bitsplit_map;
+  }
+
   return jsonEntry;
 }
 
@@ -438,7 +471,10 @@ function convertPointToJson(
   widgetFromHierarchy?: string,
   readOnlyFromHierarchy?: boolean,
   invokeButtonTextFromHierarchy?: string,
-  showInvokeButtonFromHierarchy?: boolean
+  showInvokeButtonFromHierarchy?: boolean,
+  showHistoryFromHierarchy?: boolean,
+  showRefreshFromHierarchy?: boolean,
+  showSetButtonFromHierarchy?: boolean
 ): JsonPoint {
   // Parse entries
   const entries: PointEntry[] = JSON.parse(pointData.entries);
@@ -491,11 +527,23 @@ function convertPointToJson(
   if (invokeButtonTextFromHierarchy !== undefined) {
     jsonPoint.invokeButtonText = invokeButtonTextFromHierarchy;
   }
-  
+
   if (showInvokeButtonFromHierarchy !== undefined) {
     jsonPoint.showInvokeButton = showInvokeButtonFromHierarchy;
   }
-  
+
+  if (showHistoryFromHierarchy !== undefined) {
+    jsonPoint.showHistory = showHistoryFromHierarchy;
+  }
+
+  if (showRefreshFromHierarchy !== undefined) {
+    jsonPoint.showRefresh = showRefreshFromHierarchy;
+  }
+
+  if (showSetButtonFromHierarchy !== undefined) {
+    jsonPoint.showSetButton = showSetButtonFromHierarchy;
+  }
+
   // Widget priority: hierarchy.yaml only (widgets are UI concerns, not protocol concerns)
   if (widgetFromHierarchy) {
     jsonPoint.widget = widgetFromHierarchy;
@@ -548,13 +596,16 @@ for (const themeSpec of hierarchy.themes) {
       for (const pointSpec of subsectionSpec.points) {
         // Support both formats:
         // - Simple string: "Basic.SystemTime"
-        // - Object with UI properties: 
-        //   { command_id: "Basic.SystemTime", widget: "datetime", readOnly: true, invokeButtonText: "Start", showInvokeButton: false }
+        // - Object with UI properties:
+        //   { command_id: "Basic.SystemTime", widget: "datetime", readOnly: true, invokeButtonText: "Start", showInvokeButton: false, showHistory: false, showRefresh: false, showSetButton: true }
         let pointCommandId: string;
         let widgetFromHierarchy: string | undefined;
         let readOnlyFromHierarchy: boolean | undefined;
         let invokeButtonTextFromHierarchy: string | undefined;
         let showInvokeButtonFromHierarchy: boolean | undefined;
+        let showHistoryFromHierarchy: boolean | undefined;
+        let showRefreshFromHierarchy: boolean | undefined;
+        let showSetButtonFromHierarchy: boolean | undefined;
         
         if (typeof pointSpec === 'string') {
           // Format 1: Simple string
@@ -799,7 +850,22 @@ for (const themeSpec of hierarchy.themes) {
                 ? combineSpec.showInvokeButton
                 : (combineSpec.showInvokeButton === 'true' || combineSpec.showInvokeButton === '1');
             }
-            
+            if (combineSpec.showHistory !== undefined) {
+              combinedPoint.showHistory = typeof combineSpec.showHistory === 'boolean'
+                ? combineSpec.showHistory
+                : (combineSpec.showHistory === 'true' || combineSpec.showHistory === '1');
+            }
+            if (combineSpec.showRefresh !== undefined) {
+              combinedPoint.showRefresh = typeof combineSpec.showRefresh === 'boolean'
+                ? combineSpec.showRefresh
+                : (combineSpec.showRefresh === 'true' || combineSpec.showRefresh === '1');
+            }
+            if (combineSpec.showSetButton !== undefined) {
+              combinedPoint.showSetButton = typeof combineSpec.showSetButton === 'boolean'
+                ? combineSpec.showSetButton
+                : (combineSpec.showSetButton === 'true' || combineSpec.showSetButton === '1');
+            }
+
             subsection.points.push(combinedPoint);
           } else if (pointSpec.command_id) {
             // Format 2: Object with UI properties
@@ -808,24 +874,44 @@ for (const themeSpec of hierarchy.themes) {
             let readOnlyFromHierarchy: boolean | undefined;
             let invokeButtonTextFromHierarchy: string | undefined;
             let showInvokeButtonFromHierarchy: boolean | undefined;
-            
+            let showHistoryFromHierarchy: boolean | undefined;
+            let showRefreshFromHierarchy: boolean | undefined;
+
             widgetFromHierarchy = pointSpec.widget;
-            
+
             // Handle readOnly - can be boolean or string
             if (pointSpec.readOnly !== undefined) {
-              readOnlyFromHierarchy = typeof pointSpec.readOnly === 'boolean' 
-                ? pointSpec.readOnly 
+              readOnlyFromHierarchy = typeof pointSpec.readOnly === 'boolean'
+                ? pointSpec.readOnly
                 : (pointSpec.readOnly === 'true' || pointSpec.readOnly === '1' || pointSpec.readOnly === true);
             }
-            
+
             if (pointSpec.invokeButtonText !== undefined) {
               invokeButtonTextFromHierarchy = pointSpec.invokeButtonText;
             }
-            
+
             if (pointSpec.showInvokeButton !== undefined) {
               showInvokeButtonFromHierarchy = typeof pointSpec.showInvokeButton === 'boolean'
                 ? pointSpec.showInvokeButton
                 : (pointSpec.showInvokeButton === 'true' || pointSpec.showInvokeButton === '1' || pointSpec.showInvokeButton === true);
+            }
+
+            if (pointSpec.showHistory !== undefined) {
+              showHistoryFromHierarchy = typeof pointSpec.showHistory === 'boolean'
+                ? pointSpec.showHistory
+                : (pointSpec.showHistory === 'true' || pointSpec.showHistory === '1' || pointSpec.showHistory === true);
+            }
+
+            if (pointSpec.showRefresh !== undefined) {
+              showRefreshFromHierarchy = typeof pointSpec.showRefresh === 'boolean'
+                ? pointSpec.showRefresh
+                : (pointSpec.showRefresh === 'true' || pointSpec.showRefresh === '1' || pointSpec.showRefresh === true);
+            }
+
+            if (pointSpec.showSetButton !== undefined) {
+              showSetButtonFromHierarchy = typeof pointSpec.showSetButton === 'boolean'
+                ? pointSpec.showSetButton
+                : (pointSpec.showSetButton === 'true' || pointSpec.showSetButton === '1' || pointSpec.showSetButton === true);
             }
 
             const pointData = pointMap.get(pointCommandId);
@@ -845,7 +931,10 @@ for (const themeSpec of hierarchy.themes) {
               widgetFromHierarchy,
               readOnlyFromHierarchy,
               invokeButtonTextFromHierarchy,
-              showInvokeButtonFromHierarchy
+              showInvokeButtonFromHierarchy,
+              showHistoryFromHierarchy,
+              showRefreshFromHierarchy,
+              showSetButtonFromHierarchy
             ));
           } else {
             console.warn(`Warning: Invalid point spec format: ${JSON.stringify(pointSpec)}`);
@@ -1005,6 +1094,18 @@ function convertEnvySpecificPointToJson(def: EnvySpecificPoint): JsonPoint {
 
   if (def.showInvokeButton !== undefined) {
     jsonPoint.showInvokeButton = def.showInvokeButton;
+  }
+
+  if (def.showHistory !== undefined) {
+    jsonPoint.showHistory = def.showHistory;
+  }
+
+  if (def.showRefresh !== undefined) {
+    jsonPoint.showRefresh = def.showRefresh;
+  }
+
+  if (def.showSetButton !== undefined) {
+    jsonPoint.showSetButton = def.showSetButton;
   }
 
   return jsonPoint;
