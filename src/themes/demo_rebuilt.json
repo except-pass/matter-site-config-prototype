@@ -722,7 +722,7 @@
                 },
                 {
                   "title": "Detected Grid Phases",
-                  "help": "Attribute in Parallel cluster",
+                  "help": "The output phase this inverter is responsible for in a three-phase system. R, S, and T correspond to L1, L2, and L3.",
                   "element_type": "attribute",
                   "access": "R",
                   "readOnly": true,
