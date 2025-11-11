@@ -10783,7 +10783,7 @@ protocols:
   block: fixed
   entry:
     name: socAcCplOn
-    description: AC Coupled PV Start/Stop SOC Start SOC
+    description: AC Coupled PV Start SOC
     longdescription: Value from Site Configuration AC Coupled PV/AC Coupled PV. Defines the battery state-of-charge thresholds that control when the inverter allows AC Coupled PV charging to start and stop.
     dtype: uint16
     unit: '%'
@@ -10805,7 +10805,7 @@ protocols:
   block: fixed
   entry:
     name: socAcCplOff
-    description: AC Coupled PV Start/Stop SOC Stop SOC
+    description: AC Coupled PV Stop SOC
     longdescription: Value from Site Configuration AC Coupled PV/AC Coupled PV. Defines the battery state-of-charge thresholds that control when the inverter allows AC Coupled PV charging to start and stop.
     dtype: uint16
     unit: '%'

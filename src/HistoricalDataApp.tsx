@@ -299,12 +299,13 @@ function HelpToggle({ show, onToggle }: HelpToggleProps) {
 interface LabelGroupProps {
   firstLevel: string;
   secondLevelMap: Map<string, ProtocolPoint[]>;
-  selected: Set<string>;
+  selected: Map<string, Set<string>>;
   toggle: (key: string) => void;
   showHelp: boolean;
+  onUpdateInverters: (pointKey: string, inverters: Set<string>) => void;
 }
 
-function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: LabelGroupProps) {
+function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, onUpdateInverters }: LabelGroupProps) {
   return (
     <details className="group border-b py-2" open>
       <summary className="cursor-pointer list-none font-semibold">
@@ -323,48 +324,60 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: 
                   const long = it.entry.longdescription || desc;
                   const unit = it.entry.unit && it.entry.unit !== "N/A" ? ` (${it.entry.unit})` : "";
                   const checked = selected.has(key);
+                  const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
                   const labels = Array.isArray(it.labels) ? it.labels : [];
                   return (
                     <div key={key} className="rounded-md px-2 py-1 hover:bg-gray-50">
-                      <label className="flex cursor-pointer items-center gap-2 flex-wrap">
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggle(key)}
-                          className="h-4 w-4"
-                        />
-                        <span className="text-sm">
-                          {desc}
-                          {unit}
-                        </span>
-                        {showHelp && labels.length > 0 && (
-                          <div className="ml-2 flex flex-wrap gap-1">
-                            {labels.map((label, idx) => {
-                              const color = getLabelColor(label.label_family, label.label_text);
-                              const labelHelp = getLabelHelp(label.label_family, label.label_text);
-                              const tooltipText = labelHelp || `${label.label_family}: ${label.label_text}`;
-                              return (
-                                <span
-                                  key={idx}
-                                  className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border}`}
-                                  title={tooltipText}
-                                >
-                                  {label.label_text}
-                                </span>
-                              );
-                            })}
-                          </div>
-                        )}
-                        {!showHelp && (
-                          <span
-                            className="ml-1 text-gray-400"
-                            title={long}
-                            aria-label="Help"
-                          >
-                            ⓘ
+                      <div className="flex items-start gap-2 flex-wrap">
+                        <label className="flex cursor-pointer items-center gap-2 flex-wrap flex-1 min-w-0">
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => toggle(key)}
+                            className="h-4 w-4 flex-shrink-0"
+                          />
+                          <span className="text-sm">
+                            {desc}
+                            {unit}
                           </span>
-                        )}
-                      </label>
+                          {checked && (
+                            <div className="ml-auto flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                              <span className="text-xs text-gray-600">Inverter SN:</span>
+                              <InverterSelector
+                                selectedInverters={selectedInverters}
+                                onChange={(newInverters) => onUpdateInverters(key, newInverters)}
+                              />
+                            </div>
+                          )}
+                          {showHelp && labels.length > 0 && (
+                            <div className="ml-2 flex flex-wrap gap-1 w-full">
+                              {labels.map((label, idx) => {
+                                const color = getLabelColor(label.label_family, label.label_text);
+                                const labelHelp = getLabelHelp(label.label_family, label.label_text);
+                                const tooltipText = labelHelp || `${label.label_family}: ${label.label_text}`;
+                                return (
+                                  <span
+                                    key={idx}
+                                    className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border}`}
+                                    title={tooltipText}
+                                  >
+                                    {label.label_text}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          )}
+                          {!showHelp && (
+                            <span
+                              className="ml-1 text-gray-400"
+                              title={long}
+                              aria-label="Help"
+                            >
+                              ⓘ
+                            </span>
+                          )}
+                        </label>
+                      </div>
                       {showHelp && (
                         <div className="pl-6 text-xs text-gray-500 whitespace-pre-wrap">{long}</div>
                       )}
@@ -388,48 +401,60 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: 
                   const long = it.entry.longdescription || desc;
                   const unit = it.entry.unit && it.entry.unit !== "N/A" ? ` (${it.entry.unit})` : "";
                   const checked = selected.has(key);
+                  const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
                   const labels = Array.isArray(it.labels) ? it.labels : [];
                   return (
                     <div key={key} className="rounded-md px-2 py-1 hover:bg-gray-50">
-                      <label className="flex cursor-pointer items-center gap-2 flex-wrap">
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggle(key)}
-                          className="h-4 w-4"
-                        />
-                        <span className="text-sm">
-                          {desc}
-                          {unit}
-                        </span>
-                        {showHelp && labels.length > 0 && (
-                          <div className="ml-2 flex flex-wrap gap-1">
-                            {labels.map((label, idx) => {
-                              const color = getLabelColor(label.label_family, label.label_text);
-                              const labelHelp = getLabelHelp(label.label_family, label.label_text);
-                              const tooltipText = labelHelp || `${label.label_family}: ${label.label_text}`;
-                              return (
-                                <span
-                                  key={idx}
-                                  className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border}`}
-                                  title={tooltipText}
-                                >
-                                  {label.label_text}
-                                </span>
-                              );
-                            })}
-                          </div>
-                        )}
-                        {!showHelp && (
-                          <span
-                            className="ml-1 text-gray-400"
-                            title={long}
-                            aria-label="Help"
-                          >
-                            ⓘ
+                      <div className="flex items-start gap-2 flex-wrap">
+                        <label className="flex cursor-pointer items-center gap-2 flex-wrap flex-1 min-w-0">
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => toggle(key)}
+                            className="h-4 w-4 flex-shrink-0"
+                          />
+                          <span className="text-sm">
+                            {desc}
+                            {unit}
                           </span>
-                        )}
-                      </label>
+                          {checked && (
+                            <div className="ml-auto flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                              <span className="text-xs text-gray-600">Inverter SN:</span>
+                              <InverterSelector
+                                selectedInverters={selectedInverters}
+                                onChange={(newInverters) => onUpdateInverters(key, newInverters)}
+                              />
+                            </div>
+                          )}
+                          {showHelp && labels.length > 0 && (
+                            <div className="ml-2 flex flex-wrap gap-1 w-full">
+                              {labels.map((label, idx) => {
+                                const color = getLabelColor(label.label_family, label.label_text);
+                                const labelHelp = getLabelHelp(label.label_family, label.label_text);
+                                const tooltipText = labelHelp || `${label.label_family}: ${label.label_text}`;
+                                return (
+                                  <span
+                                    key={idx}
+                                    className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border}`}
+                                    title={tooltipText}
+                                  >
+                                    {label.label_text}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          )}
+                          {!showHelp && (
+                            <span
+                              className="ml-1 text-gray-400"
+                              title={long}
+                              aria-label="Help"
+                            >
+                              ⓘ
+                            </span>
+                          )}
+                        </label>
+                      </div>
                       {showHelp && (
                         <div className="pl-6 text-xs text-gray-500 whitespace-pre-wrap">{long}</div>
                       )}
@@ -664,22 +689,122 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters 
 }
 
 interface FakeChartProps {
-  selectedPoints: Set<string>;
+  selectedPoints: Map<string, Set<string>>;
   protocols: ProtocolPoint[];
+  onUpdateInverters: (pointKey: string, inverters: Set<string>) => void;
 }
 
-function FakeChart({ selectedPoints, protocols }: FakeChartProps) {
-  // Get selected point names
-  const selectedPointNames = Array.from(selectedPoints)
-    .map((key) => {
+// Available inverters (hardcoded for now, could come from props or API)
+const AVAILABLE_INVERTERS = ['001', '002', '003'];
+
+interface InverterSelectorProps {
+  selectedInverters: Set<string>;
+  onChange: (inverters: Set<string>) => void;
+}
+
+function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const isAllSelected = selectedInverters.size === AVAILABLE_INVERTERS.length;
+  const displayText = isAllSelected 
+    ? 'All Inverters' 
+    : Array.from(selectedInverters).sort().join(', ');
+
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isOpen]);
+
+  const handleToggleAll = () => {
+    if (isAllSelected) {
+      onChange(new Set(['001'])); // Default to 001 if deselecting all
+    } else {
+      onChange(new Set(AVAILABLE_INVERTERS));
+    }
+  };
+
+  const handleToggleInverter = (inverter: string) => {
+    const next = new Set(selectedInverters);
+    if (next.has(inverter)) {
+      next.delete(inverter);
+      // If no inverters selected, default to 001
+      if (next.size === 0) {
+        next.add('001');
+      }
+    } else {
+      next.add(inverter);
+    }
+    onChange(next);
+  };
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="text-xs border border-blue-300 rounded px-2 py-1 bg-white text-blue-800 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-1"
+      >
+        <span>{displayText}</span>
+        <svg 
+          className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {isOpen && (
+        <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 rounded shadow-lg z-50 min-w-[120px]">
+          <div className="py-1">
+            <label className="flex items-center gap-2 px-3 py-1.5 hover:bg-gray-100 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isAllSelected}
+                onChange={handleToggleAll}
+                className="h-3 w-3"
+              />
+              <span className="text-xs text-gray-700">All Inverters</span>
+            </label>
+            {AVAILABLE_INVERTERS.map((inv) => (
+              <label
+                key={inv}
+                className="flex items-center gap-2 px-3 py-1.5 hover:bg-gray-100 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedInverters.has(inv)}
+                  onChange={() => handleToggleInverter(inv)}
+                  className="h-3 w-3"
+                />
+                <span className="text-xs text-gray-700">{inv}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FakeChart({ selectedPoints, protocols, onUpdateInverters }: FakeChartProps) {
+  // Get selected point info with their inverters
+  const selectedPointInfo = Array.from(selectedPoints.entries())
+    .map(([key, inverters]) => {
       const [model, point] = key.split(':');
       const protocol = protocols.find((p) => p.model === model && p.point === point);
-      if (protocol) {
-        return protocol.entry.description || protocol.entry.name || point;
-      }
-      return point;
+      const name = protocol ? (protocol.entry.description || protocol.entry.name || point) : point;
+      return { key, name, inverters };
     })
-    .filter(Boolean);
+    .filter((info) => info.name);
 
   return (
     <div className="w-full h-full p-4">
@@ -713,20 +838,31 @@ function FakeChart({ selectedPoints, protocols }: FakeChartProps) {
 
         {/* Chart area */}
         <div className="absolute inset-0 left-8 bottom-8 p-4">
-          {selectedPointNames.length === 0 ? (
+          {selectedPointInfo.length === 0 ? (
             <div className="flex items-center justify-center h-full text-sm text-gray-400">
               Select points to display charts
             </div>
           ) : (
             <div className="space-y-3">
-              {selectedPointNames.map((name, index) => (
-                <div
-                  key={index}
-                  className="bg-blue-50 border border-blue-200 rounded px-3 py-2 text-sm text-blue-800"
-                >
-                  Chart of <strong>{name}</strong> here
-                </div>
-              ))}
+              {selectedPointInfo.map(({ key, name, inverters }) => {
+                return (
+                  <div
+                    key={key}
+                    className="bg-blue-50 border border-blue-200 rounded px-3 py-2 text-sm"
+                  >
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-blue-800">
+                        <strong>{name}</strong>
+                      </span>
+                      <InverterSelector
+                        selectedInverters={inverters}
+                        onChange={(newInverters) => onUpdateInverters(key, newInverters)}
+                      />
+                      <span className="text-blue-600 text-xs">Chart here</span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -886,7 +1022,8 @@ function HierarchyConfig({ availableFamilies, hierarchy, onChange }: HierarchyCo
 
 export default function App() {
   const [query, setQuery] = useState<string>("");
-  const [selected, setSelected] = useState<Set<string>>(() => new Set());
+  // Map from point key (model:point) to Set of inverter serial numbers
+  const [selected, setSelected] = useState<Map<string, Set<string>>>(() => new Map());
   const [showHelp, setShowHelp] = useState<boolean>(true);
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set(["Level of Detail:Standard"]));
   const [hierarchy, setHierarchy] = useState<string[]>(["Component", "Feature"]);
@@ -894,6 +1031,31 @@ export default function App() {
   const [sidebarWidth, setSidebarWidth] = useState<number>(500);
   const [isResizing, setIsResizing] = React.useState(false);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
+
+  // Load last inverter selection from localStorage
+  const getLastInverterSelection = (): Set<string> => {
+    try {
+      const stored = localStorage.getItem('matter-app-last-inverter-selection');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return new Set(parsed);
+        }
+      }
+    } catch (e) {
+      // Ignore errors, use default
+    }
+    return new Set(['001']); // Default to 001
+  };
+
+  // Store last inverter selection to localStorage
+  const saveLastInverterSelection = (inverters: Set<string>) => {
+    try {
+      localStorage.setItem('matter-app-last-inverter-selection', JSON.stringify(Array.from(inverters)));
+    } catch (e) {
+      // Ignore errors
+    }
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -1007,9 +1169,31 @@ export default function App() {
 
   const toggle = (key: string) => {
     setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
+      const next = new Map(prev);
+      if (next.has(key)) {
+        // Remove point
+        next.delete(key);
+      } else {
+        // Add point with last used inverter selection (or default to 001)
+        const lastSelection = getLastInverterSelection();
+        next.set(key, new Set(lastSelection));
+      }
+      return next;
+    });
+  };
+
+  const updateInverters = (pointKey: string, inverters: Set<string>) => {
+    // Save this selection as the last used
+    saveLastInverterSelection(inverters);
+    
+    setSelected((prev) => {
+      const next = new Map(prev);
+      if (inverters.size === 0) {
+        // If no inverters selected, remove the point
+        next.delete(pointKey);
+      } else {
+        next.set(pointKey, inverters);
+      }
       return next;
     });
   };
@@ -1051,7 +1235,7 @@ export default function App() {
     <div className="h-full bg-slate-100 p-4 md:p-6">
       <div className="mx-auto w-full max-w-[95vw] h-[calc(100vh-2rem)] rounded-2xl border bg-white shadow-sm relative">
         {/* Chart area - full width */}
-        <FakeChart selectedPoints={selected} protocols={protocols} />
+        <FakeChart selectedPoints={selected} protocols={protocols} onUpdateInverters={updateInverters} />
         
         {/* Toggle button - always visible, positioned outside sidebar */}
         <button
@@ -1137,6 +1321,7 @@ export default function App() {
                       selected={selected}
                       toggle={toggle}
                       showHelp={showHelp}
+                      onUpdateInverters={updateInverters}
                     />
                   ))
               )}
