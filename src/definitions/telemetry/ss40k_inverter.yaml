@@ -9723,12 +9723,12 @@ protocols:
   - label_family: Info
     label_text: Config
 - model: 40104
-  point: FreqWattOpenLoopResponseTime
+  point: VqOpenLoopResponseTime
   block: fixed
   entry:
-    name: FreqWattOpenLoopResponseTime
-    description: Frequency-Watt Open-Loop Response Time
-    longdescription: Value from Site Configuration Grid/Grid Support/Freq-Watt (Frequency-Active Power). Response time used for open-loop Frequency-Active Power changes.
+    name: VqOpenLoopResponseTime
+    description: Volt-VAR Open-Loop Response Time
+    longdescription: Value from Site Configuration Grid/Grid Support/Volt-VAR (Voltage-Reactive Power). Response time used for open-loop Volt-VAR changes.
     dtype: uint16
     unit: N/A
     category: VoltageReactivePowerMode

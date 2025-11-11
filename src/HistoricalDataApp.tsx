@@ -149,37 +149,77 @@ function groupByLabelHierarchy(
     }
 
     // Recursively build the hierarchy
+    // Place points at the deepest level they have labels for
     let currentMap = map;
+    let lastValidLevel = -1;
+    
+    // First, find the deepest level this point has a label for
     for (let i = 0; i < hierarchy.length; i++) {
       const family = hierarchy[i];
       const label = labels.find((l) => l.label_family === family);
-      
-      if (!label) {
-        // No matching label for this level, skip this point
-        return;
+      if (label) {
+        lastValidLevel = i;
       }
+    }
+    
+    // If point has no labels for any hierarchy level, skip it
+    if (lastValidLevel === -1) {
+      return;
+    }
+    
+    // Build the hierarchy up to the last valid level
+    for (let i = 0; i <= lastValidLevel; i++) {
+      const family = hierarchy[i];
+      const label = labels.find((l) => l.label_family === family);
+      
+      // This should always exist since we checked lastValidLevel
+      if (!label) continue;
       
       const key = label.label_text;
       
-      if (i === hierarchy.length - 1) {
-        // Last level - create a map entry for this level, then store items in a sub-map
-        // This allows the last level to be rendered as a group
+      if (i === lastValidLevel) {
+        // This is the deepest level the point has - store items here
+        // Always use a Map structure with empty string key for items, to maintain consistency
         if (!currentMap.has(key)) {
           currentMap.set(key, new Map());
         }
-        const levelMap = currentMap.get(key) as LabelHierarchy;
-        // Store items under empty string key within this level's map
-        if (!levelMap.has("")) {
-          levelMap.set("", []);
+        const levelMap = currentMap.get(key);
+        
+        // Ensure it's a Map (handle case where it might have been set as array previously)
+        if (Array.isArray(levelMap)) {
+          // Convert array to Map structure
+          const itemsArray = levelMap as ProtocolPoint[];
+          const newMap = new Map<string, ProtocolPoint[]>();
+          newMap.set("", itemsArray);
+          currentMap.set(key, newMap);
         }
-        const itemsList = levelMap.get("") as ProtocolPoint[];
+        
+        const finalMap = currentMap.get(key) as LabelHierarchy;
+        if (!finalMap.has("")) {
+          finalMap.set("", []);
+        }
+        const itemsList = finalMap.get("") as ProtocolPoint[];
         itemsList.push(it);
       } else {
-        // Intermediate level - create nested map
+        // Intermediate level - ensure it's always a Map
         if (!currentMap.has(key)) {
           currentMap.set(key, new Map());
+        } else {
+          // Check if it's an array and convert to Map if needed
+          const existing = currentMap.get(key);
+          if (Array.isArray(existing)) {
+            const itemsArray = existing as ProtocolPoint[];
+            const newMap = new Map<string, ProtocolPoint[]>();
+            newMap.set("", itemsArray);
+            currentMap.set(key, newMap);
+          }
         }
         const nestedMap = currentMap.get(key) as LabelHierarchy;
+        // Safety check - ensure nestedMap is actually a Map
+        if (!(nestedMap instanceof Map)) {
+          console.error('Expected Map but got:', typeof nestedMap, nestedMap);
+          continue;
+        }
         currentMap = nestedMap;
       }
     }
@@ -331,7 +371,7 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
     const pointHelpShown = showHelp || pointHelpEnabled.has(key);
     
     return (
-      <div key={key} data-point-key={key} className="rounded-md px-2 py-1 hover:bg-gray-50 transition-colors">
+      <div key={key} id={`point-${key.replace(/:/g, '-')}`} data-point-key={key} className="rounded-md px-2 py-1 hover:bg-gray-50 transition-colors">
         <div className="flex items-start gap-2 flex-wrap">
           <label className="flex cursor-pointer items-center gap-2 flex-wrap flex-1 min-w-0">
             <input
