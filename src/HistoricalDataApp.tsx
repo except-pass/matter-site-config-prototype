@@ -327,7 +327,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, on
                   const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
                   const labels = Array.isArray(it.labels) ? it.labels : [];
                   return (
-                    <div key={key} className="rounded-md px-2 py-1 hover:bg-gray-50">
+                    <div key={key} data-point-key={key} className="rounded-md px-2 py-1 hover:bg-gray-50 transition-colors">
                       <div className="flex items-start gap-2 flex-wrap">
                         <label className="flex cursor-pointer items-center gap-2 flex-wrap flex-1 min-w-0">
                           <input
@@ -404,7 +404,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, on
                   const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
                   const labels = Array.isArray(it.labels) ? it.labels : [];
                   return (
-                    <div key={key} className="rounded-md px-2 py-1 hover:bg-gray-50">
+                    <div key={key} data-point-key={key} className="rounded-md px-2 py-1 hover:bg-gray-50 transition-colors">
                       <div className="flex items-start gap-2 flex-wrap">
                         <label className="flex cursor-pointer items-center gap-2 flex-wrap flex-1 min-w-0">
                           <input
@@ -692,10 +692,24 @@ interface FakeChartProps {
   selectedPoints: Map<string, Set<string>>;
   protocols: ProtocolPoint[];
   onUpdateInverters: (pointKey: string, inverters: Set<string>) => void;
+  onScrollToPoint?: (pointKey: string) => void;
+  onRemoveInverter?: (pointKey: string, inverterSN: string) => void;
 }
 
 // Available inverters (hardcoded for now, could come from props or API)
 const AVAILABLE_INVERTERS = ['001', '002', '003'];
+
+// Color palette for legend entries
+const LEGEND_COLORS = [
+  { bg: 'bg-purple-500', border: 'border-purple-600' },
+  { bg: 'bg-green-500', border: 'border-green-600' },
+  { bg: 'bg-teal-500', border: 'border-teal-600' },
+  { bg: 'bg-blue-500', border: 'border-blue-600' },
+  { bg: 'bg-pink-500', border: 'border-pink-600' },
+  { bg: 'bg-orange-500', border: 'border-orange-600' },
+  { bg: 'bg-indigo-500', border: 'border-indigo-600' },
+  { bg: 'bg-red-500', border: 'border-red-600' },
+];
 
 interface InverterSelectorProps {
   selectedInverters: Set<string>;
@@ -795,7 +809,10 @@ function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps
   );
 }
 
-function FakeChart({ selectedPoints, protocols, onUpdateInverters }: FakeChartProps) {
+function FakeChart({ selectedPoints, protocols, onUpdateInverters, onScrollToPoint, onRemoveInverter }: FakeChartProps) {
+  // Track visibility state for each legend entry
+  const [hiddenEntries, setHiddenEntries] = React.useState<Set<string>>(new Set());
+
   // Get selected point info with their inverters
   const selectedPointInfo = Array.from(selectedPoints.entries())
     .map(([key, inverters]) => {
@@ -806,10 +823,66 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters }: FakeChartPr
     })
     .filter((info) => info.name);
 
+  // Flatten to create one entry per SN+point combination
+  const legendEntries = selectedPointInfo.flatMap(({ key, name, inverters }) => {
+    const [model, point] = key.split(':');
+    const protocol = protocols.find((p) => p.model === model && p.point === point);
+    const unit = protocol?.entry?.unit && protocol.entry.unit !== "N/A" ? protocol.entry.unit : "N/A";
+    
+    return Array.from(inverters).sort().map((sn, index) => ({
+      key,
+      pointKey: `${key}:${sn}`, // Unique key for this SN+point combo
+      name,
+      sn,
+      unit,
+      colorIndex: (selectedPointInfo.findIndex(p => p.key === key) * AVAILABLE_INVERTERS.length + index) % LEGEND_COLORS.length,
+    }));
+  });
+
+  // Group entries by unit
+  const entriesByUnit = legendEntries.reduce((acc, entry) => {
+    if (!acc.has(entry.unit)) {
+      acc.set(entry.unit, []);
+    }
+    acc.get(entry.unit)!.push(entry);
+    return acc;
+  }, new Map<string, typeof legendEntries>());
+
+  const toggleVisibility = (pointKey: string) => {
+    setHiddenEntries((prev) => {
+      const next = new Set(prev);
+      if (next.has(pointKey)) {
+        next.delete(pointKey);
+      } else {
+        next.add(pointKey);
+      }
+      return next;
+    });
+  };
+
+  const showOnlyEntry = (pointKey: string) => {
+    // If this is the only visible entry, show all entries
+    const visibleCount = legendEntries.filter(e => !hiddenEntries.has(e.pointKey)).length;
+    const isOnlyVisible = visibleCount === 1 && !hiddenEntries.has(pointKey);
+    
+    if (isOnlyVisible) {
+      // Show all entries
+      setHiddenEntries(new Set());
+    } else {
+      // Hide all entries except the one clicked
+      setHiddenEntries(new Set(legendEntries.filter(e => e.pointKey !== pointKey).map(e => e.pointKey)));
+    }
+  };
+
+  const handleRemove = (pointKey: string, sn: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    onRemoveInverter?.(pointKey, sn);
+  };
+
   return (
-    <div className="w-full h-full p-4">
+    <div className="w-full h-full p-4 flex flex-col">
       <div className="mb-2 text-sm font-semibold text-gray-700">Chart</div>
-      <div className="relative h-[500px] border border-gray-400 bg-gray-50">
+      <div className="relative flex-1 border border-gray-400 bg-gray-50 min-h-0">
         {/* Y-axis */}
         <div className="absolute left-0 top-0 bottom-0 w-8 border-r border-gray-600 flex flex-col items-center justify-between py-2">
           <span className="text-xs text-gray-600 transform -rotate-90 whitespace-nowrap">Value</span>
@@ -838,35 +911,87 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters }: FakeChartPr
 
         {/* Chart area */}
         <div className="absolute inset-0 left-8 bottom-8 p-4">
-          {selectedPointInfo.length === 0 ? (
+          {legendEntries.length === 0 ? (
             <div className="flex items-center justify-center h-full text-sm text-gray-400">
               Select points to display charts
             </div>
           ) : (
-            <div className="space-y-3">
-              {selectedPointInfo.map(({ key, name, inverters }) => {
-                return (
-                  <div
-                    key={key}
-                    className="bg-blue-50 border border-blue-200 rounded px-3 py-2 text-sm"
-                  >
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-blue-800">
-                        <strong>{name}</strong>
-                      </span>
-                      <InverterSelector
-                        selectedInverters={inverters}
-                        onChange={(newInverters) => onUpdateInverters(key, newInverters)}
-                      />
-                      <span className="text-blue-600 text-xs">Chart here</span>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="flex items-center justify-center h-full text-sm text-gray-400">
+              Chart visualization would appear here
             </div>
           )}
         </div>
       </div>
+      
+      {/* Legend/Point List */}
+      {legendEntries.length > 0 && (
+        <div className="mt-4 flex flex-wrap gap-3">
+          {Array.from(entriesByUnit.entries()).map(([unit, entries]) => (
+            <div key={unit} className="bg-white border border-gray-300 rounded p-3 flex-shrink-0">
+              <div className="flex justify-end mb-2">
+                <span className="text-xs text-gray-600 font-medium">{unit}</span>
+              </div>
+              <div className="space-y-1">
+                {entries.map(({ pointKey, name, sn, colorIndex, key }) => {
+                  const displayName = name.length > 50 ? `${name.substring(0, 47)}...` : name;
+                  const color = LEGEND_COLORS[colorIndex];
+                  const isHidden = hiddenEntries.has(pointKey);
+                  return (
+                    <div 
+                      key={pointKey} 
+                      className="flex items-center gap-2 text-sm group hover:bg-gray-50 rounded px-1 py-0.5 -mx-1 transition-colors cursor-pointer"
+                      onClick={() => toggleVisibility(pointKey)}
+                      onDoubleClick={(e) => {
+                        e.stopPropagation();
+                        showOnlyEntry(pointKey);
+                      }}
+                    >
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleVisibility(pointKey);
+                        }}
+                        onDoubleClick={(e) => {
+                          e.stopPropagation();
+                          showOnlyEntry(pointKey);
+                        }}
+                        className={`w-3 h-3 rounded border-2 ${color.border} flex-shrink-0 flex items-center justify-center transition-colors ${
+                          isHidden ? 'bg-white' : color.bg
+                        } hover:opacity-80`}
+                        title={isHidden ? "Show in chart (double-click to show only this)" : "Hide in chart (double-click to show only this)"}
+                      >
+                        {isHidden && (
+                          <svg className="w-2 h-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                          </svg>
+                        )}
+                      </button>
+                      <span 
+                        className={`text-gray-700 flex-1 ${isHidden ? 'opacity-50 line-through' : ''}`}
+                        title="Click to toggle visibility (double-click to show only this)"
+                      >
+                        SN {sn} {displayName}
+                      </span>
+                      <span className="text-gray-400 text-xs font-mono min-w-[60px] text-right">
+                        --
+                      </span>
+                      <button
+                        onClick={(e) => handleRemove(key, sn, e)}
+                        className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-600 transition-opacity flex-shrink-0 ml-1"
+                        title="Remove this inverter SN"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -1031,6 +1156,50 @@ export default function App() {
   const [sidebarWidth, setSidebarWidth] = useState<number>(500);
   const [isResizing, setIsResizing] = React.useState(false);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
+  const sidebarContentRef = React.useRef<HTMLDivElement>(null);
+
+  // Handle Escape key to close sidebar
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && sidebarOpen) {
+        setSidebarOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [sidebarOpen]);
+
+  // Scroll to a point in the sidebar
+  const scrollToPoint = (pointKey: string) => {
+    if (!sidebarOpen) {
+      // If sidebar is closed, open it first
+      setSidebarOpen(true);
+      // Wait for sidebar to open, then scroll
+      setTimeout(() => {
+        scrollToPointElement(pointKey);
+      }, 300);
+    } else {
+      scrollToPointElement(pointKey);
+    }
+  };
+
+  const scrollToPointElement = (pointKey: string) => {
+    if (!sidebarContentRef.current) return;
+    
+    // Find the element with data-point-key attribute matching the pointKey
+    const pointElement = sidebarContentRef.current.querySelector(`[data-point-key="${pointKey}"]`) as HTMLElement;
+    if (pointElement) {
+      pointElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Highlight briefly
+      pointElement.classList.add('bg-blue-100');
+      setTimeout(() => {
+        pointElement.classList.remove('bg-blue-100');
+      }, 1000);
+    }
+  };
 
   // Load last inverter selection from localStorage
   const getLastInverterSelection = (): Set<string> => {
@@ -1198,6 +1367,27 @@ export default function App() {
     });
   };
 
+  const removeInverter = (pointKey: string, inverterSN: string) => {
+    setSelected((prev) => {
+      const next = new Map(prev);
+      const currentInverters = next.get(pointKey);
+      if (!currentInverters) return next;
+      
+      const newInverters = new Set(currentInverters);
+      newInverters.delete(inverterSN);
+      
+      if (newInverters.size === 0) {
+        // If no inverters left, remove the entire point
+        next.delete(pointKey);
+      } else {
+        // Otherwise, just update the inverters
+        next.set(pointKey, newInverters);
+      }
+      
+      return next;
+    });
+  };
+
   const toggleLabel = (family: string, text: string) => {
     setSelectedLabels((prev) => {
       const next = new Set(prev);
@@ -1235,7 +1425,7 @@ export default function App() {
     <div className="h-full bg-slate-100 p-4 md:p-6">
       <div className="mx-auto w-full max-w-[95vw] h-[calc(100vh-2rem)] rounded-2xl border bg-white shadow-sm relative">
         {/* Chart area - full width */}
-        <FakeChart selectedPoints={selected} protocols={protocols} onUpdateInverters={updateInverters} />
+        <FakeChart selectedPoints={selected} protocols={protocols} onUpdateInverters={updateInverters} onScrollToPoint={scrollToPoint} onRemoveInverter={removeInverter} />
         
         {/* Toggle button - always visible, positioned outside sidebar */}
         <button
@@ -1305,7 +1495,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-4 pb-4 pr-1">
+            <div className="flex-1 overflow-y-auto px-4 pb-4 pr-1" ref={sidebarContentRef}>
               {grouped.size === 0 ? (
                 <div className="py-4 text-center text-sm text-gray-500">
                   No points match the current filters
