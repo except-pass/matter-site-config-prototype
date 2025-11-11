@@ -153,6 +153,12 @@ function groupByLabelHierarchy(
     let currentMap = map;
     let lastValidLevel = -1;
     
+    // Safety check - ensure currentMap is actually a Map
+    if (!(currentMap instanceof Map)) {
+      console.error('groupByLabelHierarchy: currentMap is not a Map', currentMap);
+      return;
+    }
+    
     // First, find the deepest level this point has a label for
     for (let i = 0; i < hierarchy.length; i++) {
       const family = hierarchy[i];
@@ -169,6 +175,12 @@ function groupByLabelHierarchy(
     
     // Build the hierarchy up to the last valid level
     for (let i = 0; i <= lastValidLevel; i++) {
+      // Safety check - ensure currentMap is still a Map
+      if (!(currentMap instanceof Map)) {
+        console.error('groupByLabelHierarchy: currentMap became non-Map at level', i, currentMap);
+        return;
+      }
+      
       const family = hierarchy[i];
       const label = labels.find((l) => l.label_family === family);
       
@@ -194,11 +206,19 @@ function groupByLabelHierarchy(
           currentMap.set(key, newMap);
         }
         
-        const finalMap = currentMap.get(key) as LabelHierarchy;
+        const finalMap = currentMap.get(key);
+        if (!(finalMap instanceof Map)) {
+          console.error('Expected Map for finalMap but got:', typeof finalMap, finalMap);
+          return;
+        }
         if (!finalMap.has("")) {
           finalMap.set("", []);
         }
         const itemsList = finalMap.get("") as ProtocolPoint[];
+        if (!Array.isArray(itemsList)) {
+          console.error('Expected array for itemsList but got:', typeof itemsList, itemsList);
+          return;
+        }
         itemsList.push(it);
       } else {
         // Intermediate level - ensure it's always a Map
@@ -214,13 +234,13 @@ function groupByLabelHierarchy(
             currentMap.set(key, newMap);
           }
         }
-        const nestedMap = currentMap.get(key) as LabelHierarchy;
+        const nestedMap = currentMap.get(key);
         // Safety check - ensure nestedMap is actually a Map
         if (!(nestedMap instanceof Map)) {
-          console.error('Expected Map but got:', typeof nestedMap, nestedMap);
-          continue;
+          console.error('Expected Map for nestedMap but got:', typeof nestedMap, nestedMap, 'at level', i, 'key', key);
+          return;
         }
-        currentMap = nestedMap;
+        currentMap = nestedMap as LabelHierarchy;
       }
     }
   });
