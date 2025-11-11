@@ -221,13 +221,13 @@ interface JsonOutput {
 
 // Read hierarchy.yaml
 console.log('Reading hierarchy.yaml...');
-const hierarchyPath = path.resolve(__dirname, '../definitions/hierarchy.yaml');
+const hierarchyPath = path.resolve(__dirname, '../definitions/commands/hierarchy.yaml');
 const hierarchyContent = fs.readFileSync(hierarchyPath, 'utf-8');
 const hierarchy = yaml.parse(hierarchyContent);
 
 // Read matter.xlsx
 console.log('Reading matter.xlsx...');
-const matterPath = path.resolve(__dirname, '../definitions/matter.xlsx');
+const matterPath = path.resolve(__dirname, '../definitions/commands/matter.xlsx');
 const workbook = XLSX.readFile(matterPath);
 const matterSheet = workbook.Sheets['matter'];
 
@@ -932,8 +932,8 @@ for (const themeSpec of hierarchy.themes) {
 // Load Envy-specific points from envy_specific.yaml or envy_specific.json
 function loadEnvySpecificPoints(): EnvySpecificPoint[] {
   // Try YAML first, then JSON
-  const yamlPath = path.resolve(__dirname, '../definitions/envy_specific.yaml');
-  const jsonPath = path.resolve(__dirname, '../definitions/envy_specific.json');
+  const yamlPath = path.resolve(__dirname, '../definitions/commands/envy_specific.yaml');
+  const jsonPath = path.resolve(__dirname, '../definitions/commands/envy_specific.json');
   
   if (fs.existsSync(yamlPath)) {
     try {

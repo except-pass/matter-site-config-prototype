@@ -1,12 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SiteConfigApp from "./SiteConfigApp";
 import HistoricalDataApp from "./HistoricalDataApp";
 import "./historical-data.css";
 
 type AppView = "site-config" | "historical-data";
 
+const STORAGE_KEY = "matter-app-active-view";
+
 export default function App() {
-  const [activeView, setActiveView] = useState<AppView>("site-config");
+  // Load initial view from localStorage, default to "site-config"
+  const [activeView, setActiveView] = useState<AppView>(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === "site-config" || saved === "historical-data") {
+      return saved;
+    }
+    return "site-config";
+  });
+
+  // Save to localStorage whenever activeView changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, activeView);
+  }, [activeView]);
 
   return (
     <div className="flex h-screen bg-slate-100">

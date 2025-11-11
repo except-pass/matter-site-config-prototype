@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import YAML from "yaml";
-import rawYaml from "./definitions/ss40k_inverter.yaml?raw";
+import rawYaml from "./definitions/telemetry/ss40k_inverter.yaml?raw";
+import rawLabelHelp from "./definitions/telemetry/label_help.yaml?raw";
 
 type Meanings = Record<string | number, string>;
 
@@ -83,6 +84,40 @@ function loadProtocols(): ProtocolPoint[] {
 }
 
 const protocols: ProtocolPoint[] = loadProtocols();
+
+// Load label help data
+interface LabelHelpData {
+  label_families: {
+    [family: string]: {
+      help: string;
+      labels: {
+        [labelText: string]: {
+          help: string;
+        };
+      };
+    };
+  };
+}
+
+let labelHelpData: LabelHelpData | null = null;
+try {
+  labelHelpData = YAML.parse(rawLabelHelp) as LabelHelpData;
+} catch (error) {
+  console.error("Failed to parse label_help.yaml", error);
+}
+
+function getLabelHelp(family: string, labelText?: string): string | null {
+  if (!labelHelpData) return null;
+  const familyData = labelHelpData.label_families[family];
+  if (!familyData) return null;
+  
+  if (labelText) {
+    const labelData = familyData.labels[labelText];
+    return labelData?.help || null;
+  }
+  
+  return familyData.help || null;
+}
 
 // Helper to group by label hierarchy (supports multiple levels)
 function groupByLabelHierarchy(
@@ -319,11 +354,13 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: 
                           <div className="ml-2 flex flex-wrap gap-1">
                             {labels.map((label, idx) => {
                               const color = getLabelColor(label.label_family, label.label_text);
+                              const labelHelp = getLabelHelp(label.label_family, label.label_text);
+                              const tooltipText = labelHelp || `${label.label_family}: ${label.label_text}`;
                               return (
                                 <span
                                   key={idx}
                                   className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border}`}
-                                  title={`${label.label_family}: ${label.label_text}`}
+                                  title={tooltipText}
                                 >
                                   {label.label_text}
                                 </span>
@@ -382,11 +419,13 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: 
                           <div className="ml-2 flex flex-wrap gap-1">
                             {labels.map((label, idx) => {
                               const color = getLabelColor(label.label_family, label.label_text);
+                              const labelHelp = getLabelHelp(label.label_family, label.label_text);
+                              const tooltipText = labelHelp || `${label.label_family}: ${label.label_text}`;
                               return (
                                 <span
                                   key={idx}
                                   className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border}`}
-                                  title={`${label.label_family}: ${label.label_text}`}
+                                  title={tooltipText}
                                 >
                                   {label.label_text}
                                 </span>
@@ -419,6 +458,60 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: 
   );
 }
 
+interface LabelHelpModalProps {
+  family: string;
+  labels: Set<string>;
+  onClose: () => void;
+}
+
+function LabelHelpModal({ family, labels, onClose }: LabelHelpModalProps) {
+  const familyHelp = getLabelHelp(family);
+  const sortedLabels = [...labels].sort();
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={onClose}>
+      <div className="relative max-h-[80vh] w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-800">{family} Labels</h2>
+          <button
+            onClick={onClose}
+            className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            aria-label="Close"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        {familyHelp && (
+          <div className="mb-4 rounded-lg bg-blue-50 p-3 text-sm text-gray-700">
+            <strong className="font-semibold">About {family}:</strong> {familyHelp}
+          </div>
+        )}
+        
+        <div className="max-h-[60vh] overflow-y-auto">
+          <div className="space-y-4">
+            {sortedLabels.map((labelText) => {
+              const labelHelp = getLabelHelp(family, labelText);
+              return (
+                <div key={labelText} className="border-b border-gray-200 pb-3 last:border-b-0">
+                  <div className="mb-1 font-medium text-gray-800">{labelText}</div>
+                  {labelHelp ? (
+                    <div className="text-sm text-gray-600">{labelHelp}</div>
+                  ) : (
+                    <div className="text-sm italic text-gray-400">No help text available</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 interface LabelFilterProps {
   allLabels: Map<string, Set<string>>;
   selectedLabels: Set<string>;
@@ -428,6 +521,7 @@ interface LabelFilterProps {
 function LabelFilter({ allLabels, selectedLabels, onToggleLabel }: LabelFilterProps) {
   const [height, setHeight] = React.useState(200);
   const [isResizing, setIsResizing] = React.useState(false);
+  const [helpModalFamily, setHelpModalFamily] = React.useState<string | null>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -471,33 +565,57 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel }: LabelFilterPr
         className="space-y-1 overflow-auto"
         style={{ height: `${height}px` }}
       >
-        {[...allLabels.entries()].map(([family, texts]) => (
-          <div key={family} className="text-xs">
-            <div className="font-medium text-gray-600">{family}:</div>
-            <div className="ml-2 flex flex-wrap gap-1">
-              {[...texts].sort().map((text) => {
-                const labelKey = `${family}:${text}`;
-                const isSelected = selectedLabels.has(labelKey);
-                const color = getLabelColor(family, text);
-                return (
-                  <button
-                    key={labelKey}
-                    onClick={() => onToggleLabel(family, text)}
-                    className={`rounded border px-2 py-0.5 text-xs transition-all ${
-                      isSelected
-                        ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
-                        : `bg-white ${color.text} ${color.border} hover:opacity-80`
-                    }`}
-                    style={!isSelected ? { borderColor: 'currentColor' } : undefined}
-                  >
-                    {text}
-                  </button>
-                );
-              })}
+        {[...allLabels.entries()].map(([family, texts]) => {
+          const familyHelp = getLabelHelp(family);
+          return (
+            <div key={family} className="text-xs">
+              <div className="flex items-center gap-1 font-medium text-gray-600">
+                <span>{family}:</span>
+                <button
+                  onClick={() => setHelpModalFamily(family)}
+                  className="flex items-center justify-center rounded p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
+                  title={familyHelp || `View help for ${family} labels`}
+                  aria-label={`Help for ${family}`}
+                >
+                  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
+              </div>
+              <div className="ml-2 flex flex-wrap gap-1">
+                {[...texts].sort().map((text) => {
+                  const labelKey = `${family}:${text}`;
+                  const isSelected = selectedLabels.has(labelKey);
+                  const color = getLabelColor(family, text);
+                  const labelHelp = getLabelHelp(family, text);
+                  return (
+                    <button
+                      key={labelKey}
+                      onClick={() => onToggleLabel(family, text)}
+                      className={`rounded border px-2 py-0.5 text-xs transition-all ${
+                        isSelected
+                          ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
+                          : `bg-white ${color.text} ${color.border} hover:opacity-80`
+                      }`}
+                      style={!isSelected ? { borderColor: 'currentColor' } : undefined}
+                      title={labelHelp || `${family}: ${text}`}
+                    >
+                      {text}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+      {helpModalFamily && (
+        <LabelHelpModal
+          family={helpModalFamily}
+          labels={allLabels.get(helpModalFamily) || new Set()}
+          onClose={() => setHelpModalFamily(null)}
+        />
+      )}
       <div
         onMouseDown={handleMouseDown}
         className="mt-1 h-1 cursor-ns-resize rounded bg-gray-300 hover:bg-gray-400 transition-colors"

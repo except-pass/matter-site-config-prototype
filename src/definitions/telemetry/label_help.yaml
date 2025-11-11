@@ -1,0 +1,102 @@
+# Label Help Text
+# This file provides help text for all label families and their label values
+# Used to display tooltips and modal help in the UI
+
+label_families:
+  component:
+    help: "Identifies the physical component or subsystem that the telemetry point measures or relates to."
+    labels:
+      Inverter:
+        help: "Points related to the inverter's operation, including power conversion, voltage, frequency, and operational status."
+      Battery:
+        help: "Points related to battery system operation, including state of charge, voltage, current, temperature, and charging/discharging status."
+      PV:
+        help: "Points related to photovoltaic (solar) panel systems, including DC and AC coupled PV measurements."
+      Grid:
+        help: "Points related to the electrical grid connection, including grid voltage, frequency, power import/export, and grid status."
+      Building Load:
+        help: "Points related to the building's electrical load consumption, including total load, per-phase load, and load characteristics."
+      Generator:
+        help: "Points related to backup generator operation, including generator status, power output, and control parameters."
+      Backup Power:
+        help: "Points related to backup power systems and emergency power supply functionality."
+      Smart Load:
+        help: "Points related to smart load management, including controllable loads and load scheduling."
+
+  feature:
+    help: "Identifies the feature or functional area that the telemetry point supports or configures."
+    labels:
+      "Basic Setup":
+        help: "Points related to fundamental system configuration and basic operational parameters."
+      "Battery Scheduling":
+        help: "Points related to battery charge/discharge scheduling, time-of-use settings, and battery management strategies."
+      "Grid Charge":
+        help: "Points related to charging the battery from the grid, including charge schedules and grid charge control."
+      "Grid Connection":
+        help: "Points related to grid connection status, synchronization, and connection/disconnection controls."
+      "Grid Protection":
+        help: "Points related to grid protection functions, including over/under voltage, frequency protection, and anti-islanding."
+      "Grid Support":
+        help: "Points related to grid support functions such as frequency response, voltage regulation, and reactive power control."
+      "Power Limits":
+        help: "Points related to power limit settings, including maximum charge/discharge power, grid export limits, and power curtailment."
+      "Selling Power":
+        help: "Points related to selling power back to the grid, including export limits, sell schedules, and net metering settings."
+      "PV-DC":
+        help: "Points related to DC-coupled photovoltaic systems, including MPPT (Maximum Power Point Tracking) data and DC string measurements."
+      "PV-AC Couple":
+        help: "Points related to AC-coupled photovoltaic systems, where solar inverters connect to the AC side of the system."
+      Firmware:
+        help: "Points related to firmware version information, software updates, and system identification."
+      Setup:
+        help: "Points related to system setup, configuration, and installation parameters."
+      Meter:
+        help: "Points related to energy metering, including consumption meters, production meters, and net metering."
+      CT:
+        help: "Points related to current transformer (CT) measurements and CT calibration settings."
+      Parallel:
+        help: "Points related to parallel inverter operation, including multi-unit coordination and parallel system status."
+      RSD:
+        help: "Points related to Rapid Shutdown (RSD) functionality for solar systems, including RSD status and control."
+      "Smart Load":
+        help: "Points related to smart load control, including load scheduling, priority settings, and load management."
+      "Backup Power":
+        help: "Points related to backup power operation, including backup mode settings and backup power availability."
+
+  info:
+    help: "Categorizes the type of information the telemetry point provides."
+    labels:
+      Sensor:
+        help: "Real-time sensor measurements from physical devices, including voltage, current, power, temperature, and other measured values."
+      Config:
+        help: "Configuration parameters and settings that can be read or written to configure system behavior."
+      Nameplate:
+        help: "Static information from equipment nameplates, including model numbers, serial numbers, ratings, and manufacturer information."
+      Alarms:
+        help: "Alarm and fault information, including active alarms, fault codes, and system warnings."
+
+  detail_level:
+    help: "Indicates the level of detail or complexity of the telemetry point."
+    labels:
+      Standard:
+        help: "Standard telemetry points that are commonly used and displayed by default in most views."
+      Extended:
+        help: "Extended telemetry points that provide additional detail or advanced information, typically shown in detailed or expert views."
+
+  Unit:
+    help: "Indicates the unit of measurement for numeric telemetry values."
+    labels:
+      Power:
+        help: "Power measurements in watts (W), kilowatts (kW), or megawatts (MW). Represents electrical power consumption or generation."
+      Energy:
+        help: "Energy measurements in watt-hours (Wh), kilowatt-hours (kWh), or megawatt-hours (MWh). Represents cumulative energy over time."
+      Volt:
+        help: "Voltage measurements in volts (V). Represents electrical potential difference."
+      Current:
+        help: "Current measurements in amperes (A). Represents electrical current flow."
+      Freq:
+        help: "Frequency measurements in hertz (Hz). Typically 50 Hz or 60 Hz for AC electrical systems."
+      Temp:
+        help: "Temperature measurements in degrees Celsius (°C) or Fahrenheit (°F)."
+      "%":
+        help: "Percentage values (%), commonly used for state of charge, efficiency, power factor, and other ratio-based measurements."

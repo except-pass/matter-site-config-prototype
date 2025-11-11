@@ -10,7 +10,10 @@ Rebuilds `demo.json` from `hierarchy.yaml` + `points.csv`:
 npx tsx src/transforms/rebuildFromHierarchy.ts
 ```
 
-This generates `src/themes/demo_rebuilt.json`.  `rebuildFromHierarchy.ts` expects files named `hierarchy.yaml` and `matter.xlsx` (with a sheet named `matter`) in `src/definitions/`.
+This generates `src/themes/demo_rebuilt.json`.  `rebuildFromHierarchy.ts` expects files in `src/definitions/commands/`:
+- `hierarchy.yaml` - UI structure and presentation
+- `matter.xlsx` - Protocol data (with a sheet named `matter`)
+- `envy_specific.yaml` (optional) - Envy-specific points
 
 **Adding New Transformations:**
 

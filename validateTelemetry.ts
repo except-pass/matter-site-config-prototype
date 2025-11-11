@@ -23,7 +23,7 @@ interface ValidationResult {
 function validateTelemetryReferences(): ValidationResult {
   // Load YAML file
   console.log('Loading ss40k_inverter.yaml...');
-  const yamlPath = path.resolve(__dirname, 'src/definitions/ss40k_inverter.yaml');
+  const yamlPath = path.resolve(__dirname, 'src/definitions/telemetry/ss40k_inverter.yaml');
   const yamlContent = fs.readFileSync(yamlPath, 'utf8');
   const yamlData = yaml.parse(yamlContent);
   
@@ -63,7 +63,7 @@ function validateTelemetryReferences(): ValidationResult {
 
   // Load Excel file
   console.log('Loading matter.xlsx...');
-  const matterPath = path.resolve(__dirname, 'src/definitions/matter.xlsx');
+  const matterPath = path.resolve(__dirname, 'src/definitions/commands/matter.xlsx');
   const workbook = XLSX.readFile(matterPath);
   const matterSheet = workbook.Sheets['matter'];
 
