@@ -352,7 +352,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: 
                           {desc}
                           {unit}
                         </span>
-                        {labels.length > 0 && (
+                        {showHelp && labels.length > 0 && (
                           <div className="ml-2 flex flex-wrap gap-1">
                             {labels.map((label, idx) => {
                               const color = getLabelColor(label.label_family, label.label_text);
@@ -417,7 +417,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: 
                           {desc}
                           {unit}
                         </span>
-                        {labels.length > 0 && (
+                        {showHelp && labels.length > 0 && (
                           <div className="ml-2 flex flex-wrap gap-1">
                             {labels.map((label, idx) => {
                               const color = getLabelColor(label.label_family, label.label_text);

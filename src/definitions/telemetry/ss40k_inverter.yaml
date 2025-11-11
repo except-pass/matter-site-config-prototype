@@ -575,7 +575,7 @@ protocols:
   entry:
     name: pPvTotal
     description: PV total input power
-    longdescription: Total combined DC input power from all PV strings. Represents total solar generation available to the inverter.
+    longdescription: Total combined DC input power from all PV strings. Represents total DC solar generation by the inverter.
     dtype: uint32
     unit: W
     category: DC-PV
@@ -1979,7 +1979,7 @@ protocols:
   block: fixed
   entry:
     name: pGridImpTot
-    description: Grid active power import (total)
+    description: Grid active power import
     longdescription: Total real power imported from the grid (consumed by the site).
     dtype: uint32
     unit: W
@@ -1999,8 +1999,8 @@ protocols:
   block: fixed
   entry:
     name: pGridExpTot
-    description: Grid active power export (total)
-    longdescription: Total real power exported to the grid (delivered by the site).
+    description: Grid active power export
+    longdescription: Total real power exported to the grid from PV and battery discharge.
     dtype: uint32
     unit: W
     category: Grid
@@ -2019,7 +2019,7 @@ protocols:
   block: fixed
   entry:
     name: qGridTot
-    description: Grid reactive power (total)
+    description: Grid reactive power
     longdescription: Total reactive power at the point of common coupling for the grid connection.
     dtype: int32
     unit: Var
@@ -2039,7 +2039,7 @@ protocols:
   block: fixed
   entry:
     name: sGridTot
-    description: Grid apparent power (total)
+    description: Grid apparent power
     longdescription: Total apparent power at the grid connection point.
     dtype: uint32
     unit: VA
@@ -2059,7 +2059,7 @@ protocols:
   block: fixed
   entry:
     name: pfGridTot
-    description: Grid power factor (total)
+    description: Grid power factor
     longdescription: Overall power factor measured at the grid connection point.
     dtype: int16
     unit: N/A
@@ -2077,7 +2077,7 @@ protocols:
   block: fixed
   entry:
     name: iGridTot
-    description: Grid current (total)
+    description: Grid current
     longdescription: Sum of RMS currents across active grid phases at the metering point.
     dtype: int32
     unit: A
@@ -2608,7 +2608,7 @@ protocols:
   block: fixed
   entry:
     name: pBkupTot
-    description: Backup active power (total)
+    description: Backup active power
     longdescription: Total real power delivered to backup loads/output.
     dtype: uint32
     unit: W
@@ -2630,7 +2630,7 @@ protocols:
   block: fixed
   entry:
     name: qBkupTot
-    description: Backup reactive power (total)
+    description: Backup reactive power
     longdescription: Total reactive power on the backup output.
     dtype: int32
     unit: Var
@@ -2652,7 +2652,7 @@ protocols:
   block: fixed
   entry:
     name: sBkupTot
-    description: Backup apparent power (total)
+    description: Backup apparent power
     longdescription: Total apparent power on the backup output.
     dtype: uint32
     unit: VA
@@ -2674,7 +2674,7 @@ protocols:
   block: fixed
   entry:
     name: pfBkupTot
-    description: Backup power factor (total)
+    description: Backup power factor
     longdescription: Overall power factor measured on the backup output.
     dtype: int16
     unit: N/A
@@ -2694,7 +2694,7 @@ protocols:
   block: fixed
   entry:
     name: iBkupTot
-    description: Backup current (total)
+    description: Backup current
     longdescription: Sum of RMS currents across backup phases.
     dtype: uint32
     unit: A
@@ -3327,7 +3327,7 @@ protocols:
   block: fixed
   entry:
     name: iLoadTot
-    description: Load current (total)
+    description: Load current
     longdescription: 'Sum of RMS currents across active load phases. '
     dtype: uint32
     unit: A
@@ -3880,7 +3880,7 @@ protocols:
   block: fixed
   entry:
     name: pGenTot
-    description: Generator active power (total)
+    description: Generator active power
     longdescription: Total real power delivered from the generator to the system.
     dtype: int32
     unit: W
@@ -3900,7 +3900,7 @@ protocols:
   block: fixed
   entry:
     name: qGenTot
-    description: Generator reactive power (total)
+    description: Generator reactive power
     longdescription: Total reactive power measured on the generator connection.
     dtype: int32
     unit: Var
@@ -3920,7 +3920,7 @@ protocols:
   block: fixed
   entry:
     name: sGenTot
-    description: Generator apparent power (total)
+    description: Generator apparent power
     longdescription: Total apparent power at the generator connection.
     dtype: uint32
     unit: VA
@@ -3940,7 +3940,7 @@ protocols:
   block: fixed
   entry:
     name: pfGenTot
-    description: Generator power factor (total)
+    description: Generator power factor
     longdescription: Overall generator power factor (unitless).
     dtype: int16
     unit: N/A
@@ -3958,7 +3958,7 @@ protocols:
   block: fixed
   entry:
     name: iGenTot
-    description: Generator current (total)
+    description: Generator current
     longdescription: Sum of RMS currents across generator phases.
     dtype: int32
     unit: A
@@ -4573,7 +4573,7 @@ protocols:
   block: fixed
   entry:
     name: iAcCplTot
-    description: AC couple current (total)
+    description: AC couple current
     longdescription: Sum of RMS currents across AC-coupled phases.
     dtype: int32
     unit: A
@@ -5164,7 +5164,7 @@ protocols:
   - label_family: Component
     label_text: Inverter
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
@@ -5240,7 +5240,7 @@ protocols:
   block: fixed
   entry:
     name: iSmartloadTot
-    description: Smart load current (total)
+    description: Smart load current
     longdescription: Sum of RMS currents across smart-load phases.
     dtype: int32
     unit: A
@@ -5294,7 +5294,7 @@ protocols:
   - label_family: Component
     label_text: Inverter
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
