@@ -67,7 +67,7 @@ function loadProtocols(): ProtocolPoint[] {
         const modelName = normalizeModel(item.model);
         if (!pointName || !modelName) return null;
         // Labels can be at the protocol level or entry level
-        const labels = (item.labels || item.entry?.labels || []) as Label[];
+        const labels = (Array.isArray(item.labels) ? item.labels : Array.isArray(item.entry?.labels) ? item.entry.labels : []) as Label[];
         return {
           block: String(item.block ?? "fixed"),
           entry: item.entry,
@@ -127,7 +127,7 @@ function groupByLabelHierarchy(
   const map: LabelHierarchy = new Map();
   
   items.forEach((it) => {
-    const labels = it.labels || [];
+    const labels = Array.isArray(it.labels) ? it.labels : [];
     // Skip points without labels (should already be filtered, but double-check)
     if (labels.length === 0) {
       return;
@@ -191,7 +191,7 @@ function groupByLabelHierarchy(
 function extractAllLabels(items: ProtocolPoint[]): Map<string, Set<string>> {
   const labelMap = new Map<string, Set<string>>();
   items.forEach((it) => {
-    const labels = it.labels || [];
+    const labels = Array.isArray(it.labels) ? it.labels : [];
     labels.forEach((label) => {
       if (!labelMap.has(label.label_family)) {
         labelMap.set(label.label_family, new Set());
@@ -323,7 +323,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: 
                   const long = it.entry.longdescription || desc;
                   const unit = it.entry.unit && it.entry.unit !== "N/A" ? ` (${it.entry.unit})` : "";
                   const checked = selected.has(key);
-                  const labels = it.labels || [];
+                  const labels = Array.isArray(it.labels) ? it.labels : [];
                   return (
                     <div key={key} className="rounded-md px-2 py-1 hover:bg-gray-50">
                       <label className="flex cursor-pointer items-center gap-2 flex-wrap">
@@ -388,7 +388,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: 
                   const long = it.entry.longdescription || desc;
                   const unit = it.entry.unit && it.entry.unit !== "N/A" ? ` (${it.entry.unit})` : "";
                   const checked = selected.has(key);
-                  const labels = it.labels || [];
+                  const labels = Array.isArray(it.labels) ? it.labels : [];
                   return (
                     <div key={key} className="rounded-md px-2 py-1 hover:bg-gray-50">
                       <label className="flex cursor-pointer items-center gap-2 flex-wrap">
@@ -935,7 +935,7 @@ export default function App() {
 
     // Filter out points without labels
     result = result.filter((p) => {
-      const labels = p.labels || [];
+      const labels = Array.isArray(p.labels) ? p.labels : [];
       return labels.length > 0;
     });
 
@@ -964,7 +964,7 @@ export default function App() {
       });
 
       result = result.filter((p) => {
-        const labels = p.labels || [];
+        const labels = Array.isArray(p.labels) ? p.labels : [];
         if (labels.length === 0) return false;
 
         // Group point's labels by family
@@ -1026,7 +1026,13 @@ export default function App() {
 
   const clearLabelFilters = () => setSelectedLabels(new Set<string>());
   const visibleCount = filtered.length;
-  const totalCount = protocols.length;
+  // Total count should only include points with labels (points that can be shown in UI)
+  const totalCount = useMemo(() => {
+    return protocols.filter((p) => {
+      const labels = Array.isArray(p.labels) ? p.labels : [];
+      return labels.length > 0;
+    }).length;
+  }, []);
 
   // --- Lightweight runtime "tests" to sanity check data transforms ---
   useEffect(() => {

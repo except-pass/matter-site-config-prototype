@@ -54,9 +54,7 @@ protocols:
     unit: N/A
     category: PCS information
     meanings: {}
-  labels:
-  - label_family: Info
-    label_text: Nameplate
+  labels: {}
 - model: 40100
   point: Md
   block: fixed
@@ -86,9 +84,7 @@ protocols:
     unit: N/A
     category: PCS information
     meanings: {}
-  labels:
-  - label_family: Info
-    label_text: Nameplate
+  labels: {}
 - model: 40100
   point: vNom
   block: fixed
@@ -531,9 +527,7 @@ protocols:
     unit: N/A
     category: PCS information
     meanings: {}
-  labels:
-  - label_family: Info
-    label_text: Sensor
+  labels: {}
 - model: 40101
   point: reserved2
   block: fixed
