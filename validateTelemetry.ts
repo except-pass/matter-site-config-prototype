@@ -1,6 +1,10 @@
 import fs from 'fs';
 import * as yaml from 'yaml';
 import XLSX from 'xlsx';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 interface ProtocolEntry {
   model?: string | number;
@@ -19,7 +23,8 @@ interface ValidationResult {
 function validateTelemetryReferences(): ValidationResult {
   // Load YAML file
   console.log('Loading ss40k_inverter.yaml...');
-  const yamlContent = fs.readFileSync('ss40k_inverter.yaml', 'utf8');
+  const yamlPath = path.resolve(__dirname, 'src/definitions/ss40k_inverter.yaml');
+  const yamlContent = fs.readFileSync(yamlPath, 'utf8');
   const yamlData = yaml.parse(yamlContent);
   
   if (!yamlData.protocols || !Array.isArray(yamlData.protocols)) {
@@ -58,7 +63,8 @@ function validateTelemetryReferences(): ValidationResult {
 
   // Load Excel file
   console.log('Loading matter.xlsx...');
-  const workbook = XLSX.readFile('matter.xlsx');
+  const matterPath = path.resolve(__dirname, 'src/definitions/matter.xlsx');
+  const workbook = XLSX.readFile(matterPath);
   const matterSheet = workbook.Sheets['matter'];
 
   if (!matterSheet) {

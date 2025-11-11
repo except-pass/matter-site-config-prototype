@@ -221,12 +221,14 @@ interface JsonOutput {
 
 // Read hierarchy.yaml
 console.log('Reading hierarchy.yaml...');
-const hierarchyContent = fs.readFileSync('hierarchy.yaml', 'utf-8');
+const hierarchyPath = path.resolve(__dirname, '../definitions/hierarchy.yaml');
+const hierarchyContent = fs.readFileSync(hierarchyPath, 'utf-8');
 const hierarchy = yaml.parse(hierarchyContent);
 
 // Read matter.xlsx
 console.log('Reading matter.xlsx...');
-const workbook = XLSX.readFile('matter.xlsx');
+const matterPath = path.resolve(__dirname, '../definitions/matter.xlsx');
+const workbook = XLSX.readFile(matterPath);
 const matterSheet = workbook.Sheets['matter'];
 
 if (!matterSheet) {
@@ -930,8 +932,8 @@ for (const themeSpec of hierarchy.themes) {
 // Load Envy-specific points from envy_specific.yaml or envy_specific.json
 function loadEnvySpecificPoints(): EnvySpecificPoint[] {
   // Try YAML first, then JSON
-  const yamlPath = path.resolve(__dirname, 'envy_specific.yaml');
-  const jsonPath = path.resolve(__dirname, 'envy_specific.json');
+  const yamlPath = path.resolve(__dirname, '../definitions/envy_specific.yaml');
+  const jsonPath = path.resolve(__dirname, '../definitions/envy_specific.json');
   
   if (fs.existsSync(yamlPath)) {
     try {
@@ -1257,6 +1259,7 @@ if (envySpecificPoints.length > 0) {
 
 // Write the final output
 const finalOutputJson = JSON.stringify(output, null, 2);
-fs.writeFileSync('src/themes/demo_rebuilt.json', finalOutputJson);
+const outputPath = path.resolve(__dirname, '../themes/demo_rebuilt.json');
+fs.writeFileSync(outputPath, finalOutputJson);
 console.log('Rebuilt demo_rebuilt.json successfully!');
 console.log(`Final output: ${output.themes.length} themes, ${output.themes.reduce((sum, t) => sum + t.sections.length, 0)} sections, ${output.themes.reduce((sum, t) => sum + t.sections.reduce((s, sec) => s + sec.subsections.reduce((ss, sub) => ss + sub.points.length, 0), 0), 0)} points`);

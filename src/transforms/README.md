@@ -10,7 +10,7 @@ Rebuilds `demo.json` from `hierarchy.yaml` + `points.csv`:
 npx tsx src/transforms/rebuildFromHierarchy.ts
 ```
 
-This generates `src/themes/demo_rebuilt.json`.  `rebuildFromHierarchy.ts` expects exactly files named `hierarchy.yaml` and `matter.xlsx` (with a sheet named `matter`) in the current directory.
+This generates `src/themes/demo_rebuilt.json`.  `rebuildFromHierarchy.ts` expects files named `hierarchy.yaml` and `matter.xlsx` (with a sheet named `matter`) in `src/definitions/`.
 
 **Adding New Transformations:**
 
