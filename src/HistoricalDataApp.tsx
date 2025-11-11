@@ -254,21 +254,6 @@ function getLabelColor(family: string, _text: string): { bg: string; text: strin
   return COLOR_PALETTE[index];
 }
 
-interface ToolbarProps {
-  visibleCount: number;
-  totalCount: number;
-}
-
-function Toolbar({ visibleCount, totalCount }: ToolbarProps) {
-  return (
-    <div className="flex items-center gap-2 border-b pb-2">
-      <div className="flex items-center gap-2 text-sm">
-        <span>Available: {visibleCount.toLocaleString()} of {totalCount.toLocaleString()}</span>
-      </div>
-    </div>
-  );
-}
-
 interface SearchBoxProps {
   value: string;
   onChange: (next: string) => void;
@@ -1039,7 +1024,6 @@ export default function App() {
     });
   };
 
-  const clearAll = () => setSelected(new Set<string>());
   const clearLabelFilters = () => setSelectedLabels(new Set<string>());
   const visibleCount = filtered.length;
   const totalCount = protocols.length;
