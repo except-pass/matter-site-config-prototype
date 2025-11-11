@@ -79,9 +79,9 @@ label_families:
     help: "Indicates the level of detail or complexity of the telemetry point."
     labels:
       Standard:
-        help: "Standard telemetry points that are commonly used and displayed by default in most views."
+        help: "Standard telemetry points that are commonly used and displayed by default."
       Extended:
-        help: "Extended telemetry points that provide additional detail or advanced information, typically shown in detailed or expert views."
+        help: "Extended telemetry points provide additional technical detail or advanced information."
 
   Unit:
     help: "Indicates the unit of measurement for numeric telemetry values."
