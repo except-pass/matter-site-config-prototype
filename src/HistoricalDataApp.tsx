@@ -366,7 +366,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: 
                         )}
                       </label>
                       {showHelp && (
-                        <div className="pl-6 text-xs text-gray-500">{long}</div>
+                        <div className="pl-6 text-xs text-gray-500 whitespace-pre-wrap">{long}</div>
                       )}
                     </div>
                   );
@@ -431,7 +431,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp }: 
                         )}
                       </label>
                       {showHelp && (
-                        <div className="pl-6 text-xs text-gray-500">{long}</div>
+                        <div className="pl-6 text-xs text-gray-500 whitespace-pre-wrap">{long}</div>
                       )}
                     </div>
                   );

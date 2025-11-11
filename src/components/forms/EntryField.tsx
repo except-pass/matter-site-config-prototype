@@ -61,7 +61,7 @@ export function EntryField({
           <div className="text-xs text-slate-500 leading-snug">{entry.description}</div>
         )}
         {entry.longdescription && (
-          <div className="text-xs text-slate-400 leading-snug">{entry.longdescription}</div>
+          <div className="text-xs text-slate-400 leading-snug whitespace-pre-wrap">{entry.longdescription}</div>
         )}
       </div>
     );
@@ -105,7 +105,7 @@ export function EntryField({
             <div className="text-xs text-slate-500 leading-snug">{entry.description}</div>
           )}
           {entry.longdescription && (
-            <div className="text-xs text-slate-400 leading-snug">{entry.longdescription}</div>
+            <div className="text-xs text-slate-400 leading-snug whitespace-pre-wrap">{entry.longdescription}</div>
           )}
         </div>
       );
@@ -144,7 +144,7 @@ export function EntryField({
           <div className="text-xs text-slate-500 leading-snug">{entry.description}</div>
         )}
         {entry.longdescription && (
-          <div className="text-xs text-slate-400 leading-snug">{entry.longdescription}</div>
+          <div className="text-xs text-slate-400 leading-snug whitespace-pre-wrap">{entry.longdescription}</div>
         )}
       </div>
     );
