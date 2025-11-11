@@ -31,7 +31,8 @@ interface ProtocolPoint {
   labels: Label[];
 }
 
-type LabelHierarchy = Map<string, Map<string, ProtocolPoint[]>>;
+// Recursive type for arbitrary depth hierarchy
+type LabelHierarchy = Map<string, LabelHierarchy | ProtocolPoint[]>;
 
 interface RawProtocolPoint {
   block?: string;
@@ -119,7 +120,7 @@ function getLabelHelp(family: string, labelText?: string): string | null {
   return familyData.help || null;
 }
 
-// Helper to group by label hierarchy (supports multiple levels)
+// Helper to group by label hierarchy (supports arbitrary depth)
 function groupByLabelHierarchy(
   items: ProtocolPoint[],
   hierarchy: string[]
@@ -139,48 +140,48 @@ function groupByLabelHierarchy(
       if (firstLabel) {
         const key = firstLabel.label_text;
         if (!map.has(key)) {
-          map.set(key, new Map());
+          map.set(key, []);
         }
-        const innerMap = map.get(key)!;
-        if (!innerMap.has("")) {
-          innerMap.set("", []);
-        }
-        innerMap.get("")!.push(it);
+        const itemsList = map.get(key) as ProtocolPoint[];
+        itemsList.push(it);
       }
       return;
     }
 
-    // Group by first level of hierarchy
-    const firstLevelFamily = hierarchy[0];
-    const firstLevelLabel = labels.find((l) => l.label_family === firstLevelFamily);
-    // Skip if no matching label for first level
-    if (!firstLevelLabel) {
-      return;
-    }
-    const firstLevelKey = firstLevelLabel.label_text;
-
-    if (!map.has(firstLevelKey)) {
-      map.set(firstLevelKey, new Map());
-    }
-    const innerMap = map.get(firstLevelKey)!;
-
-    // Handle remaining hierarchy levels recursively
-    if (hierarchy.length > 1) {
-      const remainingHierarchy = hierarchy.slice(1);
-      const secondLevelFamily = remainingHierarchy[0];
-      const secondLevelLabel = labels.find((l) => l.label_family === secondLevelFamily);
-      // Use second level label if found, otherwise use empty string (no second level grouping)
-      const secondLevelKey = secondLevelLabel?.label_text || "";
-      if (!innerMap.has(secondLevelKey)) {
-        innerMap.set(secondLevelKey, []);
+    // Recursively build the hierarchy
+    let currentMap = map;
+    for (let i = 0; i < hierarchy.length; i++) {
+      const family = hierarchy[i];
+      const label = labels.find((l) => l.label_family === family);
+      
+      if (!label) {
+        // No matching label for this level, skip this point
+        return;
       }
-      innerMap.get(secondLevelKey)!.push(it);
-    } else {
-      // No second level, put directly under first level
-      if (!innerMap.has("")) {
-        innerMap.set("", []);
+      
+      const key = label.label_text;
+      
+      if (i === hierarchy.length - 1) {
+        // Last level - create a map entry for this level, then store items in a sub-map
+        // This allows the last level to be rendered as a group
+        if (!currentMap.has(key)) {
+          currentMap.set(key, new Map());
+        }
+        const levelMap = currentMap.get(key) as LabelHierarchy;
+        // Store items under empty string key within this level's map
+        if (!levelMap.has("")) {
+          levelMap.set("", []);
+        }
+        const itemsList = levelMap.get("") as ProtocolPoint[];
+        itemsList.push(it);
+      } else {
+        // Intermediate level - create nested map
+        if (!currentMap.has(key)) {
+          currentMap.set(key, new Map());
+        }
+        const nestedMap = currentMap.get(key) as LabelHierarchy;
+        currentMap = nestedMap;
       }
-      innerMap.get("")!.push(it);
     }
   });
 
@@ -297,8 +298,8 @@ function HelpToggle({ show, onToggle }: HelpToggleProps) {
 }
 
 interface LabelGroupProps {
-  firstLevel: string;
-  secondLevelMap: Map<string, ProtocolPoint[]>;
+  levelName: string;
+  levelData: LabelHierarchy | ProtocolPoint[];
   selected: Map<string, Set<string>>;
   toggle: (key: string) => void;
   showHelp: boolean;
@@ -306,182 +307,147 @@ interface LabelGroupProps {
   groupsExpanded: boolean;
   pointHelpEnabled: Set<string>;
   onTogglePointHelp: (pointKey: string) => void;
+  depth?: number;
 }
 
-function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, onUpdateInverters, groupsExpanded, pointHelpEnabled, onTogglePointHelp }: LabelGroupProps) {
-  const firstLevelId = `group-${firstLevel.replace(/\s+/g, '-')}`;
+function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdateInverters, groupsExpanded, pointHelpEnabled, onTogglePointHelp, depth = 0 }: LabelGroupProps) {
+  const levelId = `group-${levelName.replace(/\s+/g, '-')}-${depth}`;
+  const isLeaf = Array.isArray(levelData);
+  
+  // Safety check: ensure levelData is valid
+  if (!levelData) {
+    return null;
+  }
+  
+  // Render a single point
+  const renderPoint = (it: ProtocolPoint) => {
+    const key = `${it.model}:${it.point}`;
+    const desc = it.entry.description || key;
+    const long = it.entry.longdescription || desc;
+    const unit = it.entry.unit && it.entry.unit !== "N/A" ? ` (${it.entry.unit})` : "";
+    const checked = selected.has(key);
+    const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
+    const labels = Array.isArray(it.labels) ? it.labels : [];
+    const pointHelpShown = showHelp || pointHelpEnabled.has(key);
+    
+    return (
+      <div key={key} data-point-key={key} className="rounded-md px-2 py-1 hover:bg-gray-50 transition-colors">
+        <div className="flex items-start gap-2 flex-wrap">
+          <label className="flex cursor-pointer items-center gap-2 flex-wrap flex-1 min-w-0">
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={() => toggle(key)}
+              className="h-4 w-4 flex-shrink-0"
+            />
+            <span className="text-sm">
+              {desc}
+              {unit}
+            </span>
+            <span
+              className={`ml-1 cursor-pointer flex-shrink-0 ${
+                pointHelpShown 
+                  ? 'text-blue-600 hover:text-blue-700' 
+                  : 'text-gray-400 hover:text-gray-600'
+              }`}
+              title={long}
+              aria-label="Help"
+              onClick={(e) => {
+                e.stopPropagation();
+                onTogglePointHelp(key);
+              }}
+            >
+              ⓘ
+            </span>
+            {checked && (
+              <div className="ml-auto flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                <span className="text-xs text-gray-600">Inverter SN:</span>
+                <InverterSelector
+                  selectedInverters={selectedInverters}
+                  onChange={(newInverters) => onUpdateInverters(key, newInverters)}
+                />
+              </div>
+            )}
+            {pointHelpShown && labels.length > 0 && (
+              <div className="ml-2 flex flex-wrap gap-1 w-full">
+                {labels.map((label, idx) => {
+                  const color = getLabelColor(label.label_family, label.label_text);
+                  const labelHelp = getLabelHelp(label.label_family, label.label_text);
+                  const tooltipText = labelHelp || `${label.label_family}: ${label.label_text}`;
+                  return (
+                    <span
+                      key={idx}
+                      className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border}`}
+                      title={tooltipText}
+                    >
+                      {label.label_text}
+                    </span>
+                  );
+                })}
+              </div>
+            )}
+          </label>
+        </div>
+        {pointHelpShown && (
+          <div className="pl-6 text-xs text-gray-500 whitespace-pre-wrap">{long}</div>
+        )}
+      </div>
+    );
+  };
+  
+  // If this is a leaf node (array of points), render them directly
+  if (isLeaf) {
+    const points = levelData as ProtocolPoint[];
+    return (
+      <div className="ml-2 space-y-1">
+        {points.map(renderPoint)}
+      </div>
+    );
+  }
+  
+  // Otherwise, render nested groups
+  // Type guard: if it's not an array, it must be a Map (LabelHierarchy)
+  if (!(levelData instanceof Map)) {
+    console.error('LabelGroup: levelData is neither array nor Map', { levelName, depth, levelData, type: typeof levelData });
+    return null;
+  }
+  const nestedMap = levelData as LabelHierarchy;
+  const isTopLevel = depth === 0;
   
   return (
-    <details id={firstLevelId} className="group border-b py-2" open={groupsExpanded}>
-      <summary className="cursor-pointer list-none font-semibold">
+    <details id={levelId} className={`group border-b py-2 ${isTopLevel ? '' : 'ml-2 border-l pl-2'}`} open={groupsExpanded}>
+      <summary className={`cursor-pointer list-none ${isTopLevel ? 'font-semibold' : 'font-medium text-gray-700'}`}>
         <span className="mr-1">▾</span>
-        {firstLevel}
+        {levelName}
       </summary>
       <div className="mt-2 ml-1 space-y-2">
-        {[...secondLevelMap.entries()].map(([secondLevel, items]) => {
-          if (secondLevel === "") {
-            // No second level grouping
-            return (
-              <div key="" className="ml-2 space-y-1">
-                {items.map((it) => {
-                  const key = `${it.model}:${it.point}`;
-                  const desc = it.entry.description || key;
-                  const long = it.entry.longdescription || desc;
-                  const unit = it.entry.unit && it.entry.unit !== "N/A" ? ` (${it.entry.unit})` : "";
-                  const checked = selected.has(key);
-                  const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
-                  const labels = Array.isArray(it.labels) ? it.labels : [];
-                  const pointHelpShown = showHelp || pointHelpEnabled.has(key);
-                  return (
-                    <div key={key} data-point-key={key} className="rounded-md px-2 py-1 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-start gap-2 flex-wrap">
-                        <label className="flex cursor-pointer items-center gap-2 flex-wrap flex-1 min-w-0">
-                          <input
-                            type="checkbox"
-                            checked={checked}
-                            onChange={() => toggle(key)}
-                            className="h-4 w-4 flex-shrink-0"
-                          />
-                          <span className="text-sm">
-                            {desc}
-                            {unit}
-                          </span>
-                          <span
-                            className={`ml-1 cursor-pointer flex-shrink-0 ${
-                              pointHelpShown 
-                                ? 'text-blue-600 hover:text-blue-700' 
-                                : 'text-gray-400 hover:text-gray-600'
-                            }`}
-                            title={long}
-                            aria-label="Help"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onTogglePointHelp(key);
-                            }}
-                          >
-                            ⓘ
-                          </span>
-                          {checked && (
-                            <div className="ml-auto flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
-                              <span className="text-xs text-gray-600">Inverter SN:</span>
-                              <InverterSelector
-                                selectedInverters={selectedInverters}
-                                onChange={(newInverters) => onUpdateInverters(key, newInverters)}
-                              />
-                            </div>
-                          )}
-                          {pointHelpShown && labels.length > 0 && (
-                            <div className="ml-2 flex flex-wrap gap-1 w-full">
-                              {labels.map((label, idx) => {
-                                const color = getLabelColor(label.label_family, label.label_text);
-                                const labelHelp = getLabelHelp(label.label_family, label.label_text);
-                                const tooltipText = labelHelp || `${label.label_family}: ${label.label_text}`;
-                                return (
-                                  <span
-                                    key={idx}
-                                    className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border}`}
-                                    title={tooltipText}
-                                  >
-                                    {label.label_text}
-                                  </span>
-                                );
-                              })}
-                            </div>
-                          )}
-                        </label>
-                      </div>
-                      {pointHelpShown && (
-                        <div className="pl-6 text-xs text-gray-500 whitespace-pre-wrap">{long}</div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            );
+        {[...nestedMap.entries()].map(([nextLevelName, nextLevelData]) => {
+          // Skip empty string entries - they contain the actual items array
+          if (nextLevelName === "") {
+            // This is the items array at the deepest level
+            if (Array.isArray(nextLevelData)) {
+              return (
+                <div key="" className="ml-2 space-y-1">
+                  {(nextLevelData as ProtocolPoint[]).map(renderPoint)}
+                </div>
+              );
+            }
+            return null;
           }
-          // Has second level grouping
           return (
-            <details key={secondLevel} className="ml-2 group border-l pl-2" open>
-              <summary className="cursor-pointer list-none font-medium text-gray-700">
-                <span className="mr-1">▾</span>
-                {secondLevel}
-              </summary>
-              <div className="mt-1 ml-1 space-y-1">
-                {items.map((it) => {
-                  const key = `${it.model}:${it.point}`;
-                  const desc = it.entry.description || key;
-                  const long = it.entry.longdescription || desc;
-                  const unit = it.entry.unit && it.entry.unit !== "N/A" ? ` (${it.entry.unit})` : "";
-                  const checked = selected.has(key);
-                  const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
-                  const labels = Array.isArray(it.labels) ? it.labels : [];
-                  const pointHelpShown = showHelp || pointHelpEnabled.has(key);
-                  return (
-                    <div key={key} data-point-key={key} className="rounded-md px-2 py-1 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-start gap-2 flex-wrap">
-                        <label className="flex cursor-pointer items-center gap-2 flex-wrap flex-1 min-w-0">
-                          <input
-                            type="checkbox"
-                            checked={checked}
-                            onChange={() => toggle(key)}
-                            className="h-4 w-4 flex-shrink-0"
-                          />
-                          <span className="text-sm">
-                            {desc}
-                            {unit}
-                          </span>
-                          <span
-                            className={`ml-1 cursor-pointer flex-shrink-0 ${
-                              pointHelpShown 
-                                ? 'text-blue-600 hover:text-blue-700' 
-                                : 'text-gray-400 hover:text-gray-600'
-                            }`}
-                            title={long}
-                            aria-label="Help"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onTogglePointHelp(key);
-                            }}
-                          >
-                            ⓘ
-                          </span>
-                          {checked && (
-                            <div className="ml-auto flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
-                              <span className="text-xs text-gray-600">Inverter SN:</span>
-                              <InverterSelector
-                                selectedInverters={selectedInverters}
-                                onChange={(newInverters) => onUpdateInverters(key, newInverters)}
-                              />
-                            </div>
-                          )}
-                          {pointHelpShown && labels.length > 0 && (
-                            <div className="ml-2 flex flex-wrap gap-1 w-full">
-                              {labels.map((label, idx) => {
-                                const color = getLabelColor(label.label_family, label.label_text);
-                                const labelHelp = getLabelHelp(label.label_family, label.label_text);
-                                const tooltipText = labelHelp || `${label.label_family}: ${label.label_text}`;
-                                return (
-                                  <span
-                                    key={idx}
-                                    className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border}`}
-                                    title={tooltipText}
-                                  >
-                                    {label.label_text}
-                                  </span>
-                                );
-                              })}
-                            </div>
-                          )}
-                        </label>
-                      </div>
-                      {pointHelpShown && (
-                        <div className="pl-6 text-xs text-gray-500 whitespace-pre-wrap">{long}</div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </details>
+            <LabelGroup
+              key={nextLevelName}
+              levelName={nextLevelName}
+              levelData={nextLevelData}
+              selected={selected}
+              toggle={toggle}
+              showHelp={showHelp}
+              onUpdateInverters={onUpdateInverters}
+              groupsExpanded={groupsExpanded}
+              pointHelpEnabled={pointHelpEnabled}
+              onTogglePointHelp={onTogglePointHelp}
+              depth={depth + 1}
+            />
           );
         })}
       </div>
@@ -1648,12 +1614,12 @@ export default function App() {
                   <div className="text-emerald-600 font-semibold mb-2 text-xs">Navigation</div>
                   <div className="flex flex-col gap-1">
                     {[...grouped.entries()]
-                      .filter(([firstLevel]) => firstLevel !== "(Unlabeled)")
-                      .map(([firstLevel]) => {
-                        const firstLevelId = `group-${firstLevel.replace(/\s+/g, '-')}`;
-                        const isActive = activeGroup === firstLevelId;
+                      .filter(([levelName]) => levelName !== "(Unlabeled)")
+                      .map(([levelName]) => {
+                        const levelId = `group-${levelName.replace(/\s+/g, '-')}-0`;
+                        const isActive = activeGroup === levelId;
                         return (
-                          <div key={firstLevel} className="relative">
+                          <div key={levelName} className="relative">
                             {/* Active indicator bar */}
                             {isActive && (
                               <div className="absolute left-0 top-1 bottom-1 w-1 bg-blue-500 rounded-r" />
@@ -1662,22 +1628,22 @@ export default function App() {
                               className={`px-2 py-1 hover:bg-gray-50 rounded text-xs w-full text-left transition-colors ${
                                 isActive ? 'text-blue-600 font-medium bg-blue-50' : 'text-gray-700'
                               }`}
-                              onClick={() => {
-                                const element = document.getElementById(firstLevelId);
-                                if (element && sidebarContentRef.current) {
-                                  // Scroll within the sidebar content area
-                                  const containerRect = sidebarContentRef.current.getBoundingClientRect();
-                                  const elementRect = element.getBoundingClientRect();
-                                  const scrollTop = sidebarContentRef.current.scrollTop;
-                                  const relativeTop = elementRect.top - containerRect.top + scrollTop;
-                                  sidebarContentRef.current.scrollTo({
-                                    top: relativeTop - 10, // 10px offset from top
-                                    behavior: 'smooth'
-                                  });
-                                }
-                              }}
-                            >
-                              {firstLevel}
+                            onClick={() => {
+                              const element = document.getElementById(levelId);
+                              if (element && sidebarContentRef.current) {
+                                // Scroll within the sidebar content area
+                                const containerRect = sidebarContentRef.current.getBoundingClientRect();
+                                const elementRect = element.getBoundingClientRect();
+                                const scrollTop = sidebarContentRef.current.scrollTop;
+                                const relativeTop = elementRect.top - containerRect.top + scrollTop;
+                                sidebarContentRef.current.scrollTo({
+                                  top: relativeTop - 10, // 10px offset from top
+                                  behavior: 'smooth'
+                                });
+                              }
+                            }}
+                          >
+                            {levelName}
                             </button>
                           </div>
                         );
@@ -1760,12 +1726,12 @@ export default function App() {
                   </div>
                 ) : (
                   [...grouped.entries()]
-                    .filter(([firstLevel]) => firstLevel !== "(Unlabeled)")
-                    .map(([firstLevel, secondLevelMap]) => (
+                    .filter(([levelName]) => levelName !== "(Unlabeled)")
+                    .map(([levelName, levelData]) => (
                       <LabelGroup
-                        key={firstLevel}
-                        firstLevel={firstLevel}
-                        secondLevelMap={secondLevelMap}
+                        key={levelName}
+                        levelName={levelName}
+                        levelData={levelData}
                         selected={selected}
                         toggle={toggle}
                         showHelp={showHelp}
@@ -1773,6 +1739,7 @@ export default function App() {
                         groupsExpanded={groupsExpanded}
                         pointHelpEnabled={pointHelpEnabled}
                         onTogglePointHelp={togglePointHelp}
+                        depth={0}
                       />
                     ))
                 )}
