@@ -231,19 +231,23 @@ const FAMILY_COLOR_MAP: Map<string, number> = new Map([
   ['component', 0],   // blue
   ['feature', 1],     // green
   ['detail_level', 2], // purple
+  ['level of detail', 2], // purple (alternative name)
   ['info', 3],        // yellow
+  ['unit', 4],        // pink
 ]);
 
 function getLabelColor(family: string, _text: string): { bg: string; text: string; border: string } {
   // Use only family name for consistent coloring - all labels of same family get same color
+  // Normalize family name to lowercase for lookup
+  const normalizedFamily = family.toLowerCase();
   // Check if we have a pre-assigned color for this family
-  if (FAMILY_COLOR_MAP.has(family)) {
-    const index = FAMILY_COLOR_MAP.get(family)!;
+  if (FAMILY_COLOR_MAP.has(normalizedFamily)) {
+    const index = FAMILY_COLOR_MAP.get(normalizedFamily)!;
     return COLOR_PALETTE[index];
   }
 
   // For unknown families, use hash but start from index 4 to avoid collisions
-  const hash = family.split('').reduce((acc, char) => {
+  const hash = normalizedFamily.split('').reduce((acc, char) => {
     return ((acc << 5) - acc) + char.charCodeAt(0);
   }, 0);
   const index = 4 + (Math.abs(hash) % (COLOR_PALETTE.length - 4));
@@ -251,25 +255,16 @@ function getLabelColor(family: string, _text: string): { bg: string; text: strin
 }
 
 interface ToolbarProps {
-  selectedCount: number;
-  onClear: () => void;
-  total: number;
+  visibleCount: number;
+  totalCount: number;
 }
 
-function Toolbar({ selectedCount, onClear, total }: ToolbarProps) {
+function Toolbar({ visibleCount, totalCount }: ToolbarProps) {
   return (
-    <div className="flex items-center justify-between gap-2 border-b pb-2">
+    <div className="flex items-center gap-2 border-b pb-2">
       <div className="flex items-center gap-2 text-sm">
-        <strong className="mr-1">Selected:</strong> {selectedCount}
-        <span className="mx-2">•</span>
-        <span>Available: {total.toLocaleString()}</span>
+        <span>Available: {visibleCount.toLocaleString()} of {totalCount.toLocaleString()}</span>
       </div>
-      <button
-        className="rounded-xl border px-3 py-1 text-sm hover:bg-gray-50"
-        onClick={onClear}
-      >
-        Clear All
-      </button>
     </div>
   );
 }
@@ -281,12 +276,19 @@ interface SearchBoxProps {
 
 function SearchBox({ value, onChange }: SearchBoxProps) {
   return (
-    <input
-      className="w-full rounded-xl border px-3 py-2 text-sm outline-none focus:ring"
-      placeholder="Filter search"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
+    <div className="relative">
+      <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <input
+        className="w-full rounded-xl border pl-10 pr-3 py-2 text-sm outline-none focus:ring"
+        placeholder="search"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
   );
 }
 
@@ -516,9 +518,10 @@ interface LabelFilterProps {
   allLabels: Map<string, Set<string>>;
   selectedLabels: Set<string>;
   onToggleLabel: (family: string, text: string) => void;
+  onClearFilters: () => void;
 }
 
-function LabelFilter({ allLabels, selectedLabels, onToggleLabel }: LabelFilterProps) {
+function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters }: LabelFilterProps) {
   const [height, setHeight] = React.useState(200);
   const [isResizing, setIsResizing] = React.useState(false);
   const [helpModalFamily, setHelpModalFamily] = React.useState<string | null>(null);
@@ -555,28 +558,79 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel }: LabelFilterPr
     };
   }, [isResizing]);
 
+  // Get active filter badges
+  const activeFilters = Array.from(selectedLabels).map((labelKey) => {
+    const [family, text] = labelKey.split(':', 2);
+    return { family, text };
+  });
+
   return (
     <div ref={containerRef} className="mb-3 rounded-lg border bg-gray-50 p-2">
-      <div className="mb-1 flex items-center justify-between">
-        <div className="text-xs font-semibold text-gray-700">Filter by Labels</div>
-        <div className="text-xs text-gray-500">Drag bottom edge to resize</div>
-      </div>
-      <div 
-        className="space-y-0.5 overflow-auto"
-        style={{ height: `${height}px` }}
-      >
+      <details className="group">
+        <summary className="cursor-pointer list-none">
+          <div className="mb-1 flex items-start justify-between gap-2">
+            <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 flex-1 min-w-0">
+              <svg className="h-4 w-4 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+              <span className="flex-shrink-0">Filters</span>
+              <span className="mr-1 group-open:rotate-90 transition-transform flex-shrink-0">▸</span>
+              {activeFilters.length > 0 && (
+                <>
+                  <div className="flex flex-wrap items-center gap-1 ml-2 min-w-0">
+                    {activeFilters.map(({ family, text }) => {
+                      const color = getLabelColor(family, text);
+                      return (
+                        <span
+                          key={`${family}:${text}`}
+                          className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border} border-2 font-semibold flex-shrink-0`}
+                        >
+                          {text}
+                        </span>
+                      );
+                    })}
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClearFilters();
+                    }}
+                    className="ml-2 flex-shrink-0 rounded p-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition-colors"
+                    title="Clear all filters"
+                    aria-label="Clear all filters"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </summary>
+        <div 
+          className="space-y-0.5 overflow-auto mt-2"
+          style={{ height: `${height}px` }}
+        >
         {[...allLabels.entries()].map(([family, texts]) => {
           const familyHelp = getLabelHelp(family);
+          const familyColor = getLabelColor(family, '');
+          // Check if any label in this family is selected
+          const hasSelectedLabel = Array.from(texts).some(text => selectedLabels.has(`${family}:${text}`));
           return (
             <div key={family} className="flex items-center gap-1.5 text-xs py-0.5">
               <button
                 onClick={() => setHelpModalFamily(family)}
-                className="flex items-center gap-1 rounded-md border border-gray-300 bg-white px-2 py-0.5 font-semibold text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-colors flex-shrink-0 w-28 justify-between"
+                className={`flex items-center gap-1 rounded-md border px-2 py-0.5 font-semibold transition-colors flex-shrink-0 w-28 justify-between ${
+                  hasSelectedLabel
+                    ? `${familyColor.bg} ${familyColor.text} ${familyColor.border} border-2`
+                    : `${familyColor.bg} ${familyColor.text} ${familyColor.border} border`
+                }`}
                 title={familyHelp || `View help for ${family} labels`}
                 aria-label={`Help for ${family}`}
               >
                 <span className="truncate">{family}</span>
-                <svg className="h-3 w-3 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`h-3 w-3 flex-shrink-0 ${familyColor.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </button>
@@ -606,19 +660,92 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel }: LabelFilterPr
             </div>
           );
         })}
-      </div>
-      {helpModalFamily && (
-        <LabelHelpModal
-          family={helpModalFamily}
-          labels={allLabels.get(helpModalFamily) || new Set()}
-          onClose={() => setHelpModalFamily(null)}
+        </div>
+        {helpModalFamily && (
+          <LabelHelpModal
+            family={helpModalFamily}
+            labels={allLabels.get(helpModalFamily) || new Set()}
+            onClose={() => setHelpModalFamily(null)}
+          />
+        )}
+        <div
+          onMouseDown={handleMouseDown}
+          className="mt-1 h-1 cursor-ns-resize rounded bg-gray-300 hover:bg-gray-400 transition-colors"
+          title="Drag to resize"
         />
-      )}
-      <div
-        onMouseDown={handleMouseDown}
-        className="mt-1 h-1 cursor-ns-resize rounded bg-gray-300 hover:bg-gray-400 transition-colors"
-        title="Drag to resize"
-      />
+      </details>
+    </div>
+  );
+}
+
+interface FakeChartProps {
+  selectedPoints: Set<string>;
+  protocols: ProtocolPoint[];
+}
+
+function FakeChart({ selectedPoints, protocols }: FakeChartProps) {
+  // Get selected point names
+  const selectedPointNames = Array.from(selectedPoints)
+    .map((key) => {
+      const [model, point] = key.split(':');
+      const protocol = protocols.find((p) => p.model === model && p.point === point);
+      if (protocol) {
+        return protocol.entry.description || protocol.entry.name || point;
+      }
+      return point;
+    })
+    .filter(Boolean);
+
+  return (
+    <div className="w-full h-full p-4">
+      <div className="mb-2 text-sm font-semibold text-gray-700">Chart</div>
+      <div className="relative h-[500px] border border-gray-400 bg-gray-50">
+        {/* Y-axis */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 border-r border-gray-600 flex flex-col items-center justify-between py-2">
+          <span className="text-xs text-gray-600 transform -rotate-90 whitespace-nowrap">Value</span>
+          <div className="flex flex-col items-center gap-1">
+            <div className="w-2 h-px bg-gray-600"></div>
+            <div className="w-2 h-px bg-gray-600"></div>
+            <div className="w-2 h-px bg-gray-600"></div>
+            <div className="w-2 h-px bg-gray-600"></div>
+            <div className="w-2 h-px bg-gray-600"></div>
+          </div>
+          <span className="text-xs text-gray-600">0</span>
+        </div>
+        
+        {/* X-axis */}
+        <div className="absolute bottom-0 left-8 right-0 h-8 border-t border-gray-600 flex items-center justify-between px-2">
+          <span className="text-xs text-gray-600">0</span>
+          <div className="flex gap-1">
+            <div className="h-2 w-px bg-gray-600"></div>
+            <div className="h-2 w-px bg-gray-600"></div>
+            <div className="h-2 w-px bg-gray-600"></div>
+            <div className="h-2 w-px bg-gray-600"></div>
+            <div className="h-2 w-px bg-gray-600"></div>
+          </div>
+          <span className="text-xs text-gray-600">Time</span>
+        </div>
+
+        {/* Chart area */}
+        <div className="absolute inset-0 left-8 bottom-8 p-4">
+          {selectedPointNames.length === 0 ? (
+            <div className="flex items-center justify-center h-full text-sm text-gray-400">
+              Select points to display charts
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {selectedPointNames.map((name, index) => (
+                <div
+                  key={index}
+                  className="bg-blue-50 border border-blue-200 rounded px-3 py-2 text-sm text-blue-800"
+                >
+                  Chart of <strong>{name}</strong> here
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -696,9 +823,27 @@ function HierarchyConfig({ availableFamilies, hierarchy, onChange }: HierarchyCo
       <div className="mb-3 rounded-lg border bg-gray-50 p-2">
         <details className="group">
           <summary className="cursor-pointer list-none">
-            <div className="flex items-center gap-2 text-xs font-semibold text-gray-700">
-              <span className="mr-1 group-open:rotate-90 transition-transform">▸</span>
-              <span>Group by</span>
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 flex-1 min-w-0">
+                <span className="mr-1 group-open:rotate-90 transition-transform flex-shrink-0">▸</span>
+                <span className="flex-shrink-0">Group by</span>
+                {hierarchy.filter(level => level).length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1 ml-2 min-w-0">
+                    {hierarchy.map((level, index) => {
+                      if (!level) return null;
+                      const color = getLabelColor(level, '');
+                      return (
+                        <span
+                          key={index}
+                          className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border} border font-semibold flex-shrink-0`}
+                        >
+                          {level}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           </summary>
           <div className="mt-2">
@@ -760,6 +905,41 @@ export default function App() {
   const [showHelp, setShowHelp] = useState<boolean>(true);
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set(["Level of Detail:Standard"]));
   const [hierarchy, setHierarchy] = useState<string[]>(["Component", "Feature"]);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const [sidebarWidth, setSidebarWidth] = useState<number>(500);
+  const [isResizing, setIsResizing] = React.useState(false);
+  const sidebarRef = React.useRef<HTMLDivElement>(null);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsResizing(true);
+  };
+
+  React.useEffect(() => {
+    if (!isResizing) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (sidebarRef.current) {
+        const rect = sidebarRef.current.getBoundingClientRect();
+        const newWidth = rect.right - e.clientX;
+        if (newWidth >= 300 && newWidth <= 800) {
+          setSidebarWidth(newWidth);
+        }
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing]);
 
   // Extract all labels from protocols
   const allLabels = useMemo(() => extractAllLabels(protocols), []);
@@ -861,7 +1041,8 @@ export default function App() {
 
   const clearAll = () => setSelected(new Set<string>());
   const clearLabelFilters = () => setSelectedLabels(new Set<string>());
-  const total = filtered.length;
+  const visibleCount = filtered.length;
+  const totalCount = protocols.length;
 
   // --- Lightweight runtime "tests" to sanity check data transforms ---
   useEffect(() => {
@@ -878,64 +1059,100 @@ export default function App() {
 
   return (
     <div className="h-full bg-slate-100 p-4 md:p-6">
-      <div className="mx-auto max-w-4xl rounded-2xl border bg-white p-4 shadow-sm">
-      <div className="mb-3 text-lg font-semibold">Select Points</div>
-      <Toolbar selectedCount={selected.size} onClear={clearAll} total={total} />
-      
-      <HierarchyConfig
-        availableFamilies={availableFamilies}
-        hierarchy={hierarchy}
-        onChange={setHierarchy}
-      />
-      
-      <LabelFilter
-        allLabels={allLabels}
-        selectedLabels={selectedLabels}
-        onToggleLabel={toggleLabel}
-      />
-      
-      {selectedLabels.size > 0 && (
-        <div className="mb-2 flex items-center gap-2">
-          <button
-            onClick={clearLabelFilters}
-            className="rounded border bg-red-50 px-2 py-1 text-xs text-red-700 hover:bg-red-100"
+      <div className="mx-auto w-full max-w-[95vw] h-[calc(100vh-2rem)] rounded-2xl border bg-white shadow-sm relative">
+        {/* Chart area - full width */}
+        <FakeChart selectedPoints={selected} protocols={protocols} />
+        
+        {/* Toggle button - always visible, positioned outside sidebar */}
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="absolute top-4 z-30 rounded-md border border-gray-300 bg-white p-2 shadow-sm hover:bg-gray-50 transition-all duration-300"
+          style={{ right: sidebarOpen ? `${sidebarWidth + 16}px` : '1rem' }}
+          title={sidebarOpen ? "Hide sidebar" : "Show sidebar"}
+        >
+          <svg
+            className={`h-5 w-5 text-gray-600 transition-transform ${sidebarOpen ? '' : 'rotate-180'}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            Clear Label Filters ({selectedLabels.size})
-          </button>
-        </div>
-      )}
-      
-      <SearchBox value={query} onChange={setQuery} />
-      <div className="mt-2 flex justify-end">
-        <HelpToggle show={showHelp} onToggle={setShowHelp} />
-      </div>
-
-      <div className="mt-3 max-h-[60vh] overflow-auto pr-1">
-        {grouped.size === 0 ? (
-          <div className="py-4 text-center text-sm text-gray-500">
-            No points match the current filters
-          </div>
-        ) : (
-          [...grouped.entries()]
-            .filter(([firstLevel]) => firstLevel !== "(Unlabeled)")
-            .map(([firstLevel, secondLevelMap]) => (
-              <LabelGroup
-                key={firstLevel}
-                firstLevel={firstLevel}
-                secondLevelMap={secondLevelMap}
-                selected={selected}
-                toggle={toggle}
-                showHelp={showHelp}
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        
+        {/* Point selector sidebar - overlays on top */}
+        <div
+          ref={sidebarRef}
+          className={`absolute top-0 right-0 bottom-0 bg-white border-l border-gray-300 shadow-lg transition-transform duration-300 overflow-hidden ${
+            sidebarOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+          style={{ 
+            width: `${sidebarWidth}px`,
+            maxHeight: '100%'
+          }}
+        >
+          {/* Resize handle */}
+          {sidebarOpen && (
+            <div
+              onMouseDown={handleMouseDown}
+              className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize bg-gray-300 hover:bg-gray-400 transition-colors z-10"
+              title="Drag to resize"
+            />
+          )}
+          
+          {/* Sidebar content */}
+          <div className="h-full overflow-hidden flex flex-col" style={{ paddingLeft: '0.25rem' }}>
+            <div className="p-4 flex-shrink-0">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="text-lg font-semibold">Select Points</div>
+                <div className="text-sm">
+                  <span>Available: {visibleCount.toLocaleString()} of {totalCount.toLocaleString()}</span>
+                </div>
+              </div>
+              
+              <HierarchyConfig
+                availableFamilies={availableFamilies}
+                hierarchy={hierarchy}
+                onChange={setHierarchy}
               />
-            ))
-        )}
-      </div>
+              
+              <LabelFilter
+                allLabels={allLabels}
+                selectedLabels={selectedLabels}
+                onToggleLabel={toggleLabel}
+                onClearFilters={clearLabelFilters}
+              />
+              
+              <div className="mt-2 flex items-center gap-2">
+                <div className="flex-1">
+                  <SearchBox value={query} onChange={setQuery} />
+                </div>
+                <HelpToggle show={showHelp} onToggle={setShowHelp} />
+              </div>
+            </div>
 
-      {/* Footer / Debug selection */}
-      <div className="mt-4 rounded-xl bg-gray-50 p-3 text-xs text-gray-600">
-        <div className="mb-1 font-medium">Selected keys</div>
-        <div className="break-words">{[...selected].join(", ") || "(none)"}</div>
-      </div>
+            <div className="flex-1 overflow-y-auto px-4 pb-4 pr-1">
+              {grouped.size === 0 ? (
+                <div className="py-4 text-center text-sm text-gray-500">
+                  No points match the current filters
+                </div>
+              ) : (
+                [...grouped.entries()]
+                  .filter(([firstLevel]) => firstLevel !== "(Unlabeled)")
+                  .map(([firstLevel, secondLevelMap]) => (
+                    <LabelGroup
+                      key={firstLevel}
+                      firstLevel={firstLevel}
+                      secondLevelMap={secondLevelMap}
+                      selected={selected}
+                      toggle={toggle}
+                      showHelp={showHelp}
+                    />
+                  ))
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
