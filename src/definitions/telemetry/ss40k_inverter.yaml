@@ -3819,7 +3819,7 @@ protocols:
   point: genDryContactState
   block: fixed
   entry:
-    name: Generator Contactor Status
+    name: genDryContactState
     description: Generator Contactor Status
     longdescription: Value from Site Configuration Generator/Generator. Indicates the current state of the generator control contactor.
     dtype: enum16
@@ -7632,7 +7632,7 @@ protocols:
   point: OperatingMode
   block: fixed
   entry:
-    name: Grid Interaction
+    name: OperatingMode
     description: Grid Interaction
     longdescription: Value from Site Configuration Inverter/Basic Setup. Select whether the inverter operates independently of the grid, or is connected to the grid. If off-grid, you should also ignore grid-loss warnings.
     dtype: enum16
@@ -7654,7 +7654,7 @@ protocols:
   point: WorkMode
   block: fixed
   entry:
-    name: Operating Mode
+    name: WorkMode
     description: Operating Mode
     longdescription: 'Value from Site Configuration Inverter/Basic Setup. Select how solar power is prioritized. Self-consumption: PV powers the home first, then charges the battery, and exports last (if allowed). Export first: PV powers the home, then exports to grid, and charges the battery last. Backup power: PV charges the battery first to build reserve, then powers the home, and exports last (if allowed). If a battery schedule is running (PV Charge Only, Discharge Only, or Grid Charge), the inverter will follow that schedule during those times instead of this operating mode. When the scheduled period ends, the inverter will return to the selected operating mode.'
     dtype: enum16
@@ -7677,7 +7677,7 @@ protocols:
   point: PowerControl
   block: fixed
   entry:
-    name: Power Status
+    name: PowerControl
     description: Power Status
     longdescription: Value from Site Configuration Inverter/Basic Setup. Put the inverter into standby mode to stop operation or make configuration changes. While in standby, the inverter will not generate PV power or charge/discharge the battery. If grid power is available, it be used to supply the loads. If the grid is unavailable, the building will not have power.
     dtype: enum16
@@ -7749,7 +7749,7 @@ protocols:
   point: CTSampleRatio
   block: fixed
   entry:
-    name: CT Ratio
+    name: CTSampleRatio
     description: CT Ratio
     longdescription: Value from Site Configuration Inverter/Current Transformer (CT) Settings. Select the current transformer (CT) ratio used for metering electric current on the grid port connection. This must match the CT hardware rating so that current and power readings are accurate.
     dtype: enum16
@@ -7778,7 +7778,7 @@ protocols:
   point: CTDirection
   block: fixed
   entry:
-    name: CT Direction
+    name: CTDirection
     description: CT Direction
     longdescription: Value from Site Configuration Inverter/Current Transformer (CT) Settings. Sets the CT installation direction. You may choose to reverse this if your inverter is reading import when power is actually flowing out to the grid (export) or vice versa.
     dtype: enum16
@@ -7811,7 +7811,7 @@ protocols:
   point: BatteryType
   block: fixed
   entry:
-    name: Battery Type
+    name: BatteryType
     description: Battery Type
     longdescription: Value from Site Configuration Battery/Setup. Specifies the chemistry or general type of connected battery. Choose **No Battery** for standalone PV or grid-tie operation, **Lead-acid** for flooded or AGM batteries, or **Lithium-ion** for managed BMS packs.
     dtype: enum16
@@ -7834,8 +7834,8 @@ protocols:
   point: BatteryBrand
   block: fixed
   entry:
-    name: Battery Brand
-    description: Brand
+    name: BatteryBrand
+    description: Battery Brand
     longdescription: Value from Site Configuration Battery/Setup. Selects the manufacturer profile for the connected battery. This may pre-configure recommended voltage and SOC limits for optimal operation.
     dtype: enum16
     unit: N/A
@@ -7856,7 +7856,7 @@ protocols:
   point: AbsorbVoltage
   block: fixed
   entry:
-    name: Absorb Voltage
+    name: AbsorbVoltage
     description: Absorb Voltage
     longdescription: Value from Site Configuration Battery/Setup. Sets the voltage used during the absorb (bulk-to-float transition) phase. Increasing this value raises the upper charge threshold for lead-acid batteries.
     dtype: uint16
@@ -7876,7 +7876,7 @@ protocols:
   point: FloatVoltage
   block: fixed
   entry:
-    name: Float Voltage
+    name: FloatVoltage
     description: Float Voltage
     longdescription: Value from Site Configuration Battery/Setup. Defines the voltage maintained once the battery is fully charged. This helps prevent overcharging while keeping the battery topped off.
     dtype: uint16
@@ -7896,7 +7896,7 @@ protocols:
   point: VbatStartDerating
   block: fixed
   entry:
-    name: Start Derating Voltage
+    name: VbatStartDerating
     description: Start Derating Voltage
     longdescription: Value from Site Configuration Battery/Setup. Voltage threshold where the inverter begins reducing charge or discharge current to protect the battery as it approaches full or low state.
     dtype: uint16
@@ -7916,8 +7916,8 @@ protocols:
   point: ChaDisChaCtrlType
   block: fixed
   entry:
-    name: Battery Control Type
-    description: Control Type
+    name: ChaDisChaCtrlType
+    description: Battery Control Type
     longdescription: 'Value from Site Configuration Battery/Setup. Determines how the inverter regulates both charging and discharging.
 
 
@@ -7944,7 +7944,7 @@ protocols:
   point: ChargeLimitSoc
   block: fixed
   entry:
-    name: Charge Limit (SOC)
+    name: ChargeLimitSoc
     description: Charge Limit (SOC)
     longdescription: Value from Site Configuration Battery/Setup. Sets the maximum state of charge (SOC) the battery will be charged to. Once the battery reaches this level, charging stops to prevent overcharging and extend lifespan.
     dtype: uint16
@@ -7986,7 +7986,7 @@ protocols:
   point: OnGridCutOffSoc
   block: fixed
   entry:
-    name: On-Grid Battery Cutoff SOC
+    name: OnGridCutOffSoc
     description: On-Grid Battery Cutoff SOC
     longdescription: Value from Site Configuration Battery/Setup. Sets the minimum state of charge (SOC) the battery will discharge to while grid power is available. Below this level, the inverter will stop discharging and switch to grid power to protect battery capacity.
     dtype: uint16
@@ -8008,7 +8008,7 @@ protocols:
   point: OffGridCutOffSoc
   block: fixed
   entry:
-    name: Off-Grid Battery Cutoff SOC
+    name: OffGridCutOffSoc
     description: Off-Grid Battery Cutoff SOC
     longdescription: Value from Site Configuration Battery/Setup. Sets the minimum state of charge (SOC) the battery will discharge to when operating off-grid. Once the battery reaches this level, the inverter stops discharging to prevent deep discharge and maintain battery health.
     dtype: uint16
@@ -8041,8 +8041,8 @@ protocols:
   point: BatteryScheduling
   block: fixed
   entry:
-    name: Battery Scheduling
-    description: Scheduling
+    name: BatteryScheduling
+    description: Battery Scheduling
     longdescription: Value from Site Configuration Battery/Battery Scheduling. This is a special scheduling mode designed for certain time-of-use (TOU) utility rates or other custom situations. In most circumstances, we recomment allowing your system to  manage charging and discharging automatically without setting a schedule.  You don't need to set a schedule unless you have a specific reason to charge or discharge at exact times.
     dtype: enum16
     unit: N/A
@@ -8064,8 +8064,8 @@ protocols:
   point: pChgT1
   block: fixed
   entry:
-    name: Max Battery Charge Power During 'PV Charge Only' Periods
-    description: Power (kW)
+    name: pChgT1
+    description: Max Battery Charge Power During 'PV Charge Only' Periods
     longdescription: Value from Site Configuration Battery/Battery Scheduling/PV Charge Only. Sets the maximum charging power during scheduled Time-of-Use (TOU) charge periods in kW. Set this limit to control the power level at which the battery will charge from the grid during PV charge only periods
     dtype: uint32
     unit: W
@@ -8339,8 +8339,8 @@ protocols:
   point: pDischgT1
   block: fixed
   entry:
-    name: Max Inverter Output Power During 'Discharge Only' Periods
-    description: Power (kW)
+    name: pDischgT1
+    description: Max Inverter Output Power During 'Discharge Only' Periods
     longdescription: Value from Site Configuration Battery/Battery Scheduling/Discharge Only. Sets the maximum discharging power during scheduled Time-of-Use (TOU) discharge periods in kW. Limit this to control how much battery power is exported to loads or grid during those windows.
     dtype: uint32
     unit: kW
@@ -8399,7 +8399,7 @@ protocols:
   point: socDischgEndT1
   block: fixed
   entry:
-    name: TOU Discharge Stop SOC
+    name: socDischgEndT1
     description: TOU Discharge Stop SOC
     longdescription: Value from Site Configuration Battery/Battery Scheduling/Discharge Only. Sets the minimum state of charge (SOC) that the battery will discharge to during 'Discharge Only' operation. Once this level is reached, discharging stops to preserve reserve capacity for later use or backup.
     dtype: uint16
@@ -8608,8 +8608,8 @@ protocols:
   point: GridRegulation
   block: fixed
   entry:
-    name: Grid Parameters
-    description: Code
+    name: GridRegulation
+    description: Grid Parameters
     longdescription: Value from Site Configuration Grid/Setup. This setting changes the conditions under which the inverter will connect or disconnect from the utility grid. Different areas have different rules about when this equipment is allowed to disconnect and when it must ride through. Choose the code required by the local utility or AHJ.
     dtype: enum16
     unit: N/A
@@ -8632,8 +8632,8 @@ protocols:
   point: GridType
   block: fixed
   entry:
-    name: Grid Type
-    description: Service Type
+    name: GridType
+    description: Grid Type
     longdescription: Value from Site Configuration Grid/Setup. Choose wiring configuration of the site.  This helps configure the system to match the power service at the site.  Note the voltage you enter here must match the EPS Voltage.
     dtype: enum16
     unit: N/A
@@ -8654,8 +8654,8 @@ protocols:
   point: GridFreq
   block: fixed
   entry:
-    name: Grid Frequency
-    description: Frequency (Hz)
+    name: GridFreq
+    description: Grid Frequency
     longdescription: Value from Site Configuration Grid/Setup. Sets the nominal grid frequency for the installation. Use 60 Hz for North America and most split-phase installs; use 50 Hz for regions that operate at 230 V single-phase.
     dtype: uint16
     unit: N/A
@@ -8685,8 +8685,8 @@ protocols:
   point: PermitServiceStatus
   block: fixed
   entry:
-    name: Permit to Operate
-    description: Permit Status
+    name: PermitServiceStatus
+    description: Permit to Operate
     longdescription: Value from Site Configuration Grid/Grid Connection. Shows whether the inverter is permitted to operate in grid-connected mode.
     dtype: enum16
     unit: N/A
@@ -8707,8 +8707,8 @@ protocols:
   point: RampRate
   block: fixed
   entry:
-    name: Ramp Rate
-    description: Ramp Rate (%/sec)
+    name: RampRate
+    description: Ramp Rate
     longdescription: Value from Site Configuration Grid/Grid Connection. How quickly inverter output is allowed to increase.
     dtype: uint16
     unit: N/A
@@ -9349,7 +9349,7 @@ protocols:
   point: ConstantPowerFactorModeStatus
   block: fixed
   entry:
-    name: Power Factor Mode
+    name: ConstantPowerFactorModeStatus
     description: Power Factor Mode
     longdescription: Value from Site Configuration Grid/Grid Support/Constant Power Factor. Shows whether constant power-factor control is active.
     dtype: enum16
@@ -9470,8 +9470,8 @@ protocols:
   point: ReactivePowerPercentCMD
   block: fixed
   entry:
-    name: Reactive Power Setpoint
-    description: Reactive Power (%)
+    name: ReactivePowerPercentCMD
+    description: Reactive Power Setpoint
     longdescription: Value from Site Configuration Grid/Grid Support/Constant Reactive Power. Displays the reactive-power target as a percentage of rated power (vars). Excitation determines whether vars are supplied (leading) or absorbed (lagging).
     dtype: uint16
     unit: N/A
@@ -9501,7 +9501,7 @@ protocols:
   point: VoltageReactivePowerMode
   block: fixed
   entry:
-    name: Volt-VAR Mode
+    name: VoltageReactivePowerMode
     description: Volt-VAR Mode
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-VAR (Voltage-Reactive Power). Shows whether Volt-VAR (voltage-reactive power) control is active. This value is read-only and reflects the current configuration or utility command.
     dtype: enum16
@@ -9523,8 +9523,8 @@ protocols:
   point: AutonomousVrefAdjustment
   block: fixed
   entry:
-    name: Autonomous Vref Adjustment
-    description: Autonomous Adjustment
+    name: AutonomousVrefAdjustment
+    description: Autonomous Vref Adjustment
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-VAR (Voltage-Reactive Power). Indicates whether the inverter autonomously adjusts its reference voltage (Vref).
     dtype: enum16
     unit: N/A
@@ -9545,8 +9545,8 @@ protocols:
   point: Verf
   block: fixed
   entry:
-    name: Reference Voltage (Vref)
-    description: Vref
+    name: Verf
+    description: Reference Voltage (Vref)
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-VAR (Voltage-Reactive Power). Voltage reference used for Volt-VAR calculations.
     dtype: uint16
     unit: N/A
@@ -9565,8 +9565,8 @@ protocols:
   point: VrefAdjustmentTimeConstant
   block: fixed
   entry:
-    name: Vref Adjustment Time Constant
-    description: Time Constant
+    name: VrefAdjustmentTimeConstant
+    description: Vref Adjustment Time Constant
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-VAR (Voltage-Reactive Power). Time constant applied when adjusting Vref.
     dtype: uint16
     unit: N/A
@@ -9665,8 +9665,8 @@ protocols:
   point: Q1
   block: fixed
   entry:
-    name: Reactive Power Setpoint Q1
-    description: Q1 (Reactive Setpoint 1)
+    name: Q1
+    description: Reactive Power Setpoint Q1
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-VAR (Voltage-Reactive Power). Reactive power at voltage point V1 on the Volt-VAR curve.
     dtype: uint16
     unit: N/A
@@ -9685,8 +9685,8 @@ protocols:
   point: Q2
   block: fixed
   entry:
-    name: Reactive Power Setpoint Q2
-    description: Q2 (Reactive Setpoint 2)
+    name: Q2
+    description: Reactive Power Setpoint Q2
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-VAR (Voltage-Reactive Power). Reactive power at voltage point V2 on the Volt-VAR curve.
     dtype: uint16
     unit: N/A
@@ -9705,8 +9705,8 @@ protocols:
   point: Q3
   block: fixed
   entry:
-    name: Reactive Power Setpoint Q3
-    description: Q3 (Reactive Setpoint 3)
+    name: Q3
+    description: Reactive Power Setpoint Q3
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-VAR (Voltage-Reactive Power). Reactive power at voltage point V3 on the Volt-VAR curve.
     dtype: uint16
     unit: N/A
@@ -9725,8 +9725,8 @@ protocols:
   point: Q4
   block: fixed
   entry:
-    name: Reactive Power Setpoint Q4
-    description: Q4 (Reactive Setpoint 4)
+    name: Q4
+    description: Reactive Power Setpoint Q4
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-VAR (Voltage-Reactive Power). Reactive power at voltage point V4 on the Volt-VAR curve.
     dtype: uint16
     unit: N/A
@@ -9745,8 +9745,8 @@ protocols:
   point: FreqWattOpenLoopResponseTime
   block: fixed
   entry:
-    name: Open-Loop Response Time
-    description: Response Time
+    name: FreqWattOpenLoopResponseTime
+    description: Open-Loop Response Time
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-VAR (Voltage-Reactive Power). Response time used for open-loop Volt-VAR changes.
     dtype: uint16
     unit: N/A
@@ -9776,7 +9776,7 @@ protocols:
   point: PQModeStatus
   block: fixed
   entry:
-    name: P-Q Mode Status
+    name: PQModeStatus
     description: P-Q Mode Status
     longdescription: Value from Site Configuration Grid/Grid Support/P-Q Mode (Active-Reactive Power). Shows whether Active/Reactive Power (P-Q) control mode is enabled.
     dtype: enum16
@@ -9869,7 +9869,7 @@ protocols:
   point: VoltageActivePowerMode
   block: fixed
   entry:
-    name: Volt-Watt Mode
+    name: VoltageActivePowerMode
     description: Volt-Watt Mode
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-Watt (Voltage-Active Power). Shows whether Volt-Watt (voltage-active power) control is enabled.
     dtype: enum16
@@ -9931,8 +9931,8 @@ protocols:
   point: VoltWattP2
   block: fixed
   entry:
-    name: Volt-Watt Power Setpoint
-    description: P2 Setpoint
+    name: VoltWattP2
+    description: Volt-Watt Power Setpoint
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-Watt (Voltage-Active Power). Power setpoint at voltage breakpoint V2 on the Volt-Watt curve.
     dtype: uint16
     unit: N/A
@@ -9951,8 +9951,8 @@ protocols:
   point: FreqWattOpenLoopResponseTime
   block: fixed
   entry:
-    name: Open-Loop Response Time
-    description: VoltWattOpenLoopResponseTime
+    name: FreqWattOpenLoopResponseTime
+    description: Open-Loop Response Time
     longdescription: Value from Site Configuration Grid/Grid Support/Volt-Watt (Voltage-Active Power). Response time used for open-loop Volt-Watt changes.
     dtype: uint16
     unit: N/A
@@ -9982,7 +9982,7 @@ protocols:
   point: FrequencyActivePowerModeStatus
   block: fixed
   entry:
-    name: Frequency-Active Power Mode
+    name: FrequencyActivePowerModeStatus
     description: Frequency-Active Power Mode
     longdescription: Value from Site Configuration Grid/Grid Support/Freq-Watt (Frequency-Active Power). Indicates whether frequency-power (Freq-Watt) control is currently enabled.
     dtype: enum16
@@ -10004,8 +10004,8 @@ protocols:
   point: FreqWattOpenLoopResponseTime
   block: fixed
   entry:
-    name: Open-Loop Response Time
-    description: Response Time
+    name: FreqWattOpenLoopResponseTime
+    description: Open-Loop Response Time
     longdescription: Value from Site Configuration Grid/Grid Support/Freq-Watt (Frequency-Active Power). Response time applied to open-loop frequency-power adjustments.
     dtype: uint16
     unit: N/A
@@ -10024,8 +10024,8 @@ protocols:
   point: OverFrequencyDroop_dbOF
   block: fixed
   entry:
-    name: 'Over-Frequency Droop: Deadband'
-    description: Deadband (Hz)
+    name: OverFrequencyDroop_dbOF
+    description: 'Over-Frequency Droop: Deadband'
     longdescription: Value from Site Configuration Grid/Grid Support/Freq-Watt (Frequency-Active Power). Over Frequency Droop dbOF â€” Deadband around nominal frequency before active power reduction begins.
     dtype: uint16
     unit: N/A
@@ -10044,8 +10044,8 @@ protocols:
   point: OverFrequencyDroop_kOF
   block: fixed
   entry:
-    name: 'Over-Frequency Droop: Gain (k)'
-    description: Gain k (slope)
+    name: OverFrequencyDroop_kOF
+    description: 'Over-Frequency Droop: Gain (k)'
     longdescription: Value from Site Configuration Grid/Grid Support/Freq-Watt (Frequency-Active Power). Over Frequency Droop kOF â€” Slope (gain k) of active power reduction versus frequency rise above nominal.
     dtype: uint16
     unit: N/A
@@ -10064,8 +10064,8 @@ protocols:
   point: UnderFrequencyDroop_dbUF
   block: fixed
   entry:
-    name: 'Under-Frequency Droop: Deadband'
-    description: Deadband (Hz)
+    name: UnderFrequencyDroop_dbUF
+    description: 'Under-Frequency Droop: Deadband'
     longdescription: Value from Site Configuration Grid/Grid Support/Freq-Watt (Frequency-Active Power). Under Frequency Droop dbUF â€” Deadband around nominal frequency before active power increase/response begins.
     dtype: uint16
     unit: N/A
@@ -10084,8 +10084,8 @@ protocols:
   point: UnderFrequencyDroop_kUF
   block: fixed
   entry:
-    name: 'Under-Frequency Droop: Gain (k)'
-    description: Gain k (slope)
+    name: UnderFrequencyDroop_kUF
+    description: 'Under-Frequency Droop: Gain (k)'
     longdescription: Value from Site Configuration Grid/Grid Support/Freq-Watt (Frequency-Active Power). Under Frequency Droop kUF â€” Slope (gain k) of active power response versus frequency drop below nominal.
     dtype: uint16
     unit: N/A
@@ -10115,7 +10115,7 @@ protocols:
   point: LimitActivePowerStatus
   block: fixed
   entry:
-    name: Limit Power Output
+    name: LimitActivePowerStatus
     description: Limit Power Output
     longdescription: Value from Site Configuration Inverter/Power Limits. Shows whether power output limiting is currently active. When not limited, the inverter can deliver its full available power (subject only to natural hardware limits). When limited, an external or configured cap is applied to restrict inverter output to the specified Power Limit.
     dtype: enum16
@@ -10139,7 +10139,7 @@ protocols:
   point: ActivePowerPercent
   block: fixed
   entry:
-    name: Power Limit
+    name: ActivePowerPercent
     description: Power Limit
     longdescription: Value from Site Configuration Inverter/Power Limits. The inverter's present active-power output limit as a percentage of its rated capacity. If power limiting is active, the inverter will limit its output power to this percentage of its rated capacity.
     dtype: uint16
@@ -10172,7 +10172,7 @@ protocols:
   point: FeedInGridStatus
   block: fixed
   entry:
-    name: Allow Selling Power to Grid
+    name: FeedInGridStatus
     description: Allow Selling Power to Grid
     longdescription: Value from Site Configuration Inverter/Selling Power. Allows the inverter to sell/export power back to the utility grid. Enable this only if local regulations and interconnect agreements permit grid export.
     dtype: enum16
@@ -10194,11 +10194,11 @@ protocols:
   point: FeedInGridMaxPower
   block: fixed
   entry:
-    name: Max Power Sold to Grid
+    name: FeedInGridMaxPower
     description: Max Power Sold to Grid
     longdescription: Value from Site Configuration Inverter/Selling Power. Sets the maximum power the inverter is allowed to sell/export to the grid. Use this to meet utility export limits or site commissioning requirements.
     dtype: uint32
-    unit: uint32
+    unit: W
     category: FeedInGrid
     meanings: {}
   labels:
@@ -10210,12 +10210,14 @@ protocols:
     label_text: Selling Power
   - label_family: info
     label_text: Config
+  - label_family: Unit
+    label_text: Power
 - model: 40104
   point: FastzeroExportstatus
   block: fixed
   entry:
-    name: 'Prevent Grid Export: Strict Mode'
-    description: Fast Zero Export
+    name: FastzeroExportstatus
+    description: 'Prevent Grid Export: Strict Mode'
     longdescription: Value from Site Configuration Inverter/Selling Power. Keeps power export at or near zero by adjusting inverter output in real time. When enabled, the inverter supplies only local (on-site) loads and will not send power back to the grid. This mode is required when grid export is not allowed. Ensure the CTs are installed on the grid connection point and  not on the inverter's load side, so the inverter can correctly detect and prevent export.
     dtype: enum16
     unit: N/A
@@ -10240,12 +10242,14 @@ protocols:
     description: FeedInGridPowerMaxSetValue
     longdescription: FeedInGridPowerMaxSetValue
     dtype: uint16
-    unit: N/A
+    unit: W
     category: FeedInGrid
     meanings: {}
   labels:
   - label_family: detail_level
     label_text: Extended
+  - label_family: Unit
+    label_text: Power
   - label_family: info
     label_text: Config
 - model: 40104
@@ -10263,8 +10267,8 @@ protocols:
   point: ACChargeStatus
   block: fixed
   entry:
-    name: Allow Battery Charging from Grid
-    description: Grid Charge
+    name: ACChargeStatus
+    description: Allow Battery Charging from Grid
     longdescription: Value from Site Configuration Battery/Grid Charge. Enables the battery to charge from the utility grid.
     dtype: enum16
     unit: N/A
@@ -10285,11 +10289,11 @@ protocols:
   point: ACChargePower
   block: fixed
   entry:
-    name: Grid Charge Power Limit
-    description: Max Grid Charge Power (W)
+    name: ACChargePower
+    description: Grid Charge Power Limit
     longdescription: Value from Site Configuration Battery/Grid Charge. Sets the maximum power the inverter will draw from the grid for charging. This cap applies when Grid Charge is enabled (and within any configured time windows).
     dtype: uint16
-    unit: N/A
+    unit: W
     category: ACCharge
     meanings: {}
   labels:
@@ -10301,12 +10305,14 @@ protocols:
     label_text: Grid Charge
   - label_family: info
     label_text: Config
+  - label_family: Unit
+    label_text: Power
 - model: 40104
   point: ACChargeType
   block: fixed
   entry:
-    name: Grid Charge Control Type
-    description: Control Type
+    name: ACChargeType
+    description: Grid Charge Control Type
     longdescription: Value from Site Configuration Battery/Grid Charge. Select whether grid charging follows a time schedule or SOC/voltage thresholds.
     dtype: enum16
     unit: N/A
@@ -10530,7 +10536,7 @@ protocols:
   point: OffGridOutput
   block: fixed
   entry:
-    name: Off-Grid Output
+    name: OffGridOutput
     description: Off-Grid Output
     longdescription: Value from Site Configuration Backup Power/Backup Power. Controls whether the inverter provides AC output when operating without the utility grid. Disable to prevent output in off-grid mode.
     dtype: enum16
@@ -10552,8 +10558,8 @@ protocols:
   point: EPSVoltage
   block: fixed
   entry:
-    name: Backup (EPS) Output Voltage
-    description: Voltage (Vac)
+    name: EPSVoltage
+    description: Backup (EPS) Output Voltage
     longdescription: Value from Site Configuration Backup Power/Backup Power. Selects the AC output voltage when operating in backup (EPS) mode. Match this to your local service voltage for proper compatibility with connected loads.
     dtype: uint16
     unit: N/A
@@ -10583,8 +10589,8 @@ protocols:
   point: LinkedPort
   block: fixed
   entry:
-    name: Generator Port Connection
-    description: Generator connected to
+    name: LinkedPort
+    description: Generator Port Connection
     longdescription: Value from Site Configuration Generator/Generator. If using a generator, select which port it's connected to â€” either the GEN port or the Grid Input port (sometimes called microgrid mode). If no generator is installed, leave this setting on GEN port.
     dtype: enum16
     unit: N/A
@@ -10603,8 +10609,8 @@ protocols:
   point: BatteryChargeCurrentLimit
   block: fixed
   entry:
-    name: Battery Charge Current Limit
-    description: Charge Current (Adc)
+    name: BatteryChargeCurrentLimit
+    description: Battery Charge Current Limit
     longdescription: Value from Site Configuration Generator/Generator. Sets the maximum DC current the inverter will send to the battery when charging from the generator.
     dtype: uint32
     unit: uint32
@@ -10621,8 +10627,8 @@ protocols:
   point: GeneratorRatedPower
   block: fixed
   entry:
-    name: Generator Rated Power
-    description: Rated Power (kW)
+    name: GeneratorRatedPower
+    description: Generator Rated Power
     longdescription: Value from Site Configuration Generator/Generator. Specify the generator's continuous rated output power.
     dtype: uint16
     unit: N/A
@@ -10639,8 +10645,8 @@ protocols:
   point: GeneratorCoolDownTime
   block: fixed
   entry:
-    name: Generator Cool-Down Time
-    description: Cool-Down Time (min)
+    name: GeneratorCoolDownTime
+    description: Generator Cool-Down Time
     longdescription: Value from Site Configuration Generator/Generator. Sets the time the generator continues running after charging stops to allow for safe cooling.
     dtype: uint16
     unit: N/A
@@ -10697,7 +10703,7 @@ protocols:
   point: GeneratorBoost
   block: fixed
   entry:
-    name: Generator Boost
+    name: GeneratorBoost
     description: Generator Boost
     longdescription: Value from Site Configuration Generator/Generator. Enables dynamic adjustment of generator charging power for faster battery recovery when needed.
     dtype: enum16
@@ -10717,7 +10723,7 @@ protocols:
   point: StartGeneratorExercise
   block: fixed
   entry:
-    name: Battery Quick Charge with Generator
+    name: StartGeneratorExercise
     description: Battery Quick Charge with Generator
     longdescription: Value from Site Configuration Generator/Generator. Start the generator to charge the battery.
     dtype: enum16
@@ -10748,8 +10754,8 @@ protocols:
   point: ACCoupledPV
   block: fixed
   entry:
-    name: AC Coupled PV
-    description: AC Coupled PV Mode
+    name: ACCoupledPV
+    description: AC Coupled PV
     longdescription: Value from Site Configuration AC Coupled PV/AC Coupled PV. Enable this option when connecting a grid-tied solar inverter (AC Coupled PV) to the system. Disable when no AC Coupled PV is present.
     dtype: enum16
     unit: N/A
@@ -10824,7 +10830,7 @@ protocols:
   point: SmartLoad
   block: fixed
   entry:
-    name: Use Smart Load
+    name: SmartLoad
     description: Use Smart Load
     longdescription: Value from Site Configuration Smart Load/Smart Load. Powers non-essential loads only when excess solar or battery energy is available. Enable this to automatically use surplus energy for optional circuits.
     dtype: enum16
@@ -10845,8 +10851,8 @@ protocols:
   point: OnGridAlwaysOn
   block: fixed
   entry:
-    name: Smart Load On-Grid Behavior
-    description: On-Grid Always-On Mode
+    name: OnGridAlwaysOn
+    description: Smart Load On-Grid Behavior
     longdescription: 'Value from Site Configuration Smart Load/Smart Load. Determines Smart Load behavior while the system is connected to the grid. When enabled, the Smart Load remains powered even if normal control conditions are not met. (AKA: **On-Grid Always On**.)'
     dtype: enum16
     unit: N/A
@@ -10867,8 +10873,8 @@ protocols:
   point: StartPVPower
   block: fixed
   entry:
-    name: Smart Load Start Power
-    description: PV Power Above (W)
+    name: StartPVPower
+    description: Smart Load Start Power
     longdescription: Value from Site Configuration Smart Load/Smart Load. Defines when the Smart Load turns on. The Smart Load port is energized once PV power exceeds this threshold **and** the battery SOC is above the start limit.
     dtype: uint32
     unit: uint32
@@ -10942,8 +10948,8 @@ protocols:
   point: ModbusAddr
   block: fixed
   entry:
-    name: Parallel unit ID
-    description: Address
+    name: ModbusAddr
+    description: Parallel unit ID
     longdescription: Value from Site Configuration Inverter/Parallel. The Unit ID (also known as the unit ID, slave ID, or node ID) for this inverter. The primary inverter should use address 1, and any secondary inverters should use 2 or higher. This sets the modbus address that inverters use to communicate with each other. Each inverter that communicates on the same Modbus communication line must have a unique address, but addresses do not need to be globally unique across separate, unconnected systems.
     dtype: uint16
     unit: N/A
@@ -10962,8 +10968,8 @@ protocols:
   point: SystemType
   block: fixed
   entry:
-    name: System Type
-    description: Parallel Role / Topology
+    name: SystemType
+    description: System Type
     longdescription: 'Value from Site Configuration Inverter/Parallel. Defines how this inverter participates in a multi-inverter or multi-phase system.
 
 
@@ -10993,7 +10999,7 @@ protocols:
   point: ComposedPhase
   block: fixed
   entry:
-    name: Assigned Phase
+    name: ComposedPhase
     description: Assigned Phase
     longdescription: Value from Site Configuration Inverter/Parallel. Selects which output phase this inverter is responsible for in a three-phase system. R, S, and T correspond to L1, L2, and L3.
     dtype: enum16
@@ -11016,7 +11022,7 @@ protocols:
   point: DetectedGridPhases
   block: fixed
   entry:
-    name: Detected Grid Phases
+    name: DetectedGridPhases
     description: Detected Grid Phases
     longdescription: Value from Site Configuration Inverter/Parallel. Attribute in Parallel cluster
     dtype: enum16
@@ -11040,8 +11046,8 @@ protocols:
   point: ShareBatteryStatus
   block: fixed
   entry:
-    name: Share Battery
-    description: Installation Method
+    name: ShareBatteryStatus
+    description: Share Battery
     longdescription: Value from Site Configuration Inverter/Parallel. Allows inverters in a parallel group to use a common battery bank instead of keeping batteries isolated per inverter.
     dtype: enum16
     unit: N/A
@@ -11062,7 +11068,7 @@ protocols:
   point: ParallelNum
   block: fixed
   entry:
-    name: Inverters in parallel
+    name: ParallelNum
     description: Inverters in parallel
     longdescription: Value from Site Configuration Inverter/Parallel. Total number of inverters detected in this parallel system.
     dtype: uint16
@@ -11082,7 +11088,7 @@ protocols:
   point: Role
   block: fixed
   entry:
-    name: Inverter Role
+    name: Role
     description: Inverter Role
     longdescription: Value from Site Configuration Inverter/Parallel. Reports whether this inverter is acting as Primary (sometimes called the Master) or Secondary in the current parallel configuration.
     dtype: enum16
@@ -11102,7 +11108,7 @@ protocols:
   point: ParallelPhase
   block: fixed
   entry:
-    name: Reported Phase
+    name: ParallelPhase
     description: Reported Phase
     longdescription: Value from Site Configuration Inverter/Parallel. Reports which phase (R / S / T) this inverter is currently serving in the parallel system.
     dtype: enum16
