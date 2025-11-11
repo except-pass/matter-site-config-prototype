@@ -557,32 +557,30 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel }: LabelFilterPr
 
   return (
     <div ref={containerRef} className="mb-3 rounded-lg border bg-gray-50 p-2">
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-1 flex items-center justify-between">
         <div className="text-xs font-semibold text-gray-700">Filter by Labels</div>
         <div className="text-xs text-gray-500">Drag bottom edge to resize</div>
       </div>
       <div 
-        className="space-y-1 overflow-auto"
+        className="space-y-0.5 overflow-auto"
         style={{ height: `${height}px` }}
       >
         {[...allLabels.entries()].map(([family, texts]) => {
           const familyHelp = getLabelHelp(family);
           return (
-            <div key={family} className="text-xs">
-              <div className="flex items-center gap-1 font-medium text-gray-600">
-                <span>{family}:</span>
-                <button
-                  onClick={() => setHelpModalFamily(family)}
-                  className="flex items-center justify-center rounded p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
-                  title={familyHelp || `View help for ${family} labels`}
-                  aria-label={`Help for ${family}`}
-                >
-                  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </button>
-              </div>
-              <div className="ml-2 flex flex-wrap gap-1">
+            <div key={family} className="flex items-center gap-1.5 text-xs py-0.5">
+              <button
+                onClick={() => setHelpModalFamily(family)}
+                className="flex items-center gap-1 rounded-md border border-gray-300 bg-white px-2 py-0.5 font-semibold text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-colors flex-shrink-0 w-28 justify-between"
+                title={familyHelp || `View help for ${family} labels`}
+                aria-label={`Help for ${family}`}
+              >
+                <span className="truncate">{family}</span>
+                <svg className="h-3 w-3 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
+              <div className="flex flex-wrap items-center gap-1 flex-1">
                 {[...texts].sort().map((text) => {
                   const labelKey = `${family}:${text}`;
                   const isSelected = selectedLabels.has(labelKey);
@@ -592,7 +590,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel }: LabelFilterPr
                     <button
                       key={labelKey}
                       onClick={() => onToggleLabel(family, text)}
-                      className={`rounded border px-2 py-0.5 text-xs transition-all ${
+                      className={`rounded border px-1.5 py-0.5 text-xs transition-all ${
                         isSelected
                           ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
                           : `bg-white ${color.text} ${color.border} hover:opacity-80`
@@ -631,7 +629,42 @@ interface HierarchyConfigProps {
   onChange: (hierarchy: string[]) => void;
 }
 
+function GroupByHelpModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={onClose}>
+      <div className="relative max-w-lg rounded-lg bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-gray-800">Group By</h2>
+          <button
+            onClick={onClose}
+            className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            aria-label="Close"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <div className="text-sm text-gray-700 space-y-3">
+          <p>
+            Reorder or add levels to control how points are grouped in the list.
+          </p>
+          <p>
+            For example, grouping by Component → Feature will show each component first, with its features listed underneath.
+          </p>
+          <p className="text-gray-600">
+            You can add or remove levels using the + button and × button next to each level.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HierarchyConfig({ availableFamilies, hierarchy, onChange }: HierarchyConfigProps) {
+  const [showHelpModal, setShowHelpModal] = React.useState(false);
+
   const handleChange = (index: number, value: string) => {
     const newHierarchy = [...hierarchy];
     if (value === "") {
@@ -659,47 +692,65 @@ function HierarchyConfig({ availableFamilies, hierarchy, onChange }: HierarchyCo
   };
 
   return (
-    <div className="mb-3 rounded-lg border bg-gray-50 p-2">
-      <div className="mb-2 text-xs font-semibold text-gray-700">Label Hierarchy</div>
-      <div className="flex flex-wrap items-center gap-2 text-xs">
-        {hierarchy.map((level, index) => (
-          <div key={index} className="flex items-center gap-1">
-            <label className="text-gray-600">Level {index + 1}:</label>
-            <select
-              value={level || ""}
-              onChange={(e) => handleChange(index, e.target.value)}
-              className="rounded border px-2 py-1 text-xs"
+    <>
+      <div className="mb-3 rounded-lg border bg-gray-50 p-2">
+        <details className="group">
+          <summary className="cursor-pointer list-none">
+            <div className="flex items-center gap-2 text-xs font-semibold text-gray-700">
+              <span className="mr-1 group-open:rotate-90 transition-transform">▸</span>
+              <span>Group by</span>
+            </div>
+          </summary>
+          <div className="mt-2">
+            <button
+              onClick={() => setShowHelpModal(true)}
+              className="mb-2 text-xs text-blue-600 hover:text-blue-800 hover:underline"
             >
-              <option value="">(None)</option>
-              {getAvailableFamiliesForLevel(index).map((f) => (
-                <option key={f} value={f}>
-                  {f}
-                </option>
+              What does this do?
+            </button>
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              {hierarchy.map((level, index) => (
+                <div key={index} className="flex items-center gap-1">
+                  <label className="text-gray-600">Level {index + 1}:</label>
+                  <select
+                    value={level || ""}
+                    onChange={(e) => handleChange(index, e.target.value)}
+                    className="rounded border px-2 py-1 text-xs"
+                  >
+                    <option value="">(None)</option>
+                    {getAvailableFamiliesForLevel(index).map((f) => (
+                      <option key={f} value={f}>
+                        {f}
+                      </option>
+                    ))}
+                  </select>
+                  {hierarchy.length > 1 && (
+                    <button
+                      onClick={() => handleRemoveLevel(index)}
+                      className="rounded border bg-white px-1.5 py-0.5 text-xs text-red-600 hover:bg-red-50"
+                      title="Remove level"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
               ))}
-            </select>
-            {hierarchy.length > 1 && (
               <button
-                onClick={() => handleRemoveLevel(index)}
-                className="rounded border bg-white px-1.5 py-0.5 text-xs text-red-600 hover:bg-red-50"
-                title="Remove level"
+                onClick={handleAddLevel}
+                className="rounded border bg-white px-2 py-1 text-xs text-gray-700 hover:bg-gray-100"
+                title="Add hierarchy level"
               >
-                ×
+                +
               </button>
-            )}
+              {hierarchy.length === 0 && (
+                <div className="text-gray-500 italic">No hierarchy levels configured</div>
+              )}
+            </div>
           </div>
-        ))}
-        <button
-          onClick={handleAddLevel}
-          className="rounded border bg-white px-2 py-1 text-xs text-gray-700 hover:bg-gray-100"
-          title="Add hierarchy level"
-        >
-          +
-        </button>
-        {hierarchy.length === 0 && (
-          <div className="text-gray-500 italic">No hierarchy levels configured</div>
-        )}
+        </details>
       </div>
-    </div>
+      {showHelpModal && <GroupByHelpModal onClose={() => setShowHelpModal(false)} />}
+    </>
   );
 }
 
@@ -707,8 +758,8 @@ export default function App() {
   const [query, setQuery] = useState<string>("");
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [showHelp, setShowHelp] = useState<boolean>(true);
-  const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set());
-  const [hierarchy, setHierarchy] = useState<string[]>(["component", "feature"]);
+  const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set(["Level of Detail:Standard"]));
+  const [hierarchy, setHierarchy] = useState<string[]>(["Component", "Feature"]);
 
   // Extract all labels from protocols
   const allLabels = useMemo(() => extractAllLabels(protocols), []);

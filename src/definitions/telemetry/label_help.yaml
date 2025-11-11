@@ -3,7 +3,7 @@
 # Used to display tooltips and modal help in the UI
 
 label_families:
-  component:
+  Component:
     help: "Identifies the physical component or subsystem that the telemetry point measures or relates to."
     labels:
       Inverter:
@@ -23,7 +23,7 @@ label_families:
       Smart Load:
         help: "Points related to smart load management, including controllable loads and load scheduling."
 
-  feature:
+  Feature:
     help: "Identifies the feature or functional area that the telemetry point supports or configures."
     labels:
       "Basic Setup":
@@ -63,7 +63,7 @@ label_families:
       "Backup Power":
         help: "Points related to backup power operation, including backup mode settings and backup power availability."
 
-  info:
+  Info:
     help: "Categorizes the type of information the telemetry point provides."
     labels:
       Sensor:
@@ -75,7 +75,7 @@ label_families:
       Alarms:
         help: "Alarm and fault information, including active alarms, fault codes, and system warnings."
 
-  detail_level:
+  Level of Detail:
     help: "Indicates the level of detail or complexity of the telemetry point."
     labels:
       Standard:
@@ -96,6 +96,8 @@ label_families:
         help: "Current measurements in amperes (A). Represents electrical current flow."
       Freq:
         help: "Frequency measurements in hertz (Hz). Typically 50 Hz or 60 Hz for AC electrical systems."
+      Mode:
+        help: "Values that are not numeric but represent a mode or state. Typically used for inverter operation modes such as operating mode or to enable/disable certain behaviors."
       Temp:
         help: "Temperature measurements in degrees Celsius (°C) or Fahrenheit (°F)."
       "%":
