@@ -303,11 +303,14 @@ interface LabelGroupProps {
   toggle: (key: string) => void;
   showHelp: boolean;
   onUpdateInverters: (pointKey: string, inverters: Set<string>) => void;
+  groupsExpanded: boolean;
 }
 
-function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, onUpdateInverters }: LabelGroupProps) {
+function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, onUpdateInverters, groupsExpanded }: LabelGroupProps) {
+  const firstLevelId = `group-${firstLevel.replace(/\s+/g, '-')}`;
+  
   return (
-    <details className="group border-b py-2" open>
+    <details id={firstLevelId} className="group border-b py-2" open={groupsExpanded}>
       <summary className="cursor-pointer list-none font-semibold">
         <span className="mr-1">▾</span>
         {firstLevel}
@@ -1157,6 +1160,48 @@ export default function App() {
   const [isResizing, setIsResizing] = React.useState(false);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
   const sidebarContentRef = React.useRef<HTMLDivElement>(null);
+  const [activeGroup, setActiveGroup] = React.useState<string>("");
+  const [groupsExpanded, setGroupsExpanded] = React.useState<boolean>(true);
+
+  // Track scroll position to highlight active group
+  // Note: This effect queries the DOM directly, so it doesn't need grouped in dependencies
+  React.useEffect(() => {
+    if (!sidebarContentRef.current) return;
+
+    const handleScroll = () => {
+      if (!sidebarContentRef.current) return;
+      
+      const container = sidebarContentRef.current;
+      const groups = container.querySelectorAll('[id^="group-"]');
+      let currentGroup = "";
+
+      // Find which group is currently in view
+      groups.forEach((group) => {
+        const rect = group.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        // Group is considered active if its top is within the top 30% of container
+        const relativeTop = rect.top - containerRect.top;
+        if (relativeTop <= containerRect.height * 0.3 && rect.bottom > containerRect.top) {
+          currentGroup = group.id;
+        }
+      });
+
+      if (currentGroup && currentGroup !== activeGroup) {
+        setActiveGroup(currentGroup);
+      }
+    };
+
+    // Set initial active group with a small delay to ensure DOM is ready
+    const timeoutId = setTimeout(handleScroll, 100);
+
+    // Listen to scroll events on the sidebar content
+    const container = sidebarContentRef.current;
+    container.addEventListener('scroll', handleScroll);
+    return () => {
+      clearTimeout(timeoutId);
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, [activeGroup]);
 
   // Handle Escape key to close sidebar
   React.useEffect(() => {
@@ -1336,6 +1381,20 @@ export default function App() {
     [filtered, hierarchy]
   );
 
+  // Reset active group when grouped data changes
+  React.useEffect(() => {
+    setActiveGroup("");
+    // Re-trigger scroll handler after a short delay to set new active group
+    if (sidebarContentRef.current) {
+      setTimeout(() => {
+        const container = sidebarContentRef.current;
+        if (container) {
+          container.dispatchEvent(new Event('scroll'));
+        }
+      }, 150);
+    }
+  }, [grouped]);
+
   const toggle = (key: string) => {
     setSelected((prev) => {
       const next = new Map(prev);
@@ -1465,56 +1524,141 @@ export default function App() {
           )}
           
           {/* Sidebar content */}
-          <div className="h-full overflow-hidden flex flex-col" style={{ paddingLeft: '0.25rem' }}>
-            <div className="p-4 flex-shrink-0">
-              <div className="mb-3 flex items-center justify-between">
-                <div className="text-lg font-semibold">Select Points</div>
-                <div className="text-sm">
-                  <span>Available: {visibleCount.toLocaleString()} of {totalCount.toLocaleString()}</span>
+          <div className="h-full overflow-hidden flex flex-row" style={{ paddingLeft: '0.25rem' }}>
+            {/* Navigation bar - left side */}
+            {grouped.size > 0 && (
+              <div className="w-32 border-r border-gray-200 flex-shrink-0 overflow-y-auto">
+                <nav className="p-3 text-sm text-gray-800">
+                  <div className="text-emerald-600 font-semibold mb-2 text-xs">Navigation</div>
+                  <div className="flex flex-col gap-1">
+                    {[...grouped.entries()]
+                      .filter(([firstLevel]) => firstLevel !== "(Unlabeled)")
+                      .map(([firstLevel]) => {
+                        const firstLevelId = `group-${firstLevel.replace(/\s+/g, '-')}`;
+                        const isActive = activeGroup === firstLevelId;
+                        return (
+                          <div key={firstLevel} className="relative">
+                            {/* Active indicator bar */}
+                            {isActive && (
+                              <div className="absolute left-0 top-1 bottom-1 w-1 bg-blue-500 rounded-r" />
+                            )}
+                            <button
+                              className={`px-2 py-1 hover:bg-gray-50 rounded text-xs w-full text-left transition-colors ${
+                                isActive ? 'text-blue-600 font-medium bg-blue-50' : 'text-gray-700'
+                              }`}
+                              onClick={() => {
+                                const element = document.getElementById(firstLevelId);
+                                if (element && sidebarContentRef.current) {
+                                  // Scroll within the sidebar content area
+                                  const containerRect = sidebarContentRef.current.getBoundingClientRect();
+                                  const elementRect = element.getBoundingClientRect();
+                                  const scrollTop = sidebarContentRef.current.scrollTop;
+                                  const relativeTop = elementRect.top - containerRect.top + scrollTop;
+                                  sidebarContentRef.current.scrollTo({
+                                    top: relativeTop - 10, // 10px offset from top
+                                    behavior: 'smooth'
+                                  });
+                                }
+                              }}
+                            >
+                              {firstLevel}
+                            </button>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </nav>
+              </div>
+            )}
+            
+            {/* Main content area */}
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <div className="p-4 flex-shrink-0">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="text-lg font-semibold">Select Points</div>
+                  <div className="text-sm">
+                    <span>Available: {visibleCount.toLocaleString()} of {totalCount.toLocaleString()}</span>
+                  </div>
+                </div>
+                
+                <HierarchyConfig
+                  availableFamilies={availableFamilies}
+                  hierarchy={hierarchy}
+                  onChange={setHierarchy}
+                />
+                
+                <LabelFilter
+                  allLabels={allLabels}
+                  selectedLabels={selectedLabels}
+                  onToggleLabel={toggleLabel}
+                  onClearFilters={clearLabelFilters}
+                />
+                
+                <div className="mt-2 flex items-center gap-2">
+                  <div className="flex-1">
+                    <SearchBox value={query} onChange={setQuery} />
+                  </div>
+                  <HelpToggle show={showHelp} onToggle={setShowHelp} />
+                </div>
+                
+                <div className="mt-2 flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setGroupsExpanded(true);
+                      // Expand all details elements
+                      if (sidebarContentRef.current) {
+                        const detailsElements = sidebarContentRef.current.querySelectorAll('details');
+                        detailsElements.forEach((details) => {
+                          (details as HTMLDetailsElement).open = true;
+                        });
+                      }
+                    }}
+                    className="text-xs px-2 py-1 border border-gray-300 rounded hover:bg-gray-50 transition-colors flex items-center gap-1"
+                  >
+                    <span>⤵</span>
+                    <span>Expand all</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setGroupsExpanded(false);
+                      // Collapse all details elements
+                      if (sidebarContentRef.current) {
+                        const detailsElements = sidebarContentRef.current.querySelectorAll('details');
+                        detailsElements.forEach((details) => {
+                          (details as HTMLDetailsElement).open = false;
+                        });
+                      }
+                    }}
+                    className="text-xs px-2 py-1 border border-gray-300 rounded hover:bg-gray-50 transition-colors flex items-center gap-1"
+                  >
+                    <span>⤴</span>
+                    <span>Collapse all</span>
+                  </button>
                 </div>
               </div>
-              
-              <HierarchyConfig
-                availableFamilies={availableFamilies}
-                hierarchy={hierarchy}
-                onChange={setHierarchy}
-              />
-              
-              <LabelFilter
-                allLabels={allLabels}
-                selectedLabels={selectedLabels}
-                onToggleLabel={toggleLabel}
-                onClearFilters={clearLabelFilters}
-              />
-              
-              <div className="mt-2 flex items-center gap-2">
-                <div className="flex-1">
-                  <SearchBox value={query} onChange={setQuery} />
-                </div>
-                <HelpToggle show={showHelp} onToggle={setShowHelp} />
-              </div>
-            </div>
 
-            <div className="flex-1 overflow-y-auto px-4 pb-4 pr-1" ref={sidebarContentRef}>
-              {grouped.size === 0 ? (
-                <div className="py-4 text-center text-sm text-gray-500">
-                  No points match the current filters
-                </div>
-              ) : (
-                [...grouped.entries()]
-                  .filter(([firstLevel]) => firstLevel !== "(Unlabeled)")
-                  .map(([firstLevel, secondLevelMap]) => (
-                    <LabelGroup
-                      key={firstLevel}
-                      firstLevel={firstLevel}
-                      secondLevelMap={secondLevelMap}
-                      selected={selected}
-                      toggle={toggle}
-                      showHelp={showHelp}
-                      onUpdateInverters={updateInverters}
-                    />
-                  ))
-              )}
+              <div className="flex-1 overflow-y-auto px-4 pb-4 pr-1" ref={sidebarContentRef}>
+                {grouped.size === 0 ? (
+                  <div className="py-4 text-center text-sm text-gray-500">
+                    No points match the current filters
+                  </div>
+                ) : (
+                  [...grouped.entries()]
+                    .filter(([firstLevel]) => firstLevel !== "(Unlabeled)")
+                    .map(([firstLevel, secondLevelMap]) => (
+                      <LabelGroup
+                        key={firstLevel}
+                        firstLevel={firstLevel}
+                        secondLevelMap={secondLevelMap}
+                        selected={selected}
+                        toggle={toggle}
+                        showHelp={showHelp}
+                        onUpdateInverters={updateInverters}
+                        groupsExpanded={groupsExpanded}
+                      />
+                    ))
+                )}
+              </div>
             </div>
           </div>
         </div>
