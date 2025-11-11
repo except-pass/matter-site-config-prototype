@@ -155,9 +155,6 @@ export default function PointThemeDemoPage() {
 
         {/* Main content area */}
         <main className="flex-1 flex flex-col gap-6">
-          <div className="text-xs text-slate-500">
-            Last Updated At: {lastUpdatedLabel}
-          </div>
 
           {/* Header with search and refresh */}
           <Header

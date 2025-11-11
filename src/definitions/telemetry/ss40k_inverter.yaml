@@ -600,7 +600,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -622,7 +622,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -644,7 +644,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -666,7 +666,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -688,7 +688,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -710,7 +710,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -732,7 +732,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -754,7 +754,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -776,7 +776,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -798,7 +798,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -820,7 +820,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -842,7 +842,7 @@ protocols:
   - label_family: Component
     label_text: PV
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
@@ -941,7 +941,7 @@ protocols:
   - label_family: Component
     label_text: Battery
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
@@ -1001,7 +1001,7 @@ protocols:
   - label_family: Component
     label_text: Battery
   - label_family: Level of Detail
-    label_text: Standard
+    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
@@ -1364,28 +1364,8 @@ protocols:
   block: fixed
   entry:
     name: LLV
-    description: Voltage LL
-    longdescription: Line-to-line RMS voltage at the inverter output (3ϕ systems).
-    dtype: uint16
-    unit: V
-    category: Inverter
-    meanings: {}
-  labels:
-  - label_family: Component
-    label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
-  - label_family: Unit
-    label_text: Volt
-  - label_family: Info
-    label_text: Sensor
-- model: 40101
-  point: LNV
-  block: fixed
-  entry:
-    name: LNV
-    description: Voltage LN
-    longdescription: Line-to-neutral RMS voltage at the inverter output.
+    description: Inverter Output Voltage
+    longdescription: Line-to-line RMS voltage at the inverter output (average of active phases).
     dtype: uint16
     unit: V
     category: Inverter
@@ -1395,6 +1375,26 @@ protocols:
     label_text: Inverter
   - label_family: Level of Detail
     label_text: Standard
+  - label_family: Unit
+    label_text: Volt
+  - label_family: Info
+    label_text: Sensor
+- model: 40101
+  point: LNV
+  block: fixed
+  entry:
+    name: LNV
+    description: Inverter Output Voltage L-N
+    longdescription: Line-to-neutral RMS voltage at the inverter output.
+    dtype: uint16
+    unit: V
+    category: Inverter
+    meanings: {}
+  labels:
+  - label_family: Component
+    label_text: Inverter
+  - label_family: Level of Detail
+    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
@@ -2612,7 +2612,7 @@ protocols:
   - label_family: Component
     label_text: Inverter
   - label_family: Level of Detail
-    label_text: Extended
+    label_text: Standard
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit

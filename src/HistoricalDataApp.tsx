@@ -304,9 +304,11 @@ interface LabelGroupProps {
   showHelp: boolean;
   onUpdateInverters: (pointKey: string, inverters: Set<string>) => void;
   groupsExpanded: boolean;
+  pointHelpEnabled: Set<string>;
+  onTogglePointHelp: (pointKey: string) => void;
 }
 
-function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, onUpdateInverters, groupsExpanded }: LabelGroupProps) {
+function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, onUpdateInverters, groupsExpanded, pointHelpEnabled, onTogglePointHelp }: LabelGroupProps) {
   const firstLevelId = `group-${firstLevel.replace(/\s+/g, '-')}`;
   
   return (
@@ -329,6 +331,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, on
                   const checked = selected.has(key);
                   const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
                   const labels = Array.isArray(it.labels) ? it.labels : [];
+                  const pointHelpShown = showHelp || pointHelpEnabled.has(key);
                   return (
                     <div key={key} data-point-key={key} className="rounded-md px-2 py-1 hover:bg-gray-50 transition-colors">
                       <div className="flex items-start gap-2 flex-wrap">
@@ -343,6 +346,21 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, on
                             {desc}
                             {unit}
                           </span>
+                          <span
+                            className={`ml-1 cursor-pointer flex-shrink-0 ${
+                              pointHelpShown 
+                                ? 'text-blue-600 hover:text-blue-700' 
+                                : 'text-gray-400 hover:text-gray-600'
+                            }`}
+                            title={long}
+                            aria-label="Help"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onTogglePointHelp(key);
+                            }}
+                          >
+                            ⓘ
+                          </span>
                           {checked && (
                             <div className="ml-auto flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                               <span className="text-xs text-gray-600">Inverter SN:</span>
@@ -352,7 +370,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, on
                               />
                             </div>
                           )}
-                          {showHelp && labels.length > 0 && (
+                          {pointHelpShown && labels.length > 0 && (
                             <div className="ml-2 flex flex-wrap gap-1 w-full">
                               {labels.map((label, idx) => {
                                 const color = getLabelColor(label.label_family, label.label_text);
@@ -370,18 +388,9 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, on
                               })}
                             </div>
                           )}
-                          {!showHelp && (
-                            <span
-                              className="ml-1 text-gray-400"
-                              title={long}
-                              aria-label="Help"
-                            >
-                              ⓘ
-                            </span>
-                          )}
                         </label>
                       </div>
-                      {showHelp && (
+                      {pointHelpShown && (
                         <div className="pl-6 text-xs text-gray-500 whitespace-pre-wrap">{long}</div>
                       )}
                     </div>
@@ -406,6 +415,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, on
                   const checked = selected.has(key);
                   const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
                   const labels = Array.isArray(it.labels) ? it.labels : [];
+                  const pointHelpShown = showHelp || pointHelpEnabled.has(key);
                   return (
                     <div key={key} data-point-key={key} className="rounded-md px-2 py-1 hover:bg-gray-50 transition-colors">
                       <div className="flex items-start gap-2 flex-wrap">
@@ -420,6 +430,21 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, on
                             {desc}
                             {unit}
                           </span>
+                          <span
+                            className={`ml-1 cursor-pointer flex-shrink-0 ${
+                              pointHelpShown 
+                                ? 'text-blue-600 hover:text-blue-700' 
+                                : 'text-gray-400 hover:text-gray-600'
+                            }`}
+                            title={long}
+                            aria-label="Help"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onTogglePointHelp(key);
+                            }}
+                          >
+                            ⓘ
+                          </span>
                           {checked && (
                             <div className="ml-auto flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                               <span className="text-xs text-gray-600">Inverter SN:</span>
@@ -429,7 +454,7 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, on
                               />
                             </div>
                           )}
-                          {showHelp && labels.length > 0 && (
+                          {pointHelpShown && labels.length > 0 && (
                             <div className="ml-2 flex flex-wrap gap-1 w-full">
                               {labels.map((label, idx) => {
                                 const color = getLabelColor(label.label_family, label.label_text);
@@ -447,18 +472,9 @@ function LabelGroup({ firstLevel, secondLevelMap, selected, toggle, showHelp, on
                               })}
                             </div>
                           )}
-                          {!showHelp && (
-                            <span
-                              className="ml-1 text-gray-400"
-                              title={long}
-                              aria-label="Help"
-                            >
-                              ⓘ
-                            </span>
-                          )}
                         </label>
                       </div>
-                      {showHelp && (
+                      {pointHelpShown && (
                         <div className="pl-6 text-xs text-gray-500 whitespace-pre-wrap">{long}</div>
                       )}
                     </div>
@@ -538,7 +554,9 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters 
   const [height, setHeight] = React.useState(200);
   const [isResizing, setIsResizing] = React.useState(false);
   const [helpModalFamily, setHelpModalFamily] = React.useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const detailsRef = React.useRef<HTMLDetailsElement>(null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -571,23 +589,107 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters 
     };
   }, [isResizing]);
 
-  // Get active filter badges
-  const activeFilters = Array.from(selectedLabels).map((labelKey) => {
-    const [family, text] = labelKey.split(':', 2);
-    return { family, text };
-  });
+  // Separate Level of Detail from other filters
+  const levelOfDetailFamily = 'Level of Detail';
+  const levelOfDetailLabels = allLabels.get(levelOfDetailFamily) || new Set<string>();
+  const otherLabels = new Map(allLabels);
+  otherLabels.delete(levelOfDetailFamily);
+
+  // Get active filter badges (excluding Level of Detail)
+  const activeFilters = Array.from(selectedLabels)
+    .map((labelKey) => {
+      const [family, text] = labelKey.split(':', 2);
+      return { family, text };
+    })
+    .filter(({ family }) => family !== levelOfDetailFamily);
+
+  // Level of Detail selected values
+  const levelOfDetailSelected = Array.from(selectedLabels)
+    .filter((labelKey) => labelKey.startsWith(`${levelOfDetailFamily}:`))
+    .map((labelKey) => labelKey.split(':', 2)[1]);
+
+  const levelOfDetailColor = getLabelColor(levelOfDetailFamily, '');
+  const hasLevelOfDetailSelected = levelOfDetailSelected.length > 0;
 
   return (
     <div ref={containerRef} className="mb-3 rounded-lg border bg-gray-50 p-2">
-      <details className="group">
+      <details 
+        ref={detailsRef}
+        className="group"
+        open={isExpanded}
+        onToggle={(e) => setIsExpanded((e.target as HTMLDetailsElement).open)}
+      >
         <summary className="cursor-pointer list-none">
           <div className="mb-1 flex items-start justify-between gap-2">
-            <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 flex-1 min-w-0">
+            <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 flex-1 min-w-0 flex-wrap">
               <svg className="h-4 w-4 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
               <span className="flex-shrink-0">Filters</span>
-              <span className="mr-1 group-open:rotate-90 transition-transform flex-shrink-0">▸</span>
+              
+              {/* Always show Level of Detail */}
+              <div className="flex items-center gap-1.5 ml-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setHelpModalFamily(levelOfDetailFamily);
+                  }}
+                  className={`flex items-center gap-1 rounded-md border px-2 py-0.5 font-semibold transition-colors flex-shrink-0 justify-between ${
+                    hasLevelOfDetailSelected
+                      ? `${levelOfDetailColor.bg} ${levelOfDetailColor.text} ${levelOfDetailColor.border} border-2`
+                      : `${levelOfDetailColor.bg} ${levelOfDetailColor.text} ${levelOfDetailColor.border} border`
+                  }`}
+                  title="Level of Detail"
+                >
+                  <span className="truncate">{levelOfDetailFamily}</span>
+                  <svg className={`h-3 w-3 flex-shrink-0 ${levelOfDetailColor.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
+                <div className="flex flex-wrap items-center gap-1">
+                  {[...levelOfDetailLabels].sort().map((text) => {
+                    const labelKey = `${levelOfDetailFamily}:${text}`;
+                    const isSelected = selectedLabels.has(labelKey);
+                    const color = getLabelColor(levelOfDetailFamily, text);
+                    return (
+                      <button
+                        key={labelKey}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleLabel(levelOfDetailFamily, text);
+                        }}
+                        className={`rounded border px-1.5 py-0.5 text-xs transition-all ${
+                          isSelected
+                            ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
+                            : `bg-white ${color.text} ${color.border} hover:opacity-80`
+                        }`}
+                        style={!isSelected ? { borderColor: 'currentColor' } : undefined}
+                        title={`${levelOfDetailFamily}: ${text}`}
+                      >
+                        {text}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* More Filters button when collapsed */}
+              {!isExpanded && otherLabels.size > 0 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (detailsRef.current) {
+                      detailsRef.current.open = true;
+                      setIsExpanded(true);
+                    }
+                  }}
+                  className="ml-2 text-xs text-blue-600 hover:text-blue-700 underline flex-shrink-0"
+                >
+                  More Filters
+                </button>
+              )}
+
+              {/* Active filter badges for other filters */}
               {activeFilters.length > 0 && (
                 <>
                   <div className="flex flex-wrap items-center gap-1 ml-2 min-w-0">
@@ -625,7 +727,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters 
           className="space-y-0.5 overflow-auto mt-2"
           style={{ height: `${height}px` }}
         >
-        {[...allLabels.entries()].map(([family, texts]) => {
+        {[...otherLabels.entries()].map(([family, texts]) => {
           const familyHelp = getLabelHelp(family);
           const familyColor = getLabelColor(family, '');
           // Check if any label in this family is selected
@@ -1152,7 +1254,8 @@ export default function App() {
   const [query, setQuery] = useState<string>("");
   // Map from point key (model:point) to Set of inverter serial numbers
   const [selected, setSelected] = useState<Map<string, Set<string>>>(() => new Map());
-  const [showHelp, setShowHelp] = useState<boolean>(true);
+  const [showHelp, setShowHelp] = useState<boolean>(false);
+  const [pointHelpEnabled, setPointHelpEnabled] = useState<Set<string>>(new Set());
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set(["Level of Detail:Standard"]));
   const [hierarchy, setHierarchy] = useState<string[]>(["Component", "Feature"]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
@@ -1458,6 +1561,19 @@ export default function App() {
   };
 
   const clearLabelFilters = () => setSelectedLabels(new Set<string>());
+  
+  const togglePointHelp = (pointKey: string) => {
+    setPointHelpEnabled((prev) => {
+      const next = new Set(prev);
+      if (next.has(pointKey)) {
+        next.delete(pointKey);
+      } else {
+        next.add(pointKey);
+      }
+      return next;
+    });
+  };
+  
   const visibleCount = filtered.length;
   // Total count should only include points with labels (points that can be shown in UI)
   const totalCount = useMemo(() => {
@@ -1655,6 +1771,8 @@ export default function App() {
                         showHelp={showHelp}
                         onUpdateInverters={updateInverters}
                         groupsExpanded={groupsExpanded}
+                        pointHelpEnabled={pointHelpEnabled}
+                        onTogglePointHelp={togglePointHelp}
                       />
                     ))
                 )}
