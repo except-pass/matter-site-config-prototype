@@ -812,7 +812,7 @@ function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps
   );
 }
 
-function FakeChart({ selectedPoints, protocols, onUpdateInverters, onScrollToPoint, onRemoveInverter }: FakeChartProps) {
+function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter }: FakeChartProps) {
   // Track visibility state for each legend entry
   const [hiddenEntries, setHiddenEntries] = React.useState<Set<string>>(new Set());
 
@@ -1156,7 +1156,7 @@ export default function App() {
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set(["Level of Detail:Standard"]));
   const [hierarchy, setHierarchy] = useState<string[]>(["Component", "Feature"]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
-  const [sidebarWidth, setSidebarWidth] = useState<number>(500);
+  const [sidebarWidth, setSidebarWidth] = useState<number>(650);
   const [isResizing, setIsResizing] = React.useState(false);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
   const sidebarContentRef = React.useRef<HTMLDivElement>(null);
