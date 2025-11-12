@@ -1119,7 +1119,7 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
 
         {/* Chart area */}
         <div 
-          className="absolute inset-0 left-8 bottom-8 p-4 cursor-pointer"
+          className={`absolute inset-0 left-8 bottom-8 p-4 ${selectedPoints.size === 0 ? 'cursor-pointer' : ''}`}
           onClick={() => {
             if (selectedPoints.size === 0 && onSelectPointsToggle) {
               onSelectPointsToggle(true);
