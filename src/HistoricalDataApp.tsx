@@ -881,6 +881,8 @@ interface FakeChartProps {
   onUpdateInverters: (pointKey: string, inverters: Set<string>) => void;
   onScrollToPoint?: (pointKey: string) => void;
   onRemoveInverter?: (pointKey: string, inverterSN: string) => void;
+  onSelectPointsToggle?: (open: boolean) => void;
+  selectPointsOpen?: boolean;
 }
 
 // Available inverters (hardcoded for now, could come from props or API)
@@ -996,7 +998,7 @@ function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps
   );
 }
 
-function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter }: FakeChartProps) {
+function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen }: FakeChartProps) {
   // Track visibility state for each legend entry
   const [hiddenEntries, setHiddenEntries] = React.useState<Set<string>>(new Set());
 
@@ -1067,8 +1069,27 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
   };
 
   return (
-    <div className="w-full h-full p-4 flex flex-col">
-      <div className="mb-2 text-sm font-semibold text-gray-700">Chart</div>
+    <div className="w-full h-full p-4 flex flex-col relative">
+      <div className="mb-2 flex items-center justify-between relative">
+        <div className="text-sm font-semibold text-gray-700">Chart</div>
+        {onSelectPointsToggle && (
+          <button
+            onClick={() => onSelectPointsToggle(!selectPointsOpen)}
+            className="text-xs px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-50 transition-colors flex items-center gap-2"
+            title={selectPointsOpen ? "Hide Select Points" : "Show Select Points"}
+          >
+            <span>Select Points</span>
+            <svg
+              className={`h-4 w-4 text-gray-600 transition-transform ${selectPointsOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        )}
+      </div>
       <div className="relative flex-1 border border-gray-400 bg-gray-50 min-h-0">
         {/* Y-axis */}
         <div className="absolute left-0 top-0 bottom-0 w-8 border-r border-gray-600 flex flex-col items-center justify-between py-2">
@@ -1097,14 +1118,45 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
         </div>
 
         {/* Chart area */}
-        <div className="absolute inset-0 left-8 bottom-8 p-4">
-          {legendEntries.length === 0 ? (
+        <div 
+          className="absolute inset-0 left-8 bottom-8 p-4 cursor-pointer"
+          onClick={() => {
+            if (selectedPoints.size === 0 && onSelectPointsToggle) {
+              onSelectPointsToggle(true);
+            }
+          }}
+        >
+          {selectedPoints.size === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-sm text-gray-500 gap-2">
+              <div className="text-base font-medium text-gray-700">No points selected</div>
+              <div className="text-sm">Click anywhere in this area to select points</div>
+            </div>
+          ) : legendEntries.length === 0 ? (
             <div className="flex items-center justify-center h-full text-sm text-gray-400">
               Select points to display charts
             </div>
           ) : (
-            <div className="flex items-center justify-center h-full text-sm text-gray-400">
-              Chart visualization would appear here
+              <div className="h-full overflow-y-auto">
+              <div className="text-sm font-semibold text-gray-700 mb-3">Visible Points:</div>
+              <div className="space-y-2">
+                {legendEntries
+                  .filter(entry => !hiddenEntries.has(entry.pointKey))
+                  .map((entry) => {
+                    const color = LEGEND_COLORS[entry.colorIndex];
+                    return (
+                      <div key={entry.pointKey} className="text-xs text-gray-600 flex items-center gap-2">
+                        <div 
+                          className={`w-3 h-3 rounded-sm flex-shrink-0 ${color.bg} ${color.border} border`}
+                        />
+                        <span className="font-medium">{entry.name}</span>
+                        <span className="text-gray-400">({entry.sn})</span>
+                        {entry.unit !== "N/A" && (
+                          <span className="text-gray-400">[{entry.unit}]</span>
+                        )}
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
           )}
         </div>
@@ -1400,8 +1452,6 @@ export default function App() {
   const [detailLevel, setDetailLevel] = useState<string>("Standard");
   const [hierarchy, setHierarchy] = useState<string[]>(["Component", "Feature"]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
-  const [sidebarWidth, setSidebarWidth] = useState<number>(650);
-  const [isResizing, setIsResizing] = React.useState(false);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
   const sidebarContentRef = React.useRef<HTMLDivElement>(null);
   const [activeGroup, setActiveGroup] = React.useState<string>("");
@@ -1542,36 +1592,6 @@ export default function App() {
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsResizing(true);
-  };
-
-  React.useEffect(() => {
-    if (!isResizing) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (sidebarRef.current) {
-        const rect = sidebarRef.current.getBoundingClientRect();
-        const newWidth = rect.right - e.clientX;
-        if (newWidth >= 300 && newWidth <= 800) {
-          setSidebarWidth(newWidth);
-        }
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsResizing(false);
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isResizing]);
 
   // Extract all labels from protocols
   const allLabels = useMemo(() => extractAllLabels(protocols), []);
@@ -1800,47 +1820,36 @@ export default function App() {
     <div className="h-full bg-slate-100 p-4 md:p-6">
       <div className="mx-auto w-full max-w-[95vw] h-[calc(100vh-2rem)] rounded-2xl border bg-white shadow-sm relative">
         {/* Chart area - full width */}
-        <FakeChart selectedPoints={selected} protocols={protocols} onUpdateInverters={updateInverters} onScrollToPoint={scrollToPoint} onRemoveInverter={removeInverter} />
+        <FakeChart 
+          selectedPoints={selected} 
+          protocols={protocols} 
+          onUpdateInverters={updateInverters} 
+          onScrollToPoint={scrollToPoint} 
+          onRemoveInverter={removeInverter}
+          onSelectPointsToggle={setSidebarOpen}
+          selectPointsOpen={sidebarOpen}
+        />
         
-        {/* Toggle button - always visible, positioned outside sidebar */}
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="absolute top-4 z-30 rounded-md border border-gray-300 bg-white p-2 shadow-sm hover:bg-gray-50 transition-all duration-300"
-          style={{ right: sidebarOpen ? `${sidebarWidth + 16}px` : '1rem' }}
-          title={sidebarOpen ? "Hide sidebar" : "Show sidebar"}
-        >
-          <svg
-            className={`h-5 w-5 text-gray-600 transition-transform ${sidebarOpen ? '' : 'rotate-180'}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-        
-        {/* Point selector sidebar - overlays on top */}
+        {/* Point selector dropdown - positioned below Chart header */}
         <div
           ref={sidebarRef}
-          className={`absolute top-0 right-0 bottom-0 bg-white border-l border-gray-300 shadow-lg transition-transform duration-300 overflow-hidden ${
-            sidebarOpen ? 'translate-x-0' : 'translate-x-full'
+          className={`absolute bg-white border border-gray-300 shadow-xl transition-all duration-300 z-50 rounded-lg flex flex-row ${
+            sidebarOpen 
+              ? 'opacity-100 translate-y-0 pointer-events-auto' 
+              : 'opacity-0 -translate-y-4 pointer-events-none'
           }`}
           style={{ 
-            width: `${sidebarWidth}px`,
-            maxHeight: '100%'
+            top: 'calc(1rem + 2.5rem)', // Below Chart header (p-4 + header height)
+            left: '1rem',
+            right: '1rem',
+            width: 'auto',
+            height: sidebarOpen ? 'calc(100vh - 10rem)' : '0',
+            maxHeight: sidebarOpen ? 'calc(100vh - 10rem)' : '0', // Leave some space from top/bottom
+            overflow: 'hidden'
           }}
         >
-          {/* Resize handle */}
-          {sidebarOpen && (
-            <div
-              onMouseDown={handleMouseDown}
-              className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize bg-gray-300 hover:bg-gray-400 transition-colors z-10"
-              title="Drag to resize"
-            />
-          )}
-          
-          {/* Sidebar content */}
-          <div className="h-full overflow-hidden flex flex-row" style={{ paddingLeft: '0.25rem' }}>
+          {/* Dropdown content */}
+          <div className="h-full flex flex-row w-full min-h-0">
             {/* Navigation bar - left side */}
             {grouped.size > 0 && (
               <div className="w-32 border-r border-gray-200 flex-shrink-0 overflow-y-auto">
@@ -1888,7 +1897,7 @@ export default function App() {
             )}
             
             {/* Main content area */}
-            <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="flex-1 flex flex-col overflow-hidden min-h-0">
               {/* Collapsible top section */}
               <div className="border-b border-gray-200">
                 <button
