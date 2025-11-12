@@ -1575,9 +1575,10 @@ interface ChartGridProps {
   selectPointsOpen: boolean;
   callbacksRef: React.MutableRefObject<ChartGridCallbacks | null>;
   onActiveChartSelectedPointsChange: (points: Map<string, Set<string>>) => void;
+  onActiveChartPositionChange: (rect: DOMRect | null) => void;
 }
 
-function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, callbacksRef, onActiveChartSelectedPointsChange }: ChartGridProps) {
+function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, callbacksRef, onActiveChartSelectedPointsChange, onActiveChartPositionChange }: ChartGridProps) {
   const [charts, setCharts] = useState<ChartData[]>([
     { id: 'chart-0', selectedPoints: new Map(), row: 0, col: 0 }
   ]);
@@ -1587,6 +1588,7 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   const [rowHeights, setRowHeights] = useState<Map<number, number>>(new Map([[0, 300]]));
   const [resizingChart, setResizingChart] = useState<string | null>(null);
   const resizeStartRef = React.useRef<{ x: number; y: number; col: number; row: number; initialWidth: number; initialHeight: number } | null>(null);
+  const chartRefsMap = React.useRef<Map<string, HTMLDivElement>>(new Map());
 
   // Notify parent whenever active chart's selection changes
   React.useEffect(() => {
@@ -1595,6 +1597,30 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
       onActiveChartSelectedPointsChange(new Map(activeChart.selectedPoints));
     }
   }, [charts, activeChartId, onActiveChartSelectedPointsChange]);
+
+  // Notify parent of active chart position
+  React.useEffect(() => {
+    const updateActiveChartPosition = () => {
+      const activeChartElement = chartRefsMap.current.get(activeChartId);
+      if (activeChartElement) {
+        const rect = activeChartElement.getBoundingClientRect();
+        onActiveChartPositionChange(rect);
+      } else {
+        onActiveChartPositionChange(null);
+      }
+    };
+
+    updateActiveChartPosition();
+
+    // Also update on scroll and resize
+    window.addEventListener('scroll', updateActiveChartPosition, true);
+    window.addEventListener('resize', updateActiveChartPosition);
+
+    return () => {
+      window.removeEventListener('scroll', updateActiveChartPosition, true);
+      window.removeEventListener('resize', updateActiveChartPosition);
+    };
+  }, [activeChartId, charts, columnWidths, rowHeights, onActiveChartPositionChange]);
 
   // Initialize callbacks ref synchronously before paint
   React.useLayoutEffect(() => {
@@ -1828,6 +1854,8 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
 
     setCharts(prev => [...prev, newChart]);
     setNextChartId(prev => prev + 1);
+    // Make the newly added chart active
+    setActiveChartId(newChart.id);
   };
 
   const handleDeleteChart = (chartId: string) => {
@@ -1940,6 +1968,13 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
         {normalizedCharts.map(chart => (
           <div
             key={chart.id}
+            ref={(el) => {
+              if (el) {
+                chartRefsMap.current.set(chart.id, el);
+              } else {
+                chartRefsMap.current.delete(chart.id);
+              }
+            }}
             className={`relative border rounded-lg bg-white shadow-sm overflow-visible transition-all cursor-pointer ${
               activeChartId === chart.id ? 'border-blue-500 border-2 ring-2 ring-blue-200' : 'border-gray-300'
             }`}
@@ -1948,8 +1983,8 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
               gridColumn: chart.col + 1
             }}
             onClick={(e) => {
-              // Don't activate if clicking on add buttons, delete button, or chart content
-              if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('.chart-content')) {
+              // Don't activate if clicking on buttons
+              if ((e.target as HTMLElement).closest('button')) {
                 return;
               }
               setActiveChartId(chart.id);
@@ -1988,6 +2023,43 @@ export default function App() {
   const chartGridCallbacksRef = React.useRef<ChartGridCallbacks | null>(null);
   // State to track active chart's selected points (synced from ChartGrid)
   const [activeChartSelectedPoints, setActiveChartSelectedPoints] = React.useState<Map<string, Set<string>>>(new Map());
+  // State to track active chart's position
+  const [activeChartPosition, setActiveChartPosition] = React.useState<DOMRect | null>(null);
+
+  // Calculate sidebar position based on active chart position
+  const sidebarPosition = React.useMemo(() => {
+    if (!activeChartPosition) {
+      return { top: '1rem', left: '1rem', showArrow: false, arrowOnLeft: true };
+    }
+
+    const sidebarWidth = 600;
+    const gap = 8;
+    const windowWidth = window.innerWidth;
+
+    // Try to place on right first
+    let left = activeChartPosition.right + gap;
+    let arrowOnLeft = true;
+
+    // If it would go off-screen on the right, try left side
+    if (left + sidebarWidth > windowWidth - 20) {
+      left = activeChartPosition.left - sidebarWidth - gap;
+      arrowOnLeft = false;
+
+      // If it would also go off-screen on the left, just place it with some margin
+      if (left < 20) {
+        left = 20;
+        arrowOnLeft = true;
+      }
+    }
+
+    return {
+      top: `${activeChartPosition.top}px`,
+      left: `${left}px`,
+      showArrow: true,
+      arrowOnLeft
+    };
+  }, [activeChartPosition]);
+
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [pointHelpEnabled, setPointHelpEnabled] = useState<Set<string>>(new Set());
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set());
@@ -2362,26 +2434,44 @@ export default function App() {
             selectPointsOpen={sidebarOpen}
             callbacksRef={chartGridCallbacksRef}
             onActiveChartSelectedPointsChange={setActiveChartSelectedPoints}
+            onActiveChartPositionChange={setActiveChartPosition}
           />
         </div>
         
-        {/* Point selector dropdown - positioned below Chart header */}
+        {/* Point selector dropdown - positioned relative to active chart */}
         <div
           ref={sidebarRef}
-          className={`absolute bg-white border border-gray-300 shadow-xl transition-all duration-300 z-50 rounded-lg flex flex-row ${
+          className={`fixed bg-white border-2 border-blue-400 shadow-xl transition-all duration-300 z-50 rounded-lg flex flex-row ${
             sidebarOpen
               ? 'opacity-100 translate-y-0 pointer-events-auto'
               : 'opacity-0 -translate-y-4 pointer-events-none'
           }`}
           style={{
-            top: '1rem',
-            left: '1rem',
+            top: sidebarPosition.top,
+            left: sidebarPosition.left,
             width: '600px',
-            height: sidebarOpen ? 'calc(100vh - 4rem)' : '0',
-            maxHeight: sidebarOpen ? 'calc(100vh - 4rem)' : '0',
+            height: sidebarOpen ? 'calc(100vh - 8rem)' : '0',
+            maxHeight: 'calc(100vh - 8rem)',
             overflow: 'hidden'
           }}
         >
+          {/* Arrow pointing to active chart */}
+          {sidebarOpen && sidebarPosition.showArrow && (
+            <div
+              className={`absolute top-4 w-0 h-0 ${sidebarPosition.arrowOnLeft ? 'left-0' : 'right-0'}`}
+              style={{
+                borderTop: '8px solid transparent',
+                borderBottom: '8px solid transparent',
+                ...(sidebarPosition.arrowOnLeft ? {
+                  borderRight: '8px solid rgb(96, 165, 250)',
+                  transform: 'translateX(-8px)'
+                } : {
+                  borderLeft: '8px solid rgb(96, 165, 250)',
+                  transform: 'translateX(8px)'
+                })
+              }}
+            />
+          )}
           {/* Dropdown content */}
           <div className="h-full flex flex-row w-full min-h-0">
             {/* Navigation bar - left side */}
