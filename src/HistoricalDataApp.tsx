@@ -15,6 +15,7 @@ interface ProtocolEntry {
   longdescription?: string;
   dtype?: string;
   meanings?: Meanings;
+  friendly_meanings?: Meanings;
   name: string;
   value?: unknown;
   unit?: string | null;
@@ -68,7 +69,13 @@ function loadProtocols(): ProtocolPoint[] {
         const modelName = normalizeModel(item.model);
         if (!pointName || !modelName) return null;
         // Labels can be at the protocol level or entry level
-        const labels = (Array.isArray(item.labels) ? item.labels : Array.isArray(item.entry?.labels) ? item.entry.labels : []) as Label[];
+        const labels = (
+          Array.isArray(item.labels)
+            ? item.labels
+            : Array.isArray(item.entry?.labels)
+            ? item.entry.labels
+            : []
+        ) as Label[];
         return {
           block: String(item.block ?? "fixed"),
           entry: item.entry,
@@ -908,6 +915,207 @@ const LEGEND_COLORS = [
   { bg: 'bg-red-500', border: 'border-red-600' },
 ];
 
+interface LegendEntry {
+  key: string;
+  pointKey: string;
+  name: string;
+  sn: string;
+  unit: string;
+  colorIndex: number;
+  dtype?: string;
+  meanings?: Meanings;
+  friendlyMeanings?: Meanings;
+  meaningKeys: string[];
+  isCategorical: boolean;
+}
+
+interface CategoricalSeriesRow {
+  meaningKey: string;
+  label: string;
+  activeSlots: boolean[];
+}
+
+interface CategoricalChartData {
+  id: string;
+  title: string;
+  subtitle: string;
+  timeLabels: string[];
+  rows: CategoricalSeriesRow[];
+  colorIndex: number;
+}
+
+function createDeterministicRandom(seed: string) {
+  let value = 0;
+  for (let i = 0; i < seed.length; i += 1) {
+    value = (value * 31 + seed.charCodeAt(i)) >>> 0;
+  }
+  return () => {
+    value = (value * 1664525 + 1013904223) >>> 0;
+    return value / 2 ** 32;
+  };
+}
+
+function generateTimeLabels(count: number) {
+  const labels: string[] = [];
+  const incrementMinutes = 10;
+  const startMinutes = 12 * 60; // 12:00
+  for (let i = 0; i < count; i += 1) {
+    const totalMinutes = startMinutes + i * incrementMinutes;
+    const hours = Math.floor(totalMinutes / 60) % 24;
+    const minutes = totalMinutes % 60;
+    labels.push(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+  }
+  return labels;
+}
+
+function buildCategoricalChartData(entry: LegendEntry): CategoricalChartData | null {
+  if (!entry.meaningKeys.length) {
+    return null;
+  }
+
+  const allMeaningKeys = entry.meaningKeys;
+  const rand = createDeterministicRandom(entry.pointKey);
+  const keysWithData = allMeaningKeys.filter((_, index) => rand() > 0.35 || index === 0);
+  if (keysWithData.length === 0) {
+    keysWithData.push(allMeaningKeys[0]);
+  }
+
+  const slotCount = 12;
+  const timeLabels = generateTimeLabels(slotCount);
+  const normalizedDtype = typeof entry.dtype === 'string' ? entry.dtype.toLowerCase() : '';
+  const isBitfield = normalizedDtype.startsWith('bitfield');
+
+  const slotSets: Array<Set<string>> = Array.from({ length: slotCount }, () => new Set<string>());
+
+  if (isBitfield) {
+    for (let slot = 0; slot < slotCount; slot += 1) {
+      let activated = false;
+      keysWithData.forEach((key, idx) => {
+        if (rand() > 0.55) {
+          slotSets[slot].add(key);
+          activated = true;
+        }
+        // Encourage early keys to show up occasionally
+        if (!activated && idx === keysWithData.length - 1 && rand() > 0.7) {
+          slotSets[slot].add(key);
+          activated = true;
+        }
+      });
+    }
+  } else {
+    let slot = 0;
+    while (slot < slotCount) {
+      if (!keysWithData.length) {
+        break;
+      }
+      const keyIndex = Math.floor(rand() * keysWithData.length);
+      const selectedKey = keysWithData[keyIndex];
+      const runLength = 1 + Math.floor(rand() * 3);
+      if (rand() > 0.2) {
+        for (let offset = 0; offset < runLength && slot + offset < slotCount; offset += 1) {
+          slotSets[slot + offset].add(selectedKey);
+        }
+      }
+      slot += runLength;
+    }
+  }
+
+  const rows: CategoricalSeriesRow[] = allMeaningKeys.map((meaningKey) => {
+    const labelSourceKey = String(meaningKey);
+    const friendly = entry.friendlyMeanings?.[labelSourceKey];
+    const meaning = entry.meanings?.[labelSourceKey];
+    const label = (friendly ?? meaning ?? labelSourceKey).trim() || `Value ${labelSourceKey}`;
+    const activeSlots = slotSets.map((set) => set.has(meaningKey));
+    return { meaningKey, label, activeSlots };
+  });
+
+  return {
+    id: entry.pointKey,
+    title: entry.name,
+    subtitle: `SN ${entry.sn}`,
+    timeLabels,
+    rows,
+    colorIndex: entry.colorIndex,
+  };
+}
+
+function CategoricalChart({ data }: { data: CategoricalChartData }) {
+  const [hideEmptyBars, setHideEmptyBars] = React.useState(true);
+  const visibleRows = hideEmptyBars ? data.rows.filter((row) => row.activeSlots.some(Boolean)) : data.rows;
+  const hiddenCount = data.rows.length - visibleRows.length;
+  const labelWidth = 220;
+  const labelWidthPx = `${labelWidth}px`;
+
+  return (
+    <div className="rounded-lg border border-red-200 bg-white shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-red-200 bg-red-50 px-4 py-2">
+        <div>
+          <div className="text-[11px] font-semibold uppercase tracking-wide text-red-600">Categorical data</div>
+          <div className="text-sm font-semibold text-red-700">{data.title}</div>
+          <div className="text-xs text-red-600">{data.subtitle}</div>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 text-red-700">
+          <label className="flex items-center gap-2 text-xs font-medium">
+            <input
+              type="checkbox"
+              checked={hideEmptyBars}
+              onChange={(e) => setHideEmptyBars(e.target.checked)}
+              className="h-3 w-3 rounded border-red-400 text-red-600 focus:ring-red-500"
+            />
+            Hide empty bars
+          </label>
+          <span className="text-[11px] text-red-600">{hiddenCount} values hidden</span>
+        </div>
+      </div>
+      <div className="px-4 py-3">
+        <div
+          className="flex items-center text-[10px] font-semibold uppercase text-gray-400"
+          style={{ marginLeft: labelWidthPx }}
+        >
+          {data.timeLabels.map((label, idx) => (
+            <span
+              key={`${data.id}-time-${idx}`}
+              className={`flex-1 ${idx === 0 ? 'text-left' : idx === data.timeLabels.length - 1 ? 'text-right' : 'text-center'}`}
+            >
+              {idx % 2 === 0 ? label : ''}
+            </span>
+          ))}
+        </div>
+        <div className="mt-3 space-y-2">
+          {visibleRows.length === 0 ? (
+            <div className="text-xs text-gray-500 italic">
+              No categorical data is visible. Disable “Hide empty bars” to view all meanings.
+            </div>
+          ) : (
+            visibleRows.map((row) => (
+              <div key={row.meaningKey} className="grid grid-cols-[auto,1fr] items-center gap-3">
+                <div
+                  className="text-xs font-medium text-gray-700"
+                  style={{ width: labelWidthPx, minWidth: labelWidthPx }}
+                >
+                  {row.label}
+                </div>
+                <div className="relative h-3 rounded bg-red-100 overflow-hidden">
+                  <div className="absolute inset-0 flex">
+                    {row.activeSlots.map((active, index) => (
+                      <div
+                        key={`${row.meaningKey}-${index}`}
+                        className={`flex-1 ${
+                          index < row.activeSlots.length - 1 ? 'border-r border-red-200' : ''
+                        } ${active ? 'bg-red-500/80' : 'bg-transparent'}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 interface InverterSelectorProps {
   selectedInverters: Set<string>;
   onChange: (inverters: Set<string>) => void;
@@ -1021,11 +1229,23 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
     .filter((info) => info.name);
 
   // Flatten to create one entry per SN+point combination
-  const legendEntries = selectedPointInfo.flatMap(({ key, name, inverters }) => {
+  const legendEntries: LegendEntry[] = selectedPointInfo.flatMap(({ key, name, inverters }) => {
     const [model, point] = key.split(':');
     const protocol = protocols.find((p) => p.model === model && p.point === point);
     const unit = protocol?.entry?.unit && protocol.entry.unit !== "N/A" ? protocol.entry.unit : "N/A";
-    
+    const dtype = protocol?.entry?.dtype;
+    const meanings = protocol?.entry?.meanings;
+    const friendlyMeanings = protocol?.entry?.friendly_meanings;
+    const meaningKeysSet = new Set<string>();
+    if (meanings) {
+      Object.keys(meanings).forEach((key) => meaningKeysSet.add(String(key)));
+    }
+    if (friendlyMeanings) {
+      Object.keys(friendlyMeanings).forEach((key) => meaningKeysSet.add(String(key)));
+    }
+    const meaningKeys = Array.from(meaningKeysSet);
+    const isCategorical = meaningKeys.length > 0;
+
     return Array.from(inverters).sort().map((sn, index) => ({
       key,
       pointKey: `${key}:${sn}`, // Unique key for this SN+point combo
@@ -1033,6 +1253,11 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
       sn,
       unit,
       colorIndex: (selectedPointInfo.findIndex(p => p.key === key) * AVAILABLE_INVERTERS.length + index) % LEGEND_COLORS.length,
+      dtype,
+      meanings,
+      friendlyMeanings,
+      meaningKeys,
+      isCategorical,
     }));
   });
 
@@ -1043,7 +1268,20 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
     }
     acc.get(entry.unit)!.push(entry);
     return acc;
-  }, new Map<string, typeof legendEntries>());
+  }, new Map<string, LegendEntry[]>());
+
+  const visibleLegendEntries = legendEntries.filter((entry) => !hiddenEntries.has(entry.pointKey));
+  const visibleCategoricalEntries = visibleLegendEntries.filter((entry) => entry.isCategorical);
+  const visibleNumericEntries = visibleLegendEntries.filter((entry) => !entry.isCategorical);
+  const categoricalCharts = React.useMemo(
+    () =>
+      visibleCategoricalEntries
+        .map((entry) => buildCategoricalChartData(entry))
+        .filter((chart): chart is CategoricalChartData => chart !== null),
+    [visibleCategoricalEntries]
+  );
+  const hasNumericEntries = visibleNumericEntries.length > 0;
+  const hasAnyVisibleContent = hasNumericEntries || categoricalCharts.length > 0;
 
   const toggleVisibility = (pointKey: string) => {
     setHiddenEntries((prev) => {
@@ -1059,9 +1297,9 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
 
   const showOnlyEntry = (pointKey: string) => {
     // If this is the only visible entry, show all entries
-    const visibleCount = legendEntries.filter(e => !hiddenEntries.has(e.pointKey)).length;
+    const visibleCount = visibleLegendEntries.length;
     const isOnlyVisible = visibleCount === 1 && !hiddenEntries.has(pointKey);
-    
+
     if (isOnlyVisible) {
       // Show all entries
       setHiddenEntries(new Set());
@@ -1224,33 +1462,44 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
             <div className="flex items-center justify-center h-full text-sm text-gray-400">
               Select points to display charts
             </div>
+          ) : !hasAnyVisibleContent ? (
+            <div className="flex items-center justify-center h-full text-sm text-gray-400 text-center px-4">
+              All selected points are hidden. Use the legend controls to show a series.
+            </div>
           ) : (
-            <div className="h-full overflow-y-auto">
-              <div className="text-sm font-semibold text-gray-700 mb-3">Visible Points:</div>
-              <div className="space-y-2">
-                {legendEntries
-                  .filter(entry => !hiddenEntries.has(entry.pointKey))
-                  .map((entry) => {
-                    const color = LEGEND_COLORS[entry.colorIndex];
-                    return (
-                      <div key={entry.pointKey} className="text-xs text-gray-600 flex items-center gap-2">
-                        <div 
-                          className={`w-3 h-3 rounded-sm flex-shrink-0 ${color.bg} ${color.border} border`}
-                        />
-                        <span className="font-medium">{entry.name}</span>
-                        <span className="text-gray-400">({entry.sn})</span>
-                        {entry.unit !== "N/A" && (
-                          <span className="text-gray-400">[{entry.unit}]</span>
-                        )}
-                      </div>
-                    );
-                  })}
+            <div className="h-full overflow-y-auto pr-1">
+              <div className="flex flex-col gap-6">
+                {hasNumericEntries && (
+                  <div>
+                    <div className="text-sm font-semibold text-gray-700 mb-3">Visible Points:</div>
+                    <div className="space-y-2">
+                      {visibleNumericEntries.map((entry) => {
+                        const color = LEGEND_COLORS[entry.colorIndex];
+                        return (
+                          <div key={entry.pointKey} className="text-xs text-gray-600 flex items-center gap-2">
+                            <div
+                              className={`w-3 h-3 rounded-sm flex-shrink-0 ${color.bg} ${color.border} border`}
+                            />
+                            <span className="font-medium">{entry.name}</span>
+                            <span className="text-gray-400">({entry.sn})</span>
+                            {entry.unit !== "N/A" && (
+                              <span className="text-gray-400">[{entry.unit}]</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+                {categoricalCharts.map((chart) => (
+                  <CategoricalChart key={`${chart.id}:${chart.subtitle}`} data={chart} />
+                ))}
               </div>
             </div>
           )}
         </div>
       </div>
-      
+
       {/* Legend/Point List */}
       {legendEntries.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-3">
