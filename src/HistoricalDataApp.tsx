@@ -1187,6 +1187,7 @@ interface HierarchyConfigProps {
   availableFamilies: string[];
   hierarchy: string[];
   onChange: (hierarchy: string[]) => void;
+  scrollContainerRef?: React.RefObject<HTMLDivElement>;
 }
 
 function GroupByHelpModal({ onClose }: { onClose: () => void }) {
@@ -1222,8 +1223,11 @@ function GroupByHelpModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-function HierarchyConfig({ availableFamilies, hierarchy, onChange }: HierarchyConfigProps) {
+function HierarchyConfig({ availableFamilies, hierarchy, onChange, scrollContainerRef }: HierarchyConfigProps) {
   const [showHelpModal, setShowHelpModal] = React.useState(false);
+  const [isExpanded, setIsExpanded] = React.useState(true);
+  const detailsRef = React.useRef<HTMLDetailsElement>(null);
+  const lastScrollTop = React.useRef<number>(0);
 
   const handleChange = (index: number, value: string) => {
     const newHierarchy = [...hierarchy];
@@ -1251,10 +1255,47 @@ function HierarchyConfig({ availableFamilies, hierarchy, onChange }: HierarchyCo
     return availableFamilies.filter((f) => !usedFamilies.includes(f));
   };
 
+  // Handle scroll detection to collapse when scrolling down
+  React.useEffect(() => {
+    const scrollContainer = scrollContainerRef?.current;
+    if (!scrollContainer) return;
+
+    const handleScroll = () => {
+      const currentScrollTop = scrollContainer.scrollTop;
+      
+      // Collapse when scrolling down, expand when scrolling to top
+      if (currentScrollTop > lastScrollTop.current && currentScrollTop > 50) {
+        // Scrolling down - collapse
+        if (isExpanded && detailsRef.current) {
+          detailsRef.current.open = false;
+          setIsExpanded(false);
+        }
+      } else if (currentScrollTop < 50) {
+        // Scrolled to top - expand
+        if (!isExpanded && detailsRef.current) {
+          detailsRef.current.open = true;
+          setIsExpanded(true);
+        }
+      }
+      
+      lastScrollTop.current = currentScrollTop;
+    };
+
+    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      scrollContainer.removeEventListener('scroll', handleScroll);
+    };
+  }, [isExpanded, scrollContainerRef]);
+
   return (
     <>
-      <div className="mb-3 rounded-lg border bg-gray-50 p-2">
-        <details className="group">
+      <div className="mb-3 rounded-lg border bg-gray-50 p-2 transition-all duration-300">
+        <details 
+          ref={detailsRef}
+          className="group"
+          open={isExpanded}
+          onToggle={(e) => setIsExpanded((e.target as HTMLDetailsElement).open)}
+        >
           <summary className="cursor-pointer list-none">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-700 flex-1 min-w-0">
@@ -1365,8 +1406,11 @@ export default function App() {
   const sidebarContentRef = React.useRef<HTMLDivElement>(null);
   const [activeGroup, setActiveGroup] = React.useState<string>("");
   const [groupsExpanded, setGroupsExpanded] = React.useState<boolean>(true);
+  const [topSectionCollapsed, setTopSectionCollapsed] = React.useState<boolean>(false);
+  const topSectionScrollTop = React.useRef<number>(0);
+  const lastManualToggleTime = React.useRef<number>(0);
 
-  // Track scroll position to highlight active group
+  // Track scroll position to highlight active group and collapse top section
   // Note: This effect queries the DOM directly, so it doesn't need grouped in dependencies
   React.useEffect(() => {
     if (!sidebarContentRef.current) return;
@@ -1375,6 +1419,30 @@ export default function App() {
       if (!sidebarContentRef.current) return;
       
       const container = sidebarContentRef.current;
+      const currentScrollTop = container.scrollTop;
+      
+      // Don't auto-collapse/expand if user manually toggled recently (within last 500ms)
+      const timeSinceManualToggle = Date.now() - lastManualToggleTime.current;
+      if (timeSinceManualToggle < 500) {
+        topSectionScrollTop.current = currentScrollTop;
+        return;
+      }
+      
+      // Collapse top section when scrolling down, expand when scrolling to top
+      if (currentScrollTop > topSectionScrollTop.current && currentScrollTop > 100) {
+        // Scrolling down - collapse
+        if (!topSectionCollapsed) {
+          setTopSectionCollapsed(true);
+        }
+      } else if (currentScrollTop < 50) {
+        // Scrolled to top - expand
+        if (topSectionCollapsed) {
+          setTopSectionCollapsed(false);
+        }
+      }
+      
+      topSectionScrollTop.current = currentScrollTop;
+      
       const groups = container.querySelectorAll('[id^="group-"]');
       let currentGroup = "";
 
@@ -1404,7 +1472,7 @@ export default function App() {
       clearTimeout(timeoutId);
       container.removeEventListener('scroll', handleScroll);
     };
-  }, [activeGroup]);
+  }, [activeGroup, topSectionCollapsed]);
 
   // Handle Escape key to close sidebar
   React.useEffect(() => {
@@ -1821,18 +1889,43 @@ export default function App() {
             
             {/* Main content area */}
             <div className="flex-1 flex flex-col overflow-hidden">
-              <div className="p-4 flex-shrink-0">
-                <div className="mb-3 flex items-center justify-between">
-                  <div className="text-lg font-semibold">Select Points</div>
-                  <div className="text-sm">
+              {/* Collapsible top section */}
+              <div className="border-b border-gray-200">
+                <button
+                  onClick={() => {
+                    lastManualToggleTime.current = Date.now();
+                    setTopSectionCollapsed(!topSectionCollapsed);
+                  }}
+                  className="w-full p-2 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <svg 
+                      className={`h-4 w-4 text-gray-500 transition-transform ${topSectionCollapsed ? '' : 'rotate-90'}`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <div className="text-lg font-semibold">Select Points</div>
+                  </div>
+                  <div className="text-sm text-gray-600">
                     <span>Available: {visibleCount.toLocaleString()} of {totalCount.toLocaleString()}</span>
                   </div>
-                </div>
+                </button>
+              </div>
+              <div 
+                className={`transition-all duration-300 overflow-hidden ${
+                  topSectionCollapsed ? 'max-h-0' : 'max-h-[1000px]'
+                }`}
+              >
+                <div className="p-4">
                 
                 <HierarchyConfig
                   availableFamilies={availableFamilies}
                   hierarchy={hierarchy}
                   onChange={setHierarchy}
+                  scrollContainerRef={sidebarContentRef}
                 />
                 
                 <LabelFilter
@@ -1884,9 +1977,10 @@ export default function App() {
                   </button>
                   <DetailLevelSlider value={detailLevel} onChange={setDetailLevel} />
                 </div>
+                </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-4 pb-4 pr-1" ref={sidebarContentRef}>
+              <div className="flex-1 overflow-y-auto px-4 pb-4 pr-1" ref={sidebarContentRef} data-scroll-container>
                 {grouped.size === 0 ? (
                   <div className="py-4 text-center text-sm text-gray-500">
                     No points match the current filters
