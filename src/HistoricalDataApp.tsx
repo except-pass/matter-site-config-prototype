@@ -1591,6 +1591,10 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   ]);
   const [nextChartId, setNextChartId] = useState(1);
   const [activeChartId, setActiveChartId] = useState<string>('chart-0');
+  const [columnWidths, setColumnWidths] = useState<Map<number, number>>(new Map([[0, 400]]));
+  const [rowHeights, setRowHeights] = useState<Map<number, number>>(new Map([[0, 300]]));
+  const [resizingChart, setResizingChart] = useState<string | null>(null);
+  const resizeStartRef = React.useRef<{ x: number; y: number; col: number; row: number; initialWidth: number; initialHeight: number } | null>(null);
 
   // Notify parent whenever active chart's selection changes
   React.useEffect(() => {
@@ -1650,6 +1654,57 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
       }
     };
   }, [charts, activeChartId, callbacksRef]);
+
+  // Handle chart resizing (affects entire column width and row height)
+  const handleResizeStart = (chartId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const chart = charts.find(c => c.id === chartId);
+    if (!chart) return;
+
+    const currentWidth = columnWidths.get(chart.col) || 400;
+    const currentHeight = rowHeights.get(chart.row) || 300;
+
+    resizeStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      col: chart.col,
+      row: chart.row,
+      initialWidth: currentWidth,
+      initialHeight: currentHeight
+    };
+    setResizingChart(chartId);
+  };
+
+  React.useEffect(() => {
+    if (!resizingChart || !resizeStartRef.current) return;
+
+    const startData = resizeStartRef.current;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const deltaX = e.clientX - startData.x;
+      const deltaY = e.clientY - startData.y;
+
+      const newWidth = Math.max(300, startData.initialWidth + deltaX);
+      const newHeight = Math.max(200, startData.initialHeight + deltaY);
+
+      setColumnWidths(prev => new Map(prev).set(startData.col, newWidth));
+      setRowHeights(prev => new Map(prev).set(startData.row, newHeight));
+    };
+
+    const handleMouseUp = () => {
+      setResizingChart(null);
+      resizeStartRef.current = null;
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [resizingChart]);
 
   const handleAddChart = (chartId: string, direction: 'top' | 'bottom' | 'left' | 'right') => {
     const chart = charts.find(c => c.id === chartId);
@@ -1771,6 +1826,14 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
       col: newCol
     };
 
+    // Initialize column width and row height if they don't exist
+    if (!columnWidths.has(newCol)) {
+      setColumnWidths(prev => new Map(prev).set(newCol, 400));
+    }
+    if (!rowHeights.has(newRow)) {
+      setRowHeights(prev => new Map(prev).set(newRow, 300));
+    }
+
     setCharts(prev => [...prev, newChart]);
     setNextChartId(prev => prev + 1);
   };
@@ -1782,6 +1845,8 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
       // If this was the last chart, create a new blank one
       if (filtered.length === 0) {
         setActiveChartId('chart-0');
+        setColumnWidths(new Map([[0, 400]]));
+        setRowHeights(new Map([[0, 300]]));
         return [{ id: 'chart-0', selectedPoints: new Map(), row: 0, col: 0 }];
       }
       
@@ -1842,40 +1907,48 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   };
 
   // Calculate grid dimensions
-  const maxRow = Math.max(...charts.map(c => c.row), 0);
-  const maxCol = Math.max(...charts.map(c => c.col), 0);
   const minRow = Math.min(...charts.map(c => c.row), 0);
   const minCol = Math.min(...charts.map(c => c.col), 0);
-  
+
   // Normalize to start at 0,0
   const normalizedCharts = charts.map(c => ({
     ...c,
     row: c.row - minRow,
     col: c.col - minCol
   }));
-  
-  const gridRows = maxRow - minRow + 1;
-  const gridCols = maxCol - minCol + 1;
 
-  // Calculate grid template
-  const gridTemplateRows = `repeat(${gridRows}, minmax(0, 1fr))`;
-  const gridTemplateCols = `repeat(${gridCols}, minmax(0, 1fr))`;
+  // Get all unique normalized rows and columns
+  const uniqueRows = Array.from(new Set(normalizedCharts.map(c => c.row))).sort((a, b) => a - b);
+  const uniqueCols = Array.from(new Set(normalizedCharts.map(c => c.col))).sort((a, b) => a - b);
+
+  // Calculate grid template with explicit sizes from Maps
+  const gridTemplateRows = uniqueRows
+    .map(normalizedRow => {
+      const originalRow = normalizedRow + minRow;
+      return `${rowHeights.get(originalRow) || 300}px`;
+    })
+    .join(' ');
+
+  const gridTemplateCols = uniqueCols
+    .map(normalizedCol => {
+      const originalCol = normalizedCol + minCol;
+      return `${columnWidths.get(originalCol) || 400}px`;
+    })
+    .join(' ');
 
   return (
     <div className="w-full h-full overflow-auto">
-      <div 
+      <div
         className="grid gap-2 p-4"
         style={{
           gridTemplateRows,
-          gridTemplateColumns: gridTemplateCols,
-          minWidth: `${gridCols * 400}px`,
-          minHeight: `${gridRows * 300}px`
+          gridTemplateColumns: gridTemplateCols
         }}
       >
         {normalizedCharts.map(chart => (
           <div
             key={chart.id}
-            className={`relative border rounded-lg bg-white shadow-sm min-h-[300px] min-w-[400px] overflow-visible transition-all cursor-pointer ${
+            className={`relative border rounded-lg bg-white shadow-sm overflow-visible transition-all cursor-pointer ${
               activeChartId === chart.id ? 'border-blue-500 border-2 ring-2 ring-blue-200' : 'border-gray-300'
             }`}
             style={{
@@ -1904,6 +1977,12 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
                 onDeleteChart={() => handleDeleteChart(chart.id)}
               />
             </div>
+            {/* Resize handle */}
+            <div
+              className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize bg-gray-300 hover:bg-gray-400 rounded-tl"
+              onMouseDown={(e) => handleResizeStart(chart.id, e)}
+              style={{ zIndex: 10 }}
+            />
           </div>
         ))}
       </div>
@@ -2223,18 +2302,7 @@ export default function App() {
     }
   };
 
-  const removeInverter = (pointKey: string, inverterSN: string) => {
-    if (chartGridCallbacksRef.current) {
-      const activeSelected = chartGridCallbacksRef.current.getActiveChartSelectedPoints();
-      const currentInverters = activeSelected.get(pointKey);
-      if (!currentInverters) return;
-      
-      const newInverters = new Set(currentInverters);
-      newInverters.delete(inverterSN);
-      
-      chartGridCallbacksRef.current.updateInvertersForActiveChart(pointKey, newInverters);
-    }
-  };
+  // Removed unused removeInverter function
 
   // activeChartSelectedPoints is now managed as state, synced from ChartGrid via onActiveChartSelectedPointsChange callback
 
@@ -2291,11 +2359,11 @@ export default function App() {
         <div className="flex-1 min-h-0 relative">
           <ChartGrid
             protocols={protocols}
-            onUpdateInverters={(chartId, pointKey, inverters) => {
+            onUpdateInverters={() => {
               // Chart's internal state is already updated
             }}
             onScrollToPoint={scrollToPoint}
-            onRemoveInverter={(chartId, pointKey, inverterSN) => {
+            onRemoveInverter={() => {
               // Chart's internal state is already updated
             }}
             onSelectPointsToggle={setSidebarOpen}
@@ -2309,15 +2377,14 @@ export default function App() {
         <div
           ref={sidebarRef}
           className={`absolute bg-white border border-gray-300 shadow-xl transition-all duration-300 z-50 rounded-lg flex flex-row ${
-            sidebarOpen 
-              ? 'opacity-100 translate-y-0 pointer-events-auto' 
+            sidebarOpen
+              ? 'opacity-100 translate-y-0 pointer-events-auto'
               : 'opacity-0 -translate-y-4 pointer-events-none'
           }`}
-          style={{ 
+          style={{
             top: '1rem',
             left: '1rem',
-            right: '1rem',
-            width: 'auto',
+            width: '600px',
             height: sidebarOpen ? 'calc(100vh - 4rem)' : '0',
             maxHeight: sidebarOpen ? 'calc(100vh - 4rem)' : '0',
             overflow: 'hidden'
