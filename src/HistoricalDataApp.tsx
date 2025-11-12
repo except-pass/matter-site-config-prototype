@@ -1774,11 +1774,11 @@ const ROW_KEYBOARD_STEP = 8;
 
 interface RowDividerProps {
   onAdd: () => void;
-  onResizeStart: (clientY: number) => void;
-  onKeyboardNudge: (delta: number) => void;
-  onAutoFit: () => void;
-  percentAbove: number;
-  isActive: boolean;
+  onResizeStart?: (clientY: number) => void;
+  onKeyboardNudge?: (delta: number) => void;
+  onAutoFit?: () => void;
+  percentAbove?: number;
+  isActive?: boolean;
 }
 
 const RowDivider: React.FC<RowDividerProps> = ({
@@ -1787,16 +1787,22 @@ const RowDivider: React.FC<RowDividerProps> = ({
   onKeyboardNudge,
   onAutoFit,
   percentAbove,
-  isActive,
+  isActive = false,
 }) => {
+  const isResizable =
+    typeof onResizeStart === 'function' &&
+    typeof onKeyboardNudge === 'function' &&
+    typeof onAutoFit === 'function' &&
+    typeof percentAbove === 'number';
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       onAdd();
-    } else if (event.key === 'ArrowUp') {
+    } else if (event.key === 'ArrowUp' && isResizable && onKeyboardNudge) {
       event.preventDefault();
       onKeyboardNudge(ROW_KEYBOARD_STEP);
-    } else if (event.key === 'ArrowDown') {
+    } else if (event.key === 'ArrowDown' && isResizable && onKeyboardNudge) {
       event.preventDefault();
       onKeyboardNudge(-ROW_KEYBOARD_STEP);
     }
@@ -1806,20 +1812,41 @@ const RowDivider: React.FC<RowDividerProps> = ({
     <div
       role="separator"
       aria-orientation="horizontal"
-      aria-valuenow={Math.round(percentAbove)}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-label="Resize charts"
+      {...(isResizable
+        ? {
+            'aria-valuenow': Math.round(percentAbove!),
+            'aria-valuemin': 0,
+            'aria-valuemax': 100,
+            'aria-label': 'Resize charts',
+          }
+        : {
+            'aria-label': 'Add chart below',
+            'aria-disabled': true,
+          })}
       tabIndex={0}
       onKeyDown={handleKeyDown}
+      onClick={(event) => {
+        if (isResizable || (event.target as HTMLElement).closest('button')) {
+          return;
+        }
+        event.preventDefault();
+        onAdd();
+      }}
       onDoubleClick={(event) => {
         if ((event.target as HTMLElement).closest('button')) {
           return;
         }
         event.preventDefault();
-        onAutoFit();
+        if (isResizable && onAutoFit) {
+          onAutoFit();
+        } else {
+          onAdd();
+        }
       }}
       onMouseDown={(event) => {
+        if (!isResizable || !onResizeStart) {
+          return;
+        }
         if ((event.target as HTMLElement).closest('button')) {
           return;
         }
@@ -1829,7 +1856,9 @@ const RowDivider: React.FC<RowDividerProps> = ({
         event.preventDefault();
         onResizeStart(event.clientY);
       }}
-      className={`group relative flex items-center justify-center cursor-row-resize select-none outline-none transition-shadow duration-150 focus-visible:ring-2 focus-visible:ring-blue-300/60 ${
+      className={`group relative flex items-center justify-center ${
+        isResizable ? 'cursor-row-resize' : 'cursor-pointer'
+      } select-none outline-none transition-shadow duration-150 focus-visible:ring-2 focus-visible:ring-blue-300/60 ${
         isActive ? 'ring-2 ring-blue-300/60' : ''
       }`}
       style={{
@@ -2306,6 +2335,9 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
       rowTracks.push(`${ROW_DIVIDER_TRACK}px`);
     }
   });
+  if (uniqueRows.length > 0) {
+    rowTracks.push(`${ROW_DIVIDER_TRACK}px`);
+  }
   const gridTemplateRows = rowTracks.length > 0 ? rowTracks.join(' ') : '1fr';
 
   const gridTemplateCols = uniqueCols
@@ -2392,6 +2424,21 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
             </div>
           );
         })}
+        {uniqueRows.length > 0 && (
+          <div
+            key={`divider-${uniqueRows[uniqueRows.length - 1] + minRow}-terminal`}
+            style={{
+              gridColumn: '1 / -1',
+              gridRow: uniqueRows.length * 2,
+              alignSelf: 'center',
+              justifySelf: 'stretch'
+            }}
+          >
+            <RowDivider
+              onAdd={() => handleAddChartBelowRow(uniqueRows[uniqueRows.length - 1] + minRow)}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
