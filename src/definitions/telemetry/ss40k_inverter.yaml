@@ -396,7 +396,9 @@ protocols:
       '2': split phase
       '3': three phases
     friendly_meanings:
-      1: 'Single phase; 2: Split phase; 3: Three phase'
+      1: Single phase
+      2: Split phase
+      3: Three phase
   labels:
   - label_family: Component
     label_text: Grid

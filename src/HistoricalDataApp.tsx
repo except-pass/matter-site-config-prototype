@@ -2284,7 +2284,7 @@ export default function App() {
       return { top: '1rem', left: '1rem', showArrow: false, arrowOnLeft: true };
     }
 
-    const sidebarWidth = 600;
+    const sidebarWidth = 800;
     const gap = 8;
     const windowWidth = window.innerWidth;
 
@@ -2701,7 +2701,7 @@ export default function App() {
           style={{
             top: sidebarPosition.top,
             left: sidebarPosition.left,
-            width: '600px',
+            width: '800px',
             height: sidebarOpen ? 'calc(100vh - 8rem)' : '0',
             maxHeight: 'calc(100vh - 8rem)',
             overflow: 'hidden'
