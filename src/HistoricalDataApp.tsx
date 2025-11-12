@@ -2380,8 +2380,8 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
         }
         const content = target.querySelector<HTMLElement>('.chart-content');
         const measured = content ? content.scrollHeight : target.scrollHeight;
-        const desiredHeight = Math.ceil(measured + 24);
-        updates.set(chart.row, Math.max(desiredHeight, MIN_ROW_HEIGHT));
+        const desiredHeight = Math.max(Math.ceil(measured + 24), MIN_ROW_HEIGHT);
+        updates.set(chart.row, Math.max(desiredHeight, updates.get(chart.row) ?? 0));
       });
 
       if (updates.size === 0) {
@@ -2393,7 +2393,7 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
         const next = new Map(prev);
         updates.forEach((height, row) => {
           const current = next.get(row) ?? DEFAULT_ROW_HEIGHT;
-          if (Math.abs(height - current) > 1) {
+          if (height > current + 1) {
             next.set(row, height);
             changed = true;
           }
