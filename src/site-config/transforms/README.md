@@ -7,10 +7,10 @@ This directory contains TypeScript scripts to apply cosmetic transformations to 
 Rebuilds `demo.json` from `hierarchy.yaml` + `points.csv`:
 
 ```bash
-npx tsx src/transforms/rebuildFromHierarchy.ts
+npx tsx src/site-config/transforms/rebuildFromHierarchy.ts
 ```
 
-This generates `src/themes/demo_rebuilt.json`.  `rebuildFromHierarchy.ts` expects files in `src/definitions/commands/`:
+This generates `src/themes/demo_rebuilt.json`.  `rebuildFromHierarchy.ts` expects files in `src/site-config/definitions/commands/`:
 - `hierarchy.yaml` - UI structure and presentation
 - `matter.xlsx` - Protocol data (with a sheet named `matter`)
 - `envy_specific.yaml` (optional) - Envy-specific points

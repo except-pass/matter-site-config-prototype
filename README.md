@@ -192,7 +192,7 @@ This script combines all three source files into a single `demo_rebuilt.json` fi
 
 **Usage**:
 ```bash
-npx tsx src/transforms/rebuildFromHierarchy.ts
+npx tsx src/site-config/transforms/rebuildFromHierarchy.ts
 ```
 
 **Output**: `src/themes/demo_rebuilt.json`

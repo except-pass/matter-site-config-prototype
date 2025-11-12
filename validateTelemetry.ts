@@ -63,7 +63,7 @@ function validateTelemetryReferences(): ValidationResult {
 
   // Load Excel file
   console.log('Loading matter.xlsx...');
-  const matterPath = path.resolve(__dirname, 'src/definitions/commands/matter.xlsx');
+  const matterPath = path.resolve(__dirname, 'src/site-config/definitions/commands/matter.xlsx');
   const workbook = XLSX.readFile(matterPath);
   const matterSheet = workbook.Sheets['matter'];
 
