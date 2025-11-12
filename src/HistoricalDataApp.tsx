@@ -932,6 +932,18 @@ const LEGEND_COLORS = [
   { bg: 'bg-red-500', border: 'border-red-600' },
 ];
 
+// Extended color palette for categorical charts with all shades
+const CATEGORICAL_COLORS = [
+  { bg50: 'bg-purple-50', bg100: 'bg-purple-100', border200: 'border-purple-200', border400: 'border-purple-400', bg500: 'bg-purple-500/80', text600: 'text-purple-600', text700: 'text-purple-700', ring: 'focus:ring-purple-500' },
+  { bg50: 'bg-green-50', bg100: 'bg-green-100', border200: 'border-green-200', border400: 'border-green-400', bg500: 'bg-green-500/80', text600: 'text-green-600', text700: 'text-green-700', ring: 'focus:ring-green-500' },
+  { bg50: 'bg-teal-50', bg100: 'bg-teal-100', border200: 'border-teal-200', border400: 'border-teal-400', bg500: 'bg-teal-500/80', text600: 'text-teal-600', text700: 'text-teal-700', ring: 'focus:ring-teal-500' },
+  { bg50: 'bg-blue-50', bg100: 'bg-blue-100', border200: 'border-blue-200', border400: 'border-blue-400', bg500: 'bg-blue-500/80', text600: 'text-blue-600', text700: 'text-blue-700', ring: 'focus:ring-blue-500' },
+  { bg50: 'bg-pink-50', bg100: 'bg-pink-100', border200: 'border-pink-200', border400: 'border-pink-400', bg500: 'bg-pink-500/80', text600: 'text-pink-600', text700: 'text-pink-700', ring: 'focus:ring-pink-500' },
+  { bg50: 'bg-orange-50', bg100: 'bg-orange-100', border200: 'border-orange-200', border400: 'border-orange-400', bg500: 'bg-orange-500/80', text600: 'text-orange-600', text700: 'text-orange-700', ring: 'focus:ring-orange-500' },
+  { bg50: 'bg-indigo-50', bg100: 'bg-indigo-100', border200: 'border-indigo-200', border400: 'border-indigo-400', bg500: 'bg-indigo-500/80', text600: 'text-indigo-600', text700: 'text-indigo-700', ring: 'focus:ring-indigo-500' },
+  { bg50: 'bg-red-50', bg100: 'bg-red-100', border200: 'border-red-200', border400: 'border-red-400', bg500: 'bg-red-500/80', text600: 'text-red-600', text700: 'text-red-700', ring: 'focus:ring-red-500' },
+];
+
 interface LegendEntry {
   key: string;
   pointKey: string;
@@ -1064,66 +1076,50 @@ function CategoricalChart({ data }: { data: CategoricalChartData }) {
   const [hideEmptyBars, setHideEmptyBars] = React.useState(true);
   const visibleRows = hideEmptyBars ? data.rows.filter((row) => row.activeSlots.some(Boolean)) : data.rows;
   const hiddenCount = data.rows.length - visibleRows.length;
-  const labelWidth = 220;
-  const labelWidthPx = `${labelWidth}px`;
+
+  // Get colors based on colorIndex
+  const colors = CATEGORICAL_COLORS[data.colorIndex % CATEGORICAL_COLORS.length];
 
   return (
-    <div className="rounded-lg border border-red-200 bg-white shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-red-200 bg-red-50 px-4 py-2">
-        <div>
-          <div className="text-[11px] font-semibold uppercase tracking-wide text-red-600">Categorical data</div>
-          <div className="text-sm font-semibold text-red-700">{data.title}</div>
-          <div className="text-xs text-red-600">{data.subtitle}</div>
+    <div className={`rounded-lg border ${colors.border200} bg-white shadow-sm`}>
+      <div className={`flex items-center justify-between gap-2 border-b ${colors.border200} ${colors.bg50} px-4 py-1.5`}>
+        <div className="flex items-center gap-3 text-xs">
+          <span className={`font-semibold ${colors.text700}`}>{data.title}</span>
+          <span className={colors.text600}>{data.subtitle}</span>
         </div>
-        <div className="flex flex-wrap items-center gap-3 text-red-700">
-          <label className="flex items-center gap-2 text-xs font-medium">
+        <div className={`flex items-center gap-3 text-xs ${colors.text700}`}>
+          <label className="flex items-center gap-1.5 font-medium">
             <input
               type="checkbox"
               checked={hideEmptyBars}
               onChange={(e) => setHideEmptyBars(e.target.checked)}
-              className="h-3 w-3 rounded border-red-400 text-red-600 focus:ring-red-500"
+              className={`h-3 w-3 rounded ${colors.border400} ${colors.text600} ${colors.ring}`}
             />
             Hide empty bars
           </label>
-          <span className="text-[11px] text-red-600">{hiddenCount} values hidden</span>
+          <span className={`text-[11px] ${colors.text600}`}>{hiddenCount} values hidden</span>
         </div>
       </div>
       <div className="px-4 py-3">
-        <div
-          className="flex items-center text-[10px] font-semibold uppercase text-gray-400"
-          style={{ marginLeft: labelWidthPx }}
-        >
-          {data.timeLabels.map((label, idx) => (
-            <span
-              key={`${data.id}-time-${idx}`}
-              className={`flex-1 ${idx === 0 ? 'text-left' : idx === data.timeLabels.length - 1 ? 'text-right' : 'text-center'}`}
-            >
-              {idx % 2 === 0 ? label : ''}
-            </span>
-          ))}
-        </div>
-        <div className="mt-3 space-y-2">
+        <div className="space-y-1">
           {visibleRows.length === 0 ? (
             <div className="text-xs text-gray-500 italic">
-              No categorical data is visible. Disable “Hide empty bars” to view all meanings.
+              No categorical data is visible. Disable "Hide empty bars" to view all meanings.
             </div>
           ) : (
             visibleRows.map((row) => (
-              <div key={row.meaningKey} className="grid grid-cols-[auto,1fr] items-center gap-3">
-                <div
-                  className="text-xs font-medium text-gray-700"
-                  style={{ width: labelWidthPx, minWidth: labelWidthPx }}
-                >
+              <div key={row.meaningKey} className="flex flex-col">
+                <div className="text-[10px] font-medium text-gray-600 mb-0.5">
                   {row.label}
                 </div>
-                <div className="relative h-3 rounded bg-red-100 overflow-hidden">
+                <div className={`relative h-3 rounded ${colors.bg100} overflow-hidden`}>
                   <div className="absolute inset-0 flex">
                     {row.activeSlots.map((active, index) => (
                       <div
                         key={`${row.meaningKey}-${index}`}
                         className={`flex-1 ${
-                          index < row.activeSlots.length - 1 ? 'border-r border-red-200' : ''
-                        } ${active ? 'bg-red-500/80' : 'bg-transparent'}`}
+                          index < row.activeSlots.length - 1 ? `border-r ${colors.border200}` : ''
+                        } ${active ? colors.bg500 : 'bg-transparent'}`}
                       />
                     ))}
                   </div>
