@@ -513,8 +513,13 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
               title={long}
               aria-label="Help"
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 onTogglePointHelp(key);
+              }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
               }}
             >
               ⓘ
@@ -883,6 +888,9 @@ interface FakeChartProps {
   onRemoveInverter?: (pointKey: string, inverterSN: string) => void;
   onSelectPointsToggle?: (open: boolean) => void;
   selectPointsOpen?: boolean;
+  showAddButtons?: boolean;
+  onAddChart?: (direction: 'top' | 'bottom' | 'left' | 'right') => void;
+  onDeleteChart?: () => void;
 }
 
 // Available inverters (hardcoded for now, could come from props or API)
@@ -998,7 +1006,7 @@ function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps
   );
 }
 
-function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen }: FakeChartProps) {
+function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, showAddButtons, onAddChart, onDeleteChart }: FakeChartProps) {
   // Track visibility state for each legend entry
   const [hiddenEntries, setHiddenEntries] = React.useState<Set<string>>(new Set());
 
@@ -1069,28 +1077,109 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
   };
 
   return (
-    <div className="w-full h-full p-4 flex flex-col relative">
-      <div className="mb-2 flex items-center justify-between relative">
-        <div className="text-sm font-semibold text-gray-700">Chart</div>
-        {onSelectPointsToggle && (
-          <button
-            onClick={() => onSelectPointsToggle(!selectPointsOpen)}
-            className="text-xs px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-50 transition-colors flex items-center gap-2"
-            title={selectPointsOpen ? "Hide Select Points" : "Show Select Points"}
-          >
-            <span>Select Points</span>
-            <svg
-              className={`h-4 w-4 text-gray-600 transition-transform ${selectPointsOpen ? 'rotate-180' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        )}
-      </div>
-      <div className="relative flex-1 border border-gray-400 bg-gray-50 min-h-0">
+    <div className="w-full h-full flex flex-col relative">
+      {/* Add button - Top */}
+      {showAddButtons && onAddChart && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddChart('top');
+          }}
+          className="absolute -top-2 left-1/2 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-md transition-colors"
+          title="Add chart above"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m0 0l-4-4m4 4l4-4" />
+          </svg>
+        </button>
+      )}
+      
+      {/* Add button - Left */}
+      {showAddButtons && onAddChart && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddChart('left');
+          }}
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-md transition-colors"
+          title="Add chart to the left"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+      )}
+      
+      {/* Add button - Right */}
+      {showAddButtons && onAddChart && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddChart('right');
+          }}
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10 w-6 h-6 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-md transition-colors"
+          title="Add chart to the right"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
+      
+      {/* Add button - Bottom */}
+      {showAddButtons && onAddChart && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddChart('bottom');
+          }}
+          className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-md transition-colors"
+          title="Add chart below"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 20V4m0 0l-4 4m4-4l4 4" />
+          </svg>
+        </button>
+      )}
+      
+      <div className="p-4 flex flex-col h-full">
+        <div className="mb-2 flex items-center justify-between relative">
+          <div className="text-sm font-semibold text-gray-700">Chart</div>
+          <div className="flex items-center gap-2">
+            {onSelectPointsToggle && (
+              <button
+                onClick={() => onSelectPointsToggle(!selectPointsOpen)}
+                className="text-xs px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-50 transition-colors flex items-center gap-2"
+                title={selectPointsOpen ? "Hide Select Points" : "Show Select Points"}
+              >
+                <span>Select Points</span>
+                <svg
+                  className={`h-4 w-4 text-gray-600 transition-transform ${selectPointsOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            )}
+            {onDeleteChart && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteChart();
+                }}
+                className="text-xs px-2 py-1.5 border border-gray-300 rounded hover:bg-gray-50 transition-colors flex items-center justify-center text-gray-600 hover:text-gray-800 opacity-70 hover:opacity-100"
+                title="Delete chart"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="relative flex-1 border border-gray-400 bg-gray-50 min-h-0">
         {/* Y-axis */}
         <div className="absolute left-0 top-0 bottom-0 w-8 border-r border-gray-600 flex flex-col items-center justify-between py-2">
           <span className="text-xs text-gray-600 transform -rotate-90 whitespace-nowrap">Value</span>
@@ -1136,7 +1225,7 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
               Select points to display charts
             </div>
           ) : (
-              <div className="h-full overflow-y-auto">
+            <div className="h-full overflow-y-auto">
               <div className="text-sm font-semibold text-gray-700 mb-3">Visible Points:</div>
               <div className="space-y-2">
                 {legendEntries
@@ -1231,6 +1320,7 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
@@ -1439,6 +1529,303 @@ function HierarchyConfig({ availableFamilies, hierarchy, onChange, scrollContain
       </div>
       {showHelpModal && <GroupByHelpModal onClose={() => setShowHelpModal(false)} />}
     </>
+  );
+}
+
+interface ChartData {
+  id: string;
+  selectedPoints: Map<string, Set<string>>;
+  row: number;
+  col: number;
+}
+
+interface ChartGridProps {
+  protocols: ProtocolPoint[];
+  onUpdateInverters: (chartId: string, pointKey: string, inverters: Set<string>) => void;
+  onScrollToPoint: (pointKey: string) => void;
+  onRemoveInverter: (chartId: string, pointKey: string, inverterSN: string) => void;
+  onSelectPointsToggle: (open: boolean) => void;
+  selectPointsOpen: boolean;
+  selectedPoints: Map<string, Set<string>>;
+  onTogglePoint: (pointKey: string) => void;
+  onUpdateInvertersForChart: (pointKey: string, inverters: Set<string>) => void;
+}
+
+function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, selectedPoints, onTogglePoint, onUpdateInvertersForChart }: ChartGridProps) {
+  const [charts, setCharts] = useState<ChartData[]>([
+    { id: 'chart-0', selectedPoints: new Map(), row: 0, col: 0 }
+  ]);
+  const [nextChartId, setNextChartId] = useState(1);
+  const [activeChartId, setActiveChartId] = useState<string>('chart-0');
+
+  const handleAddChart = (chartId: string, direction: 'top' | 'bottom' | 'left' | 'right') => {
+    const chart = charts.find(c => c.id === chartId);
+    if (!chart) return;
+
+    let newRow = chart.row;
+    let newCol = chart.col;
+
+    // Check if target position is already occupied
+    const isPositionOccupied = (row: number, col: number) => {
+      return charts.some(c => c.row === row && c.col === col);
+    };
+
+    switch (direction) {
+      case 'top':
+        newRow = chart.row - 1;
+        // Check if target position is occupied
+        if (isPositionOccupied(newRow, chart.col)) {
+          // First, try to find an empty spot in existing rows of this column
+          const allRows = new Set(charts.map(c => c.row));
+          const sortedRows = Array.from(allRows).sort((a, b) => a - b);
+          let foundEmpty = false;
+          for (const row of sortedRows) {
+            if (row < chart.row && !isPositionOccupied(row, chart.col)) {
+              newRow = row;
+              foundEmpty = true;
+              break;
+            }
+          }
+          if (!foundEmpty) {
+            // No empty row found, shift all charts up
+            setCharts(prev => prev.map(c => 
+              c.row < chart.row ? { ...c, row: c.row - 1 } : c
+            ));
+            newRow = chart.row - 1;
+          }
+        }
+        break;
+      case 'bottom':
+        newRow = chart.row + 1;
+        // Check if target position is occupied
+        if (isPositionOccupied(newRow, chart.col)) {
+          // First, try to find an empty spot in existing rows of this column
+          const allRows = new Set(charts.map(c => c.row));
+          const sortedRows = Array.from(allRows).sort((a, b) => a - b);
+          let foundEmpty = false;
+          for (const row of sortedRows) {
+            if (row > chart.row && !isPositionOccupied(row, chart.col)) {
+              newRow = row;
+              foundEmpty = true;
+              break;
+            }
+          }
+          if (!foundEmpty) {
+            // Find the next empty row (may be beyond existing rows)
+            let emptyRow = newRow;
+            while (isPositionOccupied(emptyRow, chart.col)) {
+              emptyRow++;
+            }
+            newRow = emptyRow;
+          }
+        }
+        break;
+      case 'left':
+        newCol = chart.col - 1;
+        // Check if target position is occupied
+        if (isPositionOccupied(chart.row, newCol)) {
+          // First, try to find an empty spot in existing columns of this row
+          const allCols = new Set(charts.map(c => c.col));
+          const sortedCols = Array.from(allCols).sort((a, b) => a - b);
+          let foundEmpty = false;
+          for (const col of sortedCols) {
+            if (col < chart.col && !isPositionOccupied(chart.row, col)) {
+              newCol = col;
+              foundEmpty = true;
+              break;
+            }
+          }
+          if (!foundEmpty) {
+            // No empty column found, shift all charts left
+            setCharts(prev => prev.map(c => 
+              c.col < chart.col ? { ...c, col: c.col - 1 } : c
+            ));
+            newCol = chart.col - 1;
+          }
+        }
+        break;
+      case 'right':
+        newCol = chart.col + 1;
+        // Check if target position is occupied
+        if (isPositionOccupied(chart.row, newCol)) {
+          // First, try to find an empty spot in existing columns of this row
+          const allCols = new Set(charts.map(c => c.col));
+          const sortedCols = Array.from(allCols).sort((a, b) => a - b);
+          let foundEmpty = false;
+          for (const col of sortedCols) {
+            if (col > chart.col && !isPositionOccupied(chart.row, col)) {
+              newCol = col;
+              foundEmpty = true;
+              break;
+            }
+          }
+          if (!foundEmpty) {
+            // Find the next empty column (may be beyond existing columns)
+            let emptyCol = newCol;
+            while (isPositionOccupied(chart.row, emptyCol)) {
+              emptyCol++;
+            }
+            newCol = emptyCol;
+          }
+        }
+        break;
+    }
+
+    const newChart: ChartData = {
+      id: `chart-${nextChartId}`,
+      selectedPoints: new Map(),
+      row: newRow,
+      col: newCol
+    };
+
+    setCharts(prev => [...prev, newChart]);
+    setNextChartId(prev => prev + 1);
+  };
+
+  const handleDeleteChart = (chartId: string) => {
+    setCharts(prev => {
+      const filtered = prev.filter(c => c.id !== chartId);
+      
+      // If this was the last chart, create a new blank one
+      if (filtered.length === 0) {
+        setActiveChartId('chart-0');
+        return [{ id: 'chart-0', selectedPoints: new Map(), row: 0, col: 0 }];
+      }
+      
+      // If we deleted the active chart, switch to the first remaining chart
+      if (chartId === activeChartId) {
+        setActiveChartId(filtered[0].id);
+      }
+      
+      // Compact the grid: renormalize positions to remove gaps
+      const rows = new Set(filtered.map(c => c.row));
+      const cols = new Set(filtered.map(c => c.col));
+      const sortedRows = Array.from(rows).sort((a, b) => a - b);
+      const sortedCols = Array.from(cols).sort((a, b) => a - b);
+      
+      // Create mapping from old positions to new compacted positions
+      const rowMap = new Map(sortedRows.map((row, idx) => [row, idx]));
+      const colMap = new Map(sortedCols.map((col, idx) => [col, idx]));
+      
+      // Apply compaction
+      return filtered.map(c => ({
+        ...c,
+        row: rowMap.get(c.row) ?? c.row,
+        col: colMap.get(c.col) ?? c.col
+      }));
+    });
+  };
+
+  const handleUpdateInverters = (chartId: string, pointKey: string, inverters: Set<string>) => {
+    setCharts(prev => prev.map(c => 
+      c.id === chartId 
+        ? { ...c, selectedPoints: new Map(c.selectedPoints).set(pointKey, inverters) }
+        : c
+    ));
+    // If this is the active chart, also update the parent state
+    if (chartId === activeChartId) {
+      onUpdateInvertersForChart(pointKey, inverters);
+    }
+    onUpdateInverters(chartId, pointKey, inverters);
+  };
+
+  // Sync selectedPoints from App to active chart
+  React.useEffect(() => {
+    setCharts(prev => prev.map(c => 
+      c.id === activeChartId 
+        ? { ...c, selectedPoints: new Map(selectedPoints) }
+        : c
+    ));
+  }, [selectedPoints, activeChartId]);
+
+  const handleRemoveInverter = (chartId: string, pointKey: string, inverterSN: string) => {
+    setCharts(prev => prev.map(c => {
+      if (c.id === chartId) {
+        const newSelected = new Map(c.selectedPoints);
+        const inverters = newSelected.get(pointKey);
+        if (inverters) {
+          const newInverters = new Set(inverters);
+          newInverters.delete(inverterSN);
+          if (newInverters.size === 0) {
+            newSelected.delete(pointKey);
+          } else {
+            newSelected.set(pointKey, newInverters);
+          }
+          return { ...c, selectedPoints: newSelected };
+        }
+      }
+      return c;
+    }));
+    onRemoveInverter(chartId, pointKey, inverterSN);
+  };
+
+  // Calculate grid dimensions
+  const maxRow = Math.max(...charts.map(c => c.row), 0);
+  const maxCol = Math.max(...charts.map(c => c.col), 0);
+  const minRow = Math.min(...charts.map(c => c.row), 0);
+  const minCol = Math.min(...charts.map(c => c.col), 0);
+  
+  // Normalize to start at 0,0
+  const normalizedCharts = charts.map(c => ({
+    ...c,
+    row: c.row - minRow,
+    col: c.col - minCol
+  }));
+  
+  const gridRows = maxRow - minRow + 1;
+  const gridCols = maxCol - minCol + 1;
+
+  // Calculate grid template
+  const gridTemplateRows = `repeat(${gridRows}, minmax(0, 1fr))`;
+  const gridTemplateCols = `repeat(${gridCols}, minmax(0, 1fr))`;
+
+  return (
+    <div className="w-full h-full overflow-auto">
+      <div 
+        className="grid gap-2 p-4"
+        style={{
+          gridTemplateRows,
+          gridTemplateColumns: gridTemplateCols,
+          minWidth: `${gridCols * 400}px`,
+          minHeight: `${gridRows * 300}px`
+        }}
+      >
+        {normalizedCharts.map(chart => (
+          <div
+            key={chart.id}
+            className={`relative border rounded-lg bg-white shadow-sm min-h-[300px] min-w-[400px] overflow-visible transition-all cursor-pointer ${
+              activeChartId === chart.id ? 'border-blue-500 border-2 ring-2 ring-blue-200' : 'border-gray-300'
+            }`}
+            style={{
+              gridRow: chart.row + 1,
+              gridColumn: chart.col + 1
+            }}
+            onClick={(e) => {
+              // Don't activate if clicking on add buttons, delete button, or chart content
+              if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('.chart-content')) {
+                return;
+              }
+              setActiveChartId(chart.id);
+            }}
+          >
+            <div className="chart-content h-full">
+              <FakeChart
+                selectedPoints={chart.selectedPoints}
+                protocols={protocols}
+                onUpdateInverters={(pointKey, inverters) => handleUpdateInverters(chart.id, pointKey, inverters)}
+                onScrollToPoint={onScrollToPoint}
+                onRemoveInverter={(pointKey, inverterSN) => handleRemoveInverter(chart.id, pointKey, inverterSN)}
+                onSelectPointsToggle={onSelectPointsToggle}
+                selectPointsOpen={selectPointsOpen}
+                showAddButtons={true}
+                onAddChart={(direction) => handleAddChart(chart.id, direction)}
+                onDeleteChart={() => handleDeleteChart(chart.id)}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -1818,17 +2205,25 @@ export default function App() {
 
   return (
     <div className="h-full bg-slate-100 p-4 md:p-6">
-      <div className="mx-auto w-full max-w-[95vw] h-[calc(100vh-2rem)] rounded-2xl border bg-white shadow-sm relative">
-        {/* Chart area - full width */}
-        <FakeChart 
-          selectedPoints={selected} 
-          protocols={protocols} 
-          onUpdateInverters={updateInverters} 
-          onScrollToPoint={scrollToPoint} 
-          onRemoveInverter={removeInverter}
-          onSelectPointsToggle={setSidebarOpen}
-          selectPointsOpen={sidebarOpen}
-        />
+      <div className="mx-auto w-full max-w-[95vw] h-[calc(100vh-2rem)] rounded-2xl border bg-white shadow-sm relative overflow-hidden flex flex-col">
+        {/* Chart grid area */}
+        <div className="flex-1 min-h-0 relative">
+          <ChartGrid
+            protocols={protocols}
+            onUpdateInverters={(chartId, pointKey, inverters) => {
+              updateInverters(pointKey, inverters);
+            }}
+            onScrollToPoint={scrollToPoint}
+            onRemoveInverter={(chartId, pointKey, inverterSN) => {
+              removeInverter(pointKey, inverterSN);
+            }}
+            onSelectPointsToggle={setSidebarOpen}
+            selectPointsOpen={sidebarOpen}
+            selectedPoints={selected}
+            onTogglePoint={toggle}
+            onUpdateInvertersForChart={updateInverters}
+          />
+        </div>
         
         {/* Point selector dropdown - positioned below Chart header */}
         <div
@@ -1839,12 +2234,12 @@ export default function App() {
               : 'opacity-0 -translate-y-4 pointer-events-none'
           }`}
           style={{ 
-            top: 'calc(1rem + 2.5rem)', // Below Chart header (p-4 + header height)
+            top: '1rem',
             left: '1rem',
             right: '1rem',
             width: 'auto',
-            height: sidebarOpen ? 'calc(100vh - 10rem)' : '0',
-            maxHeight: sidebarOpen ? 'calc(100vh - 10rem)' : '0', // Leave some space from top/bottom
+            height: sidebarOpen ? 'calc(100vh - 4rem)' : '0',
+            maxHeight: sidebarOpen ? 'calc(100vh - 4rem)' : '0',
             overflow: 'hidden'
           }}
         >
