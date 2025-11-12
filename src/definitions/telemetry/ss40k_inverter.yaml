@@ -111,7 +111,7 @@ protocols:
   entry:
     name: fNom
     description: Nominal AC frequency
-    longdescription: Rated output frequency of the inverter when synchronized to the grid. Defines the system’s base frequency for grid operation.
+    longdescription: Rated output frequency of the inverter when synchronized to the grid. Defines the system's base frequency for grid operation.
     dtype: uint16
     unit: Hz
     category: PCS information
@@ -611,6 +611,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended    
 - model: 40101
   point: iMppt1
   block: fixed
@@ -633,6 +635,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: vMppt1
   block: fixed
@@ -655,6 +659,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: pMppt2
   block: fixed
@@ -677,6 +683,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: iMppt2
   block: fixed
@@ -698,7 +706,9 @@ protocols:
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
-    label_text: Complete
+    label_text: Complete  
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: vMppt2
   block: fixed
@@ -721,6 +731,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: pMppt3
   block: fixed
@@ -743,6 +755,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: iMppt3
   block: fixed
@@ -765,6 +779,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: vMppt3
   block: fixed
@@ -787,6 +803,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: pMppt4
   block: fixed
@@ -809,6 +827,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: iMppt4
   block: fixed
@@ -831,6 +851,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: vMppt4
   block: fixed
@@ -853,6 +875,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: reserved3
   block: fixed
@@ -1022,6 +1046,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: vBat
   block: fixed
@@ -1286,8 +1312,8 @@ protocols:
   block: fixed
   entry:
     name: W
-    description: Active power total
-    longdescription: Net real power at the inverter AC output (positive export/production, implementation-dependent).
+    description: Inverter Power
+    longdescription: Net active (real) power at the inverter AC output.
     dtype: int32
     unit: W
     category: Inverter
@@ -1441,8 +1467,6 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Standard
   - label_family: Unit
     label_text: Freq
   - label_family: Info
@@ -2131,7 +2155,7 @@ protocols:
   block: fixed
   entry:
     name: vGridLL
-    description: Voltage grid LL
+    description: Grid Voltage
     longdescription: Line-to-line voltage measured at the grid connection.
     dtype: uint16
     unit: V
@@ -2155,7 +2179,7 @@ protocols:
   block: fixed
   entry:
     name: vGridLN
-    description: Voltage grid LN
+    description: Grid Voltage L-N
     longdescription: Line-to-neutral voltage measured at the grid connection.
     dtype: uint16
     unit: V
@@ -2190,6 +2214,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: pGridL1
   block: fixed
@@ -2811,8 +2837,6 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Standard
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
@@ -3446,8 +3470,6 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Standard
   - label_family: Unit
     label_text: Freq
   - label_family: Info
@@ -3923,8 +3945,6 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Standard
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
@@ -4095,6 +4115,8 @@ protocols:
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: pGenL1
   block: fixed
@@ -4207,8 +4229,6 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Standard
   - label_family: Unit
     label_text: Volt
   - label_family: Info

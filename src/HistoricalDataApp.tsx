@@ -497,7 +497,13 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
             <input
               type="checkbox"
               checked={checked}
-              onChange={() => toggle(key)}
+              onChange={(e) => {
+                e.stopPropagation();
+                toggle(key);
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
               className="h-4 w-4 flex-shrink-0"
             />
             <span className="text-sm">
@@ -896,6 +902,17 @@ interface FakeChartProps {
 // Available inverters (hardcoded for now, could come from props or API)
 const AVAILABLE_INVERTERS = ['001', '002', '003'];
 
+// Map short SN (last 3 digits) to full 10-digit SN
+// Generate deterministic 10-digit SNs based on short SN
+const getFullSerialNumber = (shortSN: string): string => {
+  // Create a deterministic 10-digit number based on short SN
+  // Use a simple hash-like approach: prefix with zeros and add a checksum-like suffix
+  const shortNum = parseInt(shortSN, 10);
+  const base = 1000000000; // Start with 1 billion
+  const fullSN = base + (shortNum * 10000) + shortNum; // Creates a 10-digit number
+  return fullSN.toString().padStart(10, '0');
+};
+
 // Color palette for legend entries
 const LEGEND_COLORS = [
   { bg: 'bg-purple-500', border: 'border-purple-600' },
@@ -919,7 +936,7 @@ function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps
   const isAllSelected = selectedInverters.size === AVAILABLE_INVERTERS.length;
   const displayText = isAllSelected 
     ? 'All Inverters' 
-    : Array.from(selectedInverters).sort().join(', ');
+    : Array.from(selectedInverters).sort().map(shortSN => getFullSerialNumber(shortSN)).join(', ');
 
   // Close dropdown when clicking outside
   React.useEffect(() => {
@@ -996,7 +1013,7 @@ function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps
                   onChange={() => handleToggleInverter(inv)}
                   className="h-3 w-3"
                 />
-                <span className="text-xs text-gray-700">{inv}</span>
+                <span className="text-xs text-gray-700">{getFullSerialNumber(inv)}</span>
               </label>
             ))}
           </div>
@@ -1025,25 +1042,26 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
     const [model, point] = key.split(':');
     const protocol = protocols.find((p) => p.model === model && p.point === point);
     const unit = protocol?.entry?.unit && protocol.entry.unit !== "N/A" ? protocol.entry.unit : "N/A";
+    const longDescription = protocol?.entry?.longdescription || protocol?.entry?.description || '';
     
-    return Array.from(inverters).sort().map((sn, index) => ({
-      key,
-      pointKey: `${key}:${sn}`, // Unique key for this SN+point combo
-      name,
-      sn,
-      unit,
-      colorIndex: (selectedPointInfo.findIndex(p => p.key === key) * AVAILABLE_INVERTERS.length + index) % LEGEND_COLORS.length,
-    }));
+    return Array.from(inverters).sort().map((shortSN, index) => {
+      const fullSN = getFullSerialNumber(shortSN);
+      return {
+        key,
+        pointKey: `${key}:${shortSN}`, // Unique key for this SN+point combo
+        name,
+        shortSN,
+        fullSN,
+        unit,
+        model,
+        point,
+        longDescription,
+        colorIndex: (selectedPointInfo.findIndex(p => p.key === key) * AVAILABLE_INVERTERS.length + index) % LEGEND_COLORS.length,
+      };
+    });
   });
 
-  // Group entries by unit
-  const entriesByUnit = legendEntries.reduce((acc, entry) => {
-    if (!acc.has(entry.unit)) {
-      acc.set(entry.unit, []);
-    }
-    acc.get(entry.unit)!.push(entry);
-    return acc;
-  }, new Map<string, typeof legendEntries>());
+  // No longer grouping by unit - just use legendEntries directly
 
   const toggleVisibility = (pointKey: string) => {
     setHiddenEntries((prev) => {
@@ -1238,7 +1256,7 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
                           className={`w-3 h-3 rounded-sm flex-shrink-0 ${color.bg} ${color.border} border`}
                         />
                         <span className="font-medium">{entry.name}</span>
-                        <span className="text-gray-400">({entry.sn})</span>
+                        <span className="text-gray-400">(SN {entry.shortSN})</span>
                         {entry.unit !== "N/A" && (
                           <span className="text-gray-400">[{entry.unit}]</span>
                         )}
@@ -1253,71 +1271,82 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
       
       {/* Legend/Point List */}
       {legendEntries.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-3">
-          {Array.from(entriesByUnit.entries()).map(([unit, entries]) => (
-            <div key={unit} className="bg-white border border-gray-300 rounded p-3 flex-shrink-0">
-              <div className="flex justify-end mb-2">
-                <span className="text-xs text-gray-600 font-medium">{unit}</span>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {legendEntries.map(({ pointKey, name, shortSN, fullSN, colorIndex, key, unit, point, longDescription }) => {
+            const color = LEGEND_COLORS[colorIndex];
+            const isHidden = hiddenEntries.has(pointKey);
+            
+            // Build comprehensive tooltip
+            const tooltipParts = [
+              "Click to toggle visibility (double-click to show only this)",
+              "",
+              `This is the point "${name}" (${point}) as read by inverter ${fullSN}.`
+            ];
+            if (longDescription) {
+              tooltipParts.push("", longDescription);
+            }
+            const tooltipText = tooltipParts.join("\n");
+            
+            return (
+              <div 
+                key={pointKey} 
+                className="flex items-center gap-2 text-xs group hover:bg-gray-50 rounded px-2 py-1 border border-gray-200 bg-white transition-colors cursor-pointer flex-shrink-0"
+                onClick={() => toggleVisibility(pointKey)}
+                onDoubleClick={(e) => {
+                  e.stopPropagation();
+                  showOnlyEntry(pointKey);
+                }}
+                title={tooltipText}
+              >
+                <div 
+                  className={`w-3 h-3 rounded-sm flex-shrink-0 ${color.bg} ${color.border} border`}
+                />
+                <span className={`font-medium text-gray-600 ${isHidden ? 'opacity-50 line-through' : ''}`}>
+                  {name}
+                </span>
+                <span className="text-gray-400">
+                  (SN {shortSN})
+                </span>
+                {unit !== "N/A" && (
+                  <span className="text-gray-400">
+                    [{unit}]
+                  </span>
+                )}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleVisibility(pointKey);
+                  }}
+                  onDoubleClick={(e) => {
+                    e.stopPropagation();
+                    showOnlyEntry(pointKey);
+                  }}
+                  className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-600 transition-opacity flex-shrink-0 ml-1"
+                  title={isHidden ? "Show in chart (double-click to show only this)" : "Hide in chart (double-click to show only this)"}
+                >
+                  {isHidden ? (
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                  )}
+                </button>
+                <button
+                  onClick={(e) => handleRemove(key, shortSN, e)}
+                  className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-600 transition-opacity flex-shrink-0 ml-1"
+                  title="Remove this data point from the chart"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-              <div className="space-y-1">
-                {entries.map(({ pointKey, name, sn, colorIndex, key }) => {
-                  const displayName = name.length > 50 ? `${name.substring(0, 47)}...` : name;
-                  const color = LEGEND_COLORS[colorIndex];
-                  const isHidden = hiddenEntries.has(pointKey);
-                  return (
-                    <div 
-                      key={pointKey} 
-                      className="flex items-center gap-2 text-sm group hover:bg-gray-50 rounded px-1 py-0.5 -mx-1 transition-colors cursor-pointer"
-                      onClick={() => toggleVisibility(pointKey)}
-                      onDoubleClick={(e) => {
-                        e.stopPropagation();
-                        showOnlyEntry(pointKey);
-                      }}
-                    >
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleVisibility(pointKey);
-                        }}
-                        onDoubleClick={(e) => {
-                          e.stopPropagation();
-                          showOnlyEntry(pointKey);
-                        }}
-                        className={`w-3 h-3 rounded border-2 ${color.border} flex-shrink-0 flex items-center justify-center transition-colors ${
-                          isHidden ? 'bg-white' : color.bg
-                        } hover:opacity-80`}
-                        title={isHidden ? "Show in chart (double-click to show only this)" : "Hide in chart (double-click to show only this)"}
-                      >
-                        {isHidden && (
-                          <svg className="w-2 h-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                          </svg>
-                        )}
-                      </button>
-                      <span 
-                        className={`text-gray-700 flex-1 ${isHidden ? 'opacity-50 line-through' : ''}`}
-                        title="Click to toggle visibility (double-click to show only this)"
-                      >
-                        SN {sn} {displayName}
-                      </span>
-                      <span className="text-gray-400 text-xs font-mono min-w-[60px] text-right">
-                        --
-                      </span>
-                      <button
-                        onClick={(e) => handleRemove(key, sn, e)}
-                        className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-600 transition-opacity flex-shrink-0 ml-1"
-                        title="Remove this inverter SN"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
       </div>
@@ -1539,6 +1568,12 @@ interface ChartData {
   col: number;
 }
 
+interface ChartGridCallbacks {
+  getActiveChartSelectedPoints: () => Map<string, Set<string>>;
+  togglePointForActiveChart: (pointKey: string) => void;
+  updateInvertersForActiveChart: (pointKey: string, inverters: Set<string>) => void;
+}
+
 interface ChartGridProps {
   protocols: ProtocolPoint[];
   onUpdateInverters: (chartId: string, pointKey: string, inverters: Set<string>) => void;
@@ -1546,17 +1581,75 @@ interface ChartGridProps {
   onRemoveInverter: (chartId: string, pointKey: string, inverterSN: string) => void;
   onSelectPointsToggle: (open: boolean) => void;
   selectPointsOpen: boolean;
-  selectedPoints: Map<string, Set<string>>;
-  onTogglePoint: (pointKey: string) => void;
-  onUpdateInvertersForChart: (pointKey: string, inverters: Set<string>) => void;
+  callbacksRef: React.MutableRefObject<ChartGridCallbacks | null>;
+  onActiveChartSelectedPointsChange: (points: Map<string, Set<string>>) => void;
 }
 
-function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, selectedPoints, onTogglePoint, onUpdateInvertersForChart }: ChartGridProps) {
+function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, callbacksRef, onActiveChartSelectedPointsChange }: ChartGridProps) {
   const [charts, setCharts] = useState<ChartData[]>([
     { id: 'chart-0', selectedPoints: new Map(), row: 0, col: 0 }
   ]);
   const [nextChartId, setNextChartId] = useState(1);
   const [activeChartId, setActiveChartId] = useState<string>('chart-0');
+
+  // Notify parent whenever active chart's selection changes
+  React.useEffect(() => {
+    const activeChart = charts.find(c => c.id === activeChartId);
+    if (activeChart) {
+      onActiveChartSelectedPointsChange(new Map(activeChart.selectedPoints));
+    }
+  }, [charts, activeChartId, onActiveChartSelectedPointsChange]);
+
+  // Initialize callbacks ref synchronously before paint
+  React.useLayoutEffect(() => {
+    callbacksRef.current = {
+      getActiveChartSelectedPoints: () => {
+        const activeChart = charts.find(c => c.id === activeChartId);
+        return activeChart ? new Map(activeChart.selectedPoints) : new Map();
+      },
+      togglePointForActiveChart: (pointKey: string) => {
+        console.log('togglePointForActiveChart called, activeChartId:', activeChartId);
+        setCharts(prev => {
+          const result = prev.map(c => {
+            if (c.id === activeChartId) {
+              const newSelected = new Map(c.selectedPoints);
+              console.log('Current selected points:', newSelected.size);
+              if (newSelected.has(pointKey)) {
+                newSelected.delete(pointKey);
+                console.log('Deleted point, new size:', newSelected.size);
+              } else {
+                const defaultInverters = new Set(['001']);
+                newSelected.set(pointKey, defaultInverters);
+                console.log('Added point, new size:', newSelected.size);
+              }
+              return { ...c, selectedPoints: newSelected };
+            }
+            return c;
+          });
+          return result;
+        });
+      },
+      updateInvertersForActiveChart: (pointKey: string, inverters: Set<string>) => {
+        console.log('updateInvertersForActiveChart called, activeChartId:', activeChartId, 'inverters:', inverters);
+        setCharts(prev => {
+          const result = prev.map(c => {
+            if (c.id === activeChartId) {
+              const newSelected = new Map(c.selectedPoints);
+              if (inverters.size === 0) {
+                newSelected.delete(pointKey);
+              } else {
+                newSelected.set(pointKey, inverters);
+              }
+              console.log('Updated chart, selected points size:', newSelected.size);
+              return { ...c, selectedPoints: newSelected };
+            }
+            return c;
+          });
+          return result;
+        });
+      }
+    };
+  }, [charts, activeChartId, callbacksRef]);
 
   const handleAddChart = (chartId: string, direction: 'top' | 'bottom' | 'left' | 'right') => {
     const chart = charts.find(c => c.id === chartId);
@@ -1722,21 +1815,10 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
         ? { ...c, selectedPoints: new Map(c.selectedPoints).set(pointKey, inverters) }
         : c
     ));
-    // If this is the active chart, also update the parent state
-    if (chartId === activeChartId) {
-      onUpdateInvertersForChart(pointKey, inverters);
-    }
     onUpdateInverters(chartId, pointKey, inverters);
   };
 
-  // Sync selectedPoints from App to active chart
-  React.useEffect(() => {
-    setCharts(prev => prev.map(c => 
-      c.id === activeChartId 
-        ? { ...c, selectedPoints: new Map(selectedPoints) }
-        : c
-    ));
-  }, [selectedPoints, activeChartId]);
+
 
   const handleRemoveInverter = (chartId: string, pointKey: string, inverterSN: string) => {
     setCharts(prev => prev.map(c => {
@@ -1831,8 +1913,10 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
 
 export default function App() {
   const [query, setQuery] = useState<string>("");
-  // Map from point key (model:point) to Set of inverter serial numbers
-  const [selected, setSelected] = useState<Map<string, Set<string>>>(() => new Map());
+  // Ref to access ChartGrid callbacks
+  const chartGridCallbacksRef = React.useRef<ChartGridCallbacks | null>(null);
+  // State to track active chart's selected points (synced from ChartGrid)
+  const [activeChartSelectedPoints, setActiveChartSelectedPoints] = React.useState<Map<string, Set<string>>>(new Map());
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [pointHelpEnabled, setPointHelpEnabled] = useState<Set<string>>(new Set());
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set());
@@ -2106,56 +2190,53 @@ export default function App() {
   }, [grouped]);
 
   const toggle = (key: string) => {
-    setSelected((prev) => {
-      const next = new Map(prev);
-      if (next.has(key)) {
-        // Remove point
-        next.delete(key);
-      } else {
-        // Add point with last used inverter selection (or default to 001)
-        const lastSelection = getLastInverterSelection();
-        next.set(key, new Set(lastSelection));
-      }
-      return next;
-    });
+    console.log('toggle called for key:', key);
+    if (!chartGridCallbacksRef.current) {
+      console.warn('ChartGrid callbacks not available yet');
+      return;
+    }
+    
+    // Check if point is currently selected
+    const activeSelected = chartGridCallbacksRef.current.getActiveChartSelectedPoints();
+    const isCurrentlySelected = activeSelected.has(key);
+    console.log('isCurrentlySelected:', isCurrentlySelected, 'activeSelected size:', activeSelected.size);
+    
+    if (isCurrentlySelected) {
+      // Remove the point
+      console.log('Removing point:', key);
+      chartGridCallbacksRef.current.togglePointForActiveChart(key);
+    } else {
+      // Add the point with last inverter selection
+      const lastSelection = getLastInverterSelection();
+      console.log('Adding point:', key, 'with inverters:', lastSelection);
+      chartGridCallbacksRef.current.updateInvertersForActiveChart(key, lastSelection);
+      // Save this selection as the last used
+      saveLastInverterSelection(lastSelection);
+    }
   };
 
   const updateInverters = (pointKey: string, inverters: Set<string>) => {
     // Save this selection as the last used
     saveLastInverterSelection(inverters);
-    
-    setSelected((prev) => {
-      const next = new Map(prev);
-      if (inverters.size === 0) {
-        // If no inverters selected, remove the point
-        next.delete(pointKey);
-      } else {
-        next.set(pointKey, inverters);
-      }
-      return next;
-    });
+    if (chartGridCallbacksRef.current) {
+      chartGridCallbacksRef.current.updateInvertersForActiveChart(pointKey, inverters);
+    }
   };
 
   const removeInverter = (pointKey: string, inverterSN: string) => {
-    setSelected((prev) => {
-      const next = new Map(prev);
-      const currentInverters = next.get(pointKey);
-      if (!currentInverters) return next;
+    if (chartGridCallbacksRef.current) {
+      const activeSelected = chartGridCallbacksRef.current.getActiveChartSelectedPoints();
+      const currentInverters = activeSelected.get(pointKey);
+      if (!currentInverters) return;
       
       const newInverters = new Set(currentInverters);
       newInverters.delete(inverterSN);
       
-      if (newInverters.size === 0) {
-        // If no inverters left, remove the entire point
-        next.delete(pointKey);
-      } else {
-        // Otherwise, just update the inverters
-        next.set(pointKey, newInverters);
-      }
-      
-      return next;
-    });
+      chartGridCallbacksRef.current.updateInvertersForActiveChart(pointKey, newInverters);
+    }
   };
+
+  // activeChartSelectedPoints is now managed as state, synced from ChartGrid via onActiveChartSelectedPointsChange callback
 
   const toggleLabel = (family: string, text: string) => {
     setSelectedLabels((prev) => {
@@ -2211,17 +2292,16 @@ export default function App() {
           <ChartGrid
             protocols={protocols}
             onUpdateInverters={(chartId, pointKey, inverters) => {
-              updateInverters(pointKey, inverters);
+              // Chart's internal state is already updated
             }}
             onScrollToPoint={scrollToPoint}
             onRemoveInverter={(chartId, pointKey, inverterSN) => {
-              removeInverter(pointKey, inverterSN);
+              // Chart's internal state is already updated
             }}
             onSelectPointsToggle={setSidebarOpen}
             selectPointsOpen={sidebarOpen}
-            selectedPoints={selected}
-            onTogglePoint={toggle}
-            onUpdateInvertersForChart={updateInverters}
+            callbacksRef={chartGridCallbacksRef}
+            onActiveChartSelectedPointsChange={setActiveChartSelectedPoints}
           />
         </div>
         
@@ -2397,7 +2477,7 @@ export default function App() {
                         key={levelName}
                         levelName={levelName}
                         levelData={levelData}
-                        selected={selected}
+                        selected={activeChartSelectedPoints}
                         toggle={toggle}
                         showHelp={showHelp}
                         onUpdateInverters={updateInverters}
