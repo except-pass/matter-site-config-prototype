@@ -1769,8 +1769,38 @@ interface ChartGridProps {
 }
 
 const ROW_DIVIDER_TRACK = 16;
-const MIN_ROW_HEIGHT = 200;
-const ROW_KEYBOARD_STEP = 8;
+const COLUMN_DIVIDER_TRACK = 16;
+const MIN_ROW_HEIGHT = 240;
+const MIN_COLUMN_WIDTH = 320;
+const ROW_KEYBOARD_STEP = 12;
+const COLUMN_KEYBOARD_STEP = 12;
+const DEFAULT_ROW_HEIGHT = 360;
+const DEFAULT_COLUMN_WIDTH = 520;
+
+interface DividerButtonSegment {
+  key: string;
+  onAdd: () => void;
+  size?: number;
+}
+
+interface DividerAddButtonProps {
+  onAdd: () => void;
+  ariaLabel: string;
+}
+
+const DividerAddButton: React.FC<DividerAddButtonProps> = ({ onAdd, ariaLabel }) => (
+  <button
+    type="button"
+    onClick={(event) => {
+      event.stopPropagation();
+      onAdd();
+    }}
+    className="relative z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-base font-semibold text-gray-600 opacity-70 shadow-sm transition-all duration-150 ease-out hover:bg-white group-hover:scale-105 group-hover:opacity-100 group-focus-within:opacity-100 focus:scale-105 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+    aria-label={ariaLabel}
+  >
+    <span className="leading-none">+</span>
+  </button>
+);
 
 interface RowDividerProps {
   onAdd: () => void;
@@ -1779,6 +1809,7 @@ interface RowDividerProps {
   onAutoFit?: () => void;
   percentAbove?: number;
   isActive?: boolean;
+  buttonSegments?: DividerButtonSegment[];
 }
 
 const RowDivider: React.FC<RowDividerProps> = ({
@@ -1788,6 +1819,7 @@ const RowDivider: React.FC<RowDividerProps> = ({
   onAutoFit,
   percentAbove,
   isActive = false,
+  buttonSegments,
 }) => {
   const isResizable =
     typeof onResizeStart === 'function' &&
@@ -1867,24 +1899,197 @@ const RowDivider: React.FC<RowDividerProps> = ({
         paddingRight: '0.5rem',
       }}
     >
-      <div className="pointer-events-none absolute inset-0 flex items-center">
+      <div className="pointer-events-none absolute inset-0 flex items-center px-4">
         <div
-          className={`h-px w-full transition-colors duration-150 group-hover:bg-[#CBD1DB] group-focus-within:bg-[#CBD1DB] ${
+          className={`flex-1 h-1 rounded-full transition-colors duration-150 ${
             isActive ? 'bg-[#CBD1DB]' : 'bg-[#E4E6EA]'
-          }`}
+          } group-hover:bg-[#CBD1DB] group-focus-within:bg-[#CBD1DB]`}
+        />
+        <div className="mx-2 flex items-center gap-1">
+          {[0, 1, 2].map((idx) => (
+            <span
+              key={idx}
+              className="h-3 w-1 rounded-full bg-gray-300/80 group-hover:bg-gray-400 group-focus-within:bg-gray-400"
+            />
+          ))}
+        </div>
+        <div
+          className={`flex-1 h-1 rounded-full transition-colors duration-150 ${
+            isActive ? 'bg-[#CBD1DB]' : 'bg-[#E4E6EA]'
+          } group-hover:bg-[#CBD1DB] group-focus-within:bg-[#CBD1DB]`}
         />
       </div>
-      <button
-        type="button"
-        onClick={(event) => {
-          event.stopPropagation();
-          onAdd();
-        }}
-        className="relative z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/80 text-base font-semibold text-gray-600 opacity-0 shadow-sm transition-all duration-150 ease-out group-hover:scale-105 group-hover:opacity-100 group-focus-within:opacity-100 focus:scale-105 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 hover:bg-white"
-        aria-label="Add chart below"
+      <div
+        className={`${
+          buttonSegments && buttonSegments.length > 0 ? 'grid w-full' : 'flex w-full'
+        } items-center justify-center`}
+        style={
+          buttonSegments && buttonSegments.length > 0
+            ? {
+                gridTemplateColumns: buttonSegments
+                  .map((segment) => (segment.size ? `${segment.size}px` : '1fr'))
+                  .join(' '),
+              }
+            : undefined
+        }
       >
-        <span className="leading-none">+</span>
-      </button>
+        {buttonSegments && buttonSegments.length > 0 ? (
+          buttonSegments.map((segment) => (
+            <div key={segment.key} className="flex justify-center py-0.5">
+              <DividerAddButton onAdd={segment.onAdd} ariaLabel="Add chart below" />
+            </div>
+          ))
+        ) : (
+          <DividerAddButton onAdd={onAdd} ariaLabel="Add chart below" />
+        )}
+      </div>
+    </div>
+  );
+};
+
+interface ColumnDividerProps {
+  onAdd: () => void;
+  onResizeStart?: (clientX: number) => void;
+  onKeyboardNudge?: (delta: number) => void;
+  onAutoFit?: () => void;
+  percentLeft?: number;
+  isActive?: boolean;
+  buttonSegments?: DividerButtonSegment[];
+}
+
+const ColumnDivider: React.FC<ColumnDividerProps> = ({
+  onAdd,
+  onResizeStart,
+  onKeyboardNudge,
+  onAutoFit,
+  percentLeft,
+  isActive = false,
+  buttonSegments,
+}) => {
+  const isResizable =
+    typeof onResizeStart === 'function' &&
+    typeof onKeyboardNudge === 'function' &&
+    typeof onAutoFit === 'function' &&
+    typeof percentLeft === 'number';
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onAdd();
+    } else if (event.key === 'ArrowRight' && isResizable && onKeyboardNudge) {
+      event.preventDefault();
+      onKeyboardNudge(COLUMN_KEYBOARD_STEP);
+    } else if (event.key === 'ArrowLeft' && isResizable && onKeyboardNudge) {
+      event.preventDefault();
+      onKeyboardNudge(-COLUMN_KEYBOARD_STEP);
+    }
+  };
+
+  return (
+    <div
+      role="separator"
+      aria-orientation="vertical"
+      {...(isResizable
+        ? {
+            'aria-valuenow': Math.round(percentLeft!),
+            'aria-valuemin': 0,
+            'aria-valuemax': 100,
+            'aria-label': 'Resize charts horizontally',
+          }
+        : {
+            'aria-label': 'Add chart to the right',
+            'aria-disabled': true,
+          })}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      onClick={(event) => {
+        if (isResizable || (event.target as HTMLElement).closest('button')) {
+          return;
+        }
+        event.preventDefault();
+        onAdd();
+      }}
+      onDoubleClick={(event) => {
+        if ((event.target as HTMLElement).closest('button')) {
+          return;
+        }
+        event.preventDefault();
+        if (isResizable && onAutoFit) {
+          onAutoFit();
+        } else {
+          onAdd();
+        }
+      }}
+      onMouseDown={(event) => {
+        if (!isResizable || !onResizeStart) {
+          return;
+        }
+        if ((event.target as HTMLElement).closest('button')) {
+          return;
+        }
+        if (event.button !== 0) {
+          return;
+        }
+        event.preventDefault();
+        onResizeStart(event.clientX);
+      }}
+      className={`group relative flex h-full w-full ${
+        isResizable ? 'cursor-col-resize' : 'cursor-pointer'
+      } select-none flex-col items-center justify-center outline-none transition-shadow duration-150 focus-visible:ring-2 focus-visible:ring-blue-300/60 ${
+        isActive ? 'ring-2 ring-blue-300/60' : ''
+      }`}
+      style={{
+        width: COLUMN_DIVIDER_TRACK,
+        paddingTop: '0.5rem',
+        paddingBottom: '0.5rem',
+      }}
+    >
+      <div className="pointer-events-none absolute inset-0 flex flex-col justify-center py-4">
+        <div
+          className={`mx-auto w-1 rounded-full transition-colors duration-150 ${
+            isActive ? 'bg-[#CBD1DB]' : 'bg-[#E4E6EA]'
+          } group-hover:bg-[#CBD1DB] group-focus-within:bg-[#CBD1DB]`}
+          style={{ flex: 1 }}
+        />
+        <div className="my-2 flex flex-col items-center gap-1">
+          {[0, 1, 2].map((idx) => (
+            <span
+              key={idx}
+              className="w-3 h-1 rounded-full bg-gray-300/80 group-hover:bg-gray-400 group-focus-within:bg-gray-400"
+            />
+          ))}
+        </div>
+        <div
+          className={`mx-auto w-1 rounded-full transition-colors duration-150 ${
+            isActive ? 'bg-[#CBD1DB]' : 'bg-[#E4E6EA]'
+          } group-hover:bg-[#CBD1DB] group-focus-within:bg-[#CBD1DB]`}
+          style={{ flex: 1 }}
+        />
+      </div>
+      <div
+        className={`${
+          buttonSegments && buttonSegments.length > 0 ? 'grid h-full' : 'flex'
+        } w-full flex-1 flex-col items-center justify-center`}
+        style={
+          buttonSegments && buttonSegments.length > 0
+            ? {
+                gridTemplateRows: buttonSegments
+                  .map((segment) => (segment.size ? `${segment.size}px` : '1fr'))
+                  .join(' '),
+              }
+            : undefined
+        }
+      >
+        {buttonSegments && buttonSegments.length > 0 ? (
+          buttonSegments.map((segment) => (
+            <div key={segment.key} className="flex items-center justify-center px-0.5">
+              <DividerAddButton onAdd={segment.onAdd} ariaLabel="Add chart to the right" />
+            </div>
+          ))
+        ) : (
+          <DividerAddButton onAdd={onAdd} ariaLabel="Add chart to the right" />
+        )}
+      </div>
     </div>
   );
 };
@@ -1895,15 +2100,24 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   ]);
   const [nextChartId, setNextChartId] = useState(1);
   const [activeChartId, setActiveChartId] = useState<string>('chart-0');
-  const [columnWidths, setColumnWidths] = useState<Map<number, number>>(new Map([[0, 400]]));
-  const [rowHeights, setRowHeights] = useState<Map<number, number>>(new Map([[0, 300]]));
+  const [columnWidths, setColumnWidths] = useState<Map<number, number>>(new Map([[0, DEFAULT_COLUMN_WIDTH]]));
+  const [rowHeights, setRowHeights] = useState<Map<number, number>>(new Map([[0, DEFAULT_ROW_HEIGHT]]));
   const [activeRowSeparator, setActiveRowSeparator] = useState<number | null>(null);
+  const [activeColSeparator, setActiveColSeparator] = useState<number | null>(null);
   const rowResizeStartRef = React.useRef<{
     startY: number;
     aboveRow: number;
     belowRow: number;
     initialAbove: number;
     initialBelow: number;
+    total: number;
+  } | null>(null);
+  const columnResizeStartRef = React.useRef<{
+    startX: number;
+    leftCol: number;
+    rightCol: number;
+    initialLeft: number;
+    initialRight: number;
     total: number;
   } | null>(null);
   const [justAddedChartId, setJustAddedChartId] = useState<string | null>(null);
@@ -1994,8 +2208,13 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   }, [charts, activeChartId, callbacksRef]);
 
   const getRowHeight = React.useCallback(
-    (row: number) => rowHeights.get(row) ?? 300,
+    (row: number) => rowHeights.get(row) ?? DEFAULT_ROW_HEIGHT,
     [rowHeights]
+  );
+
+  const getColumnWidth = React.useCallback(
+    (col: number) => columnWidths.get(col) ?? DEFAULT_COLUMN_WIDTH,
+    [columnWidths]
   );
 
   const triggerAddAnimation = React.useCallback((chartId: string) => {
@@ -2041,6 +2260,30 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     });
   }, []);
 
+  const applyColumnWidths = React.useCallback((leftCol: number, rightCol: number, newLeft: number, total: number) => {
+    if (total <= MIN_COLUMN_WIDTH * 2) {
+      const equalSplit = total / 2;
+      setColumnWidths(prev => {
+        const next = new Map(prev);
+        next.set(leftCol, equalSplit);
+        next.set(rightCol, total - equalSplit);
+        return next;
+      });
+      return;
+    }
+
+    const minLeft = MIN_COLUMN_WIDTH;
+    const maxLeft = total - MIN_COLUMN_WIDTH;
+    const clampedLeft = Math.min(Math.max(newLeft, minLeft), maxLeft);
+    const clampedRight = total - clampedLeft;
+    setColumnWidths(prev => {
+      const next = new Map(prev);
+      next.set(leftCol, clampedLeft);
+      next.set(rightCol, clampedRight);
+      return next;
+    });
+  }, []);
+
   const handleRowResizeStart = (aboveRow: number, belowRow: number, clientY: number) => {
     if (belowRow === undefined) return;
     const initialAbove = getRowHeight(aboveRow);
@@ -2081,6 +2324,46 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     };
   }, [activeRowSeparator, applyRowHeights]);
 
+  const handleColumnResizeStart = (leftCol: number, rightCol: number, clientX: number) => {
+    if (rightCol === undefined) return;
+    const initialLeft = getColumnWidth(leftCol);
+    const initialRight = getColumnWidth(rightCol);
+    columnResizeStartRef.current = {
+      startX: clientX,
+      leftCol,
+      rightCol,
+      initialLeft,
+      initialRight,
+      total: initialLeft + initialRight,
+    };
+    setActiveColSeparator(leftCol);
+  };
+
+  React.useEffect(() => {
+    if (activeColSeparator === null || !columnResizeStartRef.current) return;
+
+    const startData = columnResizeStartRef.current;
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const delta = event.clientX - startData.startX;
+      const proposedLeft = startData.initialLeft + delta;
+      applyColumnWidths(startData.leftCol, startData.rightCol, proposedLeft, startData.total);
+    };
+
+    const handleMouseUp = () => {
+      setActiveColSeparator(null);
+      columnResizeStartRef.current = null;
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [activeColSeparator, applyColumnWidths]);
+
   const handleRowKeyboardAdjust = (aboveRow: number, belowRow: number, delta: number) => {
     const currentAbove = getRowHeight(aboveRow);
     const currentBelow = getRowHeight(belowRow);
@@ -2094,6 +2377,21 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     const total = currentAbove + currentBelow;
     const half = total / 2;
     applyRowHeights(aboveRow, belowRow, half, total);
+  };
+
+  const handleColumnKeyboardAdjust = (leftCol: number, rightCol: number, delta: number) => {
+    const currentLeft = getColumnWidth(leftCol);
+    const currentRight = getColumnWidth(rightCol);
+    const total = currentLeft + currentRight;
+    applyColumnWidths(leftCol, rightCol, currentLeft + delta, total);
+  };
+
+  const handleColumnAutoFit = (leftCol: number, rightCol: number) => {
+    const currentLeft = getColumnWidth(leftCol);
+    const currentRight = getColumnWidth(rightCol);
+    const total = currentLeft + currentRight;
+    const half = total / 2;
+    applyColumnWidths(leftCol, rightCol, half, total);
   };
 
   const handleAddChart = (chartId: string, direction: 'top' | 'bottom' | 'left' | 'right') => {
@@ -2219,10 +2517,10 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
 
     // Initialize column width and row height if they don't exist
     if (!columnWidths.has(newCol)) {
-      setColumnWidths(prev => new Map(prev).set(newCol, 400));
+      setColumnWidths(prev => new Map(prev).set(newCol, DEFAULT_COLUMN_WIDTH));
     }
     if (!rowHeights.has(newRow)) {
-      setRowHeights(prev => new Map(prev).set(newRow, 300));
+      setRowHeights(prev => new Map(prev).set(newRow, DEFAULT_ROW_HEIGHT));
     }
 
     setCharts(prev => [...prev, newChart]);
@@ -2232,14 +2530,34 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     triggerAddAnimation(newChartId);
   };
 
-  const handleAddChartBelowRow = (row: number) => {
+  const handleAddChartBelowRow = (row: number, col?: number) => {
     const chartsInRow = charts.filter(c => c.row === row);
     if (chartsInRow.length === 0) {
       return;
     }
-    const activeInRow = chartsInRow.find(c => c.id === activeChartId);
-    const target = activeInRow ?? chartsInRow[0];
+    let target: ChartData | undefined;
+    if (typeof col === 'number') {
+      target = chartsInRow.find(c => c.col === col);
+    }
+    if (!target) {
+      target = chartsInRow.find(c => c.id === activeChartId) ?? chartsInRow[0];
+    }
     handleAddChart(target.id, 'bottom');
+  };
+
+  const handleAddChartRightOfColumn = (col: number, row?: number) => {
+    const chartsInColumn = charts.filter(c => c.col === col);
+    if (chartsInColumn.length === 0) {
+      return;
+    }
+    let target: ChartData | undefined;
+    if (typeof row === 'number') {
+      target = chartsInColumn.find(c => c.row === row);
+    }
+    if (!target) {
+      target = chartsInColumn.find(c => c.id === activeChartId) ?? chartsInColumn[0];
+    }
+    handleAddChart(target.id, 'right');
   };
 
   const handleDeleteChart = (chartId: string) => {
@@ -2249,8 +2567,8 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
       // If this was the last chart, create a new blank one
       if (filtered.length === 0) {
         setActiveChartId('chart-0');
-        setColumnWidths(new Map([[0, 400]]));
-        setRowHeights(new Map([[0, 300]]));
+        setColumnWidths(new Map([[0, DEFAULT_COLUMN_WIDTH]]));
+        setRowHeights(new Map([[0, DEFAULT_ROW_HEIGHT]]));
         return [{ id: 'chart-0', selectedPoints: new Map(), row: 0, col: 0 }];
       }
       
@@ -2321,6 +2639,14 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     col: c.col - minCol
   }));
 
+  const chartPositionMap = React.useMemo(() => {
+    const map = new Map<string, ChartData>();
+    charts.forEach(chart => {
+      map.set(`${chart.row}:${chart.col}`, chart);
+    });
+    return map;
+  }, [charts]);
+
   // Get all unique normalized rows and columns
   const uniqueRows = Array.from(new Set(normalizedCharts.map(c => c.row))).sort((a, b) => a - b);
   const uniqueCols = Array.from(new Set(normalizedCharts.map(c => c.col))).sort((a, b) => a - b);
@@ -2340,21 +2666,30 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   }
   const gridTemplateRows = rowTracks.length > 0 ? rowTracks.join(' ') : '1fr';
 
-  const gridTemplateCols = uniqueCols
-    .map(normalizedCol => {
-      const originalCol = normalizedCol + minCol;
-      return `${columnWidths.get(originalCol) || 400}px`;
-    })
-    .join(' ');
+  const colIndexMap = new Map<number, number>();
+  const colTracks: string[] = [];
+  uniqueCols.forEach((normalizedCol, index) => {
+    colIndexMap.set(normalizedCol, index);
+    const originalCol = normalizedCol + minCol;
+    colTracks.push(`${getColumnWidth(originalCol)}px`);
+    if (index < uniqueCols.length - 1) {
+      colTracks.push(`${COLUMN_DIVIDER_TRACK}px`);
+    }
+  });
+  if (uniqueCols.length > 0) {
+    colTracks.push(`${COLUMN_DIVIDER_TRACK}px`);
+  }
+  const gridTemplateCols = colTracks.length > 0 ? colTracks.join(' ') : '1fr';
 
   return (
     <div className="w-full h-full overflow-auto">
       <div
-        className="grid p-4 gap-x-2"
+        className="grid p-4"
         style={{
           gridTemplateRows,
           gridTemplateColumns: gridTemplateCols,
-          rowGap: 0
+          rowGap: 0,
+          columnGap: 0,
         }}
       >
         {normalizedCharts.map(chart => (
@@ -2372,7 +2707,7 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
             } ${justAddedChartId === chart.id ? 'animate-chart-expand' : ''}`}
             style={{
               gridRow: (rowIndexMap.get(chart.row) ?? 0) * 2 + 1,
-              gridColumn: chart.col + 1
+              gridColumn: (colIndexMap.get(chart.col) ?? 0) * 2 + 1
             }}
             onClick={(e) => {
               // Don't activate if clicking on buttons
@@ -2396,6 +2731,80 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
             </div>
           </div>
         ))}
+        {uniqueCols.slice(0, -1).map((normalizedCol, index) => {
+          const leftOriginal = normalizedCol + minCol;
+          const nextCol = uniqueCols[index + 1];
+          const rightOriginal = nextCol + minCol;
+          const leftWidth = getColumnWidth(leftOriginal);
+          const rightWidth = getColumnWidth(rightOriginal);
+          const totalWidth = leftWidth + rightWidth || 1;
+          const columnButtonSegments: DividerButtonSegment[] = uniqueRows.reduce<DividerButtonSegment[]>((acc, normalizedRow) => {
+            const originalRow = normalizedRow + minRow;
+            if (chartPositionMap.has(`${originalRow}:${leftOriginal}`)) {
+              acc.push({
+                key: `col-btn-${originalRow}-${leftOriginal}`,
+                onAdd: () => handleAddChartRightOfColumn(leftOriginal, originalRow),
+                size: getRowHeight(originalRow),
+              });
+            }
+            return acc;
+          }, []);
+          return (
+            <div
+              key={`col-divider-${leftOriginal}`}
+              style={{
+                gridRow: '1 / -1',
+                gridColumn: index * 2 + 2,
+                alignSelf: 'stretch',
+                justifySelf: 'center'
+              }}
+            >
+              <ColumnDivider
+                onAdd={() => handleAddChartRightOfColumn(leftOriginal)}
+                onResizeStart={(clientX) => handleColumnResizeStart(leftOriginal, rightOriginal, clientX)}
+                onKeyboardNudge={(delta) => handleColumnKeyboardAdjust(leftOriginal, rightOriginal, delta)}
+                onAutoFit={() => handleColumnAutoFit(leftOriginal, rightOriginal)}
+                percentLeft={(leftWidth / totalWidth) * 100}
+                isActive={activeColSeparator === leftOriginal}
+                buttonSegments={columnButtonSegments}
+              />
+            </div>
+          );
+        })}
+        {uniqueCols.length > 0 && (
+          (() => {
+            const lastNormalizedCol = uniqueCols[uniqueCols.length - 1];
+            const lastOriginalCol = lastNormalizedCol + minCol;
+            const terminalColumnButtonSegments: DividerButtonSegment[] = uniqueRows.reduce<DividerButtonSegment[]>((acc, normalizedRow) => {
+              const originalRow = normalizedRow + minRow;
+              if (chartPositionMap.has(`${originalRow}:${lastOriginalCol}`)) {
+                acc.push({
+                  key: `terminal-col-btn-${originalRow}-${lastOriginalCol}`,
+                  onAdd: () => handleAddChartRightOfColumn(lastOriginalCol, originalRow),
+                  size: getRowHeight(originalRow),
+                });
+              }
+              return acc;
+            }, []);
+
+            return (
+              <div
+                key={`col-divider-${lastOriginalCol}-terminal`}
+                style={{
+                  gridRow: '1 / -1',
+                  gridColumn: uniqueCols.length * 2,
+                  alignSelf: 'stretch',
+                  justifySelf: 'center'
+                }}
+              >
+                <ColumnDivider
+                  onAdd={() => handleAddChartRightOfColumn(lastOriginalCol)}
+                  buttonSegments={terminalColumnButtonSegments}
+                />
+              </div>
+            );
+          })()
+        )}
         {uniqueRows.slice(0, -1).map((normalizedRow, index) => {
           const nextRow = uniqueRows[index + 1];
           const aboveOriginal = normalizedRow + minRow;
@@ -2403,6 +2812,17 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
           const aboveHeight = getRowHeight(aboveOriginal);
           const belowHeight = getRowHeight(belowOriginal);
           const total = aboveHeight + belowHeight || 1;
+          const rowButtonSegments: DividerButtonSegment[] = uniqueCols.reduce<DividerButtonSegment[]>((acc, normalizedCol) => {
+            const originalCol = normalizedCol + minCol;
+            if (chartPositionMap.has(`${aboveOriginal}:${originalCol}`)) {
+              acc.push({
+                key: `row-btn-${aboveOriginal}-${originalCol}`,
+                onAdd: () => handleAddChartBelowRow(aboveOriginal, originalCol),
+                size: getColumnWidth(originalCol),
+              });
+            }
+            return acc;
+          }, []);
           return (
             <div
               key={`divider-${aboveOriginal}`}
@@ -2420,24 +2840,44 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
                 onAutoFit={() => handleRowAutoFit(aboveOriginal, belowOriginal)}
                 percentAbove={(aboveHeight / total) * 100}
                 isActive={activeRowSeparator === aboveOriginal}
+                buttonSegments={rowButtonSegments}
               />
             </div>
           );
         })}
         {uniqueRows.length > 0 && (
-          <div
-            key={`divider-${uniqueRows[uniqueRows.length - 1] + minRow}-terminal`}
-            style={{
-              gridColumn: '1 / -1',
-              gridRow: uniqueRows.length * 2,
-              alignSelf: 'center',
-              justifySelf: 'stretch'
-            }}
-          >
-            <RowDivider
-              onAdd={() => handleAddChartBelowRow(uniqueRows[uniqueRows.length - 1] + minRow)}
-            />
-          </div>
+          (() => {
+            const lastNormalizedRow = uniqueRows[uniqueRows.length - 1];
+            const lastOriginalRow = lastNormalizedRow + minRow;
+            const terminalRowButtonSegments: DividerButtonSegment[] = uniqueCols.reduce<DividerButtonSegment[]>((acc, normalizedCol) => {
+              const originalCol = normalizedCol + minCol;
+              if (chartPositionMap.has(`${lastOriginalRow}:${originalCol}`)) {
+                acc.push({
+                  key: `terminal-row-btn-${lastOriginalRow}-${originalCol}`,
+                  onAdd: () => handleAddChartBelowRow(lastOriginalRow, originalCol),
+                  size: getColumnWidth(originalCol),
+                });
+              }
+              return acc;
+            }, []);
+
+            return (
+              <div
+                key={`divider-${lastOriginalRow}-terminal`}
+                style={{
+                  gridColumn: '1 / -1',
+                  gridRow: uniqueRows.length * 2,
+                  alignSelf: 'center',
+                  justifySelf: 'stretch'
+                }}
+              >
+                <RowDivider
+                  onAdd={() => handleAddChartBelowRow(lastOriginalRow)}
+                  buttonSegments={terminalRowButtonSegments}
+                />
+              </div>
+            );
+          })()
         )}
       </div>
     </div>
