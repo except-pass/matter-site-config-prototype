@@ -1103,15 +1103,13 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
             e.stopPropagation();
             onAddChart('top');
           }}
-          className="absolute -top-2 left-1/2 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-md transition-colors"
+          className="absolute -top-2 left-1/3 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-gray-400 hover:bg-gray-500 text-white flex items-center justify-center shadow-md transition-colors"
           title="Add chart above"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m0 0l-4-4m4 4l4-4" />
-          </svg>
+          <span className="text-lg leading-none">+</span>
         </button>
       )}
-      
+
       {/* Add button - Left */}
       {showAddButtons && onAddChart && (
         <button
@@ -1119,15 +1117,13 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
             e.stopPropagation();
             onAddChart('left');
           }}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-md transition-colors"
+          className="absolute left-0 top-1/3 -translate-y-1/2 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-gray-400 hover:bg-gray-500 text-white flex items-center justify-center shadow-md transition-colors"
           title="Add chart to the left"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <span className="text-lg leading-none">+</span>
         </button>
       )}
-      
+
       {/* Add button - Right */}
       {showAddButtons && onAddChart && (
         <button
@@ -1135,15 +1131,13 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
             e.stopPropagation();
             onAddChart('right');
           }}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10 w-6 h-6 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-md transition-colors"
+          className="absolute right-0 top-2/3 -translate-y-1/2 translate-x-1/2 z-10 w-6 h-6 rounded-full bg-gray-400 hover:bg-gray-500 text-white flex items-center justify-center shadow-md transition-colors"
           title="Add chart to the right"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <span className="text-lg leading-none">+</span>
         </button>
       )}
-      
+
       {/* Add button - Bottom */}
       {showAddButtons && onAddChart && (
         <button
@@ -1151,12 +1145,10 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
             e.stopPropagation();
             onAddChart('bottom');
           }}
-          className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-md transition-colors"
+          className="absolute -bottom-2 left-2/3 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-gray-400 hover:bg-gray-500 text-white flex items-center justify-center shadow-md transition-colors"
           title="Add chart below"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 20V4m0 0l-4 4m4-4l4 4" />
-          </svg>
+          <span className="text-lg leading-none">+</span>
         </button>
       )}
       
