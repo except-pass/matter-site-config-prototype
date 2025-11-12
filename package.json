@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "rebuild:config": "tsx src/transforms/rebuildFromHierarchy.ts",
+    "rebuild:config": "tsx src/site-config/transforms/rebuildFromHierarchy.ts",
     "rebuild": "npm run rebuild:config"
   },
   "dependencies": {

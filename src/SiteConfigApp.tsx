@@ -1,21 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
 
 // Types and equipment data
-import { PageDef, PageRegistryEntry } from "./types/schema";
-import { equipmentOptions } from "./types/equipment";
+import { PageDef, PageRegistryEntry } from "./site-config/types/schema";
+import { equipmentOptions } from "./site-config/types/equipment";
 
 // Hooks
-import { useThemeLoader } from "./hooks/useThemeLoader";
-import { useScrollTracking } from "./hooks/useScrollTracking";
-import { useSearch } from "./hooks/useSearch";
+import { useThemeLoader } from "./site-config/hooks/useThemeLoader";
+import { useScrollTracking } from "./site-config/hooks/useScrollTracking";
+import { useSearch } from "./site-config/hooks/useSearch";
 
 // Layout components
-import { Sidebar } from "./components/layout/Sidebar";
-import { Header } from "./components/layout/Header";
-import { MainContent } from "./components/layout/MainContent";
+import { Sidebar } from "./site-config/components/layout/Sidebar";
+import { Header } from "./site-config/components/layout/Header";
+import { MainContent } from "./site-config/components/layout/MainContent";
 
 // Utils
-import { assertSchemaExpectations } from "./utils/validation";
+import { assertSchemaExpectations } from "./site-config/utils/validation";
 
 // -----------------------------------------------------------------------------
 // Page catalogue loaded from JSON files under src/themes
