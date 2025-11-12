@@ -26,3 +26,19 @@ body {
   background: #c7d2fe;
   border-radius: 999px;
 }
+
+@keyframes chart-expand {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scaleY(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+.animate-chart-expand {
+  animation: chart-expand 220ms ease-out;
+}

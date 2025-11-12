@@ -901,8 +901,6 @@ interface FakeChartProps {
   onRemoveInverter?: (pointKey: string, inverterSN: string) => void;
   onSelectPointsToggle?: (open: boolean) => void;
   selectPointsOpen?: boolean;
-  showAddButtons?: boolean;
-  onAddChart?: (direction: 'top' | 'bottom' | 'left' | 'right') => void;
   onDeleteChart?: () => void;
 }
 
@@ -1231,7 +1229,7 @@ function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps
   );
 }
 
-function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, showAddButtons, onAddChart, onDeleteChart }: FakeChartProps) {
+function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, onDeleteChart }: FakeChartProps) {
   // Track visibility state for each legend entry
   const [hiddenEntries, setHiddenEntries] = React.useState<Set<string>>(new Set());
 
@@ -1333,62 +1331,6 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
 
   return (
     <div className="w-full h-full flex flex-col relative">
-      {/* Add button - Top */}
-      {showAddButtons && onAddChart && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onAddChart('top');
-          }}
-          className="absolute -top-2 left-1/3 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-gray-400 hover:bg-gray-500 text-white flex items-center justify-center shadow-md transition-colors"
-          title="Add chart above"
-        >
-          <span className="text-lg leading-none">+</span>
-        </button>
-      )}
-
-      {/* Add button - Left */}
-      {showAddButtons && onAddChart && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onAddChart('left');
-          }}
-          className="absolute left-0 top-1/3 -translate-y-1/2 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-gray-400 hover:bg-gray-500 text-white flex items-center justify-center shadow-md transition-colors"
-          title="Add chart to the left"
-        >
-          <span className="text-lg leading-none">+</span>
-        </button>
-      )}
-
-      {/* Add button - Right */}
-      {showAddButtons && onAddChart && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onAddChart('right');
-          }}
-          className="absolute right-0 top-2/3 -translate-y-1/2 translate-x-1/2 z-10 w-6 h-6 rounded-full bg-gray-400 hover:bg-gray-500 text-white flex items-center justify-center shadow-md transition-colors"
-          title="Add chart to the right"
-        >
-          <span className="text-lg leading-none">+</span>
-        </button>
-      )}
-
-      {/* Add button - Bottom */}
-      {showAddButtons && onAddChart && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onAddChart('bottom');
-          }}
-          className="absolute -bottom-2 left-2/3 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-gray-400 hover:bg-gray-500 text-white flex items-center justify-center shadow-md transition-colors"
-          title="Add chart below"
-        >
-          <span className="text-lg leading-none">+</span>
-        </button>
-      )}
-      
       <div className="p-4 flex flex-col h-full">
         <div className="mb-2 flex items-center justify-between relative">
           <div className="text-sm font-semibold text-gray-700">Chart</div>
@@ -1826,6 +1768,98 @@ interface ChartGridProps {
   onActiveChartPositionChange: (rect: DOMRect | null) => void;
 }
 
+const ROW_DIVIDER_TRACK = 16;
+const MIN_ROW_HEIGHT = 200;
+const ROW_KEYBOARD_STEP = 8;
+
+interface RowDividerProps {
+  onAdd: () => void;
+  onResizeStart: (clientY: number) => void;
+  onKeyboardNudge: (delta: number) => void;
+  onAutoFit: () => void;
+  percentAbove: number;
+  isActive: boolean;
+}
+
+const RowDivider: React.FC<RowDividerProps> = ({
+  onAdd,
+  onResizeStart,
+  onKeyboardNudge,
+  onAutoFit,
+  percentAbove,
+  isActive,
+}) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onAdd();
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      onKeyboardNudge(ROW_KEYBOARD_STEP);
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      onKeyboardNudge(-ROW_KEYBOARD_STEP);
+    }
+  };
+
+  return (
+    <div
+      role="separator"
+      aria-orientation="horizontal"
+      aria-valuenow={Math.round(percentAbove)}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label="Resize charts"
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      onDoubleClick={(event) => {
+        if ((event.target as HTMLElement).closest('button')) {
+          return;
+        }
+        event.preventDefault();
+        onAutoFit();
+      }}
+      onMouseDown={(event) => {
+        if ((event.target as HTMLElement).closest('button')) {
+          return;
+        }
+        if (event.button !== 0) {
+          return;
+        }
+        event.preventDefault();
+        onResizeStart(event.clientY);
+      }}
+      className={`group relative flex items-center justify-center cursor-row-resize select-none outline-none transition-shadow duration-150 focus-visible:ring-2 focus-visible:ring-blue-300/60 ${
+        isActive ? 'ring-2 ring-blue-300/60' : ''
+      }`}
+      style={{
+        height: ROW_DIVIDER_TRACK,
+        paddingLeft: '0.5rem',
+        paddingRight: '0.5rem',
+      }}
+    >
+      <div className="pointer-events-none absolute inset-0 flex items-center">
+        <div
+          className={`h-px w-full transition-colors duration-150 group-hover:bg-[#CBD1DB] group-focus-within:bg-[#CBD1DB] ${
+            isActive ? 'bg-[#CBD1DB]' : 'bg-[#E4E6EA]'
+          }`}
+        />
+      </div>
+      <button
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation();
+          onAdd();
+        }}
+        className="relative z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/80 text-base font-semibold text-gray-600 opacity-0 shadow-sm transition-all duration-150 ease-out group-hover:scale-105 group-hover:opacity-100 group-focus-within:opacity-100 focus:scale-105 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 hover:bg-white"
+        aria-label="Add chart below"
+      >
+        <span className="leading-none">+</span>
+      </button>
+    </div>
+  );
+};
+
 function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, callbacksRef, onActiveChartSelectedPointsChange, onActiveChartPositionChange }: ChartGridProps) {
   const [charts, setCharts] = useState<ChartData[]>([
     { id: 'chart-0', selectedPoints: new Map(), row: 0, col: 0 }
@@ -1834,8 +1868,17 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   const [activeChartId, setActiveChartId] = useState<string>('chart-0');
   const [columnWidths, setColumnWidths] = useState<Map<number, number>>(new Map([[0, 400]]));
   const [rowHeights, setRowHeights] = useState<Map<number, number>>(new Map([[0, 300]]));
-  const [resizingChart, setResizingChart] = useState<string | null>(null);
-  const resizeStartRef = React.useRef<{ x: number; y: number; col: number; row: number; initialWidth: number; initialHeight: number } | null>(null);
+  const [activeRowSeparator, setActiveRowSeparator] = useState<number | null>(null);
+  const rowResizeStartRef = React.useRef<{
+    startY: number;
+    aboveRow: number;
+    belowRow: number;
+    initialAbove: number;
+    initialBelow: number;
+    total: number;
+  } | null>(null);
+  const [justAddedChartId, setJustAddedChartId] = useState<string | null>(null);
+  const addAnimationTimeoutRef = React.useRef<number | null>(null);
   const chartRefsMap = React.useRef<Map<string, HTMLDivElement>>(new Map());
 
   // Notify parent whenever active chart's selection changes
@@ -1921,46 +1964,83 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     };
   }, [charts, activeChartId, callbacksRef]);
 
-  // Handle chart resizing (affects entire column width and row height)
-  const handleResizeStart = (chartId: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const chart = charts.find(c => c.id === chartId);
-    if (!chart) return;
+  const getRowHeight = React.useCallback(
+    (row: number) => rowHeights.get(row) ?? 300,
+    [rowHeights]
+  );
 
-    const currentWidth = columnWidths.get(chart.col) || 400;
-    const currentHeight = rowHeights.get(chart.row) || 300;
+  const triggerAddAnimation = React.useCallback((chartId: string) => {
+    if (addAnimationTimeoutRef.current !== null) {
+      window.clearTimeout(addAnimationTimeoutRef.current);
+    }
+    setJustAddedChartId(chartId);
+    addAnimationTimeoutRef.current = window.setTimeout(() => {
+      setJustAddedChartId(null);
+      addAnimationTimeoutRef.current = null;
+    }, 400);
+  }, []);
 
-    resizeStartRef.current = {
-      x: e.clientX,
-      y: e.clientY,
-      col: chart.col,
-      row: chart.row,
-      initialWidth: currentWidth,
-      initialHeight: currentHeight
+  React.useEffect(() => {
+    return () => {
+      if (addAnimationTimeoutRef.current !== null) {
+        window.clearTimeout(addAnimationTimeoutRef.current);
+      }
     };
-    setResizingChart(chartId);
+  }, []);
+
+  const applyRowHeights = React.useCallback((aboveRow: number, belowRow: number, newAbove: number, total: number) => {
+    if (total <= MIN_ROW_HEIGHT * 2) {
+      const equalSplit = total / 2;
+      setRowHeights(prev => {
+        const next = new Map(prev);
+        next.set(aboveRow, equalSplit);
+        next.set(belowRow, total - equalSplit);
+        return next;
+      });
+      return;
+    }
+
+    const minAbove = MIN_ROW_HEIGHT;
+    const maxAbove = total - MIN_ROW_HEIGHT;
+    const clampedAbove = Math.min(Math.max(newAbove, minAbove), maxAbove);
+    const clampedBelow = total - clampedAbove;
+    setRowHeights(prev => {
+      const next = new Map(prev);
+      next.set(aboveRow, clampedAbove);
+      next.set(belowRow, clampedBelow);
+      return next;
+    });
+  }, []);
+
+  const handleRowResizeStart = (aboveRow: number, belowRow: number, clientY: number) => {
+    if (belowRow === undefined) return;
+    const initialAbove = getRowHeight(aboveRow);
+    const initialBelow = getRowHeight(belowRow);
+    rowResizeStartRef.current = {
+      startY: clientY,
+      aboveRow,
+      belowRow,
+      initialAbove,
+      initialBelow,
+      total: initialAbove + initialBelow
+    };
+    setActiveRowSeparator(aboveRow);
   };
 
   React.useEffect(() => {
-    if (!resizingChart || !resizeStartRef.current) return;
+    if (activeRowSeparator === null || !rowResizeStartRef.current) return;
 
-    const startData = resizeStartRef.current;
+    const startData = rowResizeStartRef.current;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const deltaX = e.clientX - startData.x;
-      const deltaY = e.clientY - startData.y;
-
-      const newWidth = Math.max(300, startData.initialWidth + deltaX);
-      const newHeight = Math.max(200, startData.initialHeight + deltaY);
-
-      setColumnWidths(prev => new Map(prev).set(startData.col, newWidth));
-      setRowHeights(prev => new Map(prev).set(startData.row, newHeight));
+    const handleMouseMove = (event: MouseEvent) => {
+      const delta = event.clientY - startData.startY;
+      const proposedAbove = startData.initialAbove + delta;
+      applyRowHeights(startData.aboveRow, startData.belowRow, proposedAbove, startData.total);
     };
 
     const handleMouseUp = () => {
-      setResizingChart(null);
-      resizeStartRef.current = null;
+      setActiveRowSeparator(null);
+      rowResizeStartRef.current = null;
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -1970,7 +2050,22 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [resizingChart]);
+  }, [activeRowSeparator, applyRowHeights]);
+
+  const handleRowKeyboardAdjust = (aboveRow: number, belowRow: number, delta: number) => {
+    const currentAbove = getRowHeight(aboveRow);
+    const currentBelow = getRowHeight(belowRow);
+    const total = currentAbove + currentBelow;
+    applyRowHeights(aboveRow, belowRow, currentAbove + delta, total);
+  };
+
+  const handleRowAutoFit = (aboveRow: number, belowRow: number) => {
+    const currentAbove = getRowHeight(aboveRow);
+    const currentBelow = getRowHeight(belowRow);
+    const total = currentAbove + currentBelow;
+    const half = total / 2;
+    applyRowHeights(aboveRow, belowRow, half, total);
+  };
 
   const handleAddChart = (chartId: string, direction: 'top' | 'bottom' | 'left' | 'right') => {
     const chart = charts.find(c => c.id === chartId);
@@ -2085,8 +2180,9 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
         break;
     }
 
+    const newChartId = `chart-${nextChartId}`;
     const newChart: ChartData = {
-      id: `chart-${nextChartId}`,
+      id: newChartId,
       selectedPoints: new Map(),
       row: newRow,
       col: newCol
@@ -2103,7 +2199,18 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     setCharts(prev => [...prev, newChart]);
     setNextChartId(prev => prev + 1);
     // Make the newly added chart active
-    setActiveChartId(newChart.id);
+    setActiveChartId(newChartId);
+    triggerAddAnimation(newChartId);
+  };
+
+  const handleAddChartBelowRow = (row: number) => {
+    const chartsInRow = charts.filter(c => c.row === row);
+    if (chartsInRow.length === 0) {
+      return;
+    }
+    const activeInRow = chartsInRow.find(c => c.id === activeChartId);
+    const target = activeInRow ?? chartsInRow[0];
+    handleAddChart(target.id, 'bottom');
   };
 
   const handleDeleteChart = (chartId: string) => {
@@ -2189,13 +2296,17 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   const uniqueRows = Array.from(new Set(normalizedCharts.map(c => c.row))).sort((a, b) => a - b);
   const uniqueCols = Array.from(new Set(normalizedCharts.map(c => c.col))).sort((a, b) => a - b);
 
-  // Calculate grid template with explicit sizes from Maps
-  const gridTemplateRows = uniqueRows
-    .map(normalizedRow => {
-      const originalRow = normalizedRow + minRow;
-      return `${rowHeights.get(originalRow) || 300}px`;
-    })
-    .join(' ');
+  const rowIndexMap = new Map<number, number>();
+  const rowTracks: string[] = [];
+  uniqueRows.forEach((normalizedRow, index) => {
+    rowIndexMap.set(normalizedRow, index);
+    const originalRow = normalizedRow + minRow;
+    rowTracks.push(`${getRowHeight(originalRow)}px`);
+    if (index < uniqueRows.length - 1) {
+      rowTracks.push(`${ROW_DIVIDER_TRACK}px`);
+    }
+  });
+  const gridTemplateRows = rowTracks.length > 0 ? rowTracks.join(' ') : '1fr';
 
   const gridTemplateCols = uniqueCols
     .map(normalizedCol => {
@@ -2207,10 +2318,11 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   return (
     <div className="w-full h-full overflow-auto">
       <div
-        className="grid gap-2 p-4"
+        className="grid p-4 gap-x-2"
         style={{
           gridTemplateRows,
-          gridTemplateColumns: gridTemplateCols
+          gridTemplateColumns: gridTemplateCols,
+          rowGap: 0
         }}
       >
         {normalizedCharts.map(chart => (
@@ -2225,9 +2337,9 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
             }}
             className={`relative border rounded-lg bg-white shadow-sm overflow-visible transition-all cursor-pointer ${
               activeChartId === chart.id ? 'border-blue-500 border-2 ring-2 ring-blue-200' : 'border-gray-300'
-            }`}
+            } ${justAddedChartId === chart.id ? 'animate-chart-expand' : ''}`}
             style={{
-              gridRow: chart.row + 1,
+              gridRow: (rowIndexMap.get(chart.row) ?? 0) * 2 + 1,
               gridColumn: chart.col + 1
             }}
             onClick={(e) => {
@@ -2247,19 +2359,39 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
                 onRemoveInverter={(pointKey, inverterSN) => handleRemoveInverter(chart.id, pointKey, inverterSN)}
                 onSelectPointsToggle={onSelectPointsToggle}
                 selectPointsOpen={selectPointsOpen}
-                showAddButtons={true}
-                onAddChart={(direction) => handleAddChart(chart.id, direction)}
                 onDeleteChart={() => handleDeleteChart(chart.id)}
               />
             </div>
-            {/* Resize handle */}
-            <div
-              className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize bg-gray-300 hover:bg-gray-400 rounded-tl"
-              onMouseDown={(e) => handleResizeStart(chart.id, e)}
-              style={{ zIndex: 10 }}
-            />
           </div>
         ))}
+        {uniqueRows.slice(0, -1).map((normalizedRow, index) => {
+          const nextRow = uniqueRows[index + 1];
+          const aboveOriginal = normalizedRow + minRow;
+          const belowOriginal = nextRow + minRow;
+          const aboveHeight = getRowHeight(aboveOriginal);
+          const belowHeight = getRowHeight(belowOriginal);
+          const total = aboveHeight + belowHeight || 1;
+          return (
+            <div
+              key={`divider-${aboveOriginal}`}
+              style={{
+                gridColumn: '1 / -1',
+                gridRow: index * 2 + 2,
+                alignSelf: 'center',
+                justifySelf: 'stretch'
+              }}
+            >
+              <RowDivider
+                onAdd={() => handleAddChartBelowRow(aboveOriginal)}
+                onResizeStart={(clientY) => handleRowResizeStart(aboveOriginal, belowOriginal, clientY)}
+                onKeyboardNudge={(delta) => handleRowKeyboardAdjust(aboveOriginal, belowOriginal, delta)}
+                onAutoFit={() => handleRowAutoFit(aboveOriginal, belowOriginal)}
+                percentAbove={(aboveHeight / total) * 100}
+                isActive={activeRowSeparator === aboveOriginal}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
