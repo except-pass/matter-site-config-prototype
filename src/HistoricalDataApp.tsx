@@ -491,6 +491,8 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
     const key = `${it.model}:${it.point}`;
     const desc = it.entry.description || key;
     const long = it.entry.longdescription || desc;
+    const dtype = typeof it.entry.dtype === 'string' ? it.entry.dtype.toLowerCase() : '';
+    const showsCategoricalIcon = dtype.includes('enum') || dtype.startsWith('bitfield');
     const unit = it.entry.unit && it.entry.unit !== "N/A" ? ` (${it.entry.unit})` : "";
     const checked = selected.has(key);
     const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
@@ -513,9 +515,20 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
               }}
               className="h-4 w-4 flex-shrink-0"
             />
-            <span className="text-sm">
-              {desc}
-              {unit}
+            <span className="text-sm flex items-center gap-1">
+              <span>
+                {desc}
+                {unit}
+              </span>
+              {showsCategoricalIcon && (
+                <span
+                  className="text-base leading-none cursor-help"
+                  title="Selecting this point shows named modes or states as colored bars instead of a line chart."
+                  aria-label="Categorical visualization"
+                >
+                  📊
+                </span>
+              )}
             </span>
             <span
               className={`ml-1 cursor-pointer flex-shrink-0 ${
@@ -930,6 +943,17 @@ const LEGEND_COLORS = [
   { bg: 'bg-red-500', border: 'border-red-600' },
 ];
 
+const LINE_COLOR_CLASSES = [
+  'text-purple-500',
+  'text-green-500',
+  'text-teal-500',
+  'text-blue-500',
+  'text-pink-500',
+  'text-orange-500',
+  'text-indigo-500',
+  'text-red-500',
+];
+
 // Extended color palette for categorical charts with all shades
 const CATEGORICAL_COLORS = [
   { bg50: 'bg-purple-50', bg100: 'bg-purple-100', border200: 'border-purple-200', border400: 'border-purple-400', bg500: 'bg-purple-500/80', text600: 'text-purple-600', text700: 'text-purple-700', ring: 'focus:ring-purple-500' },
@@ -997,6 +1021,79 @@ function generateTimeLabels(count: number) {
     labels.push(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
   }
   return labels;
+}
+
+const LINE_SERIES_LENGTH = 36;
+const LINE_CHART_VIEWBOX = { width: 1000, height: 360 };
+
+function generateSmoothLineSeries(seed: string, length = LINE_SERIES_LENGTH) {
+  const rand = createDeterministicRandom(`line-${seed}`);
+  const values: number[] = [];
+  let current = rand() * 60 + 20;
+  for (let i = 0; i < length; i += 1) {
+    const direction = rand() - 0.5;
+    const magnitude = 4 + rand() * 8;
+    const target = current + direction * magnitude;
+    current = values.length ? values[values.length - 1] * 0.7 + target * 0.3 : target;
+    current = Math.max(0, Math.min(140, current));
+    values.push(Number(current.toFixed(2)));
+  }
+  return values;
+}
+
+function LineChartPreview({
+  series,
+}: {
+  series: {
+    entry: LegendEntry;
+    values: number[];
+  }[];
+}) {
+  if (series.length === 0) {
+    return null;
+  }
+
+  const allValues = series.flatMap((s) => s.values);
+  const minValue = Math.min(...allValues, 0);
+  const maxValue = Math.max(...allValues, 1);
+  const span = maxValue - minValue || 1;
+
+  return (
+    <svg
+      viewBox={`0 0 ${LINE_CHART_VIEWBOX.width} ${LINE_CHART_VIEWBOX.height}`}
+      preserveAspectRatio="none"
+      className="h-full w-full"
+    >
+      {series.map(({ entry, values }) => {
+        if (values.length < 2) {
+          return null;
+        }
+        const pathD = values
+          .map((value, index) => {
+            const x = (index / (values.length - 1)) * LINE_CHART_VIEWBOX.width;
+            const normalized = (value - minValue) / span;
+            const y = LINE_CHART_VIEWBOX.height - normalized * LINE_CHART_VIEWBOX.height;
+            const command = index === 0 ? 'M' : 'L';
+            return `${command}${x.toFixed(2)},${y.toFixed(2)}`;
+          })
+          .join(' ');
+
+        return (
+          <path
+            key={entry.pointKey}
+            d={pathD}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={`${LINE_COLOR_CLASSES[entry.colorIndex % LINE_COLOR_CLASSES.length]} drop-shadow-[0_1px_3px_rgba(0,0,0,0.25)]`}
+            opacity={0.95}
+          />
+        );
+      })}
+    </svg>
+  );
 }
 
 function buildCategoricalChartData(entry: LegendEntry): CategoricalChartData | null {
@@ -1288,6 +1385,7 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
   const visibleLegendEntries = legendEntries.filter((entry) => !hiddenEntries.has(entry.pointKey));
   const visibleCategoricalEntries = visibleLegendEntries.filter((entry) => entry.isCategorical);
   const visibleNumericEntries = visibleLegendEntries.filter((entry) => !entry.isCategorical);
+  const numericLegendEntries = legendEntries.filter(entry => !entry.isCategorical);
   const categoricalCharts = React.useMemo(
     () =>
       visibleCategoricalEntries
@@ -1296,7 +1394,14 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
     [visibleCategoricalEntries]
   );
   const hasNumericEntries = visibleNumericEntries.length > 0;
-  const hasAnyVisibleContent = hasNumericEntries || categoricalCharts.length > 0;
+  const lineSeriesData = React.useMemo(
+    () =>
+      visibleNumericEntries.map((entry) => ({
+        entry,
+        values: generateSmoothLineSeries(entry.pointKey),
+      })),
+    [visibleNumericEntries]
+  );
 
   const toggleVisibility = (pointKey: string) => {
     setHiddenEntries((prev) => {
@@ -1312,7 +1417,8 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
 
   const showOnlyEntry = (pointKey: string) => {
     // If this is the only visible entry, show all entries
-    const visibleCount = visibleLegendEntries.length;
+    const numericKeys = numericLegendEntries.map(entry => entry.pointKey);
+    const visibleCount = numericKeys.filter(key => !hiddenEntries.has(key)).length;
     const isOnlyVisible = visibleCount === 1 && !hiddenEntries.has(pointKey);
 
     if (isOnlyVisible) {
@@ -1320,7 +1426,7 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
       setHiddenEntries(new Set());
     } else {
       // Hide all entries except the one clicked
-      setHiddenEntries(new Set(legendEntries.filter(e => e.pointKey !== pointKey).map(e => e.pointKey)));
+      setHiddenEntries(new Set(numericKeys.filter(key => key !== pointKey)));
     }
   };
 
@@ -1329,119 +1435,112 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
     onRemoveInverter?.(pointKey, sn);
   };
 
+  const isCategoricalOnly = !hasNumericEntries && categoricalCharts.length > 0 && selectedPoints.size > 0;
+  const shouldShowLineArea = !isCategoricalOnly;
+
   return (
     <div className="w-full h-full flex flex-col relative">
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+        {onSelectPointsToggle && (
+          <button
+            onClick={() => onSelectPointsToggle(!selectPointsOpen)}
+            className="text-xs px-3 py-1.5 border border-gray-300 rounded bg-white/90 backdrop-blur hover:bg-white transition-colors flex items-center gap-2 shadow-sm"
+            title={selectPointsOpen ? "Hide Add Points" : "Show Add Points"}
+            data-role="sidebar-toggle"
+          >
+            <span>Add Points</span>
+            <svg
+              className={`h-4 w-4 text-gray-600 transition-transform ${selectPointsOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        )}
+        {onDeleteChart && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDeleteChart();
+            }}
+            className="text-xs px-2 py-1.5 border border-gray-300 rounded bg-white/90 backdrop-blur hover:bg-white transition-colors flex items-center justify-center text-gray-600 hover:text-gray-800 opacity-80 hover:opacity-100 shadow-sm"
+            title="Delete chart"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+      </div>
       <div className="p-4 flex flex-col h-full">
-        <div className="mb-2 flex items-center justify-between relative">
-          <div className="text-sm font-semibold text-gray-700">Chart</div>
-          <div className="flex items-center gap-2">
-            {onSelectPointsToggle && (
-              <button
-                onClick={() => onSelectPointsToggle(!selectPointsOpen)}
-                className="text-xs px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-50 transition-colors flex items-center gap-2"
-                title={selectPointsOpen ? "Hide Select Points" : "Show Select Points"}
-              >
-                <span>Select Points</span>
-                <svg
-                  className={`h-4 w-4 text-gray-600 transition-transform ${selectPointsOpen ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-            )}
-            {onDeleteChart && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDeleteChart();
-                }}
-                className="text-xs px-2 py-1.5 border border-gray-300 rounded hover:bg-gray-50 transition-colors flex items-center justify-center text-gray-600 hover:text-gray-800 opacity-70 hover:opacity-100"
-                title="Delete chart"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="relative flex-1 border border-gray-400 bg-gray-50 min-h-0">
-        {/* Y-axis */}
-        <div className="absolute left-0 top-0 bottom-0 w-8 border-r border-gray-600 flex flex-col items-center justify-between py-2">
-          <span className="text-xs text-gray-600 transform -rotate-90 whitespace-nowrap">Value</span>
-          <div className="flex flex-col items-center gap-1">
-            <div className="w-2 h-px bg-gray-600"></div>
-            <div className="w-2 h-px bg-gray-600"></div>
-            <div className="w-2 h-px bg-gray-600"></div>
-            <div className="w-2 h-px bg-gray-600"></div>
-            <div className="w-2 h-px bg-gray-600"></div>
-          </div>
-          <span className="text-xs text-gray-600">0</span>
-        </div>
-        
-        {/* X-axis */}
-        <div className="absolute bottom-0 left-8 right-0 h-8 border-t border-gray-600 flex items-center justify-between px-2">
-          <span className="text-xs text-gray-600">0</span>
-          <div className="flex gap-1">
-            <div className="h-2 w-px bg-gray-600"></div>
-            <div className="h-2 w-px bg-gray-600"></div>
-            <div className="h-2 w-px bg-gray-600"></div>
-            <div className="h-2 w-px bg-gray-600"></div>
-            <div className="h-2 w-px bg-gray-600"></div>
-          </div>
-          <span className="text-xs text-gray-600">Time</span>
-        </div>
+        <div className="flex flex-col gap-4 flex-1">
+          {shouldShowLineArea && (
+          <div className="relative flex-1 min-h-[320px] rounded-2xl border border-gray-300 bg-gradient-to-b from-white via-white to-gray-50 shadow-inner overflow-hidden">
+            {/* Y-axis */}
+            <div className="absolute left-0 top-0 bottom-10 w-12 border-r border-gray-200 flex flex-col items-center justify-between py-4 text-gray-600">
+              <span className="text-[10px] uppercase tracking-widest leading-none transform -rotate-90">Value</span>
+              <div className="flex flex-col items-center gap-3 text-gray-400">
+                {[0, 1, 2, 3, 4].map((tick) => (
+                  <div key={tick} className="w-3 h-px bg-gray-400/70" />
+                ))}
+              </div>
+              <span className="text-[10px]">0</span>
+            </div>
 
-        {/* Chart area */}
-        <div 
-          className={`absolute inset-0 left-8 bottom-8 p-4 ${selectedPoints.size === 0 ? 'cursor-pointer' : ''}`}
-          onClick={() => {
-            if (selectedPoints.size === 0 && onSelectPointsToggle) {
-              onSelectPointsToggle(true);
-            }
-          }}
-        >
-          {selectedPoints.size === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-sm text-gray-500 gap-2">
-              <div className="text-base font-medium text-gray-700">No points selected</div>
-              <div className="text-sm">Click anywhere in this area to select points</div>
+            {/* X-axis */}
+            <div className="absolute left-12 right-6 bottom-6 h-10 border-t border-gray-200 flex items-center justify-between px-2 text-gray-500">
+              <span className="text-[11px]">0</span>
+              <div className="flex gap-2">
+                {[0, 1, 2, 3, 4].map((tick) => (
+                  <div key={tick} className="h-3 w-px bg-gray-400/60" />
+                ))}
+              </div>
+              <span className="text-[11px] uppercase tracking-widest">Time</span>
             </div>
-          ) : legendEntries.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-sm text-gray-400">
-              Select points to display charts
-            </div>
-          ) : !hasAnyVisibleContent ? (
-            <div className="flex items-center justify-center h-full text-sm text-gray-400 text-center px-4">
-              All selected points are hidden. Use the legend controls to show a series.
-            </div>
-          ) : (
-            <div className="h-full overflow-y-auto pr-1">
-              <div className="flex flex-col gap-6">
-                {hasNumericEntries && (
-                  <div>
-                    <div className="text-sm font-semibold text-gray-700 mb-3">Visible Points:</div>
-                    <div className="space-y-2">
-                      {visibleNumericEntries.map((entry) => {
-                        const color = LEGEND_COLORS[entry.colorIndex];
-                        return (
-                          <div key={entry.pointKey} className="text-xs text-gray-600 flex items-center gap-2">
-                            <div
-                              className={`w-3 h-3 rounded-sm flex-shrink-0 ${color.bg} ${color.border} border`}
-                            />
-                            <span className="font-medium">{entry.name}</span>
-                            <span className="text-gray-400">(SN {entry.shortSN})</span>
-                            {entry.unit !== "N/A" && (
-                              <span className="text-gray-400">[{entry.unit}]</span>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
+
+            {/* Chart area */}
+            <div
+              className={`absolute top-6 bottom-16 left-12 right-6 rounded-xl bg-white/40 backdrop-blur-sm ${
+                selectedPoints.size === 0 ? 'cursor-pointer' : 'cursor-default'
+              }`}
+              onClick={() => {
+                if (selectedPoints.size === 0 && onSelectPointsToggle) {
+                  onSelectPointsToggle(true);
+                }
+              }}
+            >
+              {selectedPoints.size === 0 ? (
+                <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-sm text-gray-500">
+                  <div className="text-base font-medium text-gray-700">No points selected</div>
+                  <div>Click anywhere in this area to select points</div>
+                </div>
+              ) : legendEntries.length === 0 ? (
+                <div className="flex h-full items-center justify-center text-sm text-gray-400">
+                  Select points to display charts
+                </div>
+              ) : hasNumericEntries ? (
+                <div className="relative h-full w-full">
+                  <div className="pointer-events-none absolute inset-0 grid grid-rows-4 opacity-30">
+                    {[0, 1, 2, 3].map((row) => (
+                      <div key={row} className="border-b border-dashed border-gray-300" />
+                    ))}
                   </div>
-                )}
+                  <LineChartPreview series={lineSeriesData} />
+                </div>
+              ) : (
+                <div className="flex h-full items-center justify-center px-6 text-center text-sm text-gray-500">
+                  All selected points are hidden. Use the legend controls to show a series.
+                </div>
+              )}
+            </div>
+          </div>
+          )}
+
+          {categoricalCharts.length > 0 && (
+            <div className={`${shouldShowLineArea ? '' : 'pt-2'}`}>
+              <div className="space-y-4">
                 {categoricalCharts.map((chart) => (
                   <CategoricalChart key={`${chart.id}:${chart.subtitle}`} data={chart} />
                 ))}
@@ -1449,12 +1548,11 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
             </div>
           )}
         </div>
-      </div>
 
       {/* Legend/Point List */}
-      {legendEntries.length > 0 && (
+      {numericLegendEntries.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
-          {legendEntries.map(({ pointKey, name, shortSN, fullSN, colorIndex, key, unit, point, longDescription }) => {
+          {numericLegendEntries.map(({ pointKey, name, shortSN, fullSN, colorIndex, key, unit, point, longDescription }) => {
             const color = LEGEND_COLORS[colorIndex];
             const isHidden = hiddenEntries.has(pointKey);
             
@@ -1776,6 +1874,7 @@ const ROW_KEYBOARD_STEP = 12;
 const COLUMN_KEYBOARD_STEP = 12;
 const DEFAULT_ROW_HEIGHT = 520;
 const DEFAULT_COLUMN_WIDTH = 780;
+const DEFAULT_INVERTER_SELECTION = ['001'];
 
 interface DividerButtonSegment {
   key: string;
@@ -2261,6 +2360,54 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
       }
     };
   }, [charts, activeChartId, callbacksRef]);
+
+  React.useEffect(() => {
+    if (typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      const updates = new Map<number, number>();
+      entries.forEach((entry) => {
+        const target = entry.target as HTMLElement;
+        const chartId = target.getAttribute('data-chart-id');
+        if (!chartId) {
+          return;
+        }
+        const chart = charts.find((c) => c.id === chartId);
+        if (!chart) {
+          return;
+        }
+        const content = target.querySelector<HTMLElement>('.chart-content');
+        const measured = content ? content.scrollHeight : target.scrollHeight;
+        const desiredHeight = Math.ceil(measured + 24);
+        updates.set(chart.row, Math.max(desiredHeight, MIN_ROW_HEIGHT));
+      });
+
+      if (updates.size === 0) {
+        return;
+      }
+
+      setRowHeights((prev) => {
+        let changed = false;
+        const next = new Map(prev);
+        updates.forEach((height, row) => {
+          const current = next.get(row) ?? DEFAULT_ROW_HEIGHT;
+          if (Math.abs(height - current) > 1) {
+            next.set(row, height);
+            changed = true;
+          }
+        });
+        return changed ? next : prev;
+      });
+    });
+
+    chartRefsMap.current.forEach((element) => observer.observe(element));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [charts, setRowHeights]);
 
   const getRowHeight = React.useCallback(
     (row: number) => rowHeights.get(row) ?? DEFAULT_ROW_HEIGHT,
@@ -2822,6 +2969,7 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
               gridRow: (rowIndexMap.get(chart.row) ?? 0) * 2 + 1,
               gridColumn: (colIndexMap.get(chart.col) ?? 0) * 2 + 1
             }}
+            data-chart-id={chart.id}
             onClick={(e) => {
               // Don't activate if clicking on buttons
               if ((e.target as HTMLElement).closest('button')) {
@@ -2830,7 +2978,7 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
               setActiveChartId(chart.id);
             }}
           >
-            <div className="chart-content h-full">
+            <div className="chart-content">
               <FakeChart
                 selectedPoints={chart.selectedPoints}
                 protocols={protocols}
@@ -3138,6 +3286,31 @@ export default function App() {
     };
   }, [sidebarOpen]);
 
+  React.useEffect(() => {
+    if (!sidebarOpen) {
+      return undefined;
+    }
+
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+      if (sidebarRef.current && sidebarRef.current.contains(target)) {
+        return;
+      }
+      if (target.closest('[data-role="sidebar-toggle"]')) {
+        return;
+      }
+      setSidebarOpen(false);
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('touchstart', handlePointerDown, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('touchstart', handlePointerDown);
+    };
+  }, [sidebarOpen]);
+
   // Scroll to a point in the sidebar
   const scrollToPoint = (pointKey: string) => {
     if (!sidebarOpen) {
@@ -3167,30 +3340,8 @@ export default function App() {
     }
   };
 
-  // Load last inverter selection from localStorage
-  const getLastInverterSelection = (): Set<string> => {
-    try {
-      const stored = localStorage.getItem('matter-app-last-inverter-selection');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return new Set(parsed);
-        }
-      }
-    } catch (e) {
-      // Ignore errors, use default
-    }
-    return new Set(['001']); // Default to 001
-  };
-
-  // Store last inverter selection to localStorage
-  const saveLastInverterSelection = (inverters: Set<string>) => {
-    try {
-      localStorage.setItem('matter-app-last-inverter-selection', JSON.stringify(Array.from(inverters)));
-    } catch (e) {
-      // Ignore errors
-    }
-  };
+  const getLastInverterSelection = (): Set<string> => new Set(DEFAULT_INVERTER_SELECTION);
+  const saveLastInverterSelection = (_inverters: Set<string>) => {};
 
 
   // Extract all labels from protocols
@@ -3526,7 +3677,7 @@ export default function App() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                    <div className="text-lg font-semibold">Select Points</div>
+                    <div className="text-lg font-semibold">Add Points</div>
                   </div>
                   <div className="text-sm text-gray-600">
                     <span>Available: {visibleCount.toLocaleString()} of {totalCount.toLocaleString()}</span>
