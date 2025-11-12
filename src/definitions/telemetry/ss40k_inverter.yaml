@@ -69,10 +69,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: SN
   block: fixed
@@ -99,12 +99,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: fNom
   block: fixed
@@ -119,12 +119,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Freq
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: pNom
   block: fixed
@@ -139,12 +139,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: sNom
   block: fixed
@@ -159,12 +159,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: hwVer
   block: fixed
@@ -179,10 +179,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: verDspMaster
   block: fixed
@@ -197,12 +197,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Firmware
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: verDspSlave
   block: fixed
@@ -217,12 +217,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Firmware
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: verArmEms
   block: fixed
@@ -237,12 +237,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Firmware
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: verAFCI
   block: fixed
@@ -257,12 +257,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Firmware
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: verLCD1
   block: fixed
@@ -277,12 +277,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Firmware
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: verLCD2
   block: fixed
@@ -297,12 +297,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Firmware
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: verProto
   block: fixed
@@ -317,10 +317,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: verSafety
   block: fixed
@@ -335,10 +335,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: reserved2
   block: fixed
@@ -364,12 +364,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Info
     label_text: Nameplate
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: reserved3
   block: fixed
@@ -400,12 +400,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Nameplate
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40100
   point: reserved4
   block: fixed
@@ -555,14 +555,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pPvTotal
   block: fixed
@@ -585,6 +585,10 @@ protocols:
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: pMppt1
   block: fixed
@@ -599,14 +603,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iMppt1
   block: fixed
@@ -621,14 +625,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vMppt1
   block: fixed
@@ -643,14 +647,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pMppt2
   block: fixed
@@ -665,14 +669,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iMppt2
   block: fixed
@@ -687,14 +691,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vMppt2
   block: fixed
@@ -709,14 +713,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pMppt3
   block: fixed
@@ -731,14 +735,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iMppt3
   block: fixed
@@ -753,14 +757,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vMppt3
   block: fixed
@@ -775,14 +779,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pMppt4
   block: fixed
@@ -797,14 +801,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iMppt4
   block: fixed
@@ -819,14 +823,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vMppt4
   block: fixed
@@ -841,14 +845,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: reserved3
   block: fixed
@@ -874,10 +878,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: socBat
   block: fixed
@@ -898,6 +902,10 @@ protocols:
     label_text: Sensor
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: sohBat
   block: fixed
@@ -912,12 +920,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: batChgDischMode
   block: fixed
@@ -940,12 +948,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pBatChg
   block: fixed
@@ -966,6 +974,10 @@ protocols:
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: pBatDischg
   block: fixed
@@ -986,6 +998,10 @@ protocols:
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: iBat
   block: fixed
@@ -1000,12 +1016,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vBat
   block: fixed
@@ -1026,6 +1042,10 @@ protocols:
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: vBatCellMax
   block: fixed
@@ -1040,12 +1060,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vBatCellMin
   block: fixed
@@ -1060,12 +1080,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: locBatCellVoltMax
   block: fixed
@@ -1080,12 +1100,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: locBatCellVoltMin
   block: fixed
@@ -1100,12 +1120,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: tempBat
   block: fixed
@@ -1120,12 +1140,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Temp
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: tempBatCellAvg
   block: fixed
@@ -1140,12 +1160,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Temp
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: tempBatCellMax
   block: fixed
@@ -1160,12 +1180,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Temp
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: tempBatCellMin
   block: fixed
@@ -1180,12 +1200,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Temp
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: locBatCellTempMax
   block: fixed
@@ -1200,12 +1220,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Temp
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: locBatCellTempMin
   block: fixed
@@ -1220,12 +1240,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Temp
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: bmsReqForceChg
   block: fixed
@@ -1244,12 +1264,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: reserved4
   block: fixed
@@ -1281,6 +1301,10 @@ protocols:
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: Var
   block: fixed
@@ -1295,12 +1319,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VA
   block: fixed
@@ -1315,12 +1339,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: PF
   block: fixed
@@ -1335,10 +1359,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: A
   block: fixed
@@ -1353,12 +1377,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: LLV
   block: fixed
@@ -1379,6 +1403,10 @@ protocols:
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: LNV
   block: fixed
@@ -1393,12 +1421,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: Hz
   block: fixed
@@ -1419,6 +1447,10 @@ protocols:
     label_text: Freq
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: WL1
   block: fixed
@@ -1433,12 +1465,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VarL1
   block: fixed
@@ -1453,12 +1485,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VAL1
   block: fixed
@@ -1473,12 +1505,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: PFL1
   block: fixed
@@ -1493,10 +1525,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: AL1
   block: fixed
@@ -1511,12 +1543,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VL1L2
   block: fixed
@@ -1531,12 +1563,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VL1
   block: fixed
@@ -1551,12 +1583,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: WL2
   block: fixed
@@ -1571,12 +1603,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VarL2
   block: fixed
@@ -1591,12 +1623,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VAL2
   block: fixed
@@ -1611,12 +1643,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: PFL2
   block: fixed
@@ -1631,10 +1663,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: AL2
   block: fixed
@@ -1649,12 +1681,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VL2L3
   block: fixed
@@ -1669,12 +1701,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VL2
   block: fixed
@@ -1689,12 +1721,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: WL3
   block: fixed
@@ -1709,12 +1741,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VarL3
   block: fixed
@@ -1729,12 +1761,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VAL3
   block: fixed
@@ -1749,12 +1781,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: PFL3
   block: fixed
@@ -1769,10 +1801,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: AL3
   block: fixed
@@ -1787,12 +1819,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VL3L1
   block: fixed
@@ -1807,12 +1839,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: VL3
   block: fixed
@@ -1827,12 +1859,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: Prec
   block: fixed
@@ -1847,12 +1879,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: tempAmb
   block: fixed
@@ -1867,12 +1899,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Temp
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: tempInt
   block: fixed
@@ -1887,12 +1919,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Temp
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: tempLLC
   block: fixed
@@ -1907,12 +1939,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Temp
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: tempInv
   block: fixed
@@ -1927,12 +1959,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Temp
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: reserved5
   block: fixed
@@ -1962,12 +1994,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pGridImpTot
   block: fixed
@@ -1988,6 +2020,10 @@ protocols:
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: pGridExpTot
   block: fixed
@@ -2008,6 +2044,10 @@ protocols:
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: qGridTot
   block: fixed
@@ -2022,12 +2062,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sGridTot
   block: fixed
@@ -2042,12 +2082,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfGridTot
   block: fixed
@@ -2062,10 +2102,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iGridTot
   block: fixed
@@ -2080,12 +2120,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGridLL
   block: fixed
@@ -2106,6 +2146,10 @@ protocols:
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: vGridLN
   block: fixed
@@ -2120,12 +2164,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: fGrid
   block: fixed
@@ -2140,12 +2184,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Freq
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pGridL1
   block: fixed
@@ -2160,12 +2204,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qGridL1
   block: fixed
@@ -2180,12 +2224,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sGridL1
   block: fixed
@@ -2200,12 +2244,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfGridL1
   block: fixed
@@ -2220,10 +2264,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iGridL1
   block: fixed
@@ -2238,12 +2282,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGridL12
   block: fixed
@@ -2258,12 +2302,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGridL1N
   block: fixed
@@ -2278,12 +2322,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pGridL2
   block: fixed
@@ -2298,12 +2342,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qGridL2
   block: fixed
@@ -2318,12 +2362,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sGridL2
   block: fixed
@@ -2338,12 +2382,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfGridL2
   block: fixed
@@ -2358,10 +2402,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iGridL2
   block: fixed
@@ -2376,12 +2420,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGridL23
   block: fixed
@@ -2396,12 +2440,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGridL2N
   block: fixed
@@ -2416,12 +2460,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pGridL3
   block: fixed
@@ -2436,12 +2480,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qGridL3
   block: fixed
@@ -2456,12 +2500,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sGridL3
   block: fixed
@@ -2476,12 +2520,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfGridL3
   block: fixed
@@ -2496,10 +2540,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iGridL3
   block: fixed
@@ -2514,12 +2558,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGridL31
   block: fixed
@@ -2534,12 +2578,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGridL3N
   block: fixed
@@ -2554,12 +2598,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: reserved6
   block: fixed
@@ -2589,14 +2633,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pBkupTot
   block: fixed
@@ -2619,6 +2663,10 @@ protocols:
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: qBkupTot
   block: fixed
@@ -2633,14 +2681,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sBkupTot
   block: fixed
@@ -2655,14 +2703,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfBkupTot
   block: fixed
@@ -2677,12 +2725,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iBkupTot
   block: fixed
@@ -2697,14 +2745,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vBkupLL
   block: fixed
@@ -2719,14 +2767,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vBkupLN
   block: fixed
@@ -2741,14 +2789,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: fBkup
   block: fixed
@@ -2771,6 +2819,10 @@ protocols:
     label_text: Freq
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: pBkupL1
   block: fixed
@@ -2785,14 +2837,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qBkupL1
   block: fixed
@@ -2807,14 +2859,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sBkupL1
   block: fixed
@@ -2829,14 +2881,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfBkupL1
   block: fixed
@@ -2851,12 +2903,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iBkupL1
   block: fixed
@@ -2871,14 +2923,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vBkupL12
   block: fixed
@@ -2893,14 +2945,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vBkupL1N
   block: fixed
@@ -2915,14 +2967,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pBkupL2
   block: fixed
@@ -2937,14 +2989,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qBkupL2
   block: fixed
@@ -2959,14 +3011,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sBkupL2
   block: fixed
@@ -2981,14 +3033,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfBkupL2
   block: fixed
@@ -3003,12 +3055,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iBkupL2
   block: fixed
@@ -3023,14 +3075,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vBkupL23
   block: fixed
@@ -3045,14 +3097,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vBkupL2N
   block: fixed
@@ -3067,14 +3119,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pBkupL3
   block: fixed
@@ -3089,14 +3141,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qBkupL3
   block: fixed
@@ -3111,14 +3163,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sBkupL3
   block: fixed
@@ -3133,14 +3185,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfBkupL3
   block: fixed
@@ -3155,12 +3207,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iBkupL3
   block: fixed
@@ -3175,14 +3227,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vBkupL31
   block: fixed
@@ -3197,14 +3249,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vBkupL3N
   block: fixed
@@ -3219,14 +3271,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: reserved7
   block: fixed
@@ -3258,6 +3310,10 @@ protocols:
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: qLoadTot
   block: fixed
@@ -3272,12 +3328,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sLoadTot
   block: fixed
@@ -3292,12 +3348,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfLoadTot
   block: fixed
@@ -3312,10 +3368,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iLoadTot
   block: fixed
@@ -3330,12 +3386,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vLoadLL
   block: fixed
@@ -3350,12 +3406,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vLoadLN
   block: fixed
@@ -3370,12 +3426,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: fLoad
   block: fixed
@@ -3396,6 +3452,10 @@ protocols:
     label_text: Freq
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: pLoadL1
   block: fixed
@@ -3410,12 +3470,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qLoadL1
   block: fixed
@@ -3430,12 +3490,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sLoadL1
   block: fixed
@@ -3450,12 +3510,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfLoadL1
   block: fixed
@@ -3470,10 +3530,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iLoadL1
   block: fixed
@@ -3488,12 +3548,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vLoadL12
   block: fixed
@@ -3508,12 +3568,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vLoadL1N
   block: fixed
@@ -3528,12 +3588,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pLoadL2
   block: fixed
@@ -3548,12 +3608,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qLoadL2
   block: fixed
@@ -3568,12 +3628,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sLoadL2
   block: fixed
@@ -3588,12 +3648,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfLoadL2
   block: fixed
@@ -3608,10 +3668,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iLoadL2
   block: fixed
@@ -3626,12 +3686,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vLoadL23
   block: fixed
@@ -3646,12 +3706,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vLoadL2N
   block: fixed
@@ -3666,12 +3726,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pLoadL3
   block: fixed
@@ -3686,12 +3746,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qLoadL3
   block: fixed
@@ -3706,12 +3766,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sLoadL3
   block: fixed
@@ -3726,12 +3786,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfLoadL3
   block: fixed
@@ -3746,10 +3806,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iLoadL3
   block: fixed
@@ -3764,12 +3824,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vLoadL31
   block: fixed
@@ -3784,12 +3844,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vLoadL3N
   block: fixed
@@ -3804,12 +3864,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: reserved8
   block: fixed
@@ -3839,12 +3899,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: genRelayStat
   block: fixed
@@ -3869,6 +3929,10 @@ protocols:
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: pGenTot
   block: fixed
@@ -3889,6 +3953,10 @@ protocols:
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: qGenTot
   block: fixed
@@ -3903,12 +3971,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sGenTot
   block: fixed
@@ -3923,12 +3991,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfGenTot
   block: fixed
@@ -3943,10 +4011,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iGenTot
   block: fixed
@@ -3961,12 +4029,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGenLL
   block: fixed
@@ -3981,12 +4049,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGenLN
   block: fixed
@@ -4001,12 +4069,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: fGen
   block: fixed
@@ -4021,12 +4089,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Freq
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pGenL1
   block: fixed
@@ -4041,12 +4109,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qGenL1
   block: fixed
@@ -4061,12 +4129,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sGenL1
   block: fixed
@@ -4081,12 +4149,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfGenL1
   block: fixed
@@ -4101,10 +4169,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iGenL1
   block: fixed
@@ -4119,12 +4187,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGenL12
   block: fixed
@@ -4145,6 +4213,10 @@ protocols:
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: vGenL1N
   block: fixed
@@ -4159,12 +4231,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pGenL2
   block: fixed
@@ -4179,12 +4251,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qGenL2
   block: fixed
@@ -4199,12 +4271,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sGenL2
   block: fixed
@@ -4219,12 +4291,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfGenL2
   block: fixed
@@ -4239,10 +4311,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iGenL2
   block: fixed
@@ -4257,12 +4329,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGenL23
   block: fixed
@@ -4277,12 +4349,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGenL2N
   block: fixed
@@ -4297,12 +4369,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pGenL3
   block: fixed
@@ -4317,12 +4389,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qGenL3
   block: fixed
@@ -4337,12 +4409,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sGenL3
   block: fixed
@@ -4357,12 +4429,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfGenL3
   block: fixed
@@ -4377,10 +4449,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iGenL3
   block: fixed
@@ -4395,12 +4467,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGenL31
   block: fixed
@@ -4415,12 +4487,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vGenL3N
   block: fixed
@@ -4435,12 +4507,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: genActFlg
   block: fixed
@@ -4459,12 +4531,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: reserved9
   block: fixed
@@ -4498,6 +4570,10 @@ protocols:
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
+  - label_family: Level of Detail
+    label_text: Extended
 - model: 40101
   point: qAcCplTot
   block: fixed
@@ -4512,14 +4588,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sAcCplTot
   block: fixed
@@ -4534,14 +4610,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfAcCplTot
   block: fixed
@@ -4556,12 +4632,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iAcCplTot
   block: fixed
@@ -4576,14 +4652,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vAcCplLL
   block: fixed
@@ -4598,14 +4674,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vAcCplLN
   block: fixed
@@ -4620,14 +4696,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: fAcCpl
   block: fixed
@@ -4642,14 +4718,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Freq
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pAcCplL1
   block: fixed
@@ -4664,14 +4740,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qAcCplL1
   block: fixed
@@ -4686,14 +4762,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sAcCplL1
   block: fixed
@@ -4708,14 +4784,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfAcCplL1
   block: fixed
@@ -4730,12 +4806,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iAcCplL1
   block: fixed
@@ -4750,14 +4826,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vAcCplL12
   block: fixed
@@ -4772,14 +4848,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vAcCplL1N
   block: fixed
@@ -4794,14 +4870,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pAcCplL2
   block: fixed
@@ -4816,14 +4892,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qAcCplL2
   block: fixed
@@ -4838,14 +4914,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sAcCplL2
   block: fixed
@@ -4860,14 +4936,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfAcCplL2
   block: fixed
@@ -4882,12 +4958,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iAcCplL2
   block: fixed
@@ -4902,14 +4978,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vAcCplL23
   block: fixed
@@ -4924,14 +5000,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vAcCplL2N
   block: fixed
@@ -4946,14 +5022,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pAcCplL3
   block: fixed
@@ -4968,14 +5044,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qAcCplL3
   block: fixed
@@ -4990,14 +5066,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sAcCplL3
   block: fixed
@@ -5012,14 +5088,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfAcCplL3
   block: fixed
@@ -5034,12 +5110,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iAcCplL3
   block: fixed
@@ -5054,14 +5130,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vAcCplL31
   block: fixed
@@ -5076,14 +5152,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vAcCplL3N
   block: fixed
@@ -5098,14 +5174,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: acCplActFlg
   block: fixed
@@ -5124,14 +5200,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: reserved10
   block: fixed
@@ -5157,14 +5233,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qSmartloadTot
   block: fixed
@@ -5179,14 +5255,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sSmartloadTot
   block: fixed
@@ -5201,14 +5277,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfSmartloadTot
   block: fixed
@@ -5223,12 +5299,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iSmartloadTot
   block: fixed
@@ -5243,14 +5319,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vSmartloadLL
   block: fixed
@@ -5265,14 +5341,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vSmartloadLN
   block: fixed
@@ -5287,14 +5363,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: fSmartload
   block: fixed
@@ -5309,14 +5385,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Freq
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pSmartloadL1
   block: fixed
@@ -5331,14 +5407,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qSmartloadL1
   block: fixed
@@ -5353,14 +5429,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sSmartloadL1
   block: fixed
@@ -5375,14 +5451,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfSmartloadL1
   block: fixed
@@ -5397,12 +5473,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iSmartloadL1
   block: fixed
@@ -5417,14 +5493,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vSmartloadL12
   block: fixed
@@ -5439,14 +5515,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vSmartloadL1N
   block: fixed
@@ -5461,14 +5537,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pSmartloadL2
   block: fixed
@@ -5483,14 +5559,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qSmartloadL2
   block: fixed
@@ -5505,14 +5581,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sSmartloadL2
   block: fixed
@@ -5527,14 +5603,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfSmartloadL2
   block: fixed
@@ -5549,12 +5625,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iSmartloadL2
   block: fixed
@@ -5569,14 +5645,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vSmartloadL23
   block: fixed
@@ -5591,14 +5667,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vSmartloadL2N
   block: fixed
@@ -5613,14 +5689,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pSmartloadL3
   block: fixed
@@ -5635,14 +5711,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: qSmartloadL3
   block: fixed
@@ -5657,14 +5733,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: sSmartloadL3
   block: fixed
@@ -5679,14 +5755,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: pfSmartloadL3
   block: fixed
@@ -5701,12 +5777,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: iSmartloadL3
   block: fixed
@@ -5721,14 +5797,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Current
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vSmartloadL31
   block: fixed
@@ -5743,14 +5819,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: vSmartloadL3N
   block: fixed
@@ -5765,14 +5841,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: smartloadActFlg
   block: fixed
@@ -5791,14 +5867,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Info
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40101
   point: reserved11
   block: fixed
@@ -5998,10 +6074,10 @@ protocols:
     category: PCS information
     meanings: {}
   labels:
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: reserved2
   block: fixed
@@ -6027,14 +6103,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: ePvTot
   block: fixed
@@ -6049,14 +6125,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: ePv1Tot
   block: fixed
@@ -6071,14 +6147,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: ePv1Tdy
   block: fixed
@@ -6093,14 +6169,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: ePv2Tot
   block: fixed
@@ -6115,14 +6191,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: ePv2Tdy
   block: fixed
@@ -6137,14 +6213,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: ePv3Tot
   block: fixed
@@ -6159,14 +6235,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: ePv3Tdy
   block: fixed
@@ -6181,14 +6257,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: reserved3
   block: fixed
@@ -6214,12 +6290,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eBatChgTot
   block: fixed
@@ -6234,12 +6310,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eBatDischgTdy
   block: fixed
@@ -6254,12 +6330,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eBatDischgTot
   block: fixed
@@ -6274,12 +6350,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: reserved4
   block: fixed
@@ -6305,12 +6381,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eInvTot
   block: fixed
@@ -6325,12 +6401,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eRecTdy
   block: fixed
@@ -6345,12 +6421,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eRecTot
   block: fixed
@@ -6365,12 +6441,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eGridImpTot
   block: fixed
@@ -6385,12 +6461,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eGridExpTot
   block: fixed
@@ -6405,12 +6481,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eGridImpTdy
   block: fixed
@@ -6425,12 +6501,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eGridExpTdy
   block: fixed
@@ -6445,12 +6521,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: reserved5
   block: fixed
@@ -6476,14 +6552,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eBkupTot
   block: fixed
@@ -6498,14 +6574,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eBkupL1Tdy
   block: fixed
@@ -6520,14 +6596,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eBkupL2Tdy
   block: fixed
@@ -6542,14 +6618,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eBkupL3Tdy
   block: fixed
@@ -6564,14 +6640,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eBkupL1Tot
   block: fixed
@@ -6586,14 +6662,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eBkupL2Tot
   block: fixed
@@ -6608,14 +6684,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eBkupL3Tot
   block: fixed
@@ -6630,14 +6706,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: reserved6
   block: fixed
@@ -6663,12 +6739,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eLoadTdy
   block: fixed
@@ -6683,12 +6759,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: reserved7
   block: fixed
@@ -6714,12 +6790,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eGenTot
   block: fixed
@@ -6734,12 +6810,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: reserved8
   block: fixed
@@ -6765,14 +6841,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eAcCplTot
   block: fixed
@@ -6787,14 +6863,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: reserved9
   block: fixed
@@ -6820,14 +6896,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: eSmartloadTot
   block: fixed
@@ -6842,14 +6918,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
     label_text: Energy
   - label_family: Info
     label_text: Sensor
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40102
   point: reserved10
   block: fixed
@@ -6972,10 +7048,10 @@ protocols:
     category: PCS information
     meanings: {}
   labels:
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: reserved2
   block: fixed
@@ -7004,10 +7080,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: pcsFault
   block: fixed
@@ -7040,10 +7116,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: reserved3
   block: fixed
@@ -7071,12 +7147,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Parallel
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: PCSParaFault
   block: fixed
@@ -7102,12 +7178,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Parallel
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: reserved4
   block: fixed
@@ -7136,12 +7212,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Alarms
   - label_family: Feature
     label_text: PV-DC
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: dcPvFault
   block: fixed
@@ -7164,12 +7240,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Alarms
   - label_family: Feature
     label_text: PV-DC
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: reserved5
   block: fixed
@@ -7202,10 +7278,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: batFault
   block: fixed
@@ -7222,10 +7298,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: reserved6
   block: fixed
@@ -7259,10 +7335,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: gridFault
   block: fixed
@@ -7282,10 +7358,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: reserved7
   block: fixed
@@ -7313,12 +7389,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Meter
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: reserved8
   block: fixed
@@ -7351,12 +7427,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: reserved9
   block: fixed
@@ -7394,10 +7470,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: reserved11
   block: fixed
@@ -7424,12 +7500,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: RSD
   - label_family: Info
     label_text: Alarms
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40103
   point: reserved12
   block: fixed
@@ -7497,10 +7573,10 @@ protocols:
     category: PCS
     meanings: {}
   labels:
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved2
   block: fixed
@@ -7528,12 +7604,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Basic Setup
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: Month
   block: fixed
@@ -7550,12 +7626,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Basic Setup
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: Day
   block: fixed
@@ -7572,12 +7648,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Basic Setup
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: Hour
   block: fixed
@@ -7594,12 +7670,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Basic Setup
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: Minute
   block: fixed
@@ -7616,12 +7692,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Basic Setup
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: Second
   block: fixed
@@ -7638,12 +7714,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Basic Setup
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: OperatingMode
   block: fixed
@@ -7660,14 +7736,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Basic Setup
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: WorkMode
   block: fixed
@@ -7694,14 +7770,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Basic Setup
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: PowerControl
   block: fixed
@@ -7718,14 +7794,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Basic Setup
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: pvPowPriority
   block: fixed
@@ -7742,12 +7818,12 @@ protocols:
       '2': Battery, Load EVCharger, Grid
       '3': Load EVCharger, Battery
   labels:
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: powSrcPriority
   block: fixed
@@ -7763,12 +7839,12 @@ protocols:
       '1': PV, Grid, Battery,Generator
       '2': PV, Battery, Generator
   labels:
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved3
   block: fixed
@@ -7803,14 +7879,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: CT
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: CTDirection
   block: fixed
@@ -7827,14 +7903,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: CT
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved4
   block: fixed
@@ -7863,14 +7939,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: BatteryBrand
   block: fixed
@@ -7887,14 +7963,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: AbsorbVoltage
   block: fixed
@@ -7909,12 +7985,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: FloatVoltage
   block: fixed
@@ -7929,12 +8005,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: VbatStartDerating
   block: fixed
@@ -7949,12 +8025,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ChaDisChaCtrlType
   block: fixed
@@ -7977,14 +8053,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ChargeLimitSoc
   block: fixed
@@ -7999,14 +8075,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: MaxChargingCurrent
   block: fixed
@@ -8021,12 +8097,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: OnGridCutOffSoc
   block: fixed
@@ -8041,14 +8117,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: OffGridCutOffSoc
   block: fixed
@@ -8063,14 +8139,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved5
   block: fixed
@@ -8099,14 +8175,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: pChgT1
   block: fixed
@@ -8121,14 +8197,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Power
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: socChgEndT1
   block: fixed
@@ -8143,14 +8219,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: socChgEndT2
   block: fixed
@@ -8165,14 +8241,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: socChgEndT3
   block: fixed
@@ -8187,14 +8263,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: chgST1
   block: fixed
@@ -8211,12 +8287,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: chgET1
   block: fixed
@@ -8233,12 +8309,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: chgST2
   block: fixed
@@ -8255,12 +8331,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: chgET2
   block: fixed
@@ -8277,12 +8353,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: chgST3
   block: fixed
@@ -8299,12 +8375,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: chgET3
   block: fixed
@@ -8321,12 +8397,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved7
   block: fixed
@@ -8352,12 +8428,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: socDischgEndT1
   block: fixed
@@ -8372,14 +8448,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: socDischgEndT2
   block: fixed
@@ -8394,14 +8470,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: socDischgEndT3
   block: fixed
@@ -8416,14 +8492,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: dischgST1
   block: fixed
@@ -8440,12 +8516,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: dischgET1
   block: fixed
@@ -8462,12 +8538,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: dischgST2
   block: fixed
@@ -8484,12 +8560,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: dischgET2
   block: fixed
@@ -8506,12 +8582,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: dischgST3
   block: fixed
@@ -8528,12 +8604,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: dischgET3
   block: fixed
@@ -8550,12 +8626,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Battery Scheduling
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved8
   block: fixed
@@ -8585,14 +8661,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridType
   block: fixed
@@ -8609,14 +8685,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreq
   block: fixed
@@ -8631,12 +8707,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Setup
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved9
   block: fixed
@@ -8664,14 +8740,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Connection
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: RampRate
   block: fixed
@@ -8686,12 +8762,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Connection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ApplicableVoltageLow
   block: fixed
@@ -8706,12 +8782,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Connection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ApplicableVoltageHigh
   block: fixed
@@ -8726,12 +8802,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Connection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ApplicableFrequencyLow
   block: fixed
@@ -8746,12 +8822,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Connection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ApplicableFrequencyHigh
   block: fixed
@@ -8766,12 +8842,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Connection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ConnectionDelayTime
   block: fixed
@@ -8786,12 +8862,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Connection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ReconnectionDelayTime
   block: fixed
@@ -8806,12 +8882,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Connection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved10
   block: fixed
@@ -8837,12 +8913,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridVoltLimit1LowTime
   block: fixed
@@ -8857,12 +8933,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridVoltLimit1High
   block: fixed
@@ -8877,12 +8953,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridVoltLimit1HighTime
   block: fixed
@@ -8897,12 +8973,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridVoltLimit2Low
   block: fixed
@@ -8917,12 +8993,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridVoltLimit2LowTime
   block: fixed
@@ -8937,12 +9013,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridVoltLimit2High
   block: fixed
@@ -8957,12 +9033,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridVoltLimit2HighTime
   block: fixed
@@ -8977,12 +9053,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridVoltLimit3Low
   block: fixed
@@ -8997,12 +9073,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridVoltLimit3LowTime
   block: fixed
@@ -9017,12 +9093,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridVoltLimit3High
   block: fixed
@@ -9037,12 +9113,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridVoltLimit3HighTime
   block: fixed
@@ -9057,12 +9133,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit1Low
   block: fixed
@@ -9077,12 +9153,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit1LowTime
   block: fixed
@@ -9097,12 +9173,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit1High
   block: fixed
@@ -9117,12 +9193,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit1HighTime
   block: fixed
@@ -9137,12 +9213,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit2Low
   block: fixed
@@ -9157,12 +9233,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit2LowTime
   block: fixed
@@ -9177,12 +9253,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit2High
   block: fixed
@@ -9197,12 +9273,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit2HighTime
   block: fixed
@@ -9217,12 +9293,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit3Low
   block: fixed
@@ -9237,12 +9313,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit3LowTime
   block: fixed
@@ -9257,12 +9333,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit3High
   block: fixed
@@ -9277,12 +9353,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GridFreqLimit3HighTime
   block: fixed
@@ -9297,12 +9373,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Protection
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved11
   block: fixed
@@ -9330,14 +9406,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ConstantPowerFactorExcited
   block: fixed
@@ -9355,14 +9431,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ConstantPowerFactor
   block: fixed
@@ -9377,12 +9453,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved12
   block: fixed
@@ -9410,14 +9486,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ConstantReactivePowerModeExcited
   block: fixed
@@ -9435,14 +9511,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ReactivePowerPercentCMD
   block: fixed
@@ -9457,12 +9533,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved13
   block: fixed
@@ -9490,14 +9566,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: AutonomousVrefAdjustment
   block: fixed
@@ -9514,14 +9590,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: Verf
   block: fixed
@@ -9536,12 +9612,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: VrefAdjustmentTimeConstant
   block: fixed
@@ -9556,12 +9632,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: UnderOverV1
   block: fixed
@@ -9576,12 +9652,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: UnderOverV2
   block: fixed
@@ -9596,12 +9672,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: UnderOverV3
   block: fixed
@@ -9616,12 +9692,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: UnderOverV4
   block: fixed
@@ -9636,12 +9712,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: Q1
   block: fixed
@@ -9656,12 +9732,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: Q2
   block: fixed
@@ -9676,12 +9752,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: Q3
   block: fixed
@@ -9696,12 +9772,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: Q4
   block: fixed
@@ -9716,12 +9792,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: VqOpenLoopResponseTime
   block: fixed
@@ -9736,12 +9812,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved14
   block: fixed
@@ -9769,14 +9845,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: PQP1
   block: fixed
@@ -9791,12 +9867,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: PQP2
   block: fixed
@@ -9811,12 +9887,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: PQP3
   block: fixed
@@ -9831,12 +9907,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved15
   block: fixed
@@ -9864,14 +9940,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: VoltWattV1
   block: fixed
@@ -9886,12 +9962,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: VoltWattV2
   block: fixed
@@ -9906,12 +9982,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: VoltWattP2
   block: fixed
@@ -9926,12 +10002,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: VoltWattOpenLoopResponseTime
   block: fixed
@@ -9946,12 +10022,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved16
   block: fixed
@@ -9979,14 +10055,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: FreqWattOpenLoopResponseTime
   block: fixed
@@ -10001,12 +10077,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: OverFrequencyDroop_dbOF
   block: fixed
@@ -10021,12 +10097,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: OverFrequencyDroop_kOF
   block: fixed
@@ -10041,12 +10117,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: UnderFrequencyDroop_dbUF
   block: fixed
@@ -10061,12 +10137,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: UnderFrequencyDroop_kUF
   block: fixed
@@ -10081,12 +10157,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Support
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved17
   block: fixed
@@ -10114,8 +10190,6 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Power Limits
   - label_family: Info
@@ -10124,6 +10198,8 @@ protocols:
     label_text: Power
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ActivePowerPercent
   block: fixed
@@ -10138,14 +10214,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Power Limits
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Power
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved18
   block: fixed
@@ -10173,14 +10249,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Selling Power
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: FeedInGridMaxPower
   block: fixed
@@ -10195,14 +10271,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Selling Power
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Power
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: FastzeroExportstatus
   block: fixed
@@ -10219,14 +10295,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Selling Power
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: FeedInGridPowerMaxSetValue
   block: fixed
@@ -10239,12 +10315,12 @@ protocols:
     category: FeedInGrid
     meanings: {}
   labels:
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Unit
     label_text: Power
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved19
   block: fixed
@@ -10272,14 +10348,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Charge
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ACChargePower
   block: fixed
@@ -10294,14 +10370,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Charge
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Power
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ACChargeType
   block: fixed
@@ -10318,14 +10394,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Charge
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ACChgStartSOC
   block: fixed
@@ -10340,14 +10416,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Charge
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ACChgStopSOC
   block: fixed
@@ -10362,14 +10438,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Charge
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: acChgST1
   block: fixed
@@ -10386,12 +10462,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Charge
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: acChgET1
   block: fixed
@@ -10408,12 +10484,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Charge
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: acChgST2
   block: fixed
@@ -10430,12 +10506,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Charge
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: acChgET2
   block: fixed
@@ -10452,12 +10528,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Charge
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: acChgST3
   block: fixed
@@ -10474,12 +10550,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Charge
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: acChgET3
   block: fixed
@@ -10496,12 +10572,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Grid Charge
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ACChargePowerMaxSetValue
   block: fixed
@@ -10514,10 +10590,10 @@ protocols:
     category: ACCharge
     meanings: {}
   labels:
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved20
   block: fixed
@@ -10545,14 +10621,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Backup Power
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: EPSVoltage
   block: fixed
@@ -10567,12 +10643,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Backup Power
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Backup Power
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved21
   block: fixed
@@ -10600,12 +10676,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: BatteryChargeCurrentLimit
   block: fixed
@@ -10620,10 +10696,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GeneratorRatedPower
   block: fixed
@@ -10638,10 +10714,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GeneratorCoolDownTime
   block: fixed
@@ -10656,10 +10732,10 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: socGenStart
   block: fixed
@@ -10674,12 +10750,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: socGenEnd
   block: fixed
@@ -10694,12 +10770,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: GeneratorBoost
   block: fixed
@@ -10716,12 +10792,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: StartGeneratorExercise
   block: fixed
@@ -10738,12 +10814,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved22
   block: fixed
@@ -10770,14 +10846,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: socAcCplOn
   block: fixed
@@ -10792,14 +10868,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: socAcCplOff
   block: fixed
@@ -10814,14 +10890,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Info
     label_text: Config
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved23
   block: fixed
@@ -10848,14 +10924,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Smart Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: OnGridAlwaysOn
   block: fixed
@@ -10872,14 +10948,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Smart Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: StartPVPower
   block: fixed
@@ -10894,12 +10970,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Smart Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: SmartLoadOnSoc
   block: fixed
@@ -10914,14 +10990,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Smart Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: SmartLoadOffSoc
   block: fixed
@@ -10936,14 +11012,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Smart Load
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Smart Load
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: '%'
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved24
   block: fixed
@@ -10969,12 +11045,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Parallel
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: SystemType
   block: fixed
@@ -10998,14 +11074,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Parallel
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ComposedPhase
   block: fixed
@@ -11023,14 +11099,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Parallel
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: DetectedGridPhases
   block: fixed
@@ -11049,14 +11125,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Parallel
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ShareBatteryStatus
   block: fixed
@@ -11073,14 +11149,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Parallel
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ParallelNum
   block: fixed
@@ -11095,12 +11171,12 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Parallel
   - label_family: Info
     label_text: Config
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: Role
   block: fixed
@@ -11115,14 +11191,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Parallel
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: ParallelPhase
   block: fixed
@@ -11140,14 +11216,14 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Level of Detail
-    label_text: Extended
   - label_family: Feature
     label_text: Parallel
   - label_family: Info
     label_text: Config
   - label_family: Unit
     label_text: Mode
+  - label_family: Level of Detail
+    label_text: Complete
 - model: 40104
   point: reserved25
   block: fixed

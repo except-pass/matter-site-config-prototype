@@ -357,6 +357,106 @@ function HelpToggle({ show, onToggle }: HelpToggleProps) {
   );
 }
 
+interface DetailLevelSliderProps {
+  value: string; // 'Standard', 'Extended', or 'Complete'
+  onChange: (value: string) => void;
+}
+
+function DetailLevelSlider({ value, onChange }: DetailLevelSliderProps) {
+  const options = ['Standard', 'Extended', 'Complete'];
+  const currentIndex = options.indexOf(value);
+  const sliderValue = currentIndex >= 0 ? currentIndex : 0;
+  const [showHelpModal, setShowHelpModal] = React.useState(false);
+
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const index = parseInt(e.target.value, 10);
+    onChange(options[index]);
+  };
+
+  // Calculate the position percentage for the slider fill
+  const fillPosition = (sliderValue / (options.length - 1)) * 100;
+
+  // Get help text for Level of Detail family
+  const levelOfDetailHelp = getLabelHelp('Level of Detail');
+  const levelOfDetailLabels = new Set(options);
+
+  return (
+    <>
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-semibold text-gray-700">Detail Level</span>
+        <button
+          onClick={() => setShowHelpModal(true)}
+          className="text-blue-500 hover:text-blue-700"
+          title={levelOfDetailHelp || "Level of Detail help"}
+        >
+          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="relative w-40 flex items-center">
+            <input
+              type="range"
+              min="0"
+              max={options.length - 1}
+              step="1"
+              value={sliderValue}
+              onChange={handleSliderChange}
+              className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              style={{
+                background: `linear-gradient(to right, #10b981 0%, #10b981 ${fillPosition}%, #e5e7eb ${fillPosition}%, #e5e7eb 100%)`
+              }}
+            />
+            <style>{`
+              input[type="range"]::-webkit-slider-thumb {
+                appearance: none;
+                width: 14px;
+                height: 14px;
+                border-radius: 50%;
+                background: #10b981;
+                cursor: pointer;
+                border: 2px solid white;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+              }
+              input[type="range"]::-moz-range-thumb {
+                width: 14px;
+                height: 14px;
+                border-radius: 50%;
+                background: #10b981;
+                cursor: pointer;
+                border: 2px solid white;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+              }
+            `}</style>
+          </div>
+          {/* Labels below slider */}
+          <div className="relative w-40 flex justify-between text-xs">
+            {options.map((option, index) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => onChange(option)}
+                className={`cursor-pointer hover:opacity-70 transition-opacity ${
+                  index === sliderValue ? 'font-semibold text-gray-900' : 'text-gray-500'
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+      {showHelpModal && (
+        <LabelHelpModal
+          family="Level of Detail"
+          labels={levelOfDetailLabels}
+          onClose={() => setShowHelpModal(false)}
+        />
+      )}
+    </>
+  );
+}
+
 interface LabelGroupProps {
   levelName: string;
   levelData: LabelHierarchy | ProtocolPoint[];
@@ -615,27 +715,16 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters 
     };
   }, [isResizing]);
 
-  // Separate Level of Detail from other filters
-  const levelOfDetailFamily = 'Level of Detail';
-  const levelOfDetailLabels = allLabels.get(levelOfDetailFamily) || new Set<string>();
-  const otherLabels = new Map(allLabels);
-  otherLabels.delete(levelOfDetailFamily);
-
-  // Get active filter badges (excluding Level of Detail)
+  // Get active filter badges
   const activeFilters = Array.from(selectedLabels)
     .map((labelKey) => {
       const [family, text] = labelKey.split(':', 2);
       return { family, text };
     })
-    .filter(({ family }) => family !== levelOfDetailFamily);
+    .filter(({ family }) => family !== 'Level of Detail');
 
-  // Level of Detail selected values
-  const levelOfDetailSelected = Array.from(selectedLabels)
-    .filter((labelKey) => labelKey.startsWith(`${levelOfDetailFamily}:`))
-    .map((labelKey) => labelKey.split(':', 2)[1]);
-
-  const levelOfDetailColor = getLabelColor(levelOfDetailFamily, '');
-  const hasLevelOfDetailSelected = levelOfDetailSelected.length > 0;
+  const otherLabels = new Map(allLabels);
+  otherLabels.delete('Level of Detail');
 
   return (
     <div ref={containerRef} className="mb-3 rounded-lg border bg-gray-50 p-2">
@@ -652,52 +741,6 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters 
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
               <span className="flex-shrink-0">Filters</span>
-              
-              {/* Always show Level of Detail */}
-              <div className="flex items-center gap-1.5 ml-2">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setHelpModalFamily(levelOfDetailFamily);
-                  }}
-                  className={`flex items-center gap-1 rounded-md border px-2 py-0.5 font-semibold transition-colors flex-shrink-0 justify-between ${
-                    hasLevelOfDetailSelected
-                      ? `${levelOfDetailColor.bg} ${levelOfDetailColor.text} ${levelOfDetailColor.border} border-2`
-                      : `${levelOfDetailColor.bg} ${levelOfDetailColor.text} ${levelOfDetailColor.border} border`
-                  }`}
-                  title="Level of Detail"
-                >
-                  <span className="truncate">{levelOfDetailFamily}</span>
-                  <svg className={`h-3 w-3 flex-shrink-0 ${levelOfDetailColor.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </button>
-                <div className="flex flex-wrap items-center gap-1">
-                  {[...levelOfDetailLabels].sort().map((text) => {
-                    const labelKey = `${levelOfDetailFamily}:${text}`;
-                    const isSelected = selectedLabels.has(labelKey);
-                    const color = getLabelColor(levelOfDetailFamily, text);
-                    return (
-                      <button
-                        key={labelKey}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onToggleLabel(levelOfDetailFamily, text);
-                        }}
-                        className={`rounded border px-1.5 py-0.5 text-xs transition-all ${
-                          isSelected
-                            ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
-                            : `bg-white ${color.text} ${color.border} hover:opacity-80`
-                        }`}
-                        style={!isSelected ? { borderColor: 'currentColor' } : undefined}
-                        title={`${levelOfDetailFamily}: ${text}`}
-                      >
-                        {text}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
 
               {/* More Filters button when collapsed */}
               {!isExpanded && otherLabels.size > 0 && (
@@ -724,9 +767,22 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters 
                       return (
                         <span
                           key={`${family}:${text}`}
-                          className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border} border-2 font-semibold flex-shrink-0`}
+                          className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border} border-2 font-semibold flex-shrink-0 flex items-center gap-1`}
                         >
-                          {text}
+                          <span>{text}</span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onToggleLabel(family, text);
+                            }}
+                            className="hover:opacity-70 transition-opacity flex-shrink-0"
+                            title={`Remove ${family}: ${text} filter`}
+                            aria-label={`Remove ${family}: ${text} filter`}
+                          >
+                            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
                         </span>
                       );
                     })}
@@ -1200,36 +1256,53 @@ function HierarchyConfig({ availableFamilies, hierarchy, onChange }: HierarchyCo
       <div className="mb-3 rounded-lg border bg-gray-50 p-2">
         <details className="group">
           <summary className="cursor-pointer list-none">
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 flex-1 min-w-0">
-                <span className="mr-1 group-open:rotate-90 transition-transform flex-shrink-0">▸</span>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-700 flex-1 min-w-0">
+                <span className="text-gray-500 flex-shrink-0">&gt;</span>
                 <span className="flex-shrink-0">Group by</span>
                 {hierarchy.filter(level => level).length > 0 && (
-                  <div className="flex flex-wrap items-center gap-1 ml-2 min-w-0">
+                  <div className="flex items-center gap-1 ml-1 min-w-0">
                     {hierarchy.map((level, index) => {
                       if (!level) return null;
                       const color = getLabelColor(level, '');
                       return (
-                        <span
-                          key={index}
-                          className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border} border font-semibold flex-shrink-0`}
-                        >
-                          {level}
-                        </span>
+                        <React.Fragment key={index}>
+                          <span
+                            className={`rounded px-2 py-0.5 text-xs font-semibold flex-shrink-0 ${
+                              index === 0 
+                                ? 'bg-blue-100 text-blue-700' 
+                                : index === 1
+                                ? 'bg-green-100 text-green-700'
+                                : `${color.bg} ${color.text}`
+                            }`}
+                          >
+                            {level}
+                          </span>
+                          {index < hierarchy.length - 1 && hierarchy[index + 1] && (
+                            <span className="text-gray-500 flex-shrink-0">&gt;</span>
+                          )}
+                        </React.Fragment>
                       );
                     })}
                   </div>
                 )}
               </div>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowHelpModal(true);
+                }}
+                className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 hover:underline flex-shrink-0"
+              >
+                <span>What does this do?</span>
+                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
             </div>
           </summary>
           <div className="mt-2">
-            <button
-              onClick={() => setShowHelpModal(true)}
-              className="mb-2 text-xs text-blue-600 hover:text-blue-800 hover:underline"
-            >
-              What does this do?
-            </button>
             <div className="flex flex-wrap items-center gap-2 text-xs">
               {hierarchy.map((level, index) => (
                 <div key={index} className="flex items-center gap-1">
@@ -1282,7 +1355,8 @@ export default function App() {
   const [selected, setSelected] = useState<Map<string, Set<string>>>(() => new Map());
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [pointHelpEnabled, setPointHelpEnabled] = useState<Set<string>>(new Set());
-  const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set(["Level of Detail:Standard"]));
+  const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set());
+  const [detailLevel, setDetailLevel] = useState<string>("Standard");
   const [hierarchy, setHierarchy] = useState<string[]>(["Component", "Feature"]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [sidebarWidth, setSidebarWidth] = useState<number>(650);
@@ -1455,6 +1529,38 @@ export default function App() {
       );
     }
 
+    // Filter by detail level
+    // Standard: show only Standard
+    // Extended: show Standard and Extended
+    // Complete: show Standard, Extended, and Complete
+    const detailLevelFilter = (() => {
+      switch (detailLevel) {
+        case 'Standard':
+          return ['Standard'];
+        case 'Extended':
+          return ['Standard', 'Extended'];
+        case 'Complete':
+          return ['Standard', 'Extended', 'Complete'];
+        default:
+          return ['Standard', 'Extended', 'Complete'];
+      }
+    })();
+
+    result = result.filter((p) => {
+      const labels = Array.isArray(p.labels) ? p.labels : [];
+      const levelOfDetailLabels = labels
+        .filter((l) => l.label_family === 'Level of Detail')
+        .map((l) => l.label_text);
+      
+      // If point has no Level of Detail label, include it (for backward compatibility)
+      if (levelOfDetailLabels.length === 0) {
+        return true;
+      }
+      
+      // Check if point has at least one matching detail level
+      return levelOfDetailLabels.some((level) => detailLevelFilter.includes(level));
+    });
+
     // Filter by selected labels
     // Logic: AND for different families, OR for same family
     if (selectedLabels.size > 0) {
@@ -1503,7 +1609,7 @@ export default function App() {
     }
 
     return result;
-  }, [query, selectedLabels]);
+  }, [query, selectedLabels, detailLevel]);
 
   const grouped = useMemo<LabelHierarchy>(
     () => groupByLabelHierarchy(filtered, hierarchy),
@@ -1743,7 +1849,7 @@ export default function App() {
                   <HelpToggle show={showHelp} onToggle={setShowHelp} />
                 </div>
                 
-                <div className="mt-2 flex items-center gap-2">
+                <div className="mt-2 flex items-center gap-4">
                   <button
                     onClick={() => {
                       setGroupsExpanded(true);
@@ -1776,6 +1882,7 @@ export default function App() {
                     <span>⤴</span>
                     <span>Collapse all</span>
                   </button>
+                  <DetailLevelSlider value={detailLevel} onChange={setDetailLevel} />
                 </div>
               </div>
 

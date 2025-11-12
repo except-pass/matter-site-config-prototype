@@ -81,7 +81,9 @@ label_families:
       Standard:
         help: "Standard telemetry points that are commonly used and displayed by default."
       Extended:
-        help: "Extended telemetry points provide additional technical detail or advanced information."
+        help: "Extended telemetry points provide additional technical details."
+      Complete:
+        help: "Complete telemetry points provide all available information and are used for detailed analysis and debugging."
 
   Unit:
     help: "Indicates the unit of measurement for numeric telemetry values."
