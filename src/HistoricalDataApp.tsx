@@ -1770,12 +1770,12 @@ interface ChartGridProps {
 
 const ROW_DIVIDER_TRACK = 16;
 const COLUMN_DIVIDER_TRACK = 16;
-const MIN_ROW_HEIGHT = 240;
-const MIN_COLUMN_WIDTH = 320;
+const MIN_ROW_HEIGHT = 280;
+const MIN_COLUMN_WIDTH = 360;
 const ROW_KEYBOARD_STEP = 12;
 const COLUMN_KEYBOARD_STEP = 12;
-const DEFAULT_ROW_HEIGHT = 360;
-const DEFAULT_COLUMN_WIDTH = 520;
+const DEFAULT_ROW_HEIGHT = 520;
+const DEFAULT_COLUMN_WIDTH = 780;
 
 interface DividerButtonSegment {
   key: string;
@@ -1805,7 +1805,9 @@ const DividerAddButton: React.FC<DividerAddButtonProps> = ({ onAdd, ariaLabel })
 interface RowDividerProps {
   onAdd: () => void;
   onResizeStart?: (clientY: number) => void;
+  onEdgeResizeStart?: (clientY: number) => void;
   onKeyboardNudge?: (delta: number) => void;
+  onEdgeKeyboardNudge?: (delta: number) => void;
   onAutoFit?: () => void;
   percentAbove?: number;
   isActive?: boolean;
@@ -1816,27 +1818,37 @@ const RowDivider: React.FC<RowDividerProps> = ({
   onAdd,
   onResizeStart,
   onKeyboardNudge,
+  onEdgeResizeStart,
+  onEdgeKeyboardNudge,
   onAutoFit,
   percentAbove,
   isActive = false,
   buttonSegments,
 }) => {
-  const isResizable =
+  const isBetweenResizable =
     typeof onResizeStart === 'function' &&
     typeof onKeyboardNudge === 'function' &&
     typeof onAutoFit === 'function' &&
     typeof percentAbove === 'number';
+  const isEdgeResizable = typeof onEdgeResizeStart === 'function';
+  const isResizable = isBetweenResizable || isEdgeResizable;
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       onAdd();
-    } else if (event.key === 'ArrowUp' && isResizable && onKeyboardNudge) {
+    } else if (event.key === 'ArrowUp' && isBetweenResizable && onKeyboardNudge) {
       event.preventDefault();
       onKeyboardNudge(ROW_KEYBOARD_STEP);
-    } else if (event.key === 'ArrowDown' && isResizable && onKeyboardNudge) {
+    } else if (event.key === 'ArrowDown' && isBetweenResizable && onKeyboardNudge) {
       event.preventDefault();
       onKeyboardNudge(-ROW_KEYBOARD_STEP);
+    } else if (event.key === 'ArrowUp' && isEdgeResizable && onEdgeKeyboardNudge) {
+      event.preventDefault();
+      onEdgeKeyboardNudge(ROW_KEYBOARD_STEP);
+    } else if (event.key === 'ArrowDown' && isEdgeResizable && onEdgeKeyboardNudge) {
+      event.preventDefault();
+      onEdgeKeyboardNudge(-ROW_KEYBOARD_STEP);
     }
   };
 
@@ -1844,17 +1856,22 @@ const RowDivider: React.FC<RowDividerProps> = ({
     <div
       role="separator"
       aria-orientation="horizontal"
-      {...(isResizable
+      {...(isBetweenResizable
         ? {
             'aria-valuenow': Math.round(percentAbove!),
             'aria-valuemin': 0,
             'aria-valuemax': 100,
             'aria-label': 'Resize charts',
           }
-        : {
-            'aria-label': 'Add chart below',
-            'aria-disabled': true,
-          })}
+        : isEdgeResizable
+          ? {
+              'aria-label': 'Resize row height',
+              'aria-valuetext': `${Math.round(percentAbove ?? 100)}%`,
+            }
+          : {
+              'aria-label': 'Add chart below',
+              'aria-disabled': true,
+            })}
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onClick={(event) => {
@@ -1869,16 +1886,13 @@ const RowDivider: React.FC<RowDividerProps> = ({
           return;
         }
         event.preventDefault();
-        if (isResizable && onAutoFit) {
+        if (isBetweenResizable && onAutoFit) {
           onAutoFit();
         } else {
           onAdd();
         }
       }}
       onMouseDown={(event) => {
-        if (!isResizable || !onResizeStart) {
-          return;
-        }
         if ((event.target as HTMLElement).closest('button')) {
           return;
         }
@@ -1886,7 +1900,11 @@ const RowDivider: React.FC<RowDividerProps> = ({
           return;
         }
         event.preventDefault();
-        onResizeStart(event.clientY);
+        if (isBetweenResizable && onResizeStart) {
+          onResizeStart(event.clientY);
+        } else if (isEdgeResizable && onEdgeResizeStart) {
+          onEdgeResizeStart(event.clientY);
+        }
       }}
       className={`group relative flex items-center justify-center ${
         isResizable ? 'cursor-row-resize' : 'cursor-pointer'
@@ -1950,7 +1968,9 @@ const RowDivider: React.FC<RowDividerProps> = ({
 interface ColumnDividerProps {
   onAdd: () => void;
   onResizeStart?: (clientX: number) => void;
+  onEdgeResizeStart?: (clientX: number) => void;
   onKeyboardNudge?: (delta: number) => void;
+  onEdgeKeyboardNudge?: (delta: number) => void;
   onAutoFit?: () => void;
   percentLeft?: number;
   isActive?: boolean;
@@ -1961,27 +1981,37 @@ const ColumnDivider: React.FC<ColumnDividerProps> = ({
   onAdd,
   onResizeStart,
   onKeyboardNudge,
+  onEdgeResizeStart,
+  onEdgeKeyboardNudge,
   onAutoFit,
   percentLeft,
   isActive = false,
   buttonSegments,
 }) => {
-  const isResizable =
+  const isBetweenResizable =
     typeof onResizeStart === 'function' &&
     typeof onKeyboardNudge === 'function' &&
     typeof onAutoFit === 'function' &&
     typeof percentLeft === 'number';
+  const isEdgeResizable = typeof onEdgeResizeStart === 'function';
+  const isResizable = isBetweenResizable || isEdgeResizable;
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       onAdd();
-    } else if (event.key === 'ArrowRight' && isResizable && onKeyboardNudge) {
+    } else if (event.key === 'ArrowRight' && isBetweenResizable && onKeyboardNudge) {
       event.preventDefault();
       onKeyboardNudge(COLUMN_KEYBOARD_STEP);
-    } else if (event.key === 'ArrowLeft' && isResizable && onKeyboardNudge) {
+    } else if (event.key === 'ArrowLeft' && isBetweenResizable && onKeyboardNudge) {
       event.preventDefault();
       onKeyboardNudge(-COLUMN_KEYBOARD_STEP);
+    } else if (event.key === 'ArrowRight' && isEdgeResizable && onEdgeKeyboardNudge) {
+      event.preventDefault();
+      onEdgeKeyboardNudge(COLUMN_KEYBOARD_STEP);
+    } else if (event.key === 'ArrowLeft' && isEdgeResizable && onEdgeKeyboardNudge) {
+      event.preventDefault();
+      onEdgeKeyboardNudge(-COLUMN_KEYBOARD_STEP);
     }
   };
 
@@ -1989,17 +2019,21 @@ const ColumnDivider: React.FC<ColumnDividerProps> = ({
     <div
       role="separator"
       aria-orientation="vertical"
-      {...(isResizable
+      {...(isBetweenResizable
         ? {
             'aria-valuenow': Math.round(percentLeft!),
             'aria-valuemin': 0,
             'aria-valuemax': 100,
             'aria-label': 'Resize charts horizontally',
           }
-        : {
-            'aria-label': 'Add chart to the right',
-            'aria-disabled': true,
-          })}
+        : isEdgeResizable
+          ? {
+              'aria-label': 'Resize column width',
+            }
+          : {
+              'aria-label': 'Add chart to the right',
+              'aria-disabled': true,
+            })}
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onClick={(event) => {
@@ -2021,9 +2055,6 @@ const ColumnDivider: React.FC<ColumnDividerProps> = ({
         }
       }}
       onMouseDown={(event) => {
-        if (!isResizable || !onResizeStart) {
-          return;
-        }
         if ((event.target as HTMLElement).closest('button')) {
           return;
         }
@@ -2031,7 +2062,11 @@ const ColumnDivider: React.FC<ColumnDividerProps> = ({
           return;
         }
         event.preventDefault();
-        onResizeStart(event.clientX);
+        if (isBetweenResizable && onResizeStart) {
+          onResizeStart(event.clientX);
+        } else if (isEdgeResizable && onEdgeResizeStart) {
+          onEdgeResizeStart(event.clientX);
+        }
       }}
       className={`group relative flex h-full w-full ${
         isResizable ? 'cursor-col-resize' : 'cursor-pointer'
@@ -2104,22 +2139,42 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   const [rowHeights, setRowHeights] = useState<Map<number, number>>(new Map([[0, DEFAULT_ROW_HEIGHT]]));
   const [activeRowSeparator, setActiveRowSeparator] = useState<number | null>(null);
   const [activeColSeparator, setActiveColSeparator] = useState<number | null>(null);
-  const rowResizeStartRef = React.useRef<{
-    startY: number;
-    aboveRow: number;
-    belowRow: number;
-    initialAbove: number;
-    initialBelow: number;
-    total: number;
-  } | null>(null);
-  const columnResizeStartRef = React.useRef<{
-    startX: number;
-    leftCol: number;
-    rightCol: number;
-    initialLeft: number;
-    initialRight: number;
-    total: number;
-  } | null>(null);
+  type RowResizeState =
+    | {
+        mode: 'between';
+        startY: number;
+        aboveRow: number;
+        belowRow: number;
+        initialAbove: number;
+        initialBelow: number;
+        total: number;
+      }
+    | {
+        mode: 'edge';
+        startY: number;
+        row: number;
+        initialHeight: number;
+      };
+
+  type ColumnResizeState =
+    | {
+        mode: 'between';
+        startX: number;
+        leftCol: number;
+        rightCol: number;
+        initialLeft: number;
+        initialRight: number;
+        total: number;
+      }
+    | {
+        mode: 'edge';
+        startX: number;
+        col: number;
+        initialWidth: number;
+      };
+
+  const rowResizeStartRef = React.useRef<RowResizeState | null>(null);
+  const columnResizeStartRef = React.useRef<ColumnResizeState | null>(null);
   const [justAddedChartId, setJustAddedChartId] = useState<string | null>(null);
   const addAnimationTimeoutRef = React.useRef<number | null>(null);
   const chartRefsMap = React.useRef<Map<string, HTMLDivElement>>(new Map());
@@ -2217,6 +2272,24 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     [columnWidths]
   );
 
+  const setSingleRowHeight = React.useCallback((row: number, newHeight: number) => {
+    const clamped = Math.max(MIN_ROW_HEIGHT, newHeight);
+    setRowHeights(prev => {
+      const next = new Map(prev);
+      next.set(row, clamped);
+      return next;
+    });
+  }, []);
+
+  const setSingleColumnWidth = React.useCallback((col: number, newWidth: number) => {
+    const clamped = Math.max(MIN_COLUMN_WIDTH, newWidth);
+    setColumnWidths(prev => {
+      const next = new Map(prev);
+      next.set(col, clamped);
+      return next;
+    });
+  }, []);
+
   const triggerAddAnimation = React.useCallback((chartId: string) => {
     if (addAnimationTimeoutRef.current !== null) {
       window.clearTimeout(addAnimationTimeoutRef.current);
@@ -2289,6 +2362,7 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     const initialAbove = getRowHeight(aboveRow);
     const initialBelow = getRowHeight(belowRow);
     rowResizeStartRef.current = {
+      mode: 'between',
       startY: clientY,
       aboveRow,
       belowRow,
@@ -2299,6 +2373,16 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     setActiveRowSeparator(aboveRow);
   };
 
+  const handleRowEdgeResizeStart = (row: number, clientY: number) => {
+    rowResizeStartRef.current = {
+      mode: 'edge',
+      startY: clientY,
+      row,
+      initialHeight: getRowHeight(row),
+    };
+    setActiveRowSeparator(row);
+  };
+
   React.useEffect(() => {
     if (activeRowSeparator === null || !rowResizeStartRef.current) return;
 
@@ -2306,8 +2390,12 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
 
     const handleMouseMove = (event: MouseEvent) => {
       const delta = event.clientY - startData.startY;
-      const proposedAbove = startData.initialAbove + delta;
-      applyRowHeights(startData.aboveRow, startData.belowRow, proposedAbove, startData.total);
+      if (startData.mode === 'between') {
+        const proposedAbove = startData.initialAbove + delta;
+        applyRowHeights(startData.aboveRow, startData.belowRow, proposedAbove, startData.total);
+      } else {
+        setSingleRowHeight(startData.row, startData.initialHeight + delta);
+      }
     };
 
     const handleMouseUp = () => {
@@ -2322,13 +2410,14 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [activeRowSeparator, applyRowHeights]);
+  }, [activeRowSeparator, applyRowHeights, setSingleRowHeight]);
 
   const handleColumnResizeStart = (leftCol: number, rightCol: number, clientX: number) => {
     if (rightCol === undefined) return;
     const initialLeft = getColumnWidth(leftCol);
     const initialRight = getColumnWidth(rightCol);
     columnResizeStartRef.current = {
+      mode: 'between',
       startX: clientX,
       leftCol,
       rightCol,
@@ -2339,6 +2428,16 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     setActiveColSeparator(leftCol);
   };
 
+  const handleColumnEdgeResizeStart = (col: number, clientX: number) => {
+    columnResizeStartRef.current = {
+      mode: 'edge',
+      startX: clientX,
+      col,
+      initialWidth: getColumnWidth(col),
+    };
+    setActiveColSeparator(col);
+  };
+
   React.useEffect(() => {
     if (activeColSeparator === null || !columnResizeStartRef.current) return;
 
@@ -2346,8 +2445,12 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
 
     const handleMouseMove = (event: MouseEvent) => {
       const delta = event.clientX - startData.startX;
-      const proposedLeft = startData.initialLeft + delta;
-      applyColumnWidths(startData.leftCol, startData.rightCol, proposedLeft, startData.total);
+      if (startData.mode === 'between') {
+        const proposedLeft = startData.initialLeft + delta;
+        applyColumnWidths(startData.leftCol, startData.rightCol, proposedLeft, startData.total);
+      } else {
+        setSingleColumnWidth(startData.col, startData.initialWidth + delta);
+      }
     };
 
     const handleMouseUp = () => {
@@ -2362,7 +2465,7 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [activeColSeparator, applyColumnWidths]);
+  }, [activeColSeparator, applyColumnWidths, setSingleColumnWidth]);
 
   const handleRowKeyboardAdjust = (aboveRow: number, belowRow: number, delta: number) => {
     const currentAbove = getRowHeight(aboveRow);
@@ -2379,6 +2482,11 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     applyRowHeights(aboveRow, belowRow, half, total);
   };
 
+  const handleRowEdgeKeyboardAdjust = (row: number, delta: number) => {
+    const current = getRowHeight(row);
+    setSingleRowHeight(row, current + delta);
+  };
+
   const handleColumnKeyboardAdjust = (leftCol: number, rightCol: number, delta: number) => {
     const currentLeft = getColumnWidth(leftCol);
     const currentRight = getColumnWidth(rightCol);
@@ -2392,6 +2500,11 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     const total = currentLeft + currentRight;
     const half = total / 2;
     applyColumnWidths(leftCol, rightCol, half, total);
+  };
+
+  const handleColumnEdgeKeyboardAdjust = (col: number, delta: number) => {
+    const current = getColumnWidth(col);
+    setSingleColumnWidth(col, current + delta);
   };
 
   const handleAddChart = (chartId: string, direction: 'top' | 'bottom' | 'left' | 'right') => {
@@ -2799,6 +2912,9 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
               >
                 <ColumnDivider
                   onAdd={() => handleAddChartRightOfColumn(lastOriginalCol)}
+                  onEdgeResizeStart={(clientX) => handleColumnEdgeResizeStart(lastOriginalCol, clientX)}
+                  onEdgeKeyboardNudge={(delta) => handleColumnEdgeKeyboardAdjust(lastOriginalCol, delta)}
+                  isActive={activeColSeparator === lastOriginalCol}
                   buttonSegments={terminalColumnButtonSegments}
                 />
               </div>
@@ -2873,6 +2989,9 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
               >
                 <RowDivider
                   onAdd={() => handleAddChartBelowRow(lastOriginalRow)}
+                  onEdgeResizeStart={(clientY) => handleRowEdgeResizeStart(lastOriginalRow, clientY)}
+                  onEdgeKeyboardNudge={(delta) => handleRowEdgeKeyboardAdjust(lastOriginalRow, delta)}
+                  isActive={activeRowSeparator === lastOriginalRow}
                   buttonSegments={terminalRowButtonSegments}
                 />
               </div>
