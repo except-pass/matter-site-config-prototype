@@ -1167,7 +1167,7 @@ function buildCategoricalChartData(entry: LegendEntry): CategoricalChartData | n
   };
 }
 
-function CategoricalChart({ data }: { data: CategoricalChartData }) {
+function CategoricalChart({ data, onRemove }: { data: CategoricalChartData; onRemove?: () => void }) {
   const [hideEmptyBars, setHideEmptyBars] = React.useState(true);
   const visibleRows = hideEmptyBars ? data.rows.filter((row) => row.activeSlots.some(Boolean)) : data.rows;
   const hiddenCount = data.rows.length - visibleRows.length;
@@ -1193,6 +1193,20 @@ function CategoricalChart({ data }: { data: CategoricalChartData }) {
             Hide empty bars
           </label>
           <span className={`text-[11px] ${colors.text600}`}>{hiddenCount} values hidden</span>
+          {onRemove && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove();
+              }}
+              className="text-[11px] px-2 py-1 rounded border border-transparent text-gray-500 hover:text-red-600 hover:border-red-200 transition-colors"
+              title="Remove this point"
+              aria-label="Remove categorical point"
+            >
+              ×
+            </button>
+          )}
         </div>
       </div>
       <div className="px-4 py-3">
@@ -1539,11 +1553,23 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
           )}
 
           {categoricalCharts.length > 0 && (
-            <div className={`${shouldShowLineArea ? '' : 'pt-2'}`}>
+            <div className={`${shouldShowLineArea ? '' : 'pt-2'}`} data-categorical-stack>
               <div className="space-y-4">
-                {categoricalCharts.map((chart) => (
-                  <CategoricalChart key={`${chart.id}:${chart.subtitle}`} data={chart} />
-                ))}
+                {categoricalCharts.map((chart) => {
+                  const removeHandler = () => {
+                    const parts = chart.id.split(':');
+                    const shortSN = parts.pop() ?? '';
+                    const pointKey = parts.join(':');
+                    onRemoveInverter?.(pointKey, shortSN);
+                  };
+                  return (
+                    <CategoricalChart
+                      key={`${chart.id}:${chart.subtitle}`}
+                      data={chart}
+                      onRemove={removeHandler}
+                    />
+                  );
+                })}
               </div>
             </div>
           )}
@@ -2378,9 +2404,12 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
         if (!chart) {
           return;
         }
-        const content = target.querySelector<HTMLElement>('.chart-content');
-        const measured = content ? content.scrollHeight : target.scrollHeight;
-        const desiredHeight = Math.max(Math.ceil(measured + 24), MIN_ROW_HEIGHT);
+        const categoricalStack = target.querySelector<HTMLElement>('[data-categorical-stack]');
+        const catHeight = categoricalStack ? categoricalStack.scrollHeight : 0;
+        if (catHeight <= 0) {
+          return;
+        }
+        const desiredHeight = Math.max(DEFAULT_ROW_HEIGHT + catHeight + 24, MIN_ROW_HEIGHT);
         updates.set(chart.row, Math.max(desiredHeight, updates.get(chart.row) ?? 0));
       });
 
@@ -2978,7 +3007,7 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
               setActiveChartId(chart.id);
             }}
           >
-            <div className="chart-content">
+            <div className="chart-content h-full flex flex-col">
               <FakeChart
                 selectedPoints={chart.selectedPoints}
                 protocols={protocols}
@@ -3775,6 +3804,14 @@ export default function App() {
                     ))
                 )}
               </div>
+              {detailLevel !== 'Complete' && (
+                <div className="border-t border-gray-200 bg-white/80 px-4 py-3">
+                  <p className="text-xs text-gray-600 mb-2">
+                    Didn't find what you were looking for? Increase the Detail Level to see more data points.
+                  </p>
+                  <DetailLevelSlider value={detailLevel} onChange={setDetailLevel} />
+                </div>
+              )}
             </div>
           </div>
         </div>
