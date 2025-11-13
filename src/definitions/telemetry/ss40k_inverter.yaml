@@ -7584,11 +7584,6 @@ protocols:
     unit: string
     category: PCS
     meanings: {}
-  labels:
-  - label_family: Info
-    label_text: Config
-  - label_family: Level of Detail
-    label_text: Complete
 - model: 40104
   point: reserved2
   block: fixed

@@ -477,6 +477,7 @@ interface LabelGroupProps {
   depth?: number;
   query: string;
   parentPath?: string;
+  hierarchy?: string[];
 }
 
 // Helper to check if search text appears in any tooltip
@@ -515,11 +516,14 @@ function searchMatchesInTooltip(point: ProtocolPoint, query: string): boolean {
   return false;
 }
 
-function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdateInverters, groupsExpanded, pointHelpEnabled, onTogglePointHelp, depth = 0, query, parentPath = '' }: LabelGroupProps) {
+function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdateInverters, groupsExpanded, pointHelpEnabled, onTogglePointHelp, depth = 0, query, parentPath = '', hierarchy = [] }: LabelGroupProps) {
   // Generate unique ID based on full path to avoid conflicts with same-named categories
   const currentPath = parentPath ? `${parentPath}-${levelName.replace(/\s+/g, '-')}` : levelName.replace(/\s+/g, '-');
   const levelId = `group-${currentPath}-${depth}`;
   const isLeaf = Array.isArray(levelData);
+
+  // Get the label family name for this depth level
+  const labelFamily = hierarchy[depth] || '';
   
   // Safety check: ensure levelData is valid
   if (!levelData) {
@@ -658,9 +662,16 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
   
   return (
     <details id={levelId} className={`group border-b py-2 ${isTopLevel ? '' : 'ml-2 border-l pl-2'}`} open={groupsExpanded}>
-      <summary className={`cursor-pointer list-none ${isTopLevel ? 'font-semibold' : 'font-medium text-gray-700'}`}>
-        <span className="mr-1">▾</span>
-        {levelName}
+      <summary className={`cursor-pointer list-none ${isTopLevel ? 'font-semibold' : 'font-medium text-gray-700'} flex items-center justify-between`}>
+        <div className="flex items-center flex-1 min-w-0">
+          <span className="mr-1">▾</span>
+          <span className="truncate">{levelName}</span>
+        </div>
+        {labelFamily && (
+          <span className="ml-2 px-2 py-0.5 text-[10px] font-normal uppercase tracking-wide text-gray-500 bg-gray-100 rounded-full flex-shrink-0">
+            {labelFamily}
+          </span>
+        )}
       </summary>
       <div className="mt-2 ml-1 space-y-2">
         {[...nestedMap.entries()].map(([nextLevelName, nextLevelData]) => {
@@ -691,6 +702,7 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
               depth={depth + 1}
               query={query}
               parentPath={currentPath}
+              hierarchy={hierarchy}
             />
           );
         })}
@@ -4212,6 +4224,7 @@ export default function App() {
                         onTogglePointHelp={togglePointHelp}
                         depth={0}
                         query={query}
+                        hierarchy={hierarchy}
                       />
                     ))
                 )}
