@@ -24,6 +24,7 @@ export function MainContent({
             key={`${theme.themeName}-${idx}`}
             theme={theme}
             themeId={themeId}
+            themeIndex={idx}
             searchQuery={searchQuery}
             pointMatchesSearch={pointMatchesSearch}
             equipment={equipment}

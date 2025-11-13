@@ -475,9 +475,34 @@ interface LabelGroupProps {
   pointHelpEnabled: Set<string>;
   onTogglePointHelp: (pointKey: string) => void;
   depth?: number;
+  query: string;
 }
 
-function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdateInverters, groupsExpanded, pointHelpEnabled, onTogglePointHelp, depth = 0 }: LabelGroupProps) {
+// Helper to check if search matches ONLY in tooltip (not in visible text)
+// This indicates why a "mysterious" search result appeared
+function pointMatchesOnlyInTooltip(point: ProtocolPoint, query: string): boolean {
+  if (!query) return false;
+
+  const q = query.toLowerCase();
+
+  // Check visible text (point name, description, long description)
+  const matchesVisible =
+    (point.entry.description || "").toLowerCase().includes(q) ||
+    (point.entry.longdescription || "").toLowerCase().includes(q) ||
+    (point.entry.name || "").toLowerCase().includes(q);
+
+  // If visible text matches, user can see why it appeared - no red dot needed
+  if (matchesVisible) return false;
+
+  // Check label help text (tooltips)
+  const labels = Array.isArray(point.labels) ? point.labels : [];
+  return labels.some((label) => {
+    const labelHelp = getLabelHelp(label.label_family, label.label_text);
+    return labelHelp && labelHelp.toLowerCase().includes(q);
+  });
+}
+
+function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdateInverters, groupsExpanded, pointHelpEnabled, onTogglePointHelp, depth = 0, query }: LabelGroupProps) {
   const levelId = `group-${levelName.replace(/\s+/g, '-')}-${depth}`;
   const isLeaf = Array.isArray(levelData);
   
@@ -498,7 +523,8 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
     const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
     const labels = Array.isArray(it.labels) ? it.labels : [];
     const pointHelpShown = showHelp || pointHelpEnabled.has(key);
-    
+    const helpTextMatch = pointMatchesOnlyInTooltip(it, query);
+
     return (
       <div key={key} id={`point-${key.replace(/:/g, '-')}`} data-point-key={key} className="rounded-md px-2 py-1 hover:bg-gray-50 transition-colors">
         <div className="flex items-start gap-2 flex-wrap">
@@ -530,26 +556,31 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
                 </span>
               )}
             </span>
-            <span
-              className={`ml-1 cursor-pointer flex-shrink-0 ${
-                pointHelpShown 
-                  ? 'text-blue-600 hover:text-blue-700' 
-                  : 'text-gray-400 hover:text-gray-600'
-              }`}
-              title={long}
-              aria-label="Help"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onTogglePointHelp(key);
-              }}
-              onMouseDown={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >
-              ⓘ
-            </span>
+            <div className="relative ml-1 flex-shrink-0">
+              <span
+                className={`cursor-pointer ${
+                  pointHelpShown
+                    ? 'text-blue-600 hover:text-blue-700'
+                    : 'text-gray-400 hover:text-gray-600'
+                }`}
+                title={long}
+                aria-label="Help"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onTogglePointHelp(key);
+                }}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                ⓘ
+              </span>
+              {helpTextMatch && (
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              )}
+            </div>
             {checked && (
               <div className="ml-auto flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 <span className="text-xs text-gray-600">Inverter SN:</span>
@@ -638,6 +669,7 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
               pointHelpEnabled={pointHelpEnabled}
               onTogglePointHelp={onTogglePointHelp}
               depth={depth + 1}
+              query={query}
             />
           );
         })}
@@ -3389,12 +3421,22 @@ export default function App() {
     // Filter by search query
     if (query) {
       const q = query.toLowerCase();
-      result = result.filter(
-        (p) =>
+      result = result.filter((p) => {
+        // Check visible text
+        const matchesVisible =
           (p.entry.description || "").toLowerCase().includes(q) ||
           (p.entry.longdescription || "").toLowerCase().includes(q) ||
-          (p.entry.name || "").toLowerCase().includes(q)
-      );
+          (p.entry.name || "").toLowerCase().includes(q);
+
+        if (matchesVisible) return true;
+
+        // Check label help text (tooltips)
+        const labels = Array.isArray(p.labels) ? p.labels : [];
+        return labels.some((label) => {
+          const labelHelp = getLabelHelp(label.label_family, label.label_text);
+          return labelHelp && labelHelp.toLowerCase().includes(q);
+        });
+      });
     }
 
     // Filter by detail level
@@ -3800,6 +3842,7 @@ export default function App() {
                         pointHelpEnabled={pointHelpEnabled}
                         onTogglePointHelp={togglePointHelp}
                         depth={0}
+                        query={query}
                       />
                     ))
                 )}
