@@ -478,28 +478,40 @@ interface LabelGroupProps {
   query: string;
 }
 
-// Helper to check if search matches ONLY in tooltip (not in visible text)
-// This indicates why a "mysterious" search result appeared
-function pointMatchesOnlyInTooltip(point: ProtocolPoint, query: string): boolean {
-  if (!query) return false;
+// Helper to check if search text appears in any tooltip
+function searchMatchesInTooltip(point: ProtocolPoint, query: string): boolean {
+  // Normalize query - handle null/undefined and trim whitespace
+  // Use String() to ensure we always have a string, even for edge cases
+  const queryStr = String(query || '').trim();
+  if (!queryStr) return false;
 
-  const q = query.toLowerCase();
-
-  // Check visible text (point name, description, long description)
-  const matchesVisible =
-    (point.entry.description || "").toLowerCase().includes(q) ||
-    (point.entry.longdescription || "").toLowerCase().includes(q) ||
-    (point.entry.name || "").toLowerCase().includes(q);
-
-  // If visible text matches, user can see why it appeared - no red dot needed
-  if (matchesVisible) return false;
+  const q = queryStr.toLowerCase();
 
   // Check label help text (tooltips)
   const labels = Array.isArray(point.labels) ? point.labels : [];
-  return labels.some((label) => {
-    const labelHelp = getLabelHelp(label.label_family, label.label_text);
-    return labelHelp && labelHelp.toLowerCase().includes(q);
-  });
+  if (labels.length === 0) return false;
+  
+  // Check each label's help text
+  for (const label of labels) {
+    // Skip invalid labels
+    if (!label || typeof label !== 'object') continue;
+    if (!label.label_family || typeof label.label_family !== 'string') continue;
+    
+    try {
+      const labelHelp = getLabelHelp(label.label_family, label.label_text);
+      // Check if help text exists and contains the query
+      if (labelHelp && typeof labelHelp === 'string' && labelHelp.length > 0) {
+        if (labelHelp.toLowerCase().includes(q)) {
+          return true;
+        }
+      }
+    } catch (error) {
+      // If getLabelHelp throws an error, skip this label silently
+      continue;
+    }
+  }
+  
+  return false;
 }
 
 function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdateInverters, groupsExpanded, pointHelpEnabled, onTogglePointHelp, depth = 0, query }: LabelGroupProps) {
@@ -523,7 +535,8 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
     const selectedInverters = checked ? (selected.get(key) || new Set(['001'])) : new Set<string>();
     const labels = Array.isArray(it.labels) ? it.labels : [];
     const pointHelpShown = showHelp || pointHelpEnabled.has(key);
-    const helpTextMatch = pointMatchesOnlyInTooltip(it, query);
+    // Pass query directly - the function handles normalization
+    const helpTextMatch = searchMatchesInTooltip(it, query);
 
     return (
       <div key={key} id={`point-${key.replace(/:/g, '-')}`} data-point-key={key} className="rounded-md px-2 py-1 hover:bg-gray-50 transition-colors">
@@ -578,7 +591,11 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
                 ⓘ
               </span>
               {helpTextMatch && (
-                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                <span 
+                  key={`red-dot-${key}`}
+                  className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" 
+                  aria-hidden="true"
+                />
               )}
             </div>
             {checked && (
@@ -2134,6 +2151,35 @@ interface ColumnDividerProps {
   buttonSegments?: DividerButtonSegment[];
 }
 
+// Corner handle for resizing both row and column simultaneously
+interface CornerHandleProps {
+  onResizeStart: (clientX: number, clientY: number) => void;
+  isActive?: boolean;
+}
+
+const CornerHandle: React.FC<CornerHandleProps> = ({ onResizeStart, isActive = false }) => {
+  return (
+    <div
+      className="relative w-full h-full flex items-center justify-center"
+      style={{ pointerEvents: 'auto' }}
+    >
+      <div
+        className={`w-3 h-3 rounded-full cursor-nwse-resize transition-all ${
+          isActive ? 'bg-blue-500 scale-125' : 'bg-gray-400 hover:bg-gray-500'
+        }`}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onResizeStart(e.clientX, e.clientY);
+        }}
+        title="Drag to resize both dimensions"
+        role="separator"
+        aria-label="Resize corner"
+      />
+    </div>
+  );
+};
+
 const ColumnDivider: React.FC<ColumnDividerProps> = ({
   onAdd,
   onResizeStart,
@@ -2296,6 +2342,7 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   const [rowHeights, setRowHeights] = useState<Map<number, number>>(new Map([[0, DEFAULT_ROW_HEIGHT]]));
   const [activeRowSeparator, setActiveRowSeparator] = useState<number | null>(null);
   const [activeColSeparator, setActiveColSeparator] = useState<number | null>(null);
+  const [activeCorner, setActiveCorner] = useState<{row: number, col: number} | null>(null);
   type RowResizeState =
     | {
         mode: 'between';
@@ -2330,8 +2377,24 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
         initialWidth: number;
       };
 
+  type CornerResizeState = {
+    startX: number;
+    startY: number;
+    aboveRow: number;
+    belowRow: number;
+    leftCol: number;
+    rightCol: number;
+    initialAboveHeight: number;
+    initialBelowHeight: number;
+    initialLeftWidth: number;
+    initialRightWidth: number;
+    totalHeight: number;
+    totalWidth: number;
+  };
+
   const rowResizeStartRef = React.useRef<RowResizeState | null>(null);
   const columnResizeStartRef = React.useRef<ColumnResizeState | null>(null);
+  const cornerResizeStartRef = React.useRef<CornerResizeState | null>(null);
   const [justAddedChartId, setJustAddedChartId] = useState<string | null>(null);
   const addAnimationTimeoutRef = React.useRef<number | null>(null);
   const chartRefsMap = React.useRef<Map<string, HTMLDivElement>>(new Map());
@@ -2674,6 +2737,149 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
       document.removeEventListener('mouseup', handleMouseUp);
     };
   }, [activeColSeparator, applyColumnWidths, setSingleColumnWidth]);
+
+  // Handler for corner resize (both row and column simultaneously)
+  const handleCornerResizeStart = (aboveRow: number, belowRow: number, leftCol: number, rightCol: number, clientX: number, clientY: number) => {
+    const initialAboveHeight = getRowHeight(aboveRow);
+    const initialBelowHeight = getRowHeight(belowRow);
+    const initialLeftWidth = getColumnWidth(leftCol);
+    const initialRightWidth = getColumnWidth(rightCol);
+
+    cornerResizeStartRef.current = {
+      startX: clientX,
+      startY: clientY,
+      aboveRow,
+      belowRow,
+      leftCol,
+      rightCol,
+      initialAboveHeight,
+      initialBelowHeight,
+      initialLeftWidth,
+      initialRightWidth,
+      totalHeight: initialAboveHeight + initialBelowHeight,
+      totalWidth: initialLeftWidth + initialRightWidth,
+    };
+
+    setActiveCorner({ row: aboveRow, col: leftCol });
+  };
+
+  // Handler for edge corner resize (one edge, one between)
+  const handleCornerEdgeResizeStart = (
+    edgeType: 'row' | 'col',
+    rowOrRowAbove: number,
+    colOrColLeft: number,
+    rowBelowOrColRight: number,
+    clientX: number,
+    clientY: number
+  ) => {
+    if (edgeType === 'row') {
+      // Row is between two rows, column is at edge
+      const aboveRow = rowOrRowAbove;
+      const belowRow = rowBelowOrColRight;
+      const col = colOrColLeft;
+
+      cornerResizeStartRef.current = {
+        startX: clientX,
+        startY: clientY,
+        aboveRow,
+        belowRow,
+        leftCol: col,
+        rightCol: col, // Same col for edge
+        initialAboveHeight: getRowHeight(aboveRow),
+        initialBelowHeight: getRowHeight(belowRow),
+        initialLeftWidth: getColumnWidth(col),
+        initialRightWidth: 0, // No right col
+        totalHeight: getRowHeight(aboveRow) + getRowHeight(belowRow),
+        totalWidth: 0, // Not used for edge
+      };
+      setActiveCorner({ row: aboveRow, col });
+    } else {
+      // Column is between two cols, row is at edge
+      const row = rowOrRowAbove;
+      const leftCol = colOrColLeft;
+      const rightCol = rowBelowOrColRight;
+
+      cornerResizeStartRef.current = {
+        startX: clientX,
+        startY: clientY,
+        aboveRow: row,
+        belowRow: row, // Same row for edge
+        leftCol,
+        rightCol,
+        initialAboveHeight: getRowHeight(row),
+        initialBelowHeight: 0, // No below row
+        initialLeftWidth: getColumnWidth(leftCol),
+        initialRightWidth: getColumnWidth(rightCol),
+        totalHeight: 0, // Not used for edge
+        totalWidth: getColumnWidth(leftCol) + getColumnWidth(rightCol),
+      };
+      setActiveCorner({ row, col: leftCol });
+    }
+  };
+
+  // Handler for terminal corner resize (both dimensions are edges)
+  const handleCornerTerminalResizeStart = (row: number, col: number, clientX: number, clientY: number) => {
+    cornerResizeStartRef.current = {
+      startX: clientX,
+      startY: clientY,
+      aboveRow: row,
+      belowRow: row, // Same for edge
+      leftCol: col,
+      rightCol: col, // Same for edge
+      initialAboveHeight: getRowHeight(row),
+      initialBelowHeight: 0,
+      initialLeftWidth: getColumnWidth(col),
+      initialRightWidth: 0,
+      totalHeight: 0,
+      totalWidth: 0,
+    };
+    setActiveCorner({ row, col });
+  };
+
+  // Update the corner resize effect to handle edge cases
+  React.useEffect(() => {
+    if (activeCorner === null || !cornerResizeStartRef.current) return;
+
+    const startData = cornerResizeStartRef.current;
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const deltaX = event.clientX - startData.startX;
+      const deltaY = event.clientY - startData.startY;
+
+      // Resize row (either between or edge)
+      if (startData.totalHeight > 0) {
+        // Between two rows
+        const proposedAboveHeight = startData.initialAboveHeight + deltaY;
+        applyRowHeights(startData.aboveRow, startData.belowRow, proposedAboveHeight, startData.totalHeight);
+      } else {
+        // Edge row
+        setSingleRowHeight(startData.aboveRow, startData.initialAboveHeight + deltaY);
+      }
+
+      // Resize column (either between or edge)
+      if (startData.totalWidth > 0) {
+        // Between two columns
+        const proposedLeftWidth = startData.initialLeftWidth + deltaX;
+        applyColumnWidths(startData.leftCol, startData.rightCol, proposedLeftWidth, startData.totalWidth);
+      } else {
+        // Edge column
+        setSingleColumnWidth(startData.leftCol, startData.initialLeftWidth + deltaX);
+      }
+    };
+
+    const handleMouseUp = () => {
+      setActiveCorner(null);
+      cornerResizeStartRef.current = null;
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [activeCorner, applyRowHeights, applyColumnWidths, setSingleRowHeight, setSingleColumnWidth]);
 
   const handleRowKeyboardAdjust = (aboveRow: number, belowRow: number, delta: number) => {
     const currentAbove = getRowHeight(aboveRow);
@@ -3202,6 +3408,135 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
                   onEdgeKeyboardNudge={(delta) => handleRowEdgeKeyboardAdjust(lastOriginalRow, delta)}
                   isActive={activeRowSeparator === lastOriginalRow}
                   buttonSegments={terminalRowButtonSegments}
+                />
+              </div>
+            );
+          })()
+        )}
+        {/* Corner handles for diagonal resizing - Internal corners */}
+        {uniqueRows.slice(0, -1).flatMap((normalizedRow, rowIndex) => {
+          const aboveOriginal = normalizedRow + minRow;
+          const nextRow = uniqueRows[rowIndex + 1];
+          const belowOriginal = nextRow + minRow;
+
+          return uniqueCols.slice(0, -1).map((normalizedCol, colIndex) => {
+            const leftOriginal = normalizedCol + minCol;
+            const nextCol = uniqueCols[colIndex + 1];
+            const rightOriginal = nextCol + minCol;
+
+            return (
+              <div
+                key={`corner-${aboveOriginal}-${leftOriginal}`}
+                style={{
+                  gridRow: rowIndex * 2 + 2,
+                  gridColumn: colIndex * 2 + 2,
+                  width: '16px',
+                  height: '16px',
+                  zIndex: 10,
+                  pointerEvents: 'auto',
+                }}
+              >
+                <CornerHandle
+                  onResizeStart={(clientX, clientY) =>
+                    handleCornerResizeStart(aboveOriginal, belowOriginal, leftOriginal, rightOriginal, clientX, clientY)
+                  }
+                  isActive={activeCorner?.row === aboveOriginal && activeCorner?.col === leftOriginal}
+                />
+              </div>
+            );
+          });
+        })}
+        {/* Corner handles for edge positions - Bottom-right corners of each row */}
+        {uniqueRows.slice(0, -1).map((normalizedRow, rowIndex) => {
+          const aboveOriginal = normalizedRow + minRow;
+          const nextRow = uniqueRows[rowIndex + 1];
+          const belowOriginal = nextRow + minRow;
+
+          if (uniqueCols.length > 0) {
+            const lastNormalizedCol = uniqueCols[uniqueCols.length - 1];
+            const lastOriginalCol = lastNormalizedCol + minCol;
+
+            return (
+              <div
+                key={`corner-edge-row-${aboveOriginal}-${lastOriginalCol}`}
+                style={{
+                  gridRow: rowIndex * 2 + 2,
+                  gridColumn: uniqueCols.length * 2,
+                  width: '16px',
+                  height: '16px',
+                  zIndex: 10,
+                  pointerEvents: 'auto',
+                }}
+              >
+                <CornerHandle
+                  onResizeStart={(clientX, clientY) =>
+                    handleCornerEdgeResizeStart('row', aboveOriginal, belowOriginal, lastOriginalCol, clientX, clientY)
+                  }
+                  isActive={activeCorner?.row === aboveOriginal && activeCorner?.col === lastOriginalCol}
+                />
+              </div>
+            );
+          }
+          return null;
+        })}
+        {/* Corner handles for edge positions - Right-bottom corners of each column */}
+        {uniqueCols.slice(0, -1).map((normalizedCol, colIndex) => {
+          const leftOriginal = normalizedCol + minCol;
+          const nextCol = uniqueCols[colIndex + 1];
+          const rightOriginal = nextCol + minCol;
+
+          if (uniqueRows.length > 0) {
+            const lastNormalizedRow = uniqueRows[uniqueRows.length - 1];
+            const lastOriginalRow = lastNormalizedRow + minRow;
+
+            return (
+              <div
+                key={`corner-edge-col-${lastOriginalRow}-${leftOriginal}`}
+                style={{
+                  gridRow: uniqueRows.length * 2,
+                  gridColumn: colIndex * 2 + 2,
+                  width: '16px',
+                  height: '16px',
+                  zIndex: 10,
+                  pointerEvents: 'auto',
+                }}
+              >
+                <CornerHandle
+                  onResizeStart={(clientX, clientY) =>
+                    handleCornerEdgeResizeStart('col', lastOriginalRow, leftOriginal, rightOriginal, clientX, clientY)
+                  }
+                  isActive={activeCorner?.row === lastOriginalRow && activeCorner?.col === leftOriginal}
+                />
+              </div>
+            );
+          }
+          return null;
+        })}
+        {/* Corner handle for the very bottom-right (terminal) corner */}
+        {uniqueRows.length > 0 && uniqueCols.length > 0 && (
+          (() => {
+            const lastNormalizedRow = uniqueRows[uniqueRows.length - 1];
+            const lastOriginalRow = lastNormalizedRow + minRow;
+            const lastNormalizedCol = uniqueCols[uniqueCols.length - 1];
+            const lastOriginalCol = lastNormalizedCol + minCol;
+
+            return (
+              <div
+                key={`corner-terminal-${lastOriginalRow}-${lastOriginalCol}`}
+                style={{
+                  gridRow: uniqueRows.length * 2,
+                  gridColumn: uniqueCols.length * 2,
+                  width: '16px',
+                  height: '16px',
+                  zIndex: 10,
+                  pointerEvents: 'auto',
+                }}
+              >
+                <CornerHandle
+                  onResizeStart={(clientX, clientY) =>
+                    handleCornerTerminalResizeStart(lastOriginalRow, lastOriginalCol, clientX, clientY)
+                  }
+                  isActive={activeCorner?.row === lastOriginalRow && activeCorner?.col === lastOriginalCol}
                 />
               </div>
             );
