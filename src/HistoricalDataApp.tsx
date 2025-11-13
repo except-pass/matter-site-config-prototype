@@ -3695,7 +3695,7 @@ export default function App() {
   const [pointHelpEnabled, setPointHelpEnabled] = useState<Set<string>>(new Set());
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set());
   const [detailLevel, setDetailLevel] = useState<string>("Standard");
-  const [hierarchy, setHierarchy] = useState<string[]>(["Info", "Component", "Feature"]);
+  const [hierarchy, setHierarchy] = useState<string[]>(["Type of Data", "Component", "Feature"]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
   const sidebarContentRef = React.useRef<HTMLDivElement>(null);

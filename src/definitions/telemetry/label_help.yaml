@@ -63,17 +63,20 @@ label_families:
       "Backup Power":
         help: "Points related to backup power operation, including backup mode settings and backup power availability."
 
-  Info:
-    help: "Categorizes the type of information the telemetry point provides."
-    labels:
-      Sensor:
-        help: "Sensor measurements from physical devices, including voltage, current, power, temperature, and other measured values."
-      Config:
-        help: "Configuration parameters and settings that can be read or written to configure system behavior."
-      Nameplate:
-        help: "Static information from equipment nameplates, including model numbers, serial numbers, ratings, and manufacturer information."
-      Alarms:
-        help: "Alarm and fault information, including active alarms, fault codes, and system warnings."
+Type of Data:
+  help: "Categorizes the type of information the telemetry point provides."
+  labels:
+    Readings:
+      help: "Measured values reported by the equipment on-site, including voltage, current, power, and temperature."
+    Settings:
+      help: "Configuration parameters and set points that control system behavior, along with their history. These values can be adjusted on the Site Configuration page."
+    Nameplate:
+      help: "Information from equipment nameplates, such as maximum rated power output or nominal frequency."
+    Alarms/Faults:
+      help: "System alarms and faults that alert you to abnormal conditions, including hardware protection events, communication losses, configuration errors, or electrical issues."
+    Status:
+      help: "Operating states reported by the system, including mode selections, on/off indicators, and other values that show how the equipment is currently running."
+
 
   Level of Detail:
     help: "Indicates the level of detail or complexity of the telemetry point."

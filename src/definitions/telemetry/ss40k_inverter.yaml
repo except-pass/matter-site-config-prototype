@@ -69,7 +69,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -101,7 +101,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -121,7 +121,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Freq
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -141,7 +141,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -161,7 +161,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -179,7 +179,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -199,7 +199,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Firmware
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -219,7 +219,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Firmware
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -239,7 +239,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Firmware
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -259,7 +259,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Firmware
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -279,7 +279,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Firmware
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -299,7 +299,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Firmware
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -317,7 +317,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -335,7 +335,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -366,7 +366,7 @@ protocols:
     label_text: PV
   - label_family: Feature
     label_text: PV-DC
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Level of Detail
     label_text: Complete
@@ -402,7 +402,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Nameplate
   - label_family: Unit
     label_text: Mode
@@ -559,7 +559,7 @@ protocols:
     label_text: PV
   - label_family: Feature
     label_text: PV-DC
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
@@ -585,7 +585,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -609,7 +609,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -633,7 +633,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -657,7 +657,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -681,7 +681,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -705,7 +705,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete  
@@ -729,7 +729,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -753,7 +753,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -777,7 +777,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -801,7 +801,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -825,7 +825,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -849,7 +849,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -873,7 +873,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -904,7 +904,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -924,7 +924,7 @@ protocols:
     label_text: Battery
   - label_family: Level of Detail
     label_text: Standard
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: '%'
@@ -946,7 +946,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: '%'
@@ -974,7 +974,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
@@ -998,7 +998,7 @@ protocols:
     label_text: Standard
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1022,7 +1022,7 @@ protocols:
     label_text: Standard
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1044,7 +1044,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1068,7 +1068,7 @@ protocols:
     label_text: Standard
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1090,7 +1090,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1110,7 +1110,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1130,7 +1130,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1150,7 +1150,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1170,7 +1170,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Temp
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1190,7 +1190,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Temp
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1210,7 +1210,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Temp
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1230,7 +1230,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Temp
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1250,7 +1250,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Temp
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1270,7 +1270,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Temp
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1292,7 +1292,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
@@ -1327,7 +1327,7 @@ protocols:
     label_text: Standard
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1349,7 +1349,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1369,7 +1369,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1387,7 +1387,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1407,7 +1407,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1429,7 +1429,7 @@ protocols:
     label_text: Standard
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1451,7 +1451,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1471,7 +1471,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Freq
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1493,7 +1493,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1513,7 +1513,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1533,7 +1533,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1551,7 +1551,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1571,7 +1571,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1591,7 +1591,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1611,7 +1611,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1631,7 +1631,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1651,7 +1651,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1671,7 +1671,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1689,7 +1689,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1709,7 +1709,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1729,7 +1729,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1749,7 +1749,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1769,7 +1769,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1789,7 +1789,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1809,7 +1809,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1827,7 +1827,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1847,7 +1847,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1867,7 +1867,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1887,7 +1887,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1907,7 +1907,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1927,7 +1927,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Temp
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1947,7 +1947,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Temp
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1967,7 +1967,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Temp
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -1987,7 +1987,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Temp
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2020,7 +2020,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
@@ -2044,7 +2044,7 @@ protocols:
     label_text: Standard
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2068,7 +2068,7 @@ protocols:
     label_text: Standard
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2090,7 +2090,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2110,7 +2110,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2128,7 +2128,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2148,7 +2148,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2170,7 +2170,7 @@ protocols:
     label_text: Standard
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2192,7 +2192,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2212,7 +2212,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Freq
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2234,7 +2234,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2254,7 +2254,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2274,7 +2274,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2292,7 +2292,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2312,7 +2312,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2332,7 +2332,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2352,7 +2352,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2372,7 +2372,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2392,7 +2392,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2412,7 +2412,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2430,7 +2430,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2450,7 +2450,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2470,7 +2470,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2490,7 +2490,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2510,7 +2510,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2530,7 +2530,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2550,7 +2550,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2568,7 +2568,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2588,7 +2588,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2608,7 +2608,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2628,7 +2628,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2663,7 +2663,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Backup Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
@@ -2689,7 +2689,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2713,7 +2713,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2735,7 +2735,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2755,7 +2755,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Backup Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2777,7 +2777,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2799,7 +2799,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2821,7 +2821,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2843,7 +2843,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Freq
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2867,7 +2867,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2889,7 +2889,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2911,7 +2911,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2931,7 +2931,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Backup Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2953,7 +2953,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2975,7 +2975,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -2997,7 +2997,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3019,7 +3019,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3041,7 +3041,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3063,7 +3063,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3083,7 +3083,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Backup Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3105,7 +3105,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3127,7 +3127,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3149,7 +3149,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3171,7 +3171,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3193,7 +3193,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3215,7 +3215,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3235,7 +3235,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Backup Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3257,7 +3257,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3279,7 +3279,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3301,7 +3301,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3334,7 +3334,7 @@ protocols:
     label_text: Standard
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3356,7 +3356,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3376,7 +3376,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3394,7 +3394,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3414,7 +3414,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3434,7 +3434,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3454,7 +3454,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3474,7 +3474,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Freq
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3496,7 +3496,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3516,7 +3516,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3536,7 +3536,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3554,7 +3554,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3574,7 +3574,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3594,7 +3594,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3614,7 +3614,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3634,7 +3634,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3654,7 +3654,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3674,7 +3674,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3692,7 +3692,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3712,7 +3712,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3732,7 +3732,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3752,7 +3752,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3772,7 +3772,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3792,7 +3792,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3812,7 +3812,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3830,7 +3830,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Building Load
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3850,7 +3850,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3870,7 +3870,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3890,7 +3890,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3923,7 +3923,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
@@ -3947,7 +3947,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
@@ -3973,7 +3973,7 @@ protocols:
     label_text: Standard
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -3995,7 +3995,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4015,7 +4015,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4033,7 +4033,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4053,7 +4053,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4073,7 +4073,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4093,7 +4093,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4113,7 +4113,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Freq
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4135,7 +4135,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4155,7 +4155,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4175,7 +4175,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4193,7 +4193,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4213,7 +4213,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4233,7 +4233,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4255,7 +4255,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4275,7 +4275,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4295,7 +4295,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4315,7 +4315,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4333,7 +4333,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4353,7 +4353,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4373,7 +4373,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4393,7 +4393,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4413,7 +4413,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4433,7 +4433,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4453,7 +4453,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4471,7 +4471,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4491,7 +4491,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4511,7 +4511,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4531,7 +4531,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4553,7 +4553,7 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
@@ -4590,7 +4590,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4614,7 +4614,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4636,7 +4636,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4656,7 +4656,7 @@ protocols:
     label_text: PV
   - label_family: Feature
     label_text: PV-AC Couple
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4678,7 +4678,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4700,7 +4700,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4722,7 +4722,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4744,7 +4744,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Freq
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4766,7 +4766,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4788,7 +4788,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4810,7 +4810,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4830,7 +4830,7 @@ protocols:
     label_text: PV
   - label_family: Feature
     label_text: PV-AC Couple
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4852,7 +4852,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4874,7 +4874,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4896,7 +4896,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4918,7 +4918,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4940,7 +4940,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4962,7 +4962,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -4982,7 +4982,7 @@ protocols:
     label_text: PV
   - label_family: Feature
     label_text: PV-AC Couple
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5004,7 +5004,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5026,7 +5026,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5048,7 +5048,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5070,7 +5070,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5092,7 +5092,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5114,7 +5114,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5134,7 +5134,7 @@ protocols:
     label_text: PV
   - label_family: Feature
     label_text: PV-AC Couple
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5156,7 +5156,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5178,7 +5178,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5200,7 +5200,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5224,7 +5224,7 @@ protocols:
     label_text: PV
   - label_family: Feature
     label_text: PV-AC Couple
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
@@ -5259,7 +5259,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5281,7 +5281,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5303,7 +5303,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5323,7 +5323,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Smart Load
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5345,7 +5345,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5367,7 +5367,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5389,7 +5389,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5411,7 +5411,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Freq
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5433,7 +5433,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5455,7 +5455,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5477,7 +5477,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5497,7 +5497,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Smart Load
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5519,7 +5519,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5541,7 +5541,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5563,7 +5563,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5585,7 +5585,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5607,7 +5607,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5629,7 +5629,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5649,7 +5649,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Smart Load
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5671,7 +5671,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5693,7 +5693,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5715,7 +5715,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5737,7 +5737,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5759,7 +5759,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5781,7 +5781,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Power
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5801,7 +5801,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Smart Load
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5823,7 +5823,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Current
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5845,7 +5845,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5867,7 +5867,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Volt
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -5891,7 +5891,7 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Smart Load
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Unit
     label_text: Mode
@@ -6124,7 +6124,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6146,7 +6146,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6168,7 +6168,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6190,7 +6190,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6212,7 +6212,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6234,7 +6234,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6256,7 +6256,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6278,7 +6278,7 @@ protocols:
     label_text: PV-DC
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6309,7 +6309,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6329,7 +6329,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6349,7 +6349,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6369,7 +6369,7 @@ protocols:
     label_text: Battery
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6400,7 +6400,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6420,7 +6420,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6440,7 +6440,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6460,7 +6460,7 @@ protocols:
     label_text: Inverter
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6480,7 +6480,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6500,7 +6500,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6520,7 +6520,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6540,7 +6540,7 @@ protocols:
     label_text: Grid
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6573,7 +6573,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6595,7 +6595,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6617,7 +6617,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6639,7 +6639,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6661,7 +6661,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6683,7 +6683,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6705,7 +6705,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6727,7 +6727,7 @@ protocols:
     label_text: Backup Power
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6758,7 +6758,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6778,7 +6778,7 @@ protocols:
     label_text: Building Load
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6809,7 +6809,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6829,7 +6829,7 @@ protocols:
     label_text: Generator
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6862,7 +6862,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6884,7 +6884,7 @@ protocols:
     label_text: PV-AC Couple
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6917,7 +6917,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -6939,7 +6939,7 @@ protocols:
     label_text: Smart Load
   - label_family: Unit
     label_text: Energy
-  - label_family: Info
+  - label_family: Type of Data
     label_text: Sensor
   - label_family: Level of Detail
     label_text: Complete
@@ -7092,8 +7092,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7128,8 +7128,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Inverter
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7161,8 +7161,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Parallel
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7192,8 +7192,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Parallel
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7224,8 +7224,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Feature
     label_text: PV-DC
   - label_family: Level of Detail
@@ -7252,8 +7252,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Feature
     label_text: PV-DC
   - label_family: Level of Detail
@@ -7290,8 +7290,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7310,8 +7310,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Battery
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7347,8 +7347,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7370,8 +7370,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Grid
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7403,8 +7403,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Meter
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7441,8 +7441,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Backup Power
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7482,8 +7482,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7514,8 +7514,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: RSD
-  - label_family: Info
-    label_text: Alarms
+  - label_family: Type of Data
+    label_text: Alarms/Faults
   - label_family: Level of Detail
     label_text: Complete
 - model: 40103
@@ -7613,8 +7613,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Basic Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -7635,8 +7635,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Basic Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -7657,8 +7657,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Basic Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -7679,8 +7679,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Basic Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -7701,8 +7701,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Basic Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -7723,8 +7723,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Basic Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -7745,8 +7745,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Basic Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -7779,8 +7779,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Basic Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -7803,8 +7803,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Basic Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -7874,8 +7874,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: CT
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -7898,8 +7898,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: CT
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -7934,8 +7934,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -7958,8 +7958,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -7980,8 +7980,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8000,8 +8000,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8020,8 +8020,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8048,8 +8048,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -8070,8 +8070,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -8092,8 +8092,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8112,8 +8112,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -8134,8 +8134,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -8173,8 +8173,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -8195,8 +8195,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Power
   - label_family: Level of Detail
@@ -8217,8 +8217,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -8239,8 +8239,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -8261,8 +8261,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -8285,8 +8285,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8307,8 +8307,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8329,8 +8329,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8351,8 +8351,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8373,8 +8373,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8395,8 +8395,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8426,8 +8426,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8446,8 +8446,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -8468,8 +8468,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -8490,8 +8490,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -8514,8 +8514,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8536,8 +8536,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8558,8 +8558,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8580,8 +8580,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8602,8 +8602,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8624,8 +8624,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Battery Scheduling
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8659,8 +8659,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -8683,8 +8683,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -8705,8 +8705,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Setup
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8738,8 +8738,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Connection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -8760,8 +8760,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Connection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8780,8 +8780,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Connection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8800,8 +8800,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Connection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8820,8 +8820,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Connection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8840,8 +8840,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Connection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8860,8 +8860,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Connection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8880,8 +8880,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Connection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8911,8 +8911,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8931,8 +8931,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8951,8 +8951,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8971,8 +8971,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -8991,8 +8991,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9011,8 +9011,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9031,8 +9031,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9051,8 +9051,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9071,8 +9071,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9091,8 +9091,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9111,8 +9111,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9131,8 +9131,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9151,8 +9151,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9171,8 +9171,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9191,8 +9191,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9211,8 +9211,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9231,8 +9231,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9251,8 +9251,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9271,8 +9271,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9291,8 +9291,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9311,8 +9311,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9331,8 +9331,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9351,8 +9351,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9371,8 +9371,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Protection
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9404,8 +9404,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -9429,8 +9429,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -9451,8 +9451,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9484,8 +9484,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -9509,8 +9509,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -9531,8 +9531,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9564,8 +9564,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -9588,8 +9588,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -9610,8 +9610,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9630,8 +9630,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9650,8 +9650,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9670,8 +9670,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9690,8 +9690,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9710,8 +9710,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9730,8 +9730,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9750,8 +9750,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9770,8 +9770,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9790,8 +9790,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9810,8 +9810,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9843,8 +9843,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -9865,8 +9865,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9885,8 +9885,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9905,8 +9905,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9938,8 +9938,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -9960,8 +9960,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -9980,8 +9980,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10000,8 +10000,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10020,8 +10020,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10053,8 +10053,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -10075,8 +10075,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10095,8 +10095,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10115,8 +10115,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10135,8 +10135,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10155,8 +10155,8 @@ protocols:
     label_text: Grid
   - label_family: Feature
     label_text: Grid Support
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10188,8 +10188,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Power Limits
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Power
   - label_family: Unit
@@ -10212,8 +10212,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Power Limits
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Power
   - label_family: Level of Detail
@@ -10247,8 +10247,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Selling Power
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -10269,8 +10269,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Selling Power
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Power
   - label_family: Level of Detail
@@ -10293,8 +10293,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Selling Power
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -10313,8 +10313,8 @@ protocols:
   labels:
   - label_family: Unit
     label_text: Power
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10346,8 +10346,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Grid Charge
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -10368,8 +10368,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Grid Charge
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Power
   - label_family: Level of Detail
@@ -10392,8 +10392,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Grid Charge
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -10414,8 +10414,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Grid Charge
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -10436,8 +10436,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Grid Charge
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -10460,8 +10460,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Grid Charge
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10482,8 +10482,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Grid Charge
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10504,8 +10504,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Grid Charge
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10526,8 +10526,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Grid Charge
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10548,8 +10548,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Grid Charge
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10570,8 +10570,8 @@ protocols:
     label_text: Battery
   - label_family: Feature
     label_text: Grid Charge
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10586,8 +10586,8 @@ protocols:
     category: ACCharge
     meanings: {}
   labels:
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10619,8 +10619,8 @@ protocols:
     label_text: Backup Power
   - label_family: Feature
     label_text: Backup Power
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -10641,8 +10641,8 @@ protocols:
     label_text: Backup Power
   - label_family: Feature
     label_text: Backup Power
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10672,8 +10672,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -10692,8 +10692,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10710,8 +10710,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10728,8 +10728,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10746,8 +10746,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -10766,8 +10766,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -10788,8 +10788,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -10810,8 +10810,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: Generator
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -10842,8 +10842,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
@@ -10864,8 +10864,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
@@ -10886,8 +10886,8 @@ protocols:
   labels:
   - label_family: Component
     label_text: PV
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
@@ -10922,8 +10922,8 @@ protocols:
     label_text: Smart Load
   - label_family: Feature
     label_text: Smart Load
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -10946,8 +10946,8 @@ protocols:
     label_text: Smart Load
   - label_family: Feature
     label_text: Smart Load
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -10968,8 +10968,8 @@ protocols:
     label_text: Smart Load
   - label_family: Feature
     label_text: Smart Load
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -10988,8 +10988,8 @@ protocols:
     label_text: Smart Load
   - label_family: Feature
     label_text: Smart Load
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -11010,8 +11010,8 @@ protocols:
     label_text: Smart Load
   - label_family: Feature
     label_text: Smart Load
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: '%'
   - label_family: Level of Detail
@@ -11043,8 +11043,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Parallel
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -11072,8 +11072,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Parallel
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -11097,8 +11097,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Parallel
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -11123,8 +11123,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Parallel
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -11147,8 +11147,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Parallel
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -11169,8 +11169,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Parallel
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Level of Detail
     label_text: Complete
 - model: 40104
@@ -11189,8 +11189,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Parallel
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
@@ -11214,8 +11214,8 @@ protocols:
     label_text: Inverter
   - label_family: Feature
     label_text: Parallel
-  - label_family: Info
-    label_text: Config
+  - label_family: Type of Data
+    label_text: Settings
   - label_family: Unit
     label_text: Mode
   - label_family: Level of Detail
