@@ -774,9 +774,10 @@ interface LabelFilterProps {
   onToggleLabel: (family: string, text: string) => void;
   onClearFilters: () => void;
   protocols: ProtocolPoint[];
+  detailLevel: string;
 }
 
-function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters, protocols }: LabelFilterProps) {
+function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters, protocols, detailLevel }: LabelFilterProps) {
   const [height, setHeight] = React.useState(200);
   const [isResizing, setIsResizing] = React.useState(false);
   const [helpModalFamily, setHelpModalFamily] = React.useState<string | null>(null);
@@ -804,9 +805,39 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
       filtersByFamily.get(f)!.add(t);
     });
 
+    // Determine which detail levels to include
+    const detailLevelFilter = (() => {
+      switch (detailLevel) {
+        case 'Standard':
+          return ['Standard'];
+        case 'Extended':
+          return ['Standard', 'Extended'];
+        case 'Complete':
+          return ['Standard', 'Extended', 'Complete'];
+        default:
+          return ['Standard', 'Extended', 'Complete'];
+      }
+    })();
+
     // Count points that match all filters (AND across families, OR within family)
     return protocols.filter((point) => {
       const pointLabels = Array.isArray(point.labels) ? point.labels : [];
+
+      // Apply detail level filter first
+      const levelOfDetailLabels = pointLabels
+        .filter((l) => l.label_family === 'Level of Detail')
+        .map((l) => l.label_text);
+
+      // If point has no Level of Detail label, include it (for backward compatibility)
+      if (levelOfDetailLabels.length > 0) {
+        // Check if point has at least one matching detail level
+        const hasMatchingDetailLevel = levelOfDetailLabels.some((level) =>
+          detailLevelFilter.includes(level)
+        );
+        if (!hasMatchingDetailLevel) {
+          return false;
+        }
+      }
 
       // Group point's labels by family
       const pointLabelsByFamily = new Map<string, Set<string>>();
@@ -833,7 +864,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
       }
       return true;
     }).length;
-  }, [selectedLabels, protocols]);
+  }, [selectedLabels, protocols, detailLevel]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -905,7 +936,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
                   }}
                   className="ml-2 text-xs text-blue-600 hover:text-blue-700 underline flex-shrink-0"
                 >
-                  More Filters
+                  Add Filters
                 </button>
               )}
 
@@ -4213,7 +4244,7 @@ export default function App() {
                       className="px-2 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
                       title="Configure grouping and sorting"
                     >
-                      Sort ⇅
+                      Change Sort Order ⇅
                     </button>
                   </div>
                 </button>
@@ -4231,6 +4262,7 @@ export default function App() {
                   onToggleLabel={toggleLabel}
                   onClearFilters={clearLabelFilters}
                   protocols={protocols}
+                  detailLevel={detailLevel}
                 />
                 
                 <div className="mt-2 flex items-center gap-2">
@@ -4281,7 +4313,7 @@ export default function App() {
               <div className="flex-1 overflow-y-auto px-4 pb-4 pr-1" ref={sidebarContentRef} data-scroll-container>
                 {grouped.size === 0 ? (
                   <div className="py-4 text-center text-sm text-gray-500">
-                    No points match the current filters
+                    No points match the current filters.<br />Increase the Detail Level or remove filters to see more data points.
                   </div>
                 ) : (
                   [...grouped.entries()]
