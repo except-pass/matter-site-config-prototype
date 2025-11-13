@@ -3807,7 +3807,7 @@ export default function App() {
               {detailLevel !== 'Complete' && (
                 <div className="border-t border-gray-200 bg-white/80 px-4 py-3">
                   <p className="text-xs text-gray-600 mb-2">
-                    Didn't find what you were looking for? Increase the Detail Level to see more data points.
+                    Didn't find what you were looking for? Increase the Detail Level or remove filters to see more data points.
                   </p>
                   <DetailLevelSlider value={detailLevel} onChange={setDetailLevel} />
                 </div>
