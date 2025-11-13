@@ -1,8 +1,9 @@
-import { PointDef, EntryValue } from '../../../types/schema';
+import { PointDef, EntryValue, EquipmentOption } from '../../../types/schema';
 import { DateTimeWidget } from '../../widgets/DateTimeWidget';
 import { TimeRangeWidget } from '../../widgets/TimeRangeWidget';
 import { MultiTimeRangeWidget } from '../../widgets/MultiTimeRangeWidget';
 import { GeneratorExerciseWidget } from '../../widgets/GeneratorExerciseWidget';
+import { ULComplianceReportWidget } from '../../widgets/ULComplianceReportWidget';
 import { DualHandleSlider } from '../../forms/DualHandleSlider';
 import { EntryField } from '../../forms/EntryField';
 
@@ -14,6 +15,7 @@ interface PointCardBodyProps {
   setButtonAppearance: string;
   onChange: (argName: string, nextVal: any) => void;
   onInvokeClick: () => void;
+  equipment: EquipmentOption;
 }
 
 export function PointCardBody({
@@ -24,6 +26,7 @@ export function PointCardBody({
   setButtonAppearance,
   onChange,
   onInvokeClick,
+  equipment,
 }: PointCardBodyProps) {
   // Detect if this point should use a multi-handle slider
   const rangedNumberEntries = point.entries.filter(
@@ -64,6 +67,12 @@ export function PointCardBody({
           readOnly={readOnly}
           onChange={onChange}
         />
+      ) : point.widget === "ul-compliance-report" ? (
+        <ULComplianceReportWidget
+          point={point}
+          equipment={equipment}
+          readOnly={readOnly}
+        />
       ) : shouldUseDualSlider ? (
         <DualHandleSlider
           entries={rangedNumberEntries}
@@ -86,7 +95,7 @@ export function PointCardBody({
         </div>
       )}
 
-      {isInvoke && point.widget !== "generator-exercise" && (point.showInvokeButton !== false) && (
+      {isInvoke && point.widget !== "generator-exercise" && point.widget !== "ul-compliance-report" && (point.showInvokeButton !== false) && (
         <div className="mt-4 flex items-center gap-2">
           <button
             type="button"

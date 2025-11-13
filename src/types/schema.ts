@@ -69,7 +69,7 @@ export interface PointDef {
     };
   };
   command_id: string;
-  widget?: "datetime" | "time" | "timerange" | "timerange-multi" | "generator-exercise" | "default";
+  widget?: "datetime" | "time" | "timerange" | "timerange-multi" | "generator-exercise" | "ul-compliance-report" | "default";
   invokeButtonText?: string; // Custom text for invoke button (defaults to "Invoke")
   showInvokeButton?: boolean; // Set to false to hide the invoke button (default: true, UI-only override)
   showHistory?: boolean; // Set to false to hide the history button (default: true for points with telemetry)

@@ -2974,6 +2974,63 @@
                   "command_id": "GridBase.GridFreq"
                 }
               ]
+            },
+            {
+              "title": null,
+              "visibility": "default",
+              "collapsedByDefault": false,
+              "points": [
+                {
+                  "title": "UL Compliance Report",
+                  "help": "Some jurisdictions require proof that your inverter's grid settings match local utility rules (for example, California Rule 21 or Puerto Rico LUMA requirements).\n\nThis report pulls the device's active grid parameters and formats them into a UL-style compliance summary you can share with the AHJ or utility.\n",
+                  "element_type": "custom",
+                  "access": "INVOKE",
+                  "readOnly": false,
+                  "entries": [
+                    {
+                      "name": "Voltage Ride-Through Windows",
+                      "arg": "VoltageRideThrough",
+                      "dtype": "String",
+                      "description": "Derived from Grid Protection voltage limit settings for UL 1741 / IEEE 1547 compliance.",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Frequency Ride-Through Windows",
+                      "arg": "FrequencyRideThrough",
+                      "dtype": "String",
+                      "description": "Derived from Grid Protection frequency limit settings for UL 1741 / IEEE 1547 compliance.",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Volt-VAR Profile",
+                      "arg": "VoltVarProfile",
+                      "dtype": "String",
+                      "description": "Captures the active Volt-VAR curve (e.g., UL 1741 SA default profile).",
+                      "longdescription": ""
+                    },
+                    {
+                      "name": "Freq-Watt Profile",
+                      "arg": "FreqWattProfile",
+                      "dtype": "String",
+                      "description": "Captures the active droop coefficients applied to frequency-active power response.",
+                      "longdescription": ""
+                    }
+                  ],
+                  "protocol": {
+                    "cgi": {
+                      "MEP": "HybridInverter",
+                      "Cluster": "Reports",
+                      "Element": "ULComplianceReport"
+                    }
+                  },
+                  "command_id": "CGI.ULComplianceReport",
+                  "widget": "ul-compliance-report",
+                  "showInvokeButton": false,
+                  "showHistory": false,
+                  "showRefresh": false,
+                  "showSetButton": false
+                }
+              ]
             }
           ]
         },
@@ -4765,7 +4822,7 @@
               "points": [
                 {
                   "title": "Generator Port Connection",
-                  "help": "If using a generator, select which port it's connected to â€” either the GEN port or the Grid Input port (sometimes called microgrid mode). If no generator is installed, leave this setting on GEN port.",
+                  "help": "If using a generator, select which port it's connected to: eeither the GEN port or the Grid Input port (sometimes called microgrid mode). If no generator is installed, leave this setting on GEN port.  In Microgrid Mode, the inverter treats the generator as the primary AC source rather than the utility grid.  When microgrid mode is active, all charging and operating limits come from the Generator settings—not the Grid Charge limits. Remember to install CTs on any power wires attached to the grid port.  This includes a generator that is configured in microgrid mode.  ",
                   "element_type": "attribute",
                   "access": "RW",
                   "readOnly": false,
@@ -4781,8 +4838,8 @@
                         "1": "GridPort"
                       },
                       "friendly_meanings": {
-                        "0": "GEN port (also select if not using generator).",
-                        "1": "Grid port (aka microgrid mode)"
+                        "0": "GEN port. Also pick this option if you are not using generator.",
+                        "1": "Grid port - also called microgrid mode"
                       },
                       "telemetry": {
                         "model": "40104",

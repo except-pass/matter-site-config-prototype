@@ -93,6 +93,7 @@ export function PointCard({
         setButtonAppearance={setButtonAppearance}
         onChange={handleFieldChange}
         onInvokeClick={onSetClick}
+        equipment={equipment}
       />
 
       {/* Modals */}
