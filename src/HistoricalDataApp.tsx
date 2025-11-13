@@ -3,6 +3,7 @@ import YAML from "yaml";
 import rawYaml from "./definitions/telemetry/ss40k_inverter.yaml?raw";
 import rawLifecycleEventsYaml from "./definitions/telemetry/lifecycle_events.yaml?raw";
 import rawLabelHelp from "./definitions/telemetry/label_help.yaml?raw";
+import ChartTutorialModal from "./components/modals/ChartTutorialModal";
 
 type Meanings = Record<string | number, string>;
 
@@ -1767,6 +1768,18 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
                 <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-sm text-gray-500">
                   <div className="text-base font-medium text-gray-700">No points selected</div>
                   <div>Click anywhere in this area to select points</div>
+                  <div className="mt-2 text-xs text-gray-500">
+                    New to charts?{' '}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowTutorialModal(true);
+                      }}
+                      className="text-blue-600 hover:text-blue-700 underline"
+                    >
+                      View quick tutorial
+                    </button>
+                  </div>
                 </div>
               ) : legendEntries.length === 0 ? (
                 <div className="flex h-full items-center justify-center text-sm text-gray-400">
@@ -2505,6 +2518,7 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   const [activeRowSeparator, setActiveRowSeparator] = useState<number | null>(null);
   const [activeColSeparator, setActiveColSeparator] = useState<number | null>(null);
   const [activeCorner, setActiveCorner] = useState<{row: number, col: number} | null>(null);
+  const [showTutorialModal, setShowTutorialModal] = useState<boolean>(false);
   type RowResizeState =
     | {
         mode: 'between';
@@ -3705,6 +3719,10 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
           })()
         )}
       </div>
+      <ChartTutorialModal
+        isOpen={showTutorialModal}
+        onClose={() => setShowTutorialModal(false)}
+      />
     </div>
   );
 }
