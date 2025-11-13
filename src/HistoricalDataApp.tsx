@@ -4406,14 +4406,14 @@ export default function App() {
                     ))
                 )}
               </div>
-              {detailLevel !== 'Complete' && (
-                <div className="border-t border-gray-200 bg-white/80 px-4 py-3">
-                  <p className="text-xs text-gray-600 mb-2">
-                    Didn't find what you were looking for? Increase the Detail Level or remove filters to see more data points.
-                  </p>
-                  <DetailLevelSlider value={detailLevel} onChange={setDetailLevel} />
-                </div>
-              )}
+              <div className="border-t border-gray-200 bg-white/80 px-4 py-3">
+                <p className="text-xs text-gray-600 mb-2">
+                  {detailLevel !== 'Complete'
+                    ? "Didn't find what you were looking for? Increase the Detail Level, remove filters, or clearing your search terms to see more data points."
+                    : "Didn't find what you were looking for? Try removing filters or clearing your search terms to see more data points."}
+                </p>
+                <DetailLevelSlider value={detailLevel} onChange={setDetailLevel} />
+              </div>
             </div>
           </div>
         </div>

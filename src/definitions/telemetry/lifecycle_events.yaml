@@ -17,7 +17,7 @@ protocols:
         label_text: Gateway
       - label_family: Feature
         label_text: Online Status
-      - label_family: Unit
+      - label_family: Type of Data
         label_text: Status
       - label_family: Info
         label_text: Readings
@@ -41,7 +41,7 @@ protocols:
         label_text: Gateway
       - label_family: Feature
         label_text: Online Status
-      - label_family: Unit
+      - label_family: Type of Data
         label_text: Status
       - label_family: Info
         label_text: Readings
