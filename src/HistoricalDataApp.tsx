@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import YAML from "yaml";
 import rawYaml from "./definitions/telemetry/ss40k_inverter.yaml?raw";
+import rawLifecycleEventsYaml from "./definitions/telemetry/lifecycle_events.yaml?raw";
 import rawLabelHelp from "./definitions/telemetry/label_help.yaml?raw";
 
 type Meanings = Record<string | number, string>;
@@ -58,7 +59,7 @@ function normalizePoint(value: unknown): string {
   return String(value).trim();
 }
 
-function loadProtocols(): ProtocolPoint[] {
+function parseProtocolFile(rawYaml: string, fileName: string): ProtocolPoint[] {
   try {
     const parsed = YAML.parse(rawYaml) as Ss40kFile;
     const raw = parsed?.protocols ?? [];
@@ -86,9 +87,15 @@ function loadProtocols(): ProtocolPoint[] {
       })
       .filter((item): item is ProtocolPoint => Boolean(item));
   } catch (error) {
-    console.error("Failed to parse ss40k_inverter.yaml", error);
+    console.error(`Failed to parse ${fileName}`, error);
     return [];
   }
+}
+
+function loadProtocols(): ProtocolPoint[] {
+  const ss40kProtocols = parseProtocolFile(rawYaml, "ss40k_inverter.yaml");
+  const lifecycleProtocols = parseProtocolFile(rawLifecycleEventsYaml, "lifecycle_events.yaml");
+  return [...ss40kProtocols, ...lifecycleProtocols];
 }
 
 const protocols: ProtocolPoint[] = loadProtocols();
@@ -739,13 +746,13 @@ function LabelHelpModal({ family, labels, onClose }: LabelHelpModalProps) {
             </svg>
           </button>
         </div>
-        
+
         {familyHelp && (
           <div className="mb-4 rounded-lg bg-blue-50 p-3 text-sm text-gray-700">
             <strong className="font-semibold">About {family}:</strong> {familyHelp}
           </div>
         )}
-        
+
         <div className="max-h-[60vh] overflow-y-auto">
           <div className="space-y-4">
             {sortedLabels.map((labelText) => {
@@ -768,6 +775,43 @@ function LabelHelpModal({ family, labels, onClose }: LabelHelpModalProps) {
   );
 }
 
+function FilterHelpModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={onClose}>
+      <div className="relative max-h-[80vh] w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-800">How do filters work?</h2>
+          <button
+            onClick={onClose}
+            className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            aria-label="Close"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="space-y-4 text-gray-700">
+          <p>
+            Use filters to quickly jump to the part of the system you're interested in—like just battery settings,
+            inverter readings, or grid-related features—without needing to scroll through the full list.
+          </p>
+          <p>
+            Select any combination of filters—such as component, type of data, unit, or feature—and the list will
+            update instantly to show only points that match your selection. You can choose multiple filters at once
+            to get more specific.
+          </p>
+          <p>
+            As you refine the list, filters that no longer apply will dim, show a count of zero, and become unavailable,
+            helping you see which combinations still have matching points.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 interface LabelFilterProps {
   allLabels: Map<string, Set<string>>;
   selectedLabels: Set<string>;
@@ -781,6 +825,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
   const [height, setHeight] = React.useState(200);
   const [isResizing, setIsResizing] = React.useState(false);
   const [helpModalFamily, setHelpModalFamily] = React.useState<string | null>(null);
+  const [showFilterHelpModal, setShowFilterHelpModal] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const detailsRef = React.useRef<HTMLDetailsElement>(null);
@@ -923,14 +968,15 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
         onToggle={(e) => setIsExpanded((e.target as HTMLDetailsElement).open)}
       >
         <summary className="cursor-pointer list-none">
-          <div className="mb-1 flex items-start justify-between gap-2">
-            <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 flex-1 min-w-0 flex-wrap">
+          <div className="mb-1 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 flex-1 min-w-0">
+              {/* Filter icon and label */}
               <svg className="h-4 w-4 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
               <span className="flex-shrink-0">Filters</span>
 
-              {/* More Filters button when collapsed */}
+              {/* Add Filter button when collapsed */}
               {!isExpanded && otherLabels.size > 0 && (
                 <button
                   onClick={(e) => {
@@ -940,57 +986,69 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
                       setIsExpanded(true);
                     }
                   }}
-                  className="ml-2 text-xs text-blue-600 hover:text-blue-700 underline flex-shrink-0"
+                  className="ml-2 rounded border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition-colors flex-shrink-0"
                 >
-                  Add Filters
+                  + Add Filter
                 </button>
               )}
 
-              {/* Active filter badges for other filters */}
+              {/* Active filter badges */}
               {activeFilters.length > 0 && (
-                <>
-                  <div className="flex flex-wrap items-center gap-1 ml-2 min-w-0">
-                    {activeFilters.map(({ family, text }) => {
-                      const color = getLabelColor(family, text);
-                      return (
-                        <span
-                          key={`${family}:${text}`}
-                          className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border} border-2 font-semibold flex-shrink-0 flex items-center gap-1`}
+                <div className="flex flex-wrap items-center gap-1.5 ml-2 min-w-0">
+                  {activeFilters.map(({ family, text }) => {
+                    const color = getLabelColor(family, text);
+                    return (
+                      <span
+                        key={`${family}:${text}`}
+                        className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border} border-2 font-semibold flex-shrink-0 flex items-center gap-1`}
+                      >
+                        <span>{text}</span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onToggleLabel(family, text);
+                          }}
+                          className="hover:opacity-70 transition-opacity flex-shrink-0"
+                          title={`Remove ${family}: ${text} filter`}
+                          aria-label={`Remove ${family}: ${text} filter`}
                         >
-                          <span>{text}</span>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onToggleLabel(family, text);
-                            }}
-                            className="hover:opacity-70 transition-opacity flex-shrink-0"
-                            title={`Remove ${family}: ${text} filter`}
-                            aria-label={`Remove ${family}: ${text} filter`}
-                          >
-                            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                          </button>
-                        </span>
-                      );
-                    })}
-                  </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onClearFilters();
-                    }}
-                    className="ml-2 flex-shrink-0 rounded p-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition-colors"
-                    title="Clear all filters"
-                    aria-label="Clear all filters"
-                  >
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </>
+                          <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Clear all button */}
+              {activeFilters.length > 0 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClearFilters();
+                  }}
+                  className="ml-2 flex-shrink-0 text-xs text-gray-500 hover:text-gray-700 transition-colors"
+                  title="Clear all filters"
+                  aria-label="Clear all filters"
+                >
+                  Clear all
+                </button>
               )}
             </div>
+
+            {/* Help text on far right */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowFilterHelpModal(true);
+              }}
+              className="flex-shrink-0 text-xs text-blue-600 hover:text-blue-700 underline transition-colors"
+            >
+              How do I use filters?
+            </button>
           </div>
         </summary>
         <div 
@@ -1066,19 +1124,22 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
           );
         })}
         </div>
-        {helpModalFamily && (
-          <LabelHelpModal
-            family={helpModalFamily}
-            labels={allLabels.get(helpModalFamily) || new Set()}
-            onClose={() => setHelpModalFamily(null)}
-          />
-        )}
         <div
           onMouseDown={handleMouseDown}
           className="mt-1 h-1 cursor-ns-resize rounded bg-gray-300 hover:bg-gray-400 transition-colors"
           title="Drag to resize"
         />
       </details>
+      {helpModalFamily && (
+        <LabelHelpModal
+          family={helpModalFamily}
+          labels={allLabels.get(helpModalFamily) || new Set()}
+          onClose={() => setHelpModalFamily(null)}
+        />
+      )}
+      {showFilterHelpModal && (
+        <FilterHelpModal onClose={() => setShowFilterHelpModal(false)} />
+      )}
     </div>
   );
 }
@@ -3656,6 +3717,8 @@ export default function App() {
   const [activeChartSelectedPoints, setActiveChartSelectedPoints] = React.useState<Map<string, Set<string>>>(new Map());
   // State to track active chart's position
   const [activeChartPosition, setActiveChartPosition] = React.useState<DOMRect | null>(null);
+  // State to remember last inverter selection
+  const [lastInverterSelection, setLastInverterSelection] = React.useState<Set<string>>(new Set(DEFAULT_INVERTER_SELECTION));
 
   // Calculate sidebar position based on active chart position
   const sidebarPosition = React.useMemo(() => {
@@ -3842,8 +3905,10 @@ export default function App() {
     }
   };
 
-  const getLastInverterSelection = (): Set<string> => new Set(DEFAULT_INVERTER_SELECTION);
-  const saveLastInverterSelection = (_inverters: Set<string>) => {};
+  const getLastInverterSelection = (): Set<string> => new Set(lastInverterSelection);
+  const saveLastInverterSelection = (inverters: Set<string>) => {
+    setLastInverterSelection(new Set(inverters));
+  };
 
 
   // Extract all labels from protocols
@@ -4359,7 +4424,7 @@ export default function App() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setSortModalOpen(false)}>
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-800">Group By Configuration</h2>
+              <h2 className="text-lg font-semibold text-gray-800">Sort Order</h2>
               <button
                 onClick={() => setSortModalOpen(false)}
                 className="text-gray-400 hover:text-gray-600 transition-colors"

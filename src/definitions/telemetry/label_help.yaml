@@ -22,6 +22,8 @@ label_families:
         help: "Points related to backup power systems and emergency power supply functionality."
       Smart Load:
         help: "Points related to smart load management, including controllable loads and load scheduling."
+      Gateway:
+        help: "The gateway is the device such as the Fortress Guardian that connects the system to the internet."
 
   Feature:
     help: "Identifies the feature or functional area that the telemetry point supports or configures."
@@ -92,17 +94,15 @@ Type of Data:
     help: "Indicates the unit of measurement for numeric telemetry values."
     labels:
       Power:
-        help: "Power measurements in watts (W), kilowatts (kW), or megawatts (MW). Represents electrical power consumption or generation."
+        help: "Power measurements in watts (W) or kilowatts (kW). Represents electrical power consumption or generation.  Includes both real and reactive power."
       Energy:
-        help: "Energy measurements in watt-hours (Wh), kilowatt-hours (kWh), or megawatt-hours (MWh). Represents cumulative energy over time."
+        help: "Energy measurements in watt-hours (Wh) or kilowatt-hours (kWh). Represents cumulative energy over time."
       Volt:
-        help: "Voltage measurements in volts (V). Represents electrical potential difference."
+        help: "Voltage measurements in volts (V). Represents electrical potential difference. Includes DC, AC line-to-line, and AC line-to-neutral voltages."
       Current:
-        help: "Current measurements in amperes (A). Represents electrical current flow."
+        help: "Current measurements in amperes (A)."
       Freq:
-        help: "Frequency measurements in hertz (Hz). Typically 50 Hz or 60 Hz for AC electrical systems."
-      Mode:
-        help: "Values that are not numeric but represent a mode or state. Typically used for inverter operation modes such as operating mode or to enable/disable certain behaviors."
+        help: "Frequency measurements in hertz (Hz)."
       Temp:
         help: "Temperature measurements in degrees Celsius (°C) or Fahrenheit (°F)."
       "%":

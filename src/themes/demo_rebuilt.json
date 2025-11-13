@@ -2808,7 +2808,7 @@
                 },
                 {
                   "title": "Battery Voltage Correction",
-                  "help": " ",
+                  "help": "Recalibrate the battery voltage reading.  Enter the actual ground-truth voltage of the battery here.",
                   "element_type": "custom",
                   "access": "RW",
                   "readOnly": false,

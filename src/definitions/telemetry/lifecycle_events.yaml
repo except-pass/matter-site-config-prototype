@@ -1,0 +1,70 @@
+protocols:
+    - model: lifecycle_events
+      point: ID
+      block: fixed
+      entry:
+        name: is_online
+        description: Online Status
+        longdescription: Indicates whether the device is online and accessible.
+        dtype: enum16
+        unit: N/A
+        category: General
+        meanings:
+            0: Offline
+            1: Online
+      labels:
+      - label_family: Component
+        label_text: Gateway
+      - label_family: Feature
+        label_text: Online Status
+      - label_family: Unit
+        label_text: Status
+      - label_family: Info
+        label_text: Readings
+      - label_family: Level of Detail
+        label_text: Standard
+    - model: lifecycle_events
+      point: client_initiated
+      block: fixed
+      entry:
+        name: client_initiated
+        description: Client Initiated
+        longdescription: Whether the disconnection was initiated by the device (only relevant for offline events)
+        dtype: enum16
+        unit: N/A
+        category: Lifecycle
+        meanings:
+            0: No
+            1: Yes
+      labels:
+      - label_family: Component
+        label_text: Gateway
+      - label_family: Feature
+        label_text: Online Status
+      - label_family: Unit
+        label_text: Status
+      - label_family: Info
+        label_text: Readings
+      - label_family: Level of Detail
+        label_text: Complete            
+    - model: lifecycle_events
+      point: ip
+      block: fixed
+      entry:
+        name: ip
+        description: IP Address
+        longdescription: IP address from which the device connected (only present for online events)
+        dtype: string
+        unit: N/A
+        category: General
+    - model: lifecycle_events
+      point: offline_reason
+      block: fixed
+      entry:
+        name: offline_reason
+        description: Offline Reason
+        longdescription: Reason for disconnection (only present for offline events)
+        dtype: string
+        unit: N/A
+        category: Lifecycle
+        
