@@ -476,6 +476,7 @@ interface LabelGroupProps {
   onTogglePointHelp: (pointKey: string) => void;
   depth?: number;
   query: string;
+  parentPath?: string;
 }
 
 // Helper to check if search text appears in any tooltip
@@ -514,8 +515,10 @@ function searchMatchesInTooltip(point: ProtocolPoint, query: string): boolean {
   return false;
 }
 
-function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdateInverters, groupsExpanded, pointHelpEnabled, onTogglePointHelp, depth = 0, query }: LabelGroupProps) {
-  const levelId = `group-${levelName.replace(/\s+/g, '-')}-${depth}`;
+function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdateInverters, groupsExpanded, pointHelpEnabled, onTogglePointHelp, depth = 0, query, parentPath = '' }: LabelGroupProps) {
+  // Generate unique ID based on full path to avoid conflicts with same-named categories
+  const currentPath = parentPath ? `${parentPath}-${levelName.replace(/\s+/g, '-')}` : levelName.replace(/\s+/g, '-');
+  const levelId = `group-${currentPath}-${depth}`;
   const isLeaf = Array.isArray(levelData);
   
   // Safety check: ensure levelData is valid
@@ -687,6 +690,7 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
               onTogglePointHelp={onTogglePointHelp}
               depth={depth + 1}
               query={query}
+              parentPath={currentPath}
             />
           );
         })}
@@ -4046,7 +4050,10 @@ export default function App() {
                             {secondLevelItems.length > 0 && (
                               <div className="ml-2 mt-0.5 space-y-0.5">
                                 {secondLevelItems.map(([level2Name]) => {
-                                  const level2Id = `group-${level2Name.replace(/\s+/g, '-')}-1`;
+                                  // Generate ID with parent path to match actual element IDs
+                                  const parentPath = levelName.replace(/\s+/g, '-');
+                                  const level2Path = `${parentPath}-${level2Name.replace(/\s+/g, '-')}`;
+                                  const level2Id = `group-${level2Path}-1`;
                                   const isLevel2Active = activeGroup === level2Id;
 
                                   return (
