@@ -6095,11 +6095,6 @@ protocols:
     unit: N/A
     category: PCS information
     meanings: {}
-  labels:
-  - label_family: Info
-    label_text: Sensor
-  - label_family: Level of Detail
-    label_text: Complete
 - model: 40102
   point: reserved2
   block: fixed
@@ -7069,11 +7064,6 @@ protocols:
     unit: N/A
     category: PCS information
     meanings: {}
-  labels:
-  - label_family: Info
-    label_text: Alarms
-  - label_family: Level of Detail
-    label_text: Complete
 - model: 40103
   point: reserved2
   block: fixed
@@ -7839,13 +7829,6 @@ protocols:
       '1': Load EVCharger, Grid, Battery
       '2': Battery, Load EVCharger, Grid
       '3': Load EVCharger, Battery
-  labels:
-  - label_family: Info
-    label_text: Config
-  - label_family: Unit
-    label_text: Mode
-  - label_family: Level of Detail
-    label_text: Complete
 - model: 40104
   point: powSrcPriority
   block: fixed
@@ -7860,13 +7843,6 @@ protocols:
       '0': PV, Battery, Grid, Generator
       '1': PV, Grid, Battery,Generator
       '2': PV, Battery, Generator
-  labels:
-  - label_family: Info
-    label_text: Config
-  - label_family: Unit
-    label_text: Mode
-  - label_family: Level of Detail
-    label_text: Complete
 - model: 40104
   point: reserved3
   block: fixed
@@ -8191,9 +8167,12 @@ protocols:
     unit: N/A
     category: BatteryScheduling
     meanings:
-      '0': disable,
-      '1': enable,
+      '0': disable
+      '1': enable
       '2': Inconsistency
+    friendly_meanings:
+      0: Disabled
+      1: Enabled
   labels:
   - label_family: Component
     label_text: Battery
@@ -8441,7 +8420,7 @@ protocols:
   block: fixed
   entry:
     name: pDischgT1
-    description: Max Inverter Output Power During 'Discharge Only' Periods
+    description: Max Inverter Power During 'Discharge Only' Periods
     longdescription: Value from Site Configuration Battery/Battery Scheduling/Discharge Only. Sets the maximum discharging power during scheduled Time-of-Use (TOU) discharge periods in kW. Limit this to control how much battery power is exported to loads or grid during those windows.
     dtype: uint32
     unit: kW
@@ -8676,9 +8655,9 @@ protocols:
     unit: N/A
     category: GridBase
     meanings:
-      '0': Default(UL-240-18）
-      '1': California(Rule 21）
-      '2': Hawaii(Rule 14）
+      '0': Default(UL-240-18)
+      '1': California(Rule 21)
+      '2': Hawaii(Rule 14)
       '3': Puerto Rico LUMA
   labels:
   - label_family: Component

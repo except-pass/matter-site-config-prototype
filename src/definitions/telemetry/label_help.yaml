@@ -67,7 +67,7 @@ label_families:
     help: "Categorizes the type of information the telemetry point provides."
     labels:
       Sensor:
-        help: "Real-time sensor measurements from physical devices, including voltage, current, power, temperature, and other measured values."
+        help: "Sensor measurements from physical devices, including voltage, current, power, temperature, and other measured values."
       Config:
         help: "Configuration parameters and settings that can be read or written to configure system behavior."
       Nameplate:
@@ -79,11 +79,11 @@ label_families:
     help: "Indicates the level of detail or complexity of the telemetry point."
     labels:
       Standard:
-        help: "Standard telemetry points that are commonly used and displayed by default."
+        help: "Shows the key data needed for a quick picture of power flows and overall system operation."
       Extended:
-        help: "Extended telemetry points provide additional technical details."
+        help: "Includes everything in Essential plus additional electrical details—voltage, current, frequency—as well as recent alarms and commonly adjusted settings."
       Complete:
-        help: "Complete telemetry points provide all available information and are used for detailed analysis and debugging."
+        help: "Displays the complete set of available data points, including all technical readings and the full history of settings and events."
 
   Unit:
     help: "Indicates the unit of measurement for numeric telemetry values."
