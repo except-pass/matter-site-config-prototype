@@ -1348,7 +1348,7 @@ protocols:
   - label_family: Component
     label_text: Inverter
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -1512,7 +1512,7 @@ protocols:
   - label_family: Component
     label_text: Inverter
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -1650,7 +1650,7 @@ protocols:
   - label_family: Component
     label_text: Inverter
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -1788,7 +1788,7 @@ protocols:
   - label_family: Component
     label_text: Inverter
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -2089,7 +2089,7 @@ protocols:
   - label_family: Component
     label_text: Grid
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -2253,7 +2253,7 @@ protocols:
   - label_family: Component
     label_text: Grid
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -2391,7 +2391,7 @@ protocols:
   - label_family: Component
     label_text: Grid
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -2529,7 +2529,7 @@ protocols:
   - label_family: Component
     label_text: Grid
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -2712,7 +2712,7 @@ protocols:
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -2888,7 +2888,7 @@ protocols:
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -3040,7 +3040,7 @@ protocols:
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -3192,7 +3192,7 @@ protocols:
   - label_family: Feature
     label_text: Backup Power
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -3355,7 +3355,7 @@ protocols:
   - label_family: Component
     label_text: Building Load
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -3515,7 +3515,7 @@ protocols:
   - label_family: Component
     label_text: Building Load
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -3653,7 +3653,7 @@ protocols:
   - label_family: Component
     label_text: Building Load
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -3791,7 +3791,7 @@ protocols:
   - label_family: Component
     label_text: Building Load
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -3994,7 +3994,7 @@ protocols:
   - label_family: Component
     label_text: Generator
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -4154,7 +4154,7 @@ protocols:
   - label_family: Component
     label_text: Generator
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -4294,7 +4294,7 @@ protocols:
   - label_family: Component
     label_text: Generator
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -4432,7 +4432,7 @@ protocols:
   - label_family: Component
     label_text: Generator
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -4613,7 +4613,7 @@ protocols:
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -4787,7 +4787,7 @@ protocols:
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -4939,7 +4939,7 @@ protocols:
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -5091,7 +5091,7 @@ protocols:
   - label_family: Feature
     label_text: PV-AC Couple
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -5280,7 +5280,7 @@ protocols:
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -5454,7 +5454,7 @@ protocols:
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -5606,7 +5606,7 @@ protocols:
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail
@@ -5758,7 +5758,7 @@ protocols:
   - label_family: Feature
     label_text: Smart Load
   - label_family: Unit
-    label_text: Volt
+    label_text: Power
   - label_family: Info
     label_text: Sensor
   - label_family: Level of Detail

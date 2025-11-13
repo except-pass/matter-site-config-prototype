@@ -2097,19 +2097,6 @@ const RowDivider: React.FC<RowDividerProps> = ({
             isActive ? 'bg-[#CBD1DB]' : 'bg-[#E4E6EA]'
           } group-hover:bg-[#CBD1DB] group-focus-within:bg-[#CBD1DB]`}
         />
-        <div className="mx-2 flex items-center gap-1">
-          {[0, 1, 2].map((idx) => (
-            <span
-              key={idx}
-              className="h-3 w-1 rounded-full bg-gray-300/80 group-hover:bg-gray-400 group-focus-within:bg-gray-400"
-            />
-          ))}
-        </div>
-        <div
-          className={`flex-1 h-1 rounded-full transition-colors duration-150 ${
-            isActive ? 'bg-[#CBD1DB]' : 'bg-[#E4E6EA]'
-          } group-hover:bg-[#CBD1DB] group-focus-within:bg-[#CBD1DB]`}
-        />
       </div>
       <div
         className={`${
@@ -2283,20 +2270,6 @@ const ColumnDivider: React.FC<ColumnDividerProps> = ({
       }}
     >
       <div className="pointer-events-none absolute inset-0 flex flex-col justify-center py-4">
-        <div
-          className={`mx-auto w-1 rounded-full transition-colors duration-150 ${
-            isActive ? 'bg-[#CBD1DB]' : 'bg-[#E4E6EA]'
-          } group-hover:bg-[#CBD1DB] group-focus-within:bg-[#CBD1DB]`}
-          style={{ flex: 1 }}
-        />
-        <div className="my-2 flex flex-col items-center gap-1">
-          {[0, 1, 2].map((idx) => (
-            <span
-              key={idx}
-              className="w-3 h-1 rounded-full bg-gray-300/80 group-hover:bg-gray-400 group-focus-within:bg-gray-400"
-            />
-          ))}
-        </div>
         <div
           className={`mx-auto w-1 rounded-full transition-colors duration-150 ${
             isActive ? 'bg-[#CBD1DB]' : 'bg-[#E4E6EA]'
@@ -3594,13 +3567,14 @@ export default function App() {
   const [pointHelpEnabled, setPointHelpEnabled] = useState<Set<string>>(new Set());
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set());
   const [detailLevel, setDetailLevel] = useState<string>("Standard");
-  const [hierarchy, setHierarchy] = useState<string[]>(["Component", "Feature"]);
+  const [hierarchy, setHierarchy] = useState<string[]>(["Info", "Component", "Feature"]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
   const sidebarContentRef = React.useRef<HTMLDivElement>(null);
   const [activeGroup, setActiveGroup] = React.useState<string>("");
   const [groupsExpanded, setGroupsExpanded] = React.useState<boolean>(true);
   const [topSectionCollapsed, setTopSectionCollapsed] = React.useState<boolean>(false);
+  const [sortModalOpen, setSortModalOpen] = React.useState<boolean>(false);
   const topSectionScrollTop = React.useRef<number>(0);
   const lastManualToggleTime = React.useRef<number>(0);
 
@@ -3668,11 +3642,15 @@ export default function App() {
     };
   }, [activeGroup, topSectionCollapsed]);
 
-  // Handle Escape key to close sidebar
+  // Handle Escape key to close sidebar or modal
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && sidebarOpen) {
-        setSidebarOpen(false);
+      if (e.key === 'Escape') {
+        if (sortModalOpen) {
+          setSortModalOpen(false);
+        } else if (sidebarOpen) {
+          setSidebarOpen(false);
+        }
       }
     };
 
@@ -3680,7 +3658,7 @@ export default function App() {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [sidebarOpen]);
+  }, [sidebarOpen, sortModalOpen]);
 
   React.useEffect(() => {
     if (!sidebarOpen) {
@@ -4017,44 +3995,90 @@ export default function App() {
           )}
           {/* Dropdown content */}
           <div className="h-full flex flex-row w-full min-h-0">
-            {/* Navigation bar - left side */}
+            {/* Navigation bar - left side - Show first 2 levels */}
             {grouped.size > 0 && (
-              <div className="w-32 border-r border-gray-200 flex-shrink-0 overflow-y-auto">
+              <div className="w-40 border-r border-gray-200 flex-shrink-0 overflow-y-auto">
                 <nav className="p-3 text-sm text-gray-800">
                   <div className="text-emerald-600 font-semibold mb-2 text-xs">Navigation</div>
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-col gap-0.5">
                     {[...grouped.entries()]
                       .filter(([levelName]) => levelName !== "(Unlabeled)")
-                      .map(([levelName]) => {
-                        const levelId = `group-${levelName.replace(/\s+/g, '-')}-0`;
-                        const isActive = activeGroup === levelId;
+                      .map(([levelName, levelData]) => {
+                        const level1Id = `group-${levelName.replace(/\s+/g, '-')}-0`;
+                        const isLevel1Active = activeGroup === level1Id;
+
+                        // Get second level items if they exist
+                        const secondLevelItems: [string, any][] = [];
+                        if (levelData instanceof Map) {
+                          secondLevelItems.push(...[...levelData.entries()].filter(([name]) => name !== "(Unlabeled)"));
+                        }
+
                         return (
-                          <div key={levelName} className="relative">
-                            {/* Active indicator bar */}
-                            {isActive && (
-                              <div className="absolute left-0 top-1 bottom-1 w-1 bg-blue-500 rounded-r" />
+                          <div key={levelName}>
+                            {/* First level */}
+                            <div className="relative">
+                              {isLevel1Active && (
+                                <div className="absolute left-0 top-1 bottom-1 w-1 bg-blue-500 rounded-r" />
+                              )}
+                              <button
+                                className={`px-2 py-1 hover:bg-gray-50 rounded text-xs w-full text-left transition-colors font-medium ${
+                                  isLevel1Active ? 'text-blue-600 bg-blue-50' : 'text-gray-800'
+                                }`}
+                                onClick={() => {
+                                  const element = document.getElementById(level1Id);
+                                  if (element && sidebarContentRef.current) {
+                                    const containerRect = sidebarContentRef.current.getBoundingClientRect();
+                                    const elementRect = element.getBoundingClientRect();
+                                    const scrollTop = sidebarContentRef.current.scrollTop;
+                                    const relativeTop = elementRect.top - containerRect.top + scrollTop;
+                                    sidebarContentRef.current.scrollTo({
+                                      top: relativeTop - 10,
+                                      behavior: 'smooth'
+                                    });
+                                  }
+                                }}
+                              >
+                                {levelName}
+                              </button>
+                            </div>
+
+                            {/* Second level - nested items */}
+                            {secondLevelItems.length > 0 && (
+                              <div className="ml-2 mt-0.5 space-y-0.5">
+                                {secondLevelItems.map(([level2Name]) => {
+                                  const level2Id = `group-${level2Name.replace(/\s+/g, '-')}-1`;
+                                  const isLevel2Active = activeGroup === level2Id;
+
+                                  return (
+                                    <div key={level2Name} className="relative">
+                                      {isLevel2Active && (
+                                        <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-blue-400 rounded-r" />
+                                      )}
+                                      <button
+                                        className={`px-2 py-0.5 hover:bg-gray-50 rounded text-xs w-full text-left transition-colors ${
+                                          isLevel2Active ? 'text-blue-600 bg-blue-50' : 'text-gray-600'
+                                        }`}
+                                        onClick={() => {
+                                          const element = document.getElementById(level2Id);
+                                          if (element && sidebarContentRef.current) {
+                                            const containerRect = sidebarContentRef.current.getBoundingClientRect();
+                                            const elementRect = element.getBoundingClientRect();
+                                            const scrollTop = sidebarContentRef.current.scrollTop;
+                                            const relativeTop = elementRect.top - containerRect.top + scrollTop;
+                                            sidebarContentRef.current.scrollTo({
+                                              top: relativeTop - 10,
+                                              behavior: 'smooth'
+                                            });
+                                          }
+                                        }}
+                                      >
+                                        {level2Name}
+                                      </button>
+                                    </div>
+                                  );
+                                })}
+                              </div>
                             )}
-                            <button
-                              className={`px-2 py-1 hover:bg-gray-50 rounded text-xs w-full text-left transition-colors ${
-                                isActive ? 'text-blue-600 font-medium bg-blue-50' : 'text-gray-700'
-                              }`}
-                            onClick={() => {
-                              const element = document.getElementById(levelId);
-                              if (element && sidebarContentRef.current) {
-                                // Scroll within the sidebar content area
-                                const containerRect = sidebarContentRef.current.getBoundingClientRect();
-                                const elementRect = element.getBoundingClientRect();
-                                const scrollTop = sidebarContentRef.current.scrollTop;
-                                const relativeTop = elementRect.top - containerRect.top + scrollTop;
-                                sidebarContentRef.current.scrollTo({
-                                  top: relativeTop - 10, // 10px offset from top
-                                  behavior: 'smooth'
-                                });
-                              }
-                            }}
-                          >
-                            {levelName}
-                            </button>
                           </div>
                         );
                       })}
@@ -4085,8 +4109,18 @@ export default function App() {
                     </svg>
                     <div className="text-lg font-semibold">Add Points</div>
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 flex items-center gap-2">
                     <span>Available: {visibleCount.toLocaleString()} of {totalCount.toLocaleString()}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSortModalOpen(true);
+                      }}
+                      className="px-2 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+                      title="Configure grouping and sorting"
+                    >
+                      Sort ⇅
+                    </button>
                   </div>
                 </button>
               </div>
@@ -4096,14 +4130,7 @@ export default function App() {
                 }`}
               >
                 <div className="p-4">
-                
-                <HierarchyConfig
-                  availableFamilies={availableFamilies}
-                  hierarchy={hierarchy}
-                  onChange={setHierarchy}
-                  scrollContainerRef={sidebarContentRef}
-                />
-                
+
                 <LabelFilter
                   allLabels={allLabels}
                   selectedLabels={selectedLabels}
@@ -4194,6 +4221,42 @@ export default function App() {
           </div>
         </div>
       </div>
+
+      {/* Sort/Group By Modal */}
+      {sortModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setSortModalOpen(false)}>
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-800">Group By Configuration</h2>
+              <button
+                onClick={() => setSortModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Close"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto max-h-[calc(80vh-140px)]">
+              <HierarchyConfig
+                availableFamilies={availableFamilies}
+                hierarchy={hierarchy}
+                onChange={setHierarchy}
+                scrollContainerRef={sidebarContentRef}
+              />
+            </div>
+            <div className="flex items-center justify-end gap-2 p-4 border-t border-gray-200">
+              <button
+                onClick={() => setSortModalOpen(false)}
+                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
