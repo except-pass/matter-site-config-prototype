@@ -790,10 +790,16 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
     const labelKey = `${family}:${text}`;
 
     // Build hypothetical filter set
-    const hypotheticalFilters = new Set(selectedLabels);
-    if (!hypotheticalFilters.has(labelKey)) {
-      hypotheticalFilters.add(labelKey);
-    }
+    // If this chip is from a family with existing selections, replace them with this chip only
+    // Otherwise, keep all existing selections and add this chip
+    const hypotheticalFilters = new Set<string>();
+    selectedLabels.forEach((key) => {
+      const [f] = key.split(':', 2);
+      if (f !== family) {
+        hypotheticalFilters.add(key);
+      }
+    });
+    hypotheticalFilters.add(labelKey);
 
     // Group hypothetical filters by family
     const filtersByFamily = new Map<string, Set<string>>();
@@ -4118,14 +4124,13 @@ export default function App() {
           {/* Dropdown content */}
           <div className="h-full flex flex-row w-full min-h-0">
             {/* Navigation bar - left side - Show first 2 levels */}
-            {grouped.size > 0 && (
-              <div className="w-40 border-r border-gray-200 flex-shrink-0 overflow-y-auto">
-                <nav className="p-3 text-sm text-gray-800">
-                  <div className="text-emerald-600 font-semibold mb-2 text-xs">Navigation</div>
-                  <div className="flex flex-col gap-0.5">
-                    {[...grouped.entries()]
-                      .filter(([levelName]) => levelName !== "(Unlabeled)")
-                      .map(([levelName, levelData]) => {
+            <div className="w-40 border-r border-gray-200 flex-shrink-0 overflow-y-auto">
+              <nav className="p-3 text-sm text-gray-800">
+                <div className="text-emerald-600 font-semibold mb-2 text-xs">Navigation</div>
+                <div className="flex flex-col gap-0.5">
+                  {grouped.size > 0 && [...grouped.entries()]
+                    .filter(([levelName]) => levelName !== "(Unlabeled)")
+                    .map(([levelName, levelData]) => {
                         const level1Id = `group-${levelName.replace(/\s+/g, '-')}-0`;
                         const isLevel1Active = activeGroup === level1Id;
 
@@ -4207,11 +4212,10 @@ export default function App() {
                           </div>
                         );
                       })}
-                  </div>
-                </nav>
-              </div>
-            )}
-            
+                </div>
+              </nav>
+            </div>
+
             {/* Main content area */}
             <div className="flex-1 flex flex-col overflow-hidden min-h-0">
               {/* Collapsible top section */}
@@ -4313,7 +4317,7 @@ export default function App() {
               <div className="flex-1 overflow-y-auto px-4 pb-4 pr-1" ref={sidebarContentRef} data-scroll-container>
                 {grouped.size === 0 ? (
                   <div className="py-4 text-center text-sm text-gray-500">
-                    No points match the current filters.<br />Increase the Detail Level or remove filters to see more data points.
+                    No points match the current filters.<br /><b>Increase the Detail Level</b> or <b>remove filters</b> to see more data points.
                   </div>
                 ) : (
                   [...grouped.entries()]
