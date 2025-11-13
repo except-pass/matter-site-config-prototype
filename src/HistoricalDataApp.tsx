@@ -668,7 +668,10 @@ function LabelGroup({ levelName, levelData, selected, toggle, showHelp, onUpdate
           <span className="truncate">{levelName}</span>
         </div>
         {labelFamily && (
-          <span className="ml-2 px-2 py-0.5 text-[10px] font-normal uppercase tracking-wide text-gray-500 bg-gray-100 rounded-full flex-shrink-0">
+          <span
+            className="ml-2 px-2 py-0.5 text-[10px] font-normal uppercase tracking-wide text-gray-500 bg-gray-100 rounded-full flex-shrink-0 cursor-help"
+            title={getLabelHelp(labelFamily) || labelFamily}
+          >
             {labelFamily}
           </span>
         )}
@@ -770,15 +773,67 @@ interface LabelFilterProps {
   selectedLabels: Set<string>;
   onToggleLabel: (family: string, text: string) => void;
   onClearFilters: () => void;
+  protocols: ProtocolPoint[];
 }
 
-function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters }: LabelFilterProps) {
+function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters, protocols }: LabelFilterProps) {
   const [height, setHeight] = React.useState(200);
   const [isResizing, setIsResizing] = React.useState(false);
   const [helpModalFamily, setHelpModalFamily] = React.useState<string | null>(null);
   const [isExpanded, setIsExpanded] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const detailsRef = React.useRef<HTMLDetailsElement>(null);
+
+  // Compute count for a hypothetical filter combination
+  const computeCountForChip = React.useCallback((family: string, text: string): number => {
+    const labelKey = `${family}:${text}`;
+
+    // Build hypothetical filter set
+    const hypotheticalFilters = new Set(selectedLabels);
+    if (!hypotheticalFilters.has(labelKey)) {
+      hypotheticalFilters.add(labelKey);
+    }
+
+    // Group hypothetical filters by family
+    const filtersByFamily = new Map<string, Set<string>>();
+    hypotheticalFilters.forEach((key) => {
+      const [f, t] = key.split(':', 2);
+      if (!filtersByFamily.has(f)) {
+        filtersByFamily.set(f, new Set());
+      }
+      filtersByFamily.get(f)!.add(t);
+    });
+
+    // Count points that match all filters (AND across families, OR within family)
+    return protocols.filter((point) => {
+      const pointLabels = Array.isArray(point.labels) ? point.labels : [];
+
+      // Group point's labels by family
+      const pointLabelsByFamily = new Map<string, Set<string>>();
+      pointLabels.forEach((label) => {
+        if (!pointLabelsByFamily.has(label.label_family)) {
+          pointLabelsByFamily.set(label.label_family, new Set());
+        }
+        pointLabelsByFamily.get(label.label_family)!.add(label.label_text);
+      });
+
+      // For each filter family, check if point has at least one matching value (OR)
+      // All filter families must match (AND)
+      for (const [filterFamily, filterTexts] of filtersByFamily.entries()) {
+        const pointTexts = pointLabelsByFamily.get(filterFamily);
+        if (!pointTexts) {
+          return false;
+        }
+        const hasMatch = [...filterTexts].some((filterText) =>
+          pointTexts.has(filterText)
+        );
+        if (!hasMatch) {
+          return false;
+        }
+      }
+      return true;
+    }).length;
+  }, [selectedLabels, protocols]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -931,21 +986,41 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters 
                 {[...texts].sort().map((text) => {
                   const labelKey = `${family}:${text}`;
                   const isSelected = selectedLabels.has(labelKey);
+                  const count = computeCountForChip(family, text);
+                  const isDisabled = !isSelected && count === 0;
                   const color = getLabelColor(family, text);
                   const labelHelp = getLabelHelp(family, text);
+
                   return (
                     <button
                       key={labelKey}
-                      onClick={() => onToggleLabel(family, text)}
+                      onClick={() => {
+                        if (!isDisabled) {
+                          onToggleLabel(family, text);
+                        }
+                      }}
                       className={`rounded border px-1.5 py-0.5 text-xs transition-all ${
-                        isSelected
+                        isDisabled
+                          ? 'opacity-40 cursor-not-allowed bg-white'
+                          : isSelected
                           ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
-                          : `bg-white ${color.text} ${color.border} hover:opacity-80`
+                          : `bg-white ${color.text} ${color.border} hover:opacity-80 cursor-pointer`
                       }`}
-                      style={!isSelected ? { borderColor: 'currentColor' } : undefined}
-                      title={labelHelp || `${family}: ${text}`}
+                      style={!isSelected && !isDisabled ? { borderColor: 'currentColor' } : undefined}
+                      title={
+                        isDisabled
+                          ? "No points available with this combination of filters"
+                          : labelHelp || `${family}: ${text}`
+                      }
+                      aria-disabled={isDisabled}
+                      tabIndex={isDisabled ? -1 : 0}
                     >
-                      {text}
+                      <span>{text}</span>
+                      {!isSelected && (
+                        <span className={`ml-1 ${isDisabled ? 'text-gray-400' : 'text-gray-500'}`}>
+                          ({count})
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -4155,6 +4230,7 @@ export default function App() {
                   selectedLabels={selectedLabels}
                   onToggleLabel={toggleLabel}
                   onClearFilters={clearLabelFilters}
+                  protocols={protocols}
                 />
                 
                 <div className="mt-2 flex items-center gap-2">
