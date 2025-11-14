@@ -1159,6 +1159,8 @@ interface FakeChartProps {
   selectPointsOpen?: boolean;
   onDeleteChart?: () => void;
   onShowTutorial?: () => void;
+  crosshairX?: number | null;
+  onCrosshairChange?: (x: number | null) => void;
 }
 
 // Available inverters (hardcoded for now, could come from props or API)
@@ -1287,11 +1289,15 @@ function generateSmoothLineSeries(seed: string, length = LINE_SERIES_LENGTH) {
 
 function LineChartPreview({
   series,
+  crosshairX,
+  onCrosshairChange,
 }: {
   series: {
     entry: LegendEntry;
     values: number[];
   }[];
+  crosshairX?: number | null;
+  onCrosshairChange?: (x: number | null) => void;
 }) {
   if (series.length === 0) {
     return null;
@@ -1302,41 +1308,73 @@ function LineChartPreview({
   const maxValue = Math.max(...allValues, 1);
   const span = maxValue - minValue || 1;
 
-  return (
-    <svg
-      viewBox={`0 0 ${LINE_CHART_VIEWBOX.width} ${LINE_CHART_VIEWBOX.height}`}
-      preserveAspectRatio="none"
-      className="h-full w-full"
-    >
-      {series.map(({ entry, values }) => {
-        if (values.length < 2) {
-          return null;
-        }
-        const pathD = values
-          .map((value, index) => {
-            const x = (index / (values.length - 1)) * LINE_CHART_VIEWBOX.width;
-            const normalized = (value - minValue) / span;
-            const y = LINE_CHART_VIEWBOX.height - normalized * LINE_CHART_VIEWBOX.height;
-            const command = index === 0 ? 'M' : 'L';
-            return `${command}${x.toFixed(2)},${y.toFixed(2)}`;
-          })
-          .join(' ');
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!onCrosshairChange) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    onCrosshairChange(Math.max(0, Math.min(100, x)));
+  };
 
-        return (
-          <path
-            key={entry.pointKey}
-            d={pathD}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2.2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={`${LINE_COLOR_CLASSES[entry.colorIndex % LINE_COLOR_CLASSES.length]} drop-shadow-[0_1px_3px_rgba(0,0,0,0.25)]`}
-            opacity={0.95}
+  const handleMouseLeave = () => {
+    if (onCrosshairChange) {
+      onCrosshairChange(null);
+    }
+  };
+
+  return (
+    <div
+      className="h-full w-full relative"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <svg
+        viewBox={`0 0 ${LINE_CHART_VIEWBOX.width} ${LINE_CHART_VIEWBOX.height}`}
+        preserveAspectRatio="none"
+        className="h-full w-full"
+      >
+        {series.map(({ entry, values }) => {
+          if (values.length < 2) {
+            return null;
+          }
+          const pathD = values
+            .map((value, index) => {
+              const x = (index / (values.length - 1)) * LINE_CHART_VIEWBOX.width;
+              const normalized = (value - minValue) / span;
+              const y = LINE_CHART_VIEWBOX.height - normalized * LINE_CHART_VIEWBOX.height;
+              const command = index === 0 ? 'M' : 'L';
+              return `${command}${x.toFixed(2)},${y.toFixed(2)}`;
+            })
+            .join(' ');
+
+          return (
+            <path
+              key={entry.pointKey}
+              d={pathD}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={`${LINE_COLOR_CLASSES[entry.colorIndex % LINE_COLOR_CLASSES.length]} drop-shadow-[0_1px_3px_rgba(0,0,0,0.25)]`}
+              opacity={0.95}
+            />
+          );
+        })}
+        {crosshairX !== null && crosshairX !== undefined && (
+          <line
+            x1={(crosshairX / 100) * LINE_CHART_VIEWBOX.width}
+            y1={0}
+            x2={(crosshairX / 100) * LINE_CHART_VIEWBOX.width}
+            y2={LINE_CHART_VIEWBOX.height}
+            stroke="#374151"
+            strokeWidth={1.5}
+            strokeDasharray="4 2"
+            opacity={0.7}
+            pointerEvents="none"
           />
-        );
-      })}
-    </svg>
+        )}
+      </svg>
+    </div>
   );
 }
 
@@ -1411,13 +1449,36 @@ function buildCategoricalChartData(entry: LegendEntry): CategoricalChartData | n
   };
 }
 
-function CategoricalChart({ data, onRemove }: { data: CategoricalChartData; onRemove?: () => void }) {
+function CategoricalChart({
+  data,
+  onRemove,
+  crosshairX,
+  onCrosshairChange
+}: {
+  data: CategoricalChartData;
+  onRemove?: () => void;
+  crosshairX?: number | null;
+  onCrosshairChange?: (x: number | null) => void;
+}) {
   const [hideEmptyBars, setHideEmptyBars] = React.useState(true);
   const visibleRows = hideEmptyBars ? data.rows.filter((row) => row.activeSlots.some(Boolean)) : data.rows;
   const hiddenCount = data.rows.length - visibleRows.length;
 
   // Get colors based on colorIndex
   const colors = CATEGORICAL_COLORS[data.colorIndex % CATEGORICAL_COLORS.length];
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!onCrosshairChange) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    onCrosshairChange(Math.max(0, Math.min(100, x)));
+  };
+
+  const handleMouseLeave = () => {
+    if (onCrosshairChange) {
+      onCrosshairChange(null);
+    }
+  };
 
   return (
     <div className={`rounded-lg border ${colors.border200} bg-white shadow-sm`}>
@@ -1453,7 +1514,11 @@ function CategoricalChart({ data, onRemove }: { data: CategoricalChartData; onRe
           )}
         </div>
       </div>
-      <div className="px-4 py-3">
+      <div
+        className="px-4 py-3 relative"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
         <div className="space-y-1">
           {visibleRows.length === 0 ? (
             <div className="text-xs text-gray-500 italic">
@@ -1481,6 +1546,14 @@ function CategoricalChart({ data, onRemove }: { data: CategoricalChartData; onRe
             ))
           )}
         </div>
+        {crosshairX !== null && crosshairX !== undefined && (
+          <div
+            className="absolute top-0 bottom-0 w-px bg-gray-700 pointer-events-none opacity-70"
+            style={{
+              left: `calc(1rem + ${crosshairX}%)`,
+            }}
+          />
+        )}
       </div>
     </div>
   );
@@ -1584,7 +1657,7 @@ function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps
   );
 }
 
-function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, onDeleteChart, onShowTutorial }: FakeChartProps) {
+function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, onDeleteChart, onShowTutorial, crosshairX, onCrosshairChange }: FakeChartProps) {
   // Track visibility state for each legend entry
   const [hiddenEntries, setHiddenEntries] = React.useState<Set<string>>(new Set());
 
@@ -1801,7 +1874,11 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
                       <div key={row} className="border-b border-dashed border-gray-300" />
                     ))}
                   </div>
-                  <LineChartPreview series={lineSeriesData} />
+                  <LineChartPreview
+                    series={lineSeriesData}
+                    crosshairX={crosshairX}
+                    onCrosshairChange={onCrosshairChange}
+                  />
                 </div>
               ) : (
                 <div className="flex h-full items-center justify-center px-6 text-center text-sm text-gray-500">
@@ -1827,6 +1904,8 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
                       key={`${chart.id}:${chart.subtitle}`}
                       data={chart}
                       onRemove={removeHandler}
+                      crosshairX={crosshairX}
+                      onCrosshairChange={onCrosshairChange}
                     />
                   );
                 })}
@@ -2590,6 +2669,9 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
   const [justAddedChartId, setJustAddedChartId] = useState<string | null>(null);
   const addAnimationTimeoutRef = React.useRef<number | null>(null);
   const chartRefsMap = React.useRef<Map<string, HTMLDivElement>>(new Map());
+
+  // Crosshair state - shared across all charts (null when not hovering)
+  const [crosshairX, setCrosshairX] = useState<number | null>(null);
 
   // Notify parent whenever active chart's selection changes
   React.useEffect(() => {
@@ -3448,6 +3530,8 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
                 selectPointsOpen={selectPointsOpen}
                 onDeleteChart={() => handleDeleteChart(chart.id)}
                 onShowTutorial={() => setShowTutorialModal(true)}
+                crosshairX={crosshairX}
+                onCrosshairChange={setCrosshairX}
               />
             </div>
           </div>
