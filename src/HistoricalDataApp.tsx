@@ -1691,7 +1691,7 @@ function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps
   );
 }
 
-function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, onDeleteChart, onShowTutorial, crosshairX, onCrosshairChange, onDragStart, onDragEnd, isDragActive, isDropTarget }: FakeChartProps) {
+function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, onDeleteChart, onShowTutorial, crosshairX, onCrosshairChange, onDragStart, onDragEnd, isDragActive, isDropTarget: _isDropTarget }: FakeChartProps) {
   // Track visibility state for each legend entry
   const [hiddenEntries, setHiddenEntries] = React.useState<Set<string>>(new Set());
 
