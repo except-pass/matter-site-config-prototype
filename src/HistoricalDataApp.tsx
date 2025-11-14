@@ -969,89 +969,93 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
         onToggle={(e) => setIsExpanded((e.target as HTMLDetailsElement).open)}
       >
         <summary className="cursor-pointer list-none">
-          <div className="mb-1 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 flex-1 min-w-0">
-              {/* Filter icon and label */}
-              <svg className="h-4 w-4 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-              <span className="flex-shrink-0">Filters</span>
-
-              {/* Add Filter button when collapsed */}
-              {!isExpanded && otherLabels.size > 0 && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (detailsRef.current) {
-                      detailsRef.current.open = true;
-                      setIsExpanded(true);
-                    }
-                  }}
-                  className="ml-2 rounded border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition-colors flex-shrink-0"
-                >
-                  + Add Filter
-                </button>
-              )}
-
-              {/* Active filter badges */}
-              {activeFilters.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1.5 ml-2 min-w-0">
-                  {activeFilters.map(({ family, text }) => {
-                    const color = getLabelColor(family, text);
-                    return (
-                      <span
-                        key={`${family}:${text}`}
-                        className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border} border-2 font-semibold flex-shrink-0 flex items-center gap-1`}
-                      >
-                        <span>{text}</span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onToggleLabel(family, text);
-                          }}
-                          className="hover:opacity-70 transition-opacity flex-shrink-0"
-                          title={`Remove ${family}: ${text} filter`}
-                          aria-label={`Remove ${family}: ${text} filter`}
-                        >
-                          <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </span>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Clear all button */}
-              {activeFilters.length > 0 && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClearFilters();
-                  }}
-                  className="ml-2 flex-shrink-0 text-xs text-gray-500 hover:text-gray-700 transition-colors"
-                  title="Clear all filters"
-                  aria-label="Clear all filters"
-                >
-                  Clear all
-                </button>
-              )}
-            </div>
-
-            {/* Help text on far right */}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setShowFilterHelpModal(true);
-              }}
-              className="flex-shrink-0 text-xs text-blue-600 hover:text-blue-700 underline transition-colors"
-            >
-              How do I use filters?
-            </button>
+          <div className="mb-1 flex items-center gap-2 text-xs font-semibold text-gray-700">
+            {/* Filter icon and label */}
+            <svg className="h-4 w-4 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            <span className="flex-shrink-0">Filters</span>
+            {activeFilters.length > 0 && (
+              <span className="text-gray-500">({activeFilters.length} active)</span>
+            )}
           </div>
         </summary>
+        <div className="mb-2 flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            {/* Add Filter button when collapsed */}
+            {!isExpanded && otherLabels.size > 0 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (detailsRef.current) {
+                    detailsRef.current.open = true;
+                    setIsExpanded(true);
+                  }
+                }}
+                className="rounded border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition-colors flex-shrink-0"
+              >
+                + Add Filter
+              </button>
+            )}
+
+            {/* Active filter badges */}
+            {activeFilters.length > 0 && (
+              <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+                {activeFilters.map(({ family, text }) => {
+                  const color = getLabelColor(family, text);
+                  return (
+                    <span
+                      key={`${family}:${text}`}
+                      className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border} border-2 font-semibold flex-shrink-0 flex items-center gap-1`}
+                    >
+                      <span>{text}</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleLabel(family, text);
+                        }}
+                        className="hover:opacity-70 transition-opacity flex-shrink-0"
+                        title={`Remove ${family}: ${text} filter`}
+                        aria-label={`Remove ${family}: ${text} filter`}
+                      >
+                        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </span>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Clear all button */}
+            {activeFilters.length > 0 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClearFilters();
+                }}
+                className="flex-shrink-0 text-xs text-gray-500 hover:text-gray-700 transition-colors"
+                title="Clear all filters"
+                aria-label="Clear all filters"
+              >
+                Clear all
+              </button>
+            )}
+          </div>
+
+          {/* Help text on far right */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowFilterHelpModal(true);
+            }}
+            className="flex-shrink-0 text-xs text-blue-600 hover:text-blue-700 underline transition-colors"
+          >
+            How do I use filters?
+          </button>
+        </div>
         <div 
           className="space-y-0.5 overflow-auto mt-2"
           style={{ height: `${height}px` }}
@@ -1154,6 +1158,7 @@ interface FakeChartProps {
   onSelectPointsToggle?: (open: boolean) => void;
   selectPointsOpen?: boolean;
   onDeleteChart?: () => void;
+  onShowTutorial?: () => void;
 }
 
 // Available inverters (hardcoded for now, could come from props or API)
@@ -1579,7 +1584,7 @@ function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps
   );
 }
 
-function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, onDeleteChart }: FakeChartProps) {
+function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, onDeleteChart, onShowTutorial }: FakeChartProps) {
   // Track visibility state for each legend entry
   const [hiddenEntries, setHiddenEntries] = React.useState<Set<string>>(new Set());
 
@@ -1758,7 +1763,11 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
               className={`absolute top-6 bottom-16 left-12 right-6 rounded-xl bg-white/40 backdrop-blur-sm ${
                 selectedPoints.size === 0 ? 'cursor-pointer' : 'cursor-default'
               }`}
-              onClick={() => {
+              onClick={(e) => {
+                // Don't open point selector if clicking on the tutorial button
+                if ((e.target as HTMLElement).closest('button')) {
+                  return;
+                }
                 if (selectedPoints.size === 0 && onSelectPointsToggle) {
                   onSelectPointsToggle(true);
                 }
@@ -1773,7 +1782,7 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        setShowTutorialModal(true);
+                        onShowTutorial?.();
                       }}
                       className="text-blue-600 hover:text-blue-700 underline"
                     >
@@ -1845,20 +1854,27 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
             const tooltipText = tooltipParts.join("\n");
             
             return (
-              <div 
-                key={pointKey} 
-                className="flex items-center gap-2 text-xs group hover:bg-gray-50 rounded px-2 py-1 border border-gray-200 bg-white transition-colors cursor-pointer flex-shrink-0"
-                onClick={() => toggleVisibility(pointKey)}
-                onDoubleClick={(e) => {
-                  e.stopPropagation();
-                  showOnlyEntry(pointKey);
-                }}
+              <div
+                key={pointKey}
+                className="flex items-center gap-2 text-xs group hover:bg-gray-50 rounded px-2 py-1 border border-gray-200 bg-white transition-colors flex-shrink-0"
                 title={tooltipText}
               >
-                <div 
-                  className={`w-3 h-3 rounded-sm flex-shrink-0 ${color.bg} ${color.border} border`}
+                <div
+                  className={`w-3 h-3 rounded-sm flex-shrink-0 ${color.bg} ${color.border} border cursor-pointer`}
+                  onClick={() => toggleVisibility(pointKey)}
+                  onDoubleClick={(e) => {
+                    e.stopPropagation();
+                    showOnlyEntry(pointKey);
+                  }}
                 />
-                <span className={`font-medium text-gray-600 ${isHidden ? 'opacity-50 line-through' : ''}`}>
+                <span
+                  className={`font-medium text-gray-600 cursor-pointer ${isHidden ? 'opacity-50 line-through' : ''}`}
+                  onClick={() => toggleVisibility(pointKey)}
+                  onDoubleClick={(e) => {
+                    e.stopPropagation();
+                    showOnlyEntry(pointKey);
+                  }}
+                >
                   {name}
                 </span>
                 <span className="text-gray-400">
@@ -3431,6 +3447,7 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
                 onSelectPointsToggle={onSelectPointsToggle}
                 selectPointsOpen={selectPointsOpen}
                 onDeleteChart={() => handleDeleteChart(chart.id)}
+                onShowTutorial={() => setShowTutorialModal(true)}
               />
             </div>
           </div>

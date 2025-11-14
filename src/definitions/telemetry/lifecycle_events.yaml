@@ -19,7 +19,7 @@ protocols:
         label_text: Online Status
       - label_family: Type of Data
         label_text: Status
-      - label_family: Info
+      - label_family: Type of Data
         label_text: Readings
       - label_family: Level of Detail
         label_text: Standard
@@ -43,7 +43,7 @@ protocols:
         label_text: Online Status
       - label_family: Type of Data
         label_text: Status
-      - label_family: Info
+      - label_family: Type of Data
         label_text: Readings
       - label_family: Level of Detail
         label_text: Complete            

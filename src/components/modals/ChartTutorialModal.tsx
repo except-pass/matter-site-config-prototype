@@ -1,4 +1,12 @@
 import React, { useState } from 'react';
+import addingPointsImg from '../../tutorial/images/adding_points.png';
+import resizingChartImg from '../../tutorial/images/resizing_chart.png';
+import createAdditionalChartsImg from '../../tutorial/images/create_additional_charts.png';
+import removeChartImg from '../../tutorial/images/remove_chart.png';
+import browseAndFindPointsImg from '../../tutorial/images/browse_and_find_points.png';
+import selectingDevicesImg from '../../tutorial/images/selecting_devices.png';
+import troubleshootingPointsImg from '../../tutorial/images/troubleshooting_points.png';
+import linesVsStatusImg from '../../tutorial/images/lines_vs_status.png';
 
 interface TutorialStep {
   title: string;
@@ -14,10 +22,27 @@ interface ChartTutorialModalProps {
 const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose }) => {
   const [currentStep, setCurrentStep] = useState(0);
 
+  const handleClose = () => {
+    setCurrentStep(0);
+    onClose();
+  };
+
+  // Handle escape key to close modal
+  React.useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen]);
+
   const tutorialSteps: TutorialStep[] = [
     {
       title: '1. Adding Points to a Chart',
-      image: '/src/tutorial/images/adding_points.png',
+      image: addingPointsImg,
       content: (
         <div>
           <p className="mb-3">You can add data points to any chart in two ways:</p>
@@ -39,7 +64,7 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
     },
     {
       title: '2. Resizing a Chart',
-      image: '/src/tutorial/images/resizing_chart.png',
+      image: resizingChartImg,
       content: (
         <div>
           <p className="mb-3">To change the size of a chart:</p>
@@ -56,7 +81,7 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
     },
     {
       title: '3. Creating Additional Charts',
-      image: '/src/tutorial/images/create_additional_charts.png',
+      image: createAdditionalChartsImg,
       content: (
         <div>
           <p className="mb-3">
@@ -76,7 +101,7 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
     },
     {
       title: '4. Removing a Chart',
-      image: '/src/tutorial/images/remove_chart.png',
+      image: removeChartImg,
       content: (
         <div>
           <p className="mb-3">
@@ -90,7 +115,7 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
     },
     {
       title: '5. Browsing and Finding Data Points',
-      image: '/src/tutorial/images/browse_and_find_points.png',
+      image: browseAndFindPointsImg,
       content: (
         <div>
           <p className="mb-3">Use the <strong>Add Points</strong> panel to find the data you want:</p>
@@ -107,7 +132,7 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
     },
     {
       title: '6. Selecting Devices for Each Point',
-      image: '/src/tutorial/images/selecting_devices.png',
+      image: selectingDevicesImg,
       content: (
         <div>
           <p className="mb-3">
@@ -127,7 +152,7 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
     },
     {
       title: '7. Troubleshooting Point Discovery',
-      image: '/src/tutorial/images/troubleshooting_points.png',
+      image: troubleshootingPointsImg,
       content: (
         <div>
           <p className="mb-3">If you don't see the point you expect:</p>
@@ -142,7 +167,7 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
     },
     {
       title: '8. Understanding Line vs. Status Charts',
-      image: '/src/tutorial/images/lines_vs_status.png',
+      image: linesVsStatusImg,
       content: (
         <div>
           <div className="mb-4">
@@ -192,11 +217,6 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
     }
   };
 
-  const handleClose = () => {
-    setCurrentStep(0);
-    onClose();
-  };
-
   if (!isOpen) return null;
 
   const currentStepData = tutorialSteps[currentStep];
@@ -243,11 +263,11 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
           </h3>
 
           {/* Image */}
-          <div className="mb-4 rounded-lg overflow-hidden border border-slate-200">
+          <div className="mb-4 rounded-lg overflow-hidden border border-slate-200 flex justify-center bg-slate-50">
             <img
               src={currentStepData.image}
               alt={currentStepData.title}
-              className="w-full h-auto"
+              className="max-w-full h-auto max-h-80 object-contain"
             />
           </div>
 
