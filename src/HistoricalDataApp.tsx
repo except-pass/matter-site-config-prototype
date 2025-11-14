@@ -820,9 +820,10 @@ interface LabelFilterProps {
   onClearFilters: () => void;
   protocols: ProtocolPoint[];
   detailLevel: string;
+  filterStructure: 'freeform' | 'sequential';
 }
 
-function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters, protocols, detailLevel }: LabelFilterProps) {
+function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters, protocols, detailLevel, filterStructure }: LabelFilterProps) {
   const [height, setHeight] = React.useState(200);
   const [isResizing, setIsResizing] = React.useState(false);
   const [helpModalFamily, setHelpModalFamily] = React.useState<string | null>(null);
@@ -830,6 +831,87 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
   const [isExpanded, setIsExpanded] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const detailsRef = React.useRef<HTMLDetailsElement>(null);
+
+  // Sequential filter order - defines the order in which filters unlock
+  const SEQUENTIAL_ORDER = React.useMemo(() => {
+    const order: string[] = [];
+    // Define preferred order, but only include families that exist in the data
+    const preferredOrder = ['Equipment', 'Component', 'Type of Data', 'Unit'];
+    preferredOrder.forEach(family => {
+      if (allLabels.has(family)) {
+        order.push(family);
+      }
+    });
+    // Add any remaining families that weren't in the preferred order
+    allLabels.forEach((_, family) => {
+      if (family !== 'Level of Detail' && !order.includes(family)) {
+        order.push(family);
+      }
+    });
+    return order;
+  }, [allLabels]);
+
+  // Get color classes for sequential steps based on index
+  const getSequentialStepColor = (index: number) => {
+    const colors = [
+      { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-300', chipBorder: 'border-blue-500', chipText: 'text-blue-700' },
+      { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-300', chipBorder: 'border-indigo-500', chipText: 'text-indigo-700' },
+      { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-300', chipBorder: 'border-emerald-500', chipText: 'text-emerald-700' },
+      { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-300', chipBorder: 'border-rose-500', chipText: 'text-rose-700' },
+      { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-300', chipBorder: 'border-purple-500', chipText: 'text-purple-700' },
+      { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-300', chipBorder: 'border-amber-500', chipText: 'text-amber-700' },
+    ];
+    return colors[index % colors.length];
+  };
+
+  // Determine which families have selections in sequential mode
+  const getFamilySelections = (family: string): string[] => {
+    return Array.from(selectedLabels)
+      .filter(key => key.startsWith(`${family}:`))
+      .map(key => key.split(':', 2)[1]);
+  };
+
+  // Handle clearing a step and all downstream steps in sequential mode
+  const handleClearSequentialStep = (family: string) => {
+    const index = SEQUENTIAL_ORDER.indexOf(family);
+    if (index === -1) return;
+
+    // Clear this step and all downstream steps
+    const toClear = SEQUENTIAL_ORDER.slice(index);
+    const newSelectedLabels = new Set<string>();
+    selectedLabels.forEach(key => {
+      const [f] = key.split(':', 2);
+      if (!toClear.includes(f)) {
+        newSelectedLabels.add(key);
+      }
+    });
+
+    // If clearing all, call the onClearFilters callback
+    if (newSelectedLabels.size === 0) {
+      onClearFilters();
+    } else {
+      // Clear selections for this family and downstream
+      toClear.forEach(f => {
+        const selections = getFamilySelections(f);
+        selections.forEach(text => {
+          onToggleLabel(f, text);
+        });
+      });
+    }
+  };
+
+  // Determine if a family is locked in sequential mode
+  const isFamilyLocked = (family: string): boolean => {
+    if (filterStructure !== 'sequential') return false;
+
+    const index = SEQUENTIAL_ORDER.indexOf(family);
+    if (index === 0) return false; // First family is always unlocked
+
+    // Check if previous family has selections
+    const prevFamily = SEQUENTIAL_ORDER[index - 1];
+    const prevSelections = getFamilySelections(prevFamily);
+    return prevSelections.length === 0;
+  };
 
   // Compute count for a hypothetical filter combination
   const computeCountForChip = React.useCallback((family: string, text: string): number => {
@@ -1056,78 +1138,168 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
             How do I use filters?
           </button>
         </div>
-        <div 
+        <div
           className="space-y-0.5 overflow-auto mt-2"
           style={{ height: `${height}px` }}
         >
-        {[...otherLabels.entries()].map(([family, texts]) => {
-          const familyHelp = getLabelHelp(family);
-          const familyColor = getLabelColor(family, '');
-          // Check if any label in this family is selected
-          const hasSelectedLabel = Array.from(texts).some(text => selectedLabels.has(`${family}:${text}`));
-          return (
-            <div key={family} className="flex items-center gap-1.5 text-xs py-0.5">
-              <button
-                onClick={() => setHelpModalFamily(family)}
-                className={`flex items-center gap-1 rounded-md border px-2 py-0.5 font-semibold transition-colors flex-shrink-0 w-28 justify-between ${
-                  hasSelectedLabel
-                    ? `${familyColor.bg} ${familyColor.text} ${familyColor.border} border-2`
-                    : `${familyColor.bg} ${familyColor.text} ${familyColor.border} border`
-                }`}
-                title={familyHelp || `View help for ${family} labels`}
-                aria-label={`Help for ${family}`}
-              >
-                <span className="truncate">{family}</span>
-                <svg className={`h-3 w-3 flex-shrink-0 ${familyColor.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </button>
-              <div className="flex flex-wrap items-center gap-1 flex-1">
-                {[...texts].sort().map((text) => {
-                  const labelKey = `${family}:${text}`;
-                  const isSelected = selectedLabels.has(labelKey);
-                  const count = computeCountForChip(family, text);
-                  const isDisabled = !isSelected && count === 0;
-                  const color = getLabelColor(family, text);
-                  const labelHelp = getLabelHelp(family, text);
+        {filterStructure === 'sequential' ? (
+          // Sequential mode rendering
+          <>
+            {SEQUENTIAL_ORDER.map((family, index) => {
+              const texts = otherLabels.get(family);
+              if (!texts) return null;
 
-                  return (
-                    <button
-                      key={labelKey}
-                      onClick={() => {
-                        if (!isDisabled) {
-                          onToggleLabel(family, text);
+              const selections = getFamilySelections(family);
+              const isLocked = isFamilyLocked(family);
+              const hasSelection = selections.length > 0;
+              const isActive = !isLocked;
+              const familyHelp = getLabelHelp(family);
+              const familyColor = getLabelColor(family, '');
+
+              // Hide locked families that have no selections
+              if (isLocked && !hasSelection) return null;
+
+              return (
+                <div key={family} className="flex items-center gap-1.5 text-xs py-0.5">
+                  <button
+                    onClick={() => setHelpModalFamily(family)}
+                    className={`flex items-center gap-1 rounded-md border px-2 py-0.5 font-semibold transition-colors flex-shrink-0 w-28 justify-between ${
+                      hasSelection
+                        ? `${familyColor.bg} ${familyColor.text} ${familyColor.border} border-2`
+                        : isLocked
+                        ? 'bg-slate-50 text-slate-400 border-slate-200 border'
+                        : `${familyColor.bg} ${familyColor.text} ${familyColor.border} border`
+                    }`}
+                    title={familyHelp || `View help for ${family} labels`}
+                    aria-label={`Help for ${family}`}
+                  >
+                    <span className="truncate">{family}</span>
+                    <svg className={`h-3 w-3 flex-shrink-0 ${familyColor.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </button>
+                  <div className="flex flex-wrap items-center gap-1 flex-1">
+                    {[...texts].sort().map((text) => {
+                      const labelKey = `${family}:${text}`;
+                      const isSelected = selections.includes(text);
+                      const count = isActive ? computeCountForChip(family, text) : 0;
+                      const isDisabled = !isActive || (!isSelected && count === 0);
+                      const color = getLabelColor(family, text);
+                      const labelHelp = getLabelHelp(family, text);
+
+                      return (
+                        <button
+                          key={labelKey}
+                          onClick={() => {
+                            if (!isDisabled) {
+                              onToggleLabel(family, text);
+                            }
+                          }}
+                          className={`rounded border px-1.5 py-0.5 text-xs transition-all ${
+                            isDisabled
+                              ? 'opacity-40 cursor-not-allowed bg-white'
+                              : isSelected
+                              ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
+                              : `bg-white ${color.text} ${color.border} hover:opacity-80 cursor-pointer`
+                          }`}
+                          style={!isSelected && !isDisabled ? { borderColor: 'currentColor' } : undefined}
+                          title={
+                            isLocked
+                              ? "Pick something above to unlock this step"
+                              : isDisabled
+                              ? "No points available with this combination of filters"
+                              : labelHelp || `${family}: ${text}`
+                          }
+                          aria-disabled={isDisabled}
+                          tabIndex={isDisabled ? -1 : 0}
+                        >
+                          <span>{text}</span>
+                          {!isSelected && isActive && (
+                            <span className={`ml-1 ${isDisabled ? 'text-gray-400' : 'text-gray-500'}`}>
+                              ({count})
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </>
+        ) : (
+          // Freeform mode rendering (original)
+          <>
+          {[...otherLabels.entries()].map(([family, texts]) => {
+            const familyHelp = getLabelHelp(family);
+            const familyColor = getLabelColor(family, '');
+            // Check if any label in this family is selected
+            const hasSelectedLabel = Array.from(texts).some(text => selectedLabels.has(`${family}:${text}`));
+            return (
+              <div key={family} className="flex items-center gap-1.5 text-xs py-0.5">
+                <button
+                  onClick={() => setHelpModalFamily(family)}
+                  className={`flex items-center gap-1 rounded-md border px-2 py-0.5 font-semibold transition-colors flex-shrink-0 w-28 justify-between ${
+                    hasSelectedLabel
+                      ? `${familyColor.bg} ${familyColor.text} ${familyColor.border} border-2`
+                      : `${familyColor.bg} ${familyColor.text} ${familyColor.border} border`
+                  }`}
+                  title={familyHelp || `View help for ${family} labels`}
+                  aria-label={`Help for ${family}`}
+                >
+                  <span className="truncate">{family}</span>
+                  <svg className={`h-3 w-3 flex-shrink-0 ${familyColor.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
+                <div className="flex flex-wrap items-center gap-1 flex-1">
+                  {[...texts].sort().map((text) => {
+                    const labelKey = `${family}:${text}`;
+                    const isSelected = selectedLabels.has(labelKey);
+                    const count = computeCountForChip(family, text);
+                    const isDisabled = !isSelected && count === 0;
+                    const color = getLabelColor(family, text);
+                    const labelHelp = getLabelHelp(family, text);
+
+                    return (
+                      <button
+                        key={labelKey}
+                        onClick={() => {
+                          if (!isDisabled) {
+                            onToggleLabel(family, text);
+                          }
+                        }}
+                        className={`rounded border px-1.5 py-0.5 text-xs transition-all ${
+                          isDisabled
+                            ? 'opacity-40 cursor-not-allowed bg-white'
+                            : isSelected
+                            ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
+                            : `bg-white ${color.text} ${color.border} hover:opacity-80 cursor-pointer`
+                        }`}
+                        style={!isSelected && !isDisabled ? { borderColor: 'currentColor' } : undefined}
+                        title={
+                          isDisabled
+                            ? "No points available with this combination of filters"
+                            : labelHelp || `${family}: ${text}`
                         }
-                      }}
-                      className={`rounded border px-1.5 py-0.5 text-xs transition-all ${
-                        isDisabled
-                          ? 'opacity-40 cursor-not-allowed bg-white'
-                          : isSelected
-                          ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
-                          : `bg-white ${color.text} ${color.border} hover:opacity-80 cursor-pointer`
-                      }`}
-                      style={!isSelected && !isDisabled ? { borderColor: 'currentColor' } : undefined}
-                      title={
-                        isDisabled
-                          ? "No points available with this combination of filters"
-                          : labelHelp || `${family}: ${text}`
-                      }
-                      aria-disabled={isDisabled}
-                      tabIndex={isDisabled ? -1 : 0}
-                    >
-                      <span>{text}</span>
-                      {!isSelected && (
-                        <span className={`ml-1 ${isDisabled ? 'text-gray-400' : 'text-gray-500'}`}>
-                          ({count})
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
+                        aria-disabled={isDisabled}
+                        tabIndex={isDisabled ? -1 : 0}
+                      >
+                        <span>{text}</span>
+                        {!isSelected && (
+                          <span className={`ml-1 ${isDisabled ? 'text-gray-400' : 'text-gray-500'}`}>
+                            ({count})
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+          </>
+        )}
         </div>
         <div
           onMouseDown={handleMouseDown}
@@ -4044,6 +4216,7 @@ export default function App() {
   const [groupsExpanded, setGroupsExpanded] = React.useState<boolean>(true);
   const [topSectionCollapsed, setTopSectionCollapsed] = React.useState<boolean>(false);
   const [sortModalOpen, setSortModalOpen] = React.useState<boolean>(false);
+  const [filterStructure, setFilterStructure] = React.useState<'freeform' | 'sequential'>('sequential');
   const topSectionScrollTop = React.useRef<number>(0);
   const lastManualToggleTime = React.useRef<number>(0);
 
@@ -4588,10 +4761,14 @@ export default function App() {
                         e.stopPropagation();
                         setSortModalOpen(true);
                       }}
-                      className="px-2 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
-                      title="Configure grouping and sorting"
+                      className="px-2 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors flex items-center gap-1"
+                      title="Configure preferences"
                     >
-                      Change Sort Order ⇅
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Preferences
                     </button>
                   </div>
                 </button>
@@ -4610,6 +4787,7 @@ export default function App() {
                   onClearFilters={clearLabelFilters}
                   protocols={protocols}
                   detailLevel={detailLevel}
+                  filterStructure={filterStructure}
                 />
                 
                 <div className="mt-2 flex items-center gap-2">
@@ -4697,12 +4875,18 @@ export default function App() {
         </div>
       </div>
 
-      {/* Sort/Group By Modal */}
+      {/* Preferences Modal */}
       {sortModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setSortModalOpen(false)}>
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-800">Sort Order</h2>
+              <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Preferences
+              </h2>
               <button
                 onClick={() => setSortModalOpen(false)}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -4713,13 +4897,56 @@ export default function App() {
                 </svg>
               </button>
             </div>
-            <div className="p-4 overflow-y-auto max-h-[calc(80vh-140px)]">
-              <HierarchyConfig
-                availableFamilies={availableFamilies}
-                hierarchy={hierarchy}
-                onChange={setHierarchy}
-                scrollContainerRef={sidebarContentRef}
-              />
+            <div className="p-4 overflow-y-auto max-h-[calc(80vh-140px)] space-y-6">
+              {/* Filter Structure Section */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-gray-800">Filter Structure</h3>
+                <div className="space-y-3">
+                  <label className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                    <input
+                      type="radio"
+                      name="filterStructure"
+                      value="sequential"
+                      checked={filterStructure === 'sequential'}
+                      onChange={(e) => setFilterStructure(e.target.value as 'sequential')}
+                      className="mt-0.5 h-4 w-4 text-blue-600 focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-900">Sequential</div>
+                      <div className="text-xs text-gray-600 mt-1">
+                        Filters unlock in order. Start by selecting equipment, then component options unlock, followed by type of data, and finally unit filters. Each level requires at least one selection before the next unlocks. This guided approach helps narrow down options step-by-step.
+                      </div>
+                    </div>
+                  </label>
+                  <label className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                    <input
+                      type="radio"
+                      name="filterStructure"
+                      value="freeform"
+                      checked={filterStructure === 'freeform'}
+                      onChange={(e) => setFilterStructure(e.target.value as 'freeform')}
+                      className="mt-0.5 h-4 w-4 text-blue-600 focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-900">Freeform</div>
+                      <div className="text-xs text-gray-600 mt-1">
+                        Select filters in any order you prefer. All filter categories are available simultaneously, allowing flexible combinations. Filters within a category use OR logic (any match), while filters across categories use AND logic (all must match).
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Sort Order Section */}
+              <div className="space-y-3 pt-6 border-t border-gray-200">
+                <h3 className="text-sm font-semibold text-gray-800">Sort Order</h3>
+                <HierarchyConfig
+                  availableFamilies={availableFamilies}
+                  hierarchy={hierarchy}
+                  onChange={setHierarchy}
+                  scrollContainerRef={sidebarContentRef}
+                />
+              </div>
             </div>
             <div className="flex items-center justify-end gap-2 p-4 border-t border-gray-200">
               <button
