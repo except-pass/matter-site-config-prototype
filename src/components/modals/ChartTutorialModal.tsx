@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import addingPointsImg from '../../tutorial/images/adding_points.png';
 import resizingChartImg from '../../tutorial/images/resizing_chart.png';
 import createAdditionalChartsImg from '../../tutorial/images/create_additional_charts.png';
+import movingPointsBetweenChartsImg from '../../tutorial/images/moving_points_between_charts.png';
 import removeChartImg from '../../tutorial/images/remove_chart.png';
 import browseAndFindPointsImg from '../../tutorial/images/browse_and_find_points.png';
 import selectingDevicesImg from '../../tutorial/images/selecting_devices.png';
@@ -203,6 +204,31 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
         </div>
       ),
     },
+    {
+      title: '9. Moving Points Between Charts',
+      image: movingPointsBetweenChartsImg,
+      content: (
+        <div>
+          <p className="mb-3">
+            You can reorganize your charts by dragging items from one chart to another.
+          </p>
+          <ul className="list-disc pl-5 mb-3 space-y-2">
+            <li>
+              <strong>Drag a legend entry</strong> to move a line-chart point.
+            </li>
+            <li>
+              <strong>Drag a status row</strong> to move a state-based point.
+            </li>
+            <li>
+              Drop onto any chart (even an empty one) to place it there.
+            </li>
+          </ul>
+          <p className="text-sm text-slate-600">
+            This makes it easy to group related data or separate concerns across multiple charts.
+          </p>
+        </div>
+      ),
+    },
   ];
 
   const handleNext = () => {
@@ -223,10 +249,9 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
+      {/* Backdrop - does not close on click */}
       <div
         className="absolute inset-0 bg-black bg-opacity-50"
-        onClick={handleClose}
       />
 
       {/* Modal */}
