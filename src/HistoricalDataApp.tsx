@@ -1161,6 +1161,10 @@ interface FakeChartProps {
   onShowTutorial?: () => void;
   crosshairX?: number | null;
   onCrosshairChange?: (x: number | null) => void;
+  onDragStart?: (pointKey: string, inverters: Set<string>) => void;
+  onDragEnd?: () => void;
+  isDragActive?: boolean;
+  isDropTarget?: boolean;
 }
 
 // Available inverters (hardcoded for now, could come from props or API)
@@ -1453,12 +1457,18 @@ function CategoricalChart({
   data,
   onRemove,
   crosshairX,
-  onCrosshairChange
+  onCrosshairChange,
+  onDragStart,
+  onDragEnd,
+  isDragActive
 }: {
   data: CategoricalChartData;
   onRemove?: () => void;
   crosshairX?: number | null;
   onCrosshairChange?: (x: number | null) => void;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
+  isDragActive?: boolean;
 }) {
   const [hideEmptyBars, setHideEmptyBars] = React.useState(true);
   const visibleRows = hideEmptyBars ? data.rows.filter((row) => row.activeSlots.some(Boolean)) : data.rows;
@@ -1481,7 +1491,31 @@ function CategoricalChart({
   };
 
   return (
-    <div className={`rounded-lg border ${colors.border200} bg-white shadow-sm`}>
+    <div
+      draggable={true}
+      onDragStart={(e) => {
+        e.stopPropagation();
+        if (onDragStart) {
+          onDragStart();
+        }
+        // Set drag image
+        const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
+        dragImage.style.position = 'absolute';
+        dragImage.style.top = '-1000px';
+        document.body.appendChild(dragImage);
+        e.dataTransfer.setDragImage(dragImage, 0, 0);
+        setTimeout(() => document.body.removeChild(dragImage), 0);
+      }}
+      onDragEnd={(e) => {
+        e.stopPropagation();
+        if (onDragEnd) {
+          onDragEnd();
+        }
+      }}
+      className={`rounded-lg border ${colors.border200} bg-white shadow-sm ${
+        isDragActive ? 'cursor-grab active:cursor-grabbing' : ''
+      }`}
+    >
       <div className={`flex items-center justify-between gap-2 border-b ${colors.border200} ${colors.bg50} px-4 py-1.5`}>
         <div className="flex items-center gap-3 text-xs">
           <span className={`font-semibold ${colors.text700}`}>{data.title}</span>
@@ -1657,7 +1691,7 @@ function InverterSelector({ selectedInverters, onChange }: InverterSelectorProps
   );
 }
 
-function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, onDeleteChart, onShowTutorial, crosshairX, onCrosshairChange }: FakeChartProps) {
+function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInverters, onScrollToPoint: _onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, onDeleteChart, onShowTutorial, crosshairX, onCrosshairChange, onDragStart, onDragEnd, isDragActive, isDropTarget }: FakeChartProps) {
   // Track visibility state for each legend entry
   const [hiddenEntries, setHiddenEntries] = React.useState<Set<string>>(new Set());
 
@@ -1899,6 +1933,11 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
                     const pointKey = parts.join(':');
                     onRemoveInverter?.(pointKey, shortSN);
                   };
+                  // Get the inverters for this categorical chart
+                  const parts = chart.id.split(':');
+                  const pointKey = parts.slice(0, -1).join(':');
+                  const categoricalInverters = selectedPoints.get(pointKey) || new Set();
+
                   return (
                     <CategoricalChart
                       key={`${chart.id}:${chart.subtitle}`}
@@ -1906,6 +1945,13 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
                       onRemove={removeHandler}
                       crosshairX={crosshairX}
                       onCrosshairChange={onCrosshairChange}
+                      onDragStart={() => {
+                        if (onDragStart) {
+                          onDragStart(pointKey, categoricalInverters);
+                        }
+                      }}
+                      onDragEnd={onDragEnd}
+                      isDragActive={isDragActive}
                     />
                   );
                 })}
@@ -1932,10 +1978,35 @@ function FakeChart({ selectedPoints, protocols, onUpdateInverters: _onUpdateInve
             }
             const tooltipText = tooltipParts.join("\n");
             
+            // Get the inverters for this point key
+            const pointInverters = selectedPoints.get(key) || new Set();
+
             return (
               <div
                 key={pointKey}
-                className="flex items-center gap-2 text-xs group hover:bg-gray-50 rounded px-2 py-1 border border-gray-200 bg-white transition-colors flex-shrink-0"
+                draggable={true}
+                onDragStart={(e) => {
+                  e.stopPropagation();
+                  if (onDragStart) {
+                    onDragStart(key, pointInverters);
+                  }
+                  // Set drag image
+                  const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
+                  dragImage.style.position = 'absolute';
+                  dragImage.style.top = '-1000px';
+                  document.body.appendChild(dragImage);
+                  e.dataTransfer.setDragImage(dragImage, 0, 0);
+                  setTimeout(() => document.body.removeChild(dragImage), 0);
+                }}
+                onDragEnd={(e) => {
+                  e.stopPropagation();
+                  if (onDragEnd) {
+                    onDragEnd();
+                  }
+                }}
+                className={`flex items-center gap-2 text-xs group hover:bg-gray-50 rounded px-2 py-1 border border-gray-200 bg-white transition-colors flex-shrink-0 ${
+                  isDragActive ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'
+                }`}
                 title={tooltipText}
               >
                 <div
@@ -2672,6 +2743,15 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
 
   // Crosshair state - shared across all charts (null when not hovering)
   const [crosshairX, setCrosshairX] = useState<number | null>(null);
+
+  // Drag-and-drop state for moving data points between charts
+  const [draggedData, setDraggedData] = useState<{
+    type: 'legend' | 'categorical';
+    pointKey: string;
+    sourceChartId: string;
+    inverters: Set<string>;
+  } | null>(null);
+  const [dropTargetChartId, setDropTargetChartId] = useState<string | null>(null);
 
   // Notify parent whenever active chart's selection changes
   React.useEffect(() => {
@@ -3429,6 +3509,71 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
     onRemoveInverter(chartId, pointKey, inverterSN);
   };
 
+  // Drag-and-drop handlers for moving data points between charts
+  const handleDragStart = (chartId: string, pointKey: string, inverters: Set<string>) => {
+    setDraggedData({
+      type: 'legend', // Can be 'legend' or 'categorical'
+      pointKey,
+      sourceChartId: chartId,
+      inverters
+    });
+  };
+
+  const handleDragEnd = () => {
+    setDraggedData(null);
+    setDropTargetChartId(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent, chartId: string) => {
+    if (!draggedData) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+    setDropTargetChartId(chartId);
+  };
+
+  const handleDragLeave = (e: React.DragEvent, chartId: string) => {
+    // Only clear if leaving the chart entirely
+    const relatedTarget = e.relatedTarget as HTMLElement;
+    const chartElement = chartRefsMap.current.get(chartId);
+    if (chartElement && !chartElement.contains(relatedTarget)) {
+      setDropTargetChartId(null);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, targetChartId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!draggedData) return;
+
+    const { pointKey, sourceChartId, inverters } = draggedData;
+
+    // Don't do anything if dropping on the same chart
+    if (sourceChartId === targetChartId) {
+      handleDragEnd();
+      return;
+    }
+
+    // Move the data point from source to target chart
+    setCharts(prev => prev.map(c => {
+      if (c.id === sourceChartId) {
+        // Remove from source chart
+        const newSelected = new Map(c.selectedPoints);
+        newSelected.delete(pointKey);
+        return { ...c, selectedPoints: newSelected };
+      } else if (c.id === targetChartId) {
+        // Add to target chart
+        const newSelected = new Map(c.selectedPoints);
+        newSelected.set(pointKey, new Set(inverters));
+        return { ...c, selectedPoints: newSelected };
+      }
+      return c;
+    }));
+
+    handleDragEnd();
+  };
+
   // Calculate grid dimensions
   const minRow = Math.min(...charts.map(c => c.row), 0);
   const minCol = Math.min(...charts.map(c => c.col), 0);
@@ -3493,7 +3638,11 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
           columnGap: 0,
         }}
       >
-        {normalizedCharts.map(chart => (
+        {normalizedCharts.map(chart => {
+          const isDropTarget = dropTargetChartId === chart.id;
+          const isEmpty = chart.selectedPoints.size === 0;
+
+          return (
           <div
             key={chart.id}
             ref={(el) => {
@@ -3505,7 +3654,9 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
             }}
             className={`relative border rounded-lg bg-white shadow-sm overflow-visible transition-all cursor-pointer ${
               activeChartId === chart.id ? 'border-blue-500 border-2 ring-2 ring-blue-200' : 'border-gray-300'
-            } ${justAddedChartId === chart.id ? 'animate-chart-expand' : ''}`}
+            } ${justAddedChartId === chart.id ? 'animate-chart-expand' : ''} ${
+              isDropTarget ? 'ring-4 ring-green-300 border-green-500' : ''
+            } ${isEmpty && draggedData ? 'bg-green-50' : ''}`}
             style={{
               gridRow: (rowIndexMap.get(chart.row) ?? 0) * 2 + 1,
               gridColumn: (colIndexMap.get(chart.col) ?? 0) * 2 + 1
@@ -3518,6 +3669,9 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
               }
               setActiveChartId(chart.id);
             }}
+            onDragOver={(e) => handleDragOver(e, chart.id)}
+            onDragLeave={(e) => handleDragLeave(e, chart.id)}
+            onDrop={(e) => handleDrop(e, chart.id)}
           >
             <div className="chart-content h-full flex flex-col">
               <FakeChart
@@ -3532,10 +3686,15 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
                 onShowTutorial={() => setShowTutorialModal(true)}
                 crosshairX={crosshairX}
                 onCrosshairChange={setCrosshairX}
+                onDragStart={(pointKey, inverters) => handleDragStart(chart.id, pointKey, inverters)}
+                onDragEnd={handleDragEnd}
+                isDragActive={draggedData !== null}
+                isDropTarget={isDropTarget}
               />
             </div>
           </div>
-        ))}
+          );
+        })}
         {uniqueCols.slice(0, -1).map((normalizedCol, index) => {
           const leftOriginal = normalizedCol + minCol;
           const nextCol = uniqueCols[index + 1];
