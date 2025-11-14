@@ -1144,7 +1144,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
         >
         {filterStructure === 'sequential' ? (
           // Sequential mode rendering
-          <div className="space-y-3">
+          <>
             {SEQUENTIAL_ORDER.map((family, index) => {
               const texts = otherLabels.get(family);
               if (!texts) return null;
@@ -1153,74 +1153,80 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
               const isLocked = isFamilyLocked(family);
               const hasSelection = selections.length > 0;
               const isActive = !isLocked;
-              const stepColor = getSequentialStepColor(index);
+              const familyHelp = getLabelHelp(family);
+              const familyColor = getLabelColor(family, '');
+
+              // Hide locked families that have no selections
+              if (isLocked && !hasSelection) return null;
 
               return (
-                <div
-                  key={family}
-                  className={`transition-opacity ${!isActive && !hasSelection ? 'opacity-40' : 'opacity-100'}`}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span
-                      className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold border ${
-                        isLocked && !hasSelection
-                          ? 'bg-slate-50 text-slate-400 border-slate-200 line-through decoration-slate-300'
-                          : `${stepColor.bg} ${stepColor.text} ${stepColor.border}`
-                      }`}
-                    >
-                      {family}
-                    </span>
-                    {hasSelection && (
-                      <div className="flex items-center gap-2 text-xs text-slate-500">
-                        <span>
-                          Selected:{' '}
-                          <span className="font-medium text-slate-700">
-                            {selections.join(', ')}
-                          </span>
-                        </span>
+                <div key={family} className="flex items-center gap-1.5 text-xs py-0.5">
+                  <button
+                    onClick={() => setHelpModalFamily(family)}
+                    className={`flex items-center gap-1 rounded-md border px-2 py-0.5 font-semibold transition-colors flex-shrink-0 w-28 justify-between ${
+                      hasSelection
+                        ? `${familyColor.bg} ${familyColor.text} ${familyColor.border} border-2`
+                        : isLocked
+                        ? 'bg-slate-50 text-slate-400 border-slate-200 border'
+                        : `${familyColor.bg} ${familyColor.text} ${familyColor.border} border`
+                    }`}
+                    title={familyHelp || `View help for ${family} labels`}
+                    aria-label={`Help for ${family}`}
+                  >
+                    <span className="truncate">{family}</span>
+                    <svg className={`h-3 w-3 flex-shrink-0 ${familyColor.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </button>
+                  <div className="flex flex-wrap items-center gap-1 flex-1">
+                    {[...texts].sort().map((text) => {
+                      const labelKey = `${family}:${text}`;
+                      const isSelected = selections.includes(text);
+                      const count = isActive ? computeCountForChip(family, text) : 0;
+                      const isDisabled = !isActive || (!isSelected && count === 0);
+                      const color = getLabelColor(family, text);
+                      const labelHelp = getLabelHelp(family, text);
+
+                      return (
                         <button
-                          type="button"
-                          onClick={() => handleClearSequentialStep(family)}
-                          className="text-[11px] font-medium text-slate-500 hover:text-slate-700 underline-offset-2 hover:underline"
+                          key={labelKey}
+                          onClick={() => {
+                            if (!isDisabled) {
+                              onToggleLabel(family, text);
+                            }
+                          }}
+                          className={`rounded border px-1.5 py-0.5 text-xs transition-all ${
+                            isDisabled
+                              ? 'opacity-40 cursor-not-allowed bg-white'
+                              : isSelected
+                              ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
+                              : `bg-white ${color.text} ${color.border} hover:opacity-80 cursor-pointer`
+                          }`}
+                          style={!isSelected && !isDisabled ? { borderColor: 'currentColor' } : undefined}
+                          title={
+                            isLocked
+                              ? "Pick something above to unlock this step"
+                              : isDisabled
+                              ? "No points available with this combination of filters"
+                              : labelHelp || `${family}: ${text}`
+                          }
+                          aria-disabled={isDisabled}
+                          tabIndex={isDisabled ? -1 : 0}
                         >
-                          Clear
+                          <span>{text}</span>
+                          {!isSelected && isActive && (
+                            <span className={`ml-1 ${isDisabled ? 'text-gray-400' : 'text-gray-500'}`}>
+                              ({count})
+                            </span>
+                          )}
                         </button>
-                      </div>
-                    )}
-                    {!hasSelection && isLocked && (
-                      <span className="text-xs text-slate-400 italic">
-                        Pick something above to unlock this step
-                      </span>
-                    )}
+                      );
+                    })}
                   </div>
-
-                  {isActive && (
-                    <div className="flex flex-wrap gap-2">
-                      {[...texts].sort().map((text) => {
-                        const labelKey = `${family}:${text}`;
-                        const isSelected = selections.includes(text);
-
-                        return (
-                          <button
-                            key={labelKey}
-                            type="button"
-                            onClick={() => onToggleLabel(family, text)}
-                            className={`rounded-full border px-3 py-1 text-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-slate-400 ${
-                              isSelected
-                                ? `${stepColor.chipBorder} ${stepColor.chipText} bg-white shadow-sm border-2`
-                                : 'border-slate-200 text-slate-700 bg-white/70'
-                            }`}
-                          >
-                            {text}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
                 </div>
               );
             })}
-          </div>
+          </>
         ) : (
           // Freeform mode rendering (original)
           <>
