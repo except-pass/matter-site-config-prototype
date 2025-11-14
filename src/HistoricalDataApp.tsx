@@ -851,53 +851,11 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
     return order;
   }, [allLabels]);
 
-  // Get color classes for sequential steps based on index
-  const getSequentialStepColor = (index: number) => {
-    const colors = [
-      { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-300', chipBorder: 'border-blue-500', chipText: 'text-blue-700' },
-      { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-300', chipBorder: 'border-indigo-500', chipText: 'text-indigo-700' },
-      { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-300', chipBorder: 'border-emerald-500', chipText: 'text-emerald-700' },
-      { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-300', chipBorder: 'border-rose-500', chipText: 'text-rose-700' },
-      { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-300', chipBorder: 'border-purple-500', chipText: 'text-purple-700' },
-      { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-300', chipBorder: 'border-amber-500', chipText: 'text-amber-700' },
-    ];
-    return colors[index % colors.length];
-  };
-
   // Determine which families have selections in sequential mode
   const getFamilySelections = (family: string): string[] => {
     return Array.from(selectedLabels)
       .filter(key => key.startsWith(`${family}:`))
       .map(key => key.split(':', 2)[1]);
-  };
-
-  // Handle clearing a step and all downstream steps in sequential mode
-  const handleClearSequentialStep = (family: string) => {
-    const index = SEQUENTIAL_ORDER.indexOf(family);
-    if (index === -1) return;
-
-    // Clear this step and all downstream steps
-    const toClear = SEQUENTIAL_ORDER.slice(index);
-    const newSelectedLabels = new Set<string>();
-    selectedLabels.forEach(key => {
-      const [f] = key.split(':', 2);
-      if (!toClear.includes(f)) {
-        newSelectedLabels.add(key);
-      }
-    });
-
-    // If clearing all, call the onClearFilters callback
-    if (newSelectedLabels.size === 0) {
-      onClearFilters();
-    } else {
-      // Clear selections for this family and downstream
-      toClear.forEach(f => {
-        const selections = getFamilySelections(f);
-        selections.forEach(text => {
-          onToggleLabel(f, text);
-        });
-      });
-    }
   };
 
   // Determine if a family is locked in sequential mode
@@ -1145,7 +1103,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
         {filterStructure === 'sequential' ? (
           // Sequential mode rendering
           <>
-            {SEQUENTIAL_ORDER.map((family, index) => {
+            {SEQUENTIAL_ORDER.map((family, _index) => {
               const texts = otherLabels.get(family);
               if (!texts) return null;
 
