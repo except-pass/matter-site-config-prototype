@@ -33,6 +33,8 @@ label_families:
         help: "Points related to backup power systems and emergency power supply functionality."
       Smart Load:
         help: "Points related to smart load management, including controllable loads and load scheduling."
+      RSD:
+        help: "Points related to Rapid Shutdown (RSD) functionality for solar systems."
       Gateway:
         help: "The gateway is the device such as the Fortress Guardian that connects the system to the internet."
 
@@ -69,8 +71,6 @@ label_families:
         help: "Points related to current transformer (CT) measurements and CT calibration settings."
       Parallel:
         help: "Points related to parallel inverter operation, including multi-unit coordination and parallel system status."
-      RSD:
-        help: "Points related to Rapid Shutdown (RSD) functionality for solar systems, including RSD status and control."
       "Smart Load":
         help: "Points related to smart load control, including load scheduling, priority settings, and load management."
       "Backup Power":

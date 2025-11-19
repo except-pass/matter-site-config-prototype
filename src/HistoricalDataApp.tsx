@@ -836,7 +836,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
   const SEQUENTIAL_ORDER = React.useMemo(() => {
     const order: string[] = [];
     // Define preferred order, but only include families that exist in the data
-    const preferredOrder = ['Equipment', 'Type of Data', 'Component', 'Unit'];
+    const preferredOrder = ['Equipment', 'Component', 'Type of Data','Unit'];
     preferredOrder.forEach(family => {
       if (allLabels.has(family)) {
         order.push(family);
@@ -4168,7 +4168,7 @@ export default function App() {
   const [pointHelpEnabled, setPointHelpEnabled] = useState<Set<string>>(new Set());
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set());
   const [detailLevel, setDetailLevel] = useState<string>("Complete");
-  const [hierarchy, setHierarchy] = useState<string[]>(["Equipment", "Type of Data", "Component"]);
+  const [hierarchy, setHierarchy] = useState<string[]>(["Equipment", "Component", "Type of Data"]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
   const sidebarContentRef = React.useRef<HTMLDivElement>(null);
