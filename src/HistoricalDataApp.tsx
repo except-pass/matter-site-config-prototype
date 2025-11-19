@@ -828,7 +828,8 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
   const [isResizing, setIsResizing] = React.useState(false);
   const [helpModalFamily, setHelpModalFamily] = React.useState<string | null>(null);
   const [showFilterHelpModal, setShowFilterHelpModal] = React.useState(false);
-  const [isExpanded, setIsExpanded] = React.useState(true);
+  //set the default expanded/collapsed state of the Filters selector here
+  const [isExpanded, setIsExpanded] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const detailsRef = React.useRef<HTMLDetailsElement>(null);
 
@@ -4167,16 +4168,16 @@ export default function App() {
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [pointHelpEnabled, setPointHelpEnabled] = useState<Set<string>>(new Set());
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set());
-  const [detailLevel, setDetailLevel] = useState<string>("Complete");
+  const [detailLevel, setDetailLevel] = useState<string>("Standard");
   const [hierarchy, setHierarchy] = useState<string[]>(["Equipment", "Component", "Type of Data"]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
   const sidebarContentRef = React.useRef<HTMLDivElement>(null);
   const [activeGroup, setActiveGroup] = React.useState<string>("");
   const [groupsExpanded, setGroupsExpanded] = React.useState<boolean>(true);
-  const [topSectionCollapsed, setTopSectionCollapsed] = React.useState<boolean>(false);
+  const [topSectionCollapsed, setTopSectionCollapsed] = React.useState<boolean>(true);
   const [sortModalOpen, setSortModalOpen] = React.useState<boolean>(false);
-  const [filterStructure, setFilterStructure] = React.useState<'freeform' | 'sequential'>('freeform');
+  const [filterStructure, setFilterStructure] = React.useState<'freeform' | 'sequential'>('sequential');
   const topSectionScrollTop = React.useRef<number>(0);
   const lastManualToggleTime = React.useRef<number>(0);
 

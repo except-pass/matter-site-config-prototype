@@ -972,6 +972,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
   - model: 40101
@@ -995,6 +997,8 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
       - label_family: Unit
@@ -1016,6 +1020,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Readings
@@ -1047,6 +1053,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
       - label_family: Type of Data
@@ -1072,6 +1080,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Extended
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Readings
@@ -1099,6 +1109,8 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
       - label_family: Unit
@@ -1122,6 +1134,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Extended
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Readings
@@ -1149,6 +1163,8 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
       - label_family: Unit
@@ -1171,6 +1187,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
       - label_family: Unit
@@ -1191,6 +1209,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Readings
@@ -1214,6 +1234,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
       - label_family: Unit
@@ -1235,6 +1257,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Readings
@@ -1258,6 +1282,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
       - label_family: Unit
@@ -1278,6 +1304,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Readings
@@ -1301,6 +1329,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
       - label_family: Unit
@@ -1321,6 +1351,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Readings
@@ -1344,6 +1376,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
       - label_family: Unit
@@ -1365,6 +1399,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Readings
@@ -1391,6 +1427,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Readings
@@ -6679,6 +6717,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
       - label_family: Unit
@@ -6699,6 +6739,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Readings
@@ -6721,6 +6763,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Readings
       - label_family: Unit
@@ -6741,6 +6785,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Readings
@@ -7701,6 +7747,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Alarms/Faults
   - model: 40103
@@ -7720,6 +7768,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Alarms/Faults
@@ -8407,6 +8457,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Type of Data
@@ -8434,6 +8486,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Type of Data
@@ -8459,6 +8513,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -8482,6 +8538,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -8504,6 +8562,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -8536,6 +8596,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Type of Data
@@ -8560,6 +8622,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -8586,6 +8650,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -8609,6 +8675,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -8635,6 +8703,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -8681,6 +8751,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Type of Data
@@ -8707,6 +8779,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Unit
@@ -8728,6 +8802,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -8751,6 +8827,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Unit
@@ -8772,6 +8850,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -8800,6 +8880,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -8824,6 +8906,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -8850,6 +8934,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -8874,6 +8960,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -8900,6 +8988,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -8924,6 +9014,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -8960,6 +9052,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -8984,6 +9078,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Unit
@@ -9006,6 +9102,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Unit
@@ -9027,6 +9125,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -9056,6 +9156,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -9081,6 +9183,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -9108,6 +9212,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -9133,6 +9239,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -9160,6 +9268,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -9185,6 +9295,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -11252,6 +11364,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Type of Data
@@ -11276,6 +11390,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -11303,6 +11419,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Type of Data
@@ -11328,6 +11446,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Unit
@@ -11352,6 +11472,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -11380,6 +11502,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -11404,6 +11528,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -11430,6 +11556,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -11454,6 +11582,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
@@ -11480,6 +11610,8 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Battery
+      - label_family: Component
+        label_text: Battery
       - label_family: Type of Data
         label_text: Settings
       - label_family: Feature
@@ -11504,6 +11636,8 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
+        label_text: Battery
+      - label_family: Component
         label_text: Battery
       - label_family: Type of Data
         label_text: Settings
