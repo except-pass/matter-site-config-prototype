@@ -1,4 +1,4 @@
-import { BaseModal } from './BaseModal';
+import { BaseModal } from '../../../../shared/components/BaseModal';
 
 interface HelpModalProps {
   title: string;

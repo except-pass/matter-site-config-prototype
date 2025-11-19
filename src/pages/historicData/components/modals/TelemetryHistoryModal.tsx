@@ -1,5 +1,5 @@
-import { BaseModal } from './BaseModal';
-import { PointDef } from '../../types/schema';
+import { BaseModal } from '../../../../shared/components/BaseModal';
+import { PointDef } from '../../../siteConfig/types/schema';
 
 interface TelemetryHistoryModalProps {
   point: PointDef;

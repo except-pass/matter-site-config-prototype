@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import SiteConfigApp from "./SiteConfigApp";
-import HistoricalDataApp from "./HistoricalDataApp";
+import SiteConfigApp from "./pages/siteConfig/SiteConfigApp";
+import HistoricalDataApp from "./pages/historicData/HistoricalDataApp";
 import "./historical-data.css";
 
 type AppView = "site-config" | "historical-data";
