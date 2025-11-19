@@ -3,6 +3,17 @@
 # Used to display tooltips and modal help in the UI
 
 label_families:
+  Equipment:
+    help: "Identifies the equipment that the telemetry point belongs to."
+    labels:
+      Inverter:
+        help: "Points related to the inverter's operation, including power conversion, voltage, frequency, and operational status."
+      Battery:
+        help: "Points related to battery system operation, including state of charge, voltage, current, temperature, and charging/discharging status."
+      Generator:
+        help: "Points related to generator operation, including generator status, power output, and control parameters."
+      Gateway:
+        help: "The gateway is the device such as the Fortress Guardian that connects the system to the internet."
   Component:
     help: "Identifies the physical component or subsystem that the telemetry point measures or relates to."
     labels:

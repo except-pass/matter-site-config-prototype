@@ -13,7 +13,7 @@ protocols:
             0: Offline
             1: Online
       labels:
-      - label_family: Component
+      - label_family: Equipment
         label_text: Gateway
       - label_family: Feature
         label_text: Online Status
@@ -37,7 +37,7 @@ protocols:
             0: No
             1: Yes
       labels:
-      - label_family: Component
+      - label_family: Equipment
         label_text: Gateway
       - label_family: Feature
         label_text: Online Status

@@ -828,7 +828,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
   const [isResizing, setIsResizing] = React.useState(false);
   const [helpModalFamily, setHelpModalFamily] = React.useState<string | null>(null);
   const [showFilterHelpModal, setShowFilterHelpModal] = React.useState(false);
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isExpanded, setIsExpanded] = React.useState(true);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const detailsRef = React.useRef<HTMLDetailsElement>(null);
 
@@ -4165,7 +4165,7 @@ export default function App() {
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [pointHelpEnabled, setPointHelpEnabled] = useState<Set<string>>(new Set());
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set());
-  const [detailLevel, setDetailLevel] = useState<string>("Standard");
+  const [detailLevel, setDetailLevel] = useState<string>("Complete");
   const [hierarchy, setHierarchy] = useState<string[]>(["Type of Data", "Component", "Feature"]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
@@ -4174,7 +4174,7 @@ export default function App() {
   const [groupsExpanded, setGroupsExpanded] = React.useState<boolean>(true);
   const [topSectionCollapsed, setTopSectionCollapsed] = React.useState<boolean>(false);
   const [sortModalOpen, setSortModalOpen] = React.useState<boolean>(false);
-  const [filterStructure, setFilterStructure] = React.useState<'freeform' | 'sequential'>('sequential');
+  const [filterStructure, setFilterStructure] = React.useState<'freeform' | 'sequential'>('freeform');
   const topSectionScrollTop = React.useRef<number>(0);
   const lastManualToggleTime = React.useRef<number>(0);
 

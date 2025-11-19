@@ -10,7 +10,8 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "rebuild:config": "tsx src/transforms/rebuildFromHierarchy.ts",
-    "rebuild": "npm run rebuild:config"
+    "rebuild": "npm run rebuild:config",
+    "convert:telemetry": "tsx src/transforms/yamlJsonConvert.ts"
   },
   "dependencies": {
     "csv-parse": "^6.1.0",
