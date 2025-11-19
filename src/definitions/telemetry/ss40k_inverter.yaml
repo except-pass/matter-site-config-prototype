@@ -54,7 +54,7 @@ protocols:
       unit: N/A
       category: PCS information
       meanings: {}
-    labels: {}
+    labels: []
   - model: 40100
     point: Md
     block: fixed
@@ -89,7 +89,7 @@ protocols:
       unit: N/A
       category: PCS information
       meanings: {}
-    labels: {}
+    labels: []
   - model: 40100
     point: vNom
     block: fixed
@@ -413,16 +413,16 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Type of Data
         label_text: Nameplate
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40100
     point: reserved3
     block: fixed
@@ -592,7 +592,7 @@ protocols:
       unit: N/A
       category: PCS information
       meanings: {}
-    labels: {}
+    labels: []
   - model: 40101
     point: reserved2
     block: fixed
@@ -619,10 +619,6 @@ protocols:
         "0": Normal
         "1": Failure
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Type of Data
         label_text: Readings
       - label_family: Type of Data
@@ -631,6 +627,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pPvTotal
     block: fixed
@@ -644,12 +644,8 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
       - label_family: Level of Detail
         label_text: Standard
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -660,6 +656,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pMppt1
     block: fixed
@@ -673,10 +673,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -687,6 +683,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: iMppt1
     block: fixed
@@ -699,10 +699,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -713,6 +709,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vMppt1
     block: fixed
@@ -725,10 +725,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -739,6 +735,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pMppt2
     block: fixed
@@ -751,10 +751,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -765,6 +761,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: iMppt2
     block: fixed
@@ -777,10 +777,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -791,6 +787,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vMppt2
     block: fixed
@@ -803,10 +803,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -817,6 +813,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pMppt3
     block: fixed
@@ -829,10 +829,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -843,6 +839,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: iMppt3
     block: fixed
@@ -855,10 +855,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -869,6 +865,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vMppt3
     block: fixed
@@ -881,10 +881,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -895,6 +891,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pMppt4
     block: fixed
@@ -907,10 +907,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -921,6 +917,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: iMppt4
     block: fixed
@@ -933,10 +933,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -947,6 +943,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vMppt4
     block: fixed
@@ -959,10 +959,6 @@ protocols:
       category: DC-PV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -973,6 +969,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: reserved3
     block: fixed
@@ -5064,12 +5064,8 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
       - label_family: Level of Detail
         label_text: Standard
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5080,6 +5076,10 @@ protocols:
         label_text: Extended
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: qAcCplTot
     block: fixed
@@ -5092,10 +5092,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5104,6 +5100,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: sAcCplTot
     block: fixed
@@ -5116,10 +5116,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5128,6 +5124,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pfAcCplTot
     block: fixed
@@ -5140,16 +5140,16 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Type of Data
         label_text: Readings
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: iAcCplTot
     block: fixed
@@ -5162,10 +5162,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -5174,6 +5170,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vAcCplLL
     block: fixed
@@ -5186,10 +5186,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -5198,6 +5194,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vAcCplLN
     block: fixed
@@ -5210,10 +5210,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -5222,6 +5218,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: fAcCpl
     block: fixed
@@ -5234,10 +5234,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Freq
       - label_family: Type of Data
@@ -5246,6 +5242,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pAcCplL1
     block: fixed
@@ -5258,10 +5258,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5270,6 +5266,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: qAcCplL1
     block: fixed
@@ -5282,10 +5282,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5294,6 +5290,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: sAcCplL1
     block: fixed
@@ -5306,10 +5306,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5318,6 +5314,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pfAcCplL1
     block: fixed
@@ -5330,16 +5330,16 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Type of Data
         label_text: Readings
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: iAcCplL1
     block: fixed
@@ -5352,10 +5352,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -5364,6 +5360,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vAcCplL12
     block: fixed
@@ -5376,10 +5376,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -5388,6 +5384,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vAcCplL1N
     block: fixed
@@ -5400,10 +5400,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -5412,6 +5408,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pAcCplL2
     block: fixed
@@ -5424,10 +5424,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5436,6 +5432,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: qAcCplL2
     block: fixed
@@ -5448,10 +5448,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5460,6 +5456,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: sAcCplL2
     block: fixed
@@ -5472,10 +5472,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5484,6 +5480,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pfAcCplL2
     block: fixed
@@ -5496,16 +5496,16 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Type of Data
         label_text: Readings
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: iAcCplL2
     block: fixed
@@ -5518,10 +5518,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -5530,6 +5526,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vAcCplL23
     block: fixed
@@ -5542,10 +5542,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -5554,6 +5550,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vAcCplL2N
     block: fixed
@@ -5566,10 +5566,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -5578,6 +5574,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pAcCplL3
     block: fixed
@@ -5590,10 +5590,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5602,6 +5598,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: qAcCplL3
     block: fixed
@@ -5614,10 +5614,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5626,6 +5622,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: sAcCplL3
     block: fixed
@@ -5638,10 +5638,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -5650,6 +5646,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: pfAcCplL3
     block: fixed
@@ -5662,16 +5662,16 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Type of Data
         label_text: Readings
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: iAcCplL3
     block: fixed
@@ -5684,10 +5684,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -5696,6 +5692,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vAcCplL31
     block: fixed
@@ -5708,10 +5708,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -5720,6 +5716,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: vAcCplL3N
     block: fixed
@@ -5732,10 +5732,6 @@ protocols:
       category: AC Couple
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -5744,6 +5740,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: acCplActFlg
     block: fixed
@@ -5760,10 +5760,6 @@ protocols:
       friendly_meanings:
         "0": "Not activated; 1: Activated"
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Type of Data
         label_text: Readings
       - label_family: Type of Data
@@ -5772,6 +5768,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40101
     point: reserved10
     block: fixed
@@ -5797,7 +5797,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -5821,7 +5821,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -5845,7 +5845,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -5869,7 +5869,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Readings
@@ -5891,7 +5891,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Current
@@ -5915,7 +5915,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -5939,7 +5939,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -5963,7 +5963,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Freq
@@ -5987,7 +5987,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6011,7 +6011,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6035,7 +6035,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6059,7 +6059,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Readings
@@ -6081,7 +6081,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Current
@@ -6105,7 +6105,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -6129,7 +6129,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -6153,7 +6153,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6177,7 +6177,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6201,7 +6201,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6225,7 +6225,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Readings
@@ -6247,7 +6247,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Current
@@ -6271,7 +6271,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -6295,7 +6295,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -6319,7 +6319,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6343,7 +6343,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6367,7 +6367,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6391,7 +6391,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Readings
@@ -6413,7 +6413,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Current
@@ -6437,7 +6437,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -6461,7 +6461,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -6489,7 +6489,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Readings
@@ -6720,10 +6720,6 @@ protocols:
       category: DC-PV  Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -6732,6 +6728,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40102
     point: ePvTot
     block: fixed
@@ -6744,10 +6744,6 @@ protocols:
       category: DC-PV  Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -6756,6 +6752,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40102
     point: ePv1Tot
     block: fixed
@@ -6768,10 +6768,6 @@ protocols:
       category: DC-PV  Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -6780,6 +6776,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40102
     point: ePv1Tdy
     block: fixed
@@ -6792,10 +6792,6 @@ protocols:
       category: DC-PV  Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -6804,6 +6800,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40102
     point: ePv2Tot
     block: fixed
@@ -6816,10 +6816,6 @@ protocols:
       category: DC-PV  Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -6828,6 +6824,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40102
     point: ePv2Tdy
     block: fixed
@@ -6840,10 +6840,6 @@ protocols:
       category: DC-PV  Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -6852,6 +6848,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40102
     point: ePv3Tot
     block: fixed
@@ -6864,10 +6864,6 @@ protocols:
       category: DC-PV  Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -6876,6 +6872,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40102
     point: ePv3Tdy
     block: fixed
@@ -6888,10 +6888,6 @@ protocols:
       category: DC-PV  Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -6900,6 +6896,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40102
     point: reserved3
     block: fixed
@@ -7522,10 +7522,6 @@ protocols:
       category: AC Couple Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -7534,6 +7530,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40102
     point: eAcCplTot
     block: fixed
@@ -7546,10 +7546,6 @@ protocols:
       category: AC Couple Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -7558,6 +7554,10 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40102
     point: reserved9
     block: fixed
@@ -7583,7 +7583,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Energy
@@ -7607,7 +7607,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Inverter
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Energy
@@ -7904,16 +7904,16 @@ protocols:
         "1": PV MPPT short circuit detected
         "2": AFCI communication loss
     labels:
-      - label_family: Component
-        label_text: PV
       - label_family: Type of Data
         label_text: Alarms/Faults
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40103
     point: dcPvFault
     block: fixed
@@ -7934,16 +7934,16 @@ protocols:
         "6": PV MPPT Multiple short circuits detected
         "7": GFCI module fault
     labels:
-      - label_family: Component
-        label_text: PV
       - label_family: Type of Data
         label_text: Alarms/Faults
-      - label_family: Feature
-        label_text: PV-DC
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40103
     point: reserved5
     block: fixed
@@ -12167,18 +12167,18 @@ protocols:
       meanings:
         "0": Disable
     labels:
-      - label_family: Component
-        label_text: PV
       - label_family: Type of Data
         label_text: Settings
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Type of Data
         label_text: Status
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40104
     point: socAcCplOn
     block: fixed
@@ -12193,18 +12193,18 @@ protocols:
       category: ACCoupledPV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
       - label_family: Type of Data
         label_text: Settings
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: "%"
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40104
     point: socAcCplOff
     block: fixed
@@ -12219,18 +12219,18 @@ protocols:
       category: ACCoupledPV
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: PV
       - label_family: Type of Data
         label_text: Settings
-      - label_family: Feature
-        label_text: PV-AC Couple
       - label_family: Unit
         label_text: "%"
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
+      - label_family: Component
+        label_text: PV-DC
+      - label_family: Component
+        label_text: PV-AC Couple
   - model: 40104
     point: reserved23
     block: fixed
@@ -12260,7 +12260,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Smart Load
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Settings
@@ -12289,7 +12289,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Smart Load
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Settings
@@ -12316,7 +12316,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Smart Load
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Settings
@@ -12342,7 +12342,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Smart Load
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Settings
@@ -12370,7 +12370,7 @@ protocols:
     labels:
       - label_family: Component
         label_text: Smart Load
-      - label_family: Feature
+      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Settings
