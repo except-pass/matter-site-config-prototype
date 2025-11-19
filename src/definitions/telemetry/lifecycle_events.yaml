@@ -1,6 +1,6 @@
 protocols:
     - model: lifecycle_events
-      point: ID
+      point: is_online
       block: fixed
       entry:
         name: is_online

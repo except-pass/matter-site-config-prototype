@@ -2248,7 +2248,7 @@ protocols:
     block: fixed
     entry:
       name: pGridImpTot
-      description: Grid active power import
+      description: Power imported from grid
       longdescription: Total real power imported from the grid (consumed by the site).
       dtype: uint32
       unit: W
@@ -2274,7 +2274,7 @@ protocols:
     block: fixed
     entry:
       name: pGridExpTot
-      description: Grid active power export
+      description: Power exported to grid
       longdescription: Total real power exported to the grid from PV and battery discharge.
       dtype: uint32
       unit: W

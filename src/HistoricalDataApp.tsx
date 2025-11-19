@@ -828,8 +828,8 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
   const [isResizing, setIsResizing] = React.useState(false);
   const [helpModalFamily, setHelpModalFamily] = React.useState<string | null>(null);
   const [showFilterHelpModal, setShowFilterHelpModal] = React.useState(false);
-  //set the default expanded/collapsed state of the Filters selector here
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  // Expand the Add Filters panel by default so chips are visible on load
+  const [isExpanded, setIsExpanded] = React.useState(true);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const detailsRef = React.useRef<HTMLDetailsElement>(null);
 
@@ -837,7 +837,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
   const SEQUENTIAL_ORDER = React.useMemo(() => {
     const order: string[] = [];
     // Define preferred order, but only include families that exist in the data
-    const preferredOrder = ['Equipment', 'Component', 'Type of Data','Unit'];
+    const preferredOrder = ['Equipment', 'Component', 'Type of Data', 'Unit'];
     preferredOrder.forEach(family => {
       if (allLabels.has(family)) {
         order.push(family);
@@ -2452,6 +2452,43 @@ const DEFAULT_ROW_HEIGHT = 520;
 const DEFAULT_COLUMN_WIDTH = 780;
 const DEFAULT_INVERTER_SELECTION = ['001'];
 
+const PRECONFIGURED_CHARTS: Array<{ id: string; row: number; col: number; points: string[] }> = [
+  {
+    id: 'chart-0',
+    row: 0,
+    col: 0,
+    points: [
+      '40101:pPvTotal',
+      '40101:pGridImpTot',
+      '40101:pGridExpTot',
+      '40101:pBatChg',
+      '40101:pBatDischg',
+    ],
+  },
+  {
+    id: 'chart-1',
+    row: 0,
+    col: 1,
+    points: ['lifecycle_events:is_online', '40101:gridStat'],
+  },
+  {
+    id: 'chart-2',
+    row: 1,
+    col: 0,
+    points: ['40101:socBat'],
+  },
+  {
+    id: 'chart-3',
+    row: 1,
+    col: 1,
+    points: [],
+  },
+];
+
+const createDefaultPointSelections = (pointKeys: string[]): Map<string, Set<string>> => {
+  return new Map(pointKeys.map((key) => [key, new Set(DEFAULT_INVERTER_SELECTION)]));
+};
+
 interface DividerButtonSegment {
   key: string;
   onAdd: () => void;
@@ -2807,13 +2844,28 @@ const ColumnDivider: React.FC<ColumnDividerProps> = ({
 };
 
 function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInverter, onSelectPointsToggle, selectPointsOpen, callbacksRef, onActiveChartSelectedPointsChange, onActiveChartPositionChange }: ChartGridProps) {
-  const [charts, setCharts] = useState<ChartData[]>([
-    { id: 'chart-0', selectedPoints: new Map(), row: 0, col: 0 }
-  ]);
-  const [nextChartId, setNextChartId] = useState(1);
+  const [charts, setCharts] = useState<ChartData[]>(() =>
+    PRECONFIGURED_CHARTS.map(({ id, row, col, points }) => ({
+      id,
+      row,
+      col,
+      selectedPoints: createDefaultPointSelections(points),
+    }))
+  );
+  const [nextChartId, setNextChartId] = useState(PRECONFIGURED_CHARTS.length);
   const [activeChartId, setActiveChartId] = useState<string>('chart-0');
-  const [columnWidths, setColumnWidths] = useState<Map<number, number>>(new Map([[0, DEFAULT_COLUMN_WIDTH]]));
-  const [rowHeights, setRowHeights] = useState<Map<number, number>>(new Map([[0, DEFAULT_ROW_HEIGHT]]));
+  const [columnWidths, setColumnWidths] = useState<Map<number, number>>(
+    () => new Map([
+      [0, DEFAULT_COLUMN_WIDTH],
+      [1, DEFAULT_COLUMN_WIDTH],
+    ])
+  );
+  const [rowHeights, setRowHeights] = useState<Map<number, number>>(
+    () => new Map([
+      [0, DEFAULT_ROW_HEIGHT],
+      [1, DEFAULT_ROW_HEIGHT],
+    ])
+  );
   const [activeRowSeparator, setActiveRowSeparator] = useState<number | null>(null);
   const [activeColSeparator, setActiveColSeparator] = useState<number | null>(null);
   const [activeCorner, setActiveCorner] = useState<{row: number, col: number} | null>(null);
