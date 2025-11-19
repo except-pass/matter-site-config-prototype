@@ -69,8 +69,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Type of Data
         label_text: Nameplate
       - label_family: Level of Detail
@@ -103,8 +101,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -126,8 +122,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Freq
       - label_family: Type of Data
@@ -150,8 +144,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -174,8 +166,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -197,8 +187,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Type of Data
         label_text: Nameplate
       - label_family: Level of Detail
@@ -219,8 +207,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Firmware
       - label_family: Type of Data
@@ -243,8 +229,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Firmware
       - label_family: Type of Data
@@ -267,8 +251,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Firmware
       - label_family: Type of Data
@@ -290,8 +272,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Firmware
       - label_family: Type of Data
@@ -313,8 +293,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Firmware
       - label_family: Type of Data
@@ -336,8 +314,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Firmware
       - label_family: Type of Data
@@ -359,8 +335,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Type of Data
         label_text: Nameplate
       - label_family: Level of Detail
@@ -380,8 +354,6 @@ protocols:
       category: PCS information
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Type of Data
         label_text: Nameplate
       - label_family: Level of Detail
@@ -1472,8 +1444,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Level of Detail
         label_text: Standard
       - label_family: Unit
@@ -1499,8 +1469,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -1522,8 +1490,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -1545,8 +1511,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Type of Data
         label_text: Readings
       - label_family: Level of Detail
@@ -1565,8 +1529,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -1588,8 +1550,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Level of Detail
         label_text: Standard
       - label_family: Unit
@@ -1614,8 +1574,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -1637,8 +1595,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Freq
       - label_family: Type of Data
@@ -1661,8 +1617,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -1683,8 +1637,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -1705,8 +1657,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -1727,8 +1677,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Type of Data
         label_text: Readings
       - label_family: Level of Detail
@@ -1747,8 +1695,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -1769,8 +1715,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -1791,8 +1735,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -1813,8 +1755,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -1835,8 +1775,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -1857,8 +1795,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -1879,8 +1815,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Type of Data
         label_text: Readings
       - label_family: Level of Detail
@@ -1899,8 +1833,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -1921,8 +1853,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -1943,8 +1873,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -1965,8 +1893,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -1987,8 +1913,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -2009,8 +1933,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -2031,8 +1953,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Type of Data
         label_text: Readings
       - label_family: Level of Detail
@@ -2051,8 +1971,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Current
       - label_family: Type of Data
@@ -2073,8 +1991,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -2095,8 +2011,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Volt
       - label_family: Type of Data
@@ -2118,8 +2032,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Power
       - label_family: Type of Data
@@ -2141,8 +2053,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Temp
       - label_family: Type of Data
@@ -2164,8 +2074,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Temp
       - label_family: Type of Data
@@ -2187,8 +2095,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Temp
       - label_family: Type of Data
@@ -2209,8 +2115,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Temp
       - label_family: Type of Data
@@ -2952,8 +2856,6 @@ protocols:
       friendly_meanings:
         "0": "Open (Off); 1: Close (On)"
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Type of Data
@@ -2976,8 +2878,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Level of Detail
         label_text: Standard
       - label_family: Feature
@@ -3004,8 +2904,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3028,8 +2926,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3052,8 +2948,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Type of Data
@@ -3074,8 +2968,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3098,8 +2990,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3122,8 +3012,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3146,8 +3034,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3172,8 +3058,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3196,8 +3080,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3220,8 +3102,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3244,8 +3124,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Type of Data
@@ -3266,8 +3144,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3290,8 +3166,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3314,8 +3188,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3338,8 +3210,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3362,8 +3232,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3386,8 +3254,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3410,8 +3276,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Type of Data
@@ -3432,8 +3296,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3456,8 +3318,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3480,8 +3340,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3504,8 +3362,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3528,8 +3384,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3552,8 +3406,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3576,8 +3428,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Type of Data
@@ -3598,8 +3448,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3622,8 +3470,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -3646,8 +3492,6 @@ protocols:
       category: Backup
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -5077,8 +4921,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: qAcCplTot
@@ -5100,8 +4942,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5125,8 +4965,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: pfAcCplTot
@@ -5146,8 +4984,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5171,8 +5007,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: vAcCplLL
@@ -5194,8 +5028,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5219,8 +5051,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: fAcCpl
@@ -5242,8 +5072,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5267,8 +5095,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: qAcCplL1
@@ -5290,8 +5116,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5315,8 +5139,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: pfAcCplL1
@@ -5336,8 +5158,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5361,8 +5181,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: vAcCplL12
@@ -5384,8 +5202,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5409,8 +5225,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: pAcCplL2
@@ -5432,8 +5246,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5457,8 +5269,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: sAcCplL2
@@ -5481,8 +5291,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: pfAcCplL2
@@ -5502,8 +5310,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5527,8 +5333,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: vAcCplL23
@@ -5550,8 +5354,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5575,8 +5377,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: pAcCplL3
@@ -5598,8 +5398,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5623,8 +5421,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: sAcCplL3
@@ -5647,8 +5443,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: pfAcCplL3
@@ -5668,8 +5462,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5693,8 +5485,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: vAcCplL31
@@ -5717,8 +5507,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
     point: vAcCplL3N
@@ -5740,8 +5528,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40101
@@ -5796,8 +5582,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -5819,8 +5603,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -5844,8 +5626,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -5868,8 +5648,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Readings
@@ -5889,8 +5667,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -5914,8 +5690,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -5937,8 +5711,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -5962,8 +5734,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Freq
@@ -5985,8 +5755,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -6010,8 +5778,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6033,8 +5799,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -6058,8 +5822,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Readings
@@ -6079,8 +5841,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -6104,8 +5864,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -6127,8 +5885,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -6152,8 +5908,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6175,8 +5929,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -6200,8 +5952,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6224,8 +5974,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Readings
@@ -6245,8 +5993,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -6270,8 +6016,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -6293,8 +6037,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -6318,8 +6060,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6341,8 +6081,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -6366,8 +6104,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Power
@@ -6390,8 +6126,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
         label_text: Readings
@@ -6411,8 +6145,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -6436,8 +6168,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Volt
@@ -6459,8 +6189,6 @@ protocols:
       category: Smart Load
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -6487,8 +6215,6 @@ protocols:
       friendly_meanings:
         "0": "Not activated; 1: Activated"
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Type of Data
@@ -7022,8 +6748,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -7044,8 +6768,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -7066,8 +6788,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -7088,8 +6808,6 @@ protocols:
       category: Inverter
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Unit
         label_text: Energy
       - label_family: Type of Data
@@ -7209,8 +6927,6 @@ protocols:
       category: Backup Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -7233,8 +6949,6 @@ protocols:
       category: Backup Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -7257,8 +6971,6 @@ protocols:
       category: Backup Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -7281,8 +6993,6 @@ protocols:
       category: Backup Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -7305,8 +7015,6 @@ protocols:
       category: Backup Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -7329,8 +7037,6 @@ protocols:
       category: Backup Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -7353,8 +7059,6 @@ protocols:
       category: Backup Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -7377,8 +7081,6 @@ protocols:
       category: Backup Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Unit
@@ -7531,8 +7233,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40102
     point: eAcCplTot
@@ -7554,8 +7254,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40102
@@ -7582,8 +7280,6 @@ protocols:
       meanings: {}
     labels:
       - label_family: Component
-        label_text: Inverter
-      - label_family: Component
         label_text: Smart Load
       - label_family: Unit
         label_text: Energy
@@ -7605,8 +7301,6 @@ protocols:
       category: SmartLoad Energy
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Component
         label_text: Smart Load
       - label_family: Unit
@@ -7764,8 +7458,6 @@ protocols:
         "1": LCD communication fault
         "2": Auto test failure
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Type of Data
         label_text: Alarms/Faults
       - label_family: Level of Detail
@@ -7802,8 +7494,6 @@ protocols:
         "16": M8 Microprocessor RX failure
         "17": US/European Model detection error
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Type of Data
         label_text: Alarms/Faults
       - label_family: Level of Detail
@@ -7835,8 +7525,6 @@ protocols:
         "0": Parallel battery abnormal
         "1": Parallel grid abnormal
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Parallel
       - label_family: Type of Data
@@ -7868,8 +7556,6 @@ protocols:
         "9": Parallel communication error
         "10": Grid rule different in Parallel
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Parallel
       - label_family: Type of Data
@@ -8093,8 +7779,6 @@ protocols:
         "0": Meter lost
         "1": Meter reversed
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Meter
       - label_family: Type of Data
@@ -8133,8 +7817,6 @@ protocols:
         "6": Backup AC Backfeed (Reverse Power Flow)
         "7": Backup and grid port miswired / cross-connection
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Backup Power
       - label_family: Type of Data
@@ -8210,8 +7892,6 @@ protocols:
       meanings:
         "0": RSD active
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: RSD
       - label_family: Type of Data
@@ -8312,8 +7992,6 @@ protocols:
       friendly_meanings:
         Date: Year
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Basic Setup
       - label_family: Type of Data
@@ -8337,8 +8015,6 @@ protocols:
       friendly_meanings:
         Date: Month
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Basic Setup
       - label_family: Type of Data
@@ -8362,8 +8038,6 @@ protocols:
       friendly_meanings:
         Date: Day
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Basic Setup
       - label_family: Type of Data
@@ -8387,8 +8061,6 @@ protocols:
       friendly_meanings:
         Date: Hour
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Basic Setup
       - label_family: Type of Data
@@ -8412,8 +8084,6 @@ protocols:
       friendly_meanings:
         Date: Minute
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Basic Setup
       - label_family: Type of Data
@@ -8437,8 +8107,6 @@ protocols:
       friendly_meanings:
         Date: Second
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Basic Setup
       - label_family: Type of Data
@@ -8463,8 +8131,6 @@ protocols:
         "0": Grid-tied
         "1": Off-grid
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Basic Setup
       - label_family: Type of Data
@@ -8510,8 +8176,6 @@ protocols:
         "1": Feed-in priority mode
         "2": Back-up mode
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Basic Setup
       - label_family: Type of Data
@@ -8541,8 +8205,6 @@ protocols:
         "0": Standby
         "1": PowerOn
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Basic Setup
       - label_family: Type of Data
@@ -8617,8 +8279,6 @@ protocols:
         "7": "6000 : 1"
         "8": "10000 : 1"
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: CT
       - label_family: Type of Data
@@ -8646,8 +8306,6 @@ protocols:
         "0": Grid to inverter
         "1": Inverter to grid
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: CT
       - label_family: Type of Data
@@ -11394,8 +11052,6 @@ protocols:
         "0": disable
         "1": enable
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Power Limits
       - label_family: Type of Data
@@ -11423,8 +11079,6 @@ protocols:
       category: LimitActivePower
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Power Limits
       - label_family: Type of Data
@@ -11463,8 +11117,6 @@ protocols:
         "0": disable,
         "1": enable
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Selling Power
       - label_family: Type of Data
@@ -11489,8 +11141,6 @@ protocols:
       category: FeedInGrid
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Selling Power
       - label_family: Type of Data
@@ -11521,8 +11171,6 @@ protocols:
         "0": disable,
         "1": enable
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Selling Power
       - label_family: Type of Data
@@ -12176,8 +11824,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40104
     point: socAcCplOn
@@ -12202,8 +11848,6 @@ protocols:
       - label_family: Equipment
         label_text: Inverter
       - label_family: Component
-        label_text: PV-DC
-      - label_family: Component
         label_text: PV-AC Couple
   - model: 40104
     point: socAcCplOff
@@ -12227,8 +11871,6 @@ protocols:
         label_text: Complete
       - label_family: Equipment
         label_text: Inverter
-      - label_family: Component
-        label_text: PV-DC
       - label_family: Component
         label_text: PV-AC Couple
   - model: 40104
@@ -12409,8 +12051,6 @@ protocols:
       category: Parallel
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Parallel
       - label_family: Type of Data
@@ -12444,8 +12084,6 @@ protocols:
         "3": Three phase parallel(Master)
         "4": 2*208(Master)
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Parallel
       - label_family: Type of Data
@@ -12473,8 +12111,6 @@ protocols:
         "2": S
         "3": T
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Parallel
       - label_family: Type of Data
@@ -12502,8 +12138,6 @@ protocols:
         "2": S
         "3": T
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Parallel
       - label_family: Type of Data
@@ -12530,8 +12164,6 @@ protocols:
         "0": Battery connect parallel
         "1": Battery connect independence
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Parallel
       - label_family: Type of Data
@@ -12555,8 +12187,6 @@ protocols:
       category: Parallel
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Parallel
       - label_family: Type of Data
@@ -12579,8 +12209,6 @@ protocols:
       category: Parallel
       meanings: {}
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Parallel
       - label_family: Type of Data
@@ -12608,8 +12236,6 @@ protocols:
         "2": S
         "3": T
     labels:
-      - label_family: Component
-        label_text: Inverter
       - label_family: Feature
         label_text: Parallel
       - label_family: Type of Data

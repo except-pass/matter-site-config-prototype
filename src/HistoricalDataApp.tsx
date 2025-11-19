@@ -836,7 +836,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
   const SEQUENTIAL_ORDER = React.useMemo(() => {
     const order: string[] = [];
     // Define preferred order, but only include families that exist in the data
-    const preferredOrder = ['Equipment', 'Component', 'Type of Data', 'Unit'];
+    const preferredOrder = ['Equipment', 'Type of Data', 'Component', 'Unit'];
     preferredOrder.forEach(family => {
       if (allLabels.has(family)) {
         order.push(family);
@@ -1186,9 +1186,11 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
             })}
           </>
         ) : (
-          // Freeform mode rendering (original)
+          // Freeform mode rendering (uses the same family ordering as sequential)
           <>
-          {[...otherLabels.entries()].map(([family, texts]) => {
+          {SEQUENTIAL_ORDER.map((family) => {
+            const texts = otherLabels.get(family);
+            if (!texts) return null;
             const familyHelp = getLabelHelp(family);
             const familyColor = getLabelColor(family, '');
             // Check if any label in this family is selected
@@ -1244,7 +1246,7 @@ function LabelFilter({ allLabels, selectedLabels, onToggleLabel, onClearFilters,
                         tabIndex={isDisabled ? -1 : 0}
                       >
                         <span>{text}</span>
-                        {!isSelected && (
+                    {!isSelected && (
                           <span className={`ml-1 ${isDisabled ? 'text-gray-400' : 'text-gray-500'}`}>
                             ({count})
                           </span>
@@ -4166,7 +4168,7 @@ export default function App() {
   const [pointHelpEnabled, setPointHelpEnabled] = useState<Set<string>>(new Set());
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(() => new Set());
   const [detailLevel, setDetailLevel] = useState<string>("Complete");
-  const [hierarchy, setHierarchy] = useState<string[]>(["Type of Data", "Component", "Feature"]);
+  const [hierarchy, setHierarchy] = useState<string[]>(["Equipment", "Type of Data", "Component"]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
   const sidebarContentRef = React.useRef<HTMLDivElement>(null);
