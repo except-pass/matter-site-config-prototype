@@ -1,5 +1,3 @@
-import React from "react";
-
 interface CornerHandleProps {
   onResizeStart: (clientX: number, clientY: number) => void;
   isActive?: boolean;

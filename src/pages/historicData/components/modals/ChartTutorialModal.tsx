@@ -189,7 +189,8 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
           <div>
             <h4 className="font-semibold mb-2">Status charts</h4>
             <p className="text-sm mb-2">
-              Show what <em>state</em> the equipment was in over time, such as:
+              Data points that will be plotted as a status chart are designated with the 📊 icon.<br />
+              These show what <em>state</em> the equipment was in over time, such as:
             </p>
             <ul className="list-disc pl-5 text-sm text-slate-600 space-y-1">
               <li>Normal</li>

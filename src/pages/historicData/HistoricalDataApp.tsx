@@ -3,7 +3,6 @@ import YAML from "yaml";
 import rawYaml from "../siteConfig/definitions/telemetry/ss40k_inverter.yaml?raw";
 import rawLifecycleEventsYaml from "../siteConfig/definitions/telemetry/lifecycle_events.yaml?raw";
 import rawLabelHelp from "../siteConfig/definitions/telemetry/label_help.yaml?raw";
-import ChartTutorialModal from "./components/modals/ChartTutorialModal";
 import LabelGroup from "./components/filters/LabelGroup";
 import LabelFilter from "./components/filters/LabelFilter";
 import ChartGrid, { type ChartGridCallbacks, DEFAULT_INVERTER_SELECTION } from "./components/charts/ChartGrid";
@@ -1069,7 +1068,7 @@ export default function App() {
                     ? "Didn't find what you were looking for? Increase the Detail Level, remove filters, or clearing your search terms to see more data points."
                     : "Didn't find what you were looking for? Try removing filters or clearing your search terms to see more data points."}
                 </p>
-                <DetailLevelSlider value={detailLevel} onChange={setDetailLevel} />
+                <DetailLevelSlider value={detailLevel} onChange={setDetailLevel} getLabelHelp={getLabelHelp} />
               </div>
             </div>
           </div>
@@ -1147,7 +1146,6 @@ export default function App() {
                   onChange={setHierarchy}
                   scrollContainerRef={sidebarContentRef}
                   getLabelColor={getLabelColor}
-                  getLabelHelp={getLabelHelp}
                 />
               </div>
             </div>

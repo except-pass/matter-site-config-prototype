@@ -7,7 +7,6 @@ interface HierarchyConfigProps {
   onChange: (hierarchy: string[]) => void;
   scrollContainerRef?: React.RefObject<HTMLDivElement>;
   getLabelColor: (family: string, text: string) => { bg: string; text: string; border: string };
-  getLabelHelp: (family: string, labelText?: string) => string | null;
 }
 
 export default function HierarchyConfig({
@@ -15,8 +14,7 @@ export default function HierarchyConfig({
   hierarchy,
   onChange,
   scrollContainerRef,
-  getLabelColor,
-  getLabelHelp
+  getLabelColor
 }: HierarchyConfigProps) {
   const [showHelpModal, setShowHelpModal] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(true);

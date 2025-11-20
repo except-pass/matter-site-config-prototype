@@ -1,5 +1,3 @@
-import React from "react";
-
 interface LabelHelpModalProps {
   family: string;
   labels: Set<string>;

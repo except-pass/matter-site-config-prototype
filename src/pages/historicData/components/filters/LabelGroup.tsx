@@ -1,6 +1,6 @@
-import React from "react";
 import type { ProtocolPoint, LabelHierarchy } from "../../types";
 import InverterSelector from "../ui/InverterSelector";
+import { getFullSerialNumber } from "../charts/chartUtils";
 
 interface LabelGroupProps {
   levelName: string;
@@ -171,6 +171,7 @@ export default function LabelGroup({
                 <InverterSelector
                   selectedInverters={selectedInverters}
                   onChange={(newInverters) => onUpdateInverters(key, newInverters)}
+                  getFullSerialNumber={getFullSerialNumber}
                 />
               </div>
             )}

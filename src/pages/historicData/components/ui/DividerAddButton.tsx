@@ -1,5 +1,3 @@
-import React from "react";
-
 interface DividerAddButtonProps {
   onAdd: () => void;
   ariaLabel: string;

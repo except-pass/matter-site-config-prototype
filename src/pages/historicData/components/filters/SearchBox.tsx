@@ -1,5 +1,3 @@
-import React from "react";
-
 interface SearchBoxProps {
   value: string;
   onChange: (next: string) => void;

@@ -1,4 +1,3 @@
-import type { Meanings } from "../../types";
 import type { LegendEntry, CategoricalChartData, CategoricalSeriesRow } from "./chartTypes";
 import { LINE_SERIES_LENGTH } from "./chartTypes";
 
