@@ -325,17 +325,61 @@ export async function readPoint(
   };
   mockPointValues.set(request.pointId, value);
 
-  // In production, would generate and send actual protocol payload
-  const mockPayload = {
-    protocol: 'matter',
-    pointId: request.pointId,
-    equipmentId: request.equipmentId,
-    operation: 'read',
-  };
+  // Find the point definition to build proper protocol payload
+  const point = findPointById(request.pointId);
+  let payload: any = {};
+
+  if (point && point.protocol) {
+    if (point.protocol.matter) {
+      // Build Matter protocol payload for read
+      payload = {
+        version: "1.0",
+        timeout: 60,
+        requestId: Date.now(),
+        endPoint: "Matter",
+        method: "Read",
+        data: {
+          Elements: [
+            {
+              MEP: point.protocol.matter.MEP,
+              Cluster: point.protocol.matter.Cluster,
+              Element: point.protocol.matter.Element
+            }
+          ],
+          thingId: {
+            Type: "Inverter",
+            Mn: "fortress",
+            Md: "FP-ENVY-Inverter",
+            SN: request.equipmentId
+          }
+        }
+      };
+    } else if (point.protocol.modbus) {
+      // Build Modbus protocol payload for read
+      const registerType = point.protocol.modbus.register_type;
+      const functionCode = registerType === 3 ? 3 : 4;
+
+      payload = {
+        version: "1.0",
+        requestId: Date.now(),
+        endPoint: "Modbus",
+        method: "Read",
+        timeout: 5,
+        data: {
+          type: "RTU",
+          uartPort: 1,
+          slaveId: 1,
+          address: point.protocol.modbus.address,
+          function: functionCode,
+          registerNumber: point.protocol.modbus.size
+        }
+      };
+    }
+  }
 
   return {
     value,
-    payload: mockPayload,
+    payload: payload,
   };
 }
 
@@ -417,16 +461,34 @@ export async function writePoint(
         }
       };
     } else if (point.protocol.modbus) {
-      // Build Modbus protocol payload
+      // Build Modbus protocol payload for write
+      const functionCode = point.protocol.modbus.size > 1 ? 16 : 6;
+
+      // Get the first value from the request (Modbus writes single value)
+      const firstEntryArg = point.entries[0]?.arg;
+      let writeValue = firstEntryArg ? request.values[firstEntryArg] : 0;
+
+      // Ensure it's an integer for Modbus
+      if (typeof writeValue === 'number') {
+        writeValue = Math.round(writeValue);
+      } else if (typeof writeValue === 'string') {
+        writeValue = parseInt(writeValue, 10) || 0;
+      }
+
       payload = {
-        bus: "modbus",
-        write: point.access !== "R",
-        map: {
+        version: "1.0",
+        requestId: Date.now(),
+        endPoint: "Modbus",
+        method: "Write",
+        timeout: 5,
+        data: {
+          type: "RTU",
+          uartPort: 1,
+          slaveId: 1,
           address: point.protocol.modbus.address,
-          register_type: point.protocol.modbus.register_type,
-          size: point.protocol.modbus.size
-        },
-        values: request.values
+          function: functionCode,
+          value: writeValue
+        }
       };
     }
   }
@@ -492,16 +554,34 @@ export async function invokeCommand(
         }
       };
     } else if (point.protocol.modbus) {
-      // Build Modbus protocol payload for invoke
+      // Build Modbus protocol payload for invoke (same as write)
+      const functionCode = point.protocol.modbus.size > 1 ? 16 : 6;
+
+      // Get the first value from the parameters
+      const firstEntryArg = point.entries[0]?.arg;
+      let writeValue = firstEntryArg && request.parameters ? request.parameters[firstEntryArg] : 0;
+
+      // Ensure it's an integer for Modbus
+      if (typeof writeValue === 'number') {
+        writeValue = Math.round(writeValue);
+      } else if (typeof writeValue === 'string') {
+        writeValue = parseInt(writeValue, 10) || 0;
+      }
+
       payload = {
-        bus: "modbus",
-        write: true,
-        map: {
+        version: "1.0",
+        requestId: Date.now(),
+        endPoint: "Modbus",
+        method: "Write",
+        timeout: 5,
+        data: {
+          type: "RTU",
+          uartPort: 1,
+          slaveId: 1,
           address: point.protocol.modbus.address,
-          register_type: point.protocol.modbus.register_type,
-          size: point.protocol.modbus.size
-        },
-        values: request.parameters
+          function: functionCode,
+          value: writeValue
+        }
       };
     }
   }
