@@ -9,6 +9,7 @@ import ChartGrid, { type ChartGridCallbacks, DEFAULT_INVERTER_SELECTION } from "
 import SearchBox from "./components/filters/SearchBox";
 import DetailLevelSlider from "./components/filters/DetailLevelSlider";
 import HierarchyConfig from "./components/filters/HierarchyConfig";
+import ChartTutorialModal from "./components/modals/ChartTutorialModal";
 
 type Meanings = Record<string | number, string>;
 
@@ -412,6 +413,7 @@ export default function App() {
   const [groupsExpanded, setGroupsExpanded] = React.useState<boolean>(true);
   const [topSectionCollapsed, setTopSectionCollapsed] = React.useState<boolean>(true);
   const [sortModalOpen, setSortModalOpen] = React.useState<boolean>(false);
+  const [chartTutorialModalOpen, setChartTutorialModalOpen] = React.useState<boolean>(false);
   const [filterStructure, setFilterStructure] = React.useState<'freeform' | 'sequential'>('sequential');
   const topSectionScrollTop = React.useRef<number>(0);
   const lastManualToggleTime = React.useRef<number>(0);
@@ -1053,6 +1055,7 @@ export default function App() {
                         groupsExpanded={groupsExpanded}
                         pointHelpEnabled={pointHelpEnabled}
                         onTogglePointHelp={togglePointHelp}
+                        onOpenChartTutorial={() => setChartTutorialModalOpen(true)}
                         depth={0}
                         query={query}
                         hierarchy={hierarchy}
@@ -1160,6 +1163,13 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Chart Tutorial Modal */}
+      <ChartTutorialModal
+        isOpen={chartTutorialModalOpen}
+        onClose={() => setChartTutorialModalOpen(false)}
+        initialStep={7}
+      />
     </div>
   );
 }

@@ -24,6 +24,13 @@ interface ChartTutorialModalProps {
 const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose, initialStep = 0 }) => {
   const [currentStep, setCurrentStep] = useState(initialStep);
 
+  // Update currentStep when modal opens with a new initialStep
+  React.useEffect(() => {
+    if (isOpen) {
+      setCurrentStep(initialStep);
+    }
+  }, [isOpen, initialStep]);
+
   const handleClose = () => {
     setCurrentStep(0);
     onClose();

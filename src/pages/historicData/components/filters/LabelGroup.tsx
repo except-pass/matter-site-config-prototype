@@ -12,6 +12,7 @@ interface LabelGroupProps {
   groupsExpanded: boolean;
   pointHelpEnabled: Set<string>;
   onTogglePointHelp: (pointKey: string) => void;
+  onOpenChartTutorial?: () => void;
   depth?: number;
   query: string;
   parentPath?: string;
@@ -70,6 +71,7 @@ export default function LabelGroup({
   groupsExpanded,
   pointHelpEnabled,
   onTogglePointHelp,
+  onOpenChartTutorial,
   depth = 0,
   query,
   parentPath = '',
@@ -128,9 +130,14 @@ export default function LabelGroup({
               </span>
               {showsCategoricalIcon && (
                 <span
-                  className="text-base leading-none cursor-help"
-                  title="Selecting this point shows named modes or states as colored bars instead of a line chart."
-                  aria-label="Categorical visualization"
+                  className="text-base leading-none cursor-pointer hover:opacity-70"
+                  title="Selecting this point shows named modes or states as colored bars instead of a line chart. Click to learn more."
+                  aria-label="Categorical visualization - click to learn more"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onOpenChartTutorial?.();
+                  }}
                 >
                   📊
                 </span>
@@ -263,6 +270,7 @@ export default function LabelGroup({
               groupsExpanded={groupsExpanded}
               pointHelpEnabled={pointHelpEnabled}
               onTogglePointHelp={onTogglePointHelp}
+              onOpenChartTutorial={onOpenChartTutorial}
               depth={depth + 1}
               query={query}
               parentPath={currentPath}
