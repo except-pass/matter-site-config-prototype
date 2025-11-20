@@ -14,12 +14,6 @@ import {
   FetchSiteConfigResponse,
   FetchPointValuesRequest,
   FetchPointValuesResponse,
-  ReadPointRequest,
-  ReadPointResponse,
-  WritePointRequest,
-  WritePointResponse,
-  InvokeCommandRequest,
-  InvokeCommandResponse,
   PointValue,
   EntryValue,
   GetGatewayStatusRequest,
@@ -33,34 +27,6 @@ import {
   SendCGICommandRequest,
   SendCGICommandResponse,
 } from './types';
-
-// Legacy batch types (kept for backward compatibility)
-interface BatchReadRequest {
-  pointIds: string[];
-  equipmentId: string;
-}
-
-interface BatchReadResponse {
-  values: Record<string, PointValue>;
-  success: boolean;
-  successCount: number;
-  failureCount: number;
-}
-
-interface BatchWriteRequest {
-  writes: Array<{
-    pointId: string;
-    values: Record<string, EntryValue>;
-  }>;
-  equipmentId: string;
-}
-
-interface BatchWriteResponse {
-  results: Record<string, WritePointResponse>;
-  success: boolean;
-  successCount: number;
-  failureCount: number;
-}
 
 // Import theme data (in production, this would come from the backend)
 import demoThemeData from '../pages/siteConfig/themes/demo_rebuilt.json';
@@ -221,29 +187,6 @@ function initializeMockValues(page: PageDef): void {
   });
 }
 
-/**
- * Find a point by its command_id
- */
-function findPointById(pointId: string): PointDef | null {
-  const page = demoThemeData as any;
-
-  if (!page.themes) return null;
-
-  for (const theme of page.themes) {
-    for (const section of theme.sections) {
-      for (const subsection of section.subsections) {
-        for (const point of subsection.points) {
-          if (point.command_id === pointId) {
-            return point;
-          }
-        }
-      }
-    }
-  }
-
-  return null;
-}
-
 // ============================================================================
 // Mock API Functions
 // ============================================================================
@@ -321,310 +264,6 @@ export async function fetchPointValues(
   return {
     values,
     timestamp: new Date().toISOString(),
-  };
-}
-
-/**
- * Read a specific point's current value
- *
- * This would typically send a read command to the device via the
- * appropriate protocol (Matter, Modbus, CGI, etc.)
- *
- * @param request - Point to read and equipment context
- * @returns Current value of the point
- */
-export async function readPoint(
-  request: ReadPointRequest
-): Promise<ReadPointResponse> {
-  await delay(NETWORK_DELAY);
-
-  // Get or generate the point value
-  let value = mockPointValues.get(request.pointId);
-
-  if (!value) {
-    // If not in cache, generate from point definition
-    const point = findPointById(request.pointId);
-    if (!point) {
-      throw new Error(`Point ${request.pointId} not found`);
-    }
-
-    value = generateMockPointValue(point);
-    mockPointValues.set(request.pointId, value);
-  }
-
-  // Update lastRead timestamp
-  value = {
-    ...value,
-    lastRead: new Date().toISOString(),
-  };
-  mockPointValues.set(request.pointId, value);
-
-  // Find the point definition to build proper protocol payload
-  const point = findPointById(request.pointId);
-  let payload: any = {};
-
-  if (point && point.protocol) {
-    if (point.protocol.matter) {
-      // Build Matter protocol payload for read
-      payload = {
-        version: "1.0",
-        timeout: 60,
-        requestId: Date.now(),
-        endPoint: "Matter",
-        method: "Read",
-        data: {
-          Elements: [
-            {
-              MEP: point.protocol.matter.MEP,
-              Cluster: point.protocol.matter.Cluster,
-              Element: point.protocol.matter.Element
-            }
-          ],
-          thingId: {
-            Type: "Inverter",
-            Mn: "fortress",
-            Md: "FP-ENVY-Inverter",
-            SN: request.equipmentId
-          }
-        }
-      };
-    } else if (point.protocol.modbus) {
-      // Build Modbus protocol payload for read
-      const registerType = point.protocol.modbus.register_type;
-      const functionCode = registerType === 3 ? 3 : 4;
-
-      payload = {
-        version: "1.0",
-        requestId: Date.now(),
-        endPoint: "Modbus",
-        method: "Read",
-        timeout: 5,
-        data: {
-          type: "RTU",
-          uartPort: 1,
-          slaveId: 1,
-          address: point.protocol.modbus.address,
-          function: functionCode,
-          registerNumber: point.protocol.modbus.size
-        }
-      };
-    }
-  }
-
-  return {
-    value,
-    payload: payload,
-  };
-}
-
-/**
- * Write values to a point
- *
- * This would typically send a write command to the device via the
- * appropriate protocol
- *
- * @param request - Point to write and values to set
- * @returns Result of the write operation
- */
-export async function writePoint(
-  request: WritePointRequest
-): Promise<WritePointResponse> {
-  await delay(NETWORK_DELAY);
-
-  // Get current value or create new one
-  let currentValue = mockPointValues.get(request.pointId);
-
-  if (!currentValue) {
-    const point = findPointById(request.pointId);
-    if (!point) {
-      return {
-        success: false,
-        error: `Point ${request.pointId} not found`,
-        timestamp: new Date().toISOString(),
-      };
-    }
-
-    currentValue = generateMockPointValue(point);
-  }
-
-  // Update the values
-  const newValue: PointValue = {
-    ...currentValue,
-    entries: {
-      ...currentValue.entries,
-      ...request.values,
-    },
-    lastRead: new Date().toISOString(),
-    success: true,
-  };
-
-  // Store the new value
-  mockPointValues.set(request.pointId, newValue);
-
-  // Find the point definition to build proper protocol payload
-  const point = findPointById(request.pointId);
-  let payload: any = {};
-
-  if (point && point.protocol) {
-    if (point.protocol.matter) {
-      // Build Matter protocol payload
-      payload = {
-        version: "1.0",
-        timeout: 60,
-        requestId: Date.now(),
-        endPoint: "Matter",
-        method:
-          point.element_type === "Service" || point.access === "Invoke"
-            ? "Invoke"
-            : "Write",
-        data: {
-          Elements: [
-            {
-              MEP: point.protocol.matter.MEP,
-              Cluster: point.protocol.matter.Cluster,
-              Element: point.protocol.matter.Element,
-              arguments: request.values
-            }
-          ],
-          thingId: {
-            Type: "Inverter",
-            Mn: "fortress",
-            Md: "FP-ENVY-Inverter",
-            SN: request.equipmentId
-          }
-        }
-      };
-    } else if (point.protocol.modbus) {
-      // Build Modbus protocol payload for write
-      const functionCode = point.protocol.modbus.size > 1 ? 16 : 6;
-
-      // Get the first value from the request (Modbus writes single value)
-      const firstEntryArg = point.entries[0]?.arg;
-      let writeValue = firstEntryArg ? request.values[firstEntryArg] : 0;
-
-      // Ensure it's an integer for Modbus
-      if (typeof writeValue === 'number') {
-        writeValue = Math.round(writeValue);
-      } else if (typeof writeValue === 'string') {
-        writeValue = parseInt(writeValue, 10) || 0;
-      }
-
-      payload = {
-        version: "1.0",
-        requestId: Date.now(),
-        endPoint: "Modbus",
-        method: "Write",
-        timeout: 5,
-        data: {
-          type: "RTU",
-          uartPort: 1,
-          slaveId: 1,
-          address: point.protocol.modbus.address,
-          function: functionCode,
-          value: writeValue
-        }
-      };
-    }
-  }
-
-  return {
-    success: true,
-    timestamp: new Date().toISOString(),
-    payload: payload,
-    newValue,
-  };
-}
-
-/**
- * Invoke a service/command point
- *
- * This would typically send an invoke command to execute a service
- * on the device
- *
- * @param request - Command to invoke and parameters
- * @returns Result of the invocation
- */
-export async function invokeCommand(
-  request: InvokeCommandRequest
-): Promise<InvokeCommandResponse> {
-  await delay(NETWORK_DELAY);
-
-  const point = findPointById(request.pointId);
-  if (!point) {
-    return {
-      success: false,
-      error: `Command ${request.pointId} not found`,
-      timestamp: new Date().toISOString(),
-    };
-  }
-
-  // Build proper protocol payload based on point definition
-  let payload: any = {};
-
-  if (point.protocol) {
-    if (point.protocol.matter) {
-      // Build Matter protocol payload for invoke
-      payload = {
-        version: "1.0",
-        timeout: 60,
-        requestId: Date.now(),
-        endPoint: "Matter",
-        method: "Invoke",
-        data: {
-          Elements: [
-            {
-              MEP: point.protocol.matter.MEP,
-              Cluster: point.protocol.matter.Cluster,
-              Element: point.protocol.matter.Element,
-              arguments: request.parameters
-            }
-          ],
-          thingId: {
-            Type: "Inverter",
-            Mn: "fortress",
-            Md: "FP-ENVY-Inverter",
-            SN: request.equipmentId
-          }
-        }
-      };
-    } else if (point.protocol.modbus) {
-      // Build Modbus protocol payload for invoke (same as write)
-      const functionCode = point.protocol.modbus.size > 1 ? 16 : 6;
-
-      // Get the first value from the parameters
-      const firstEntryArg = point.entries[0]?.arg;
-      let writeValue = firstEntryArg && request.parameters ? request.parameters[firstEntryArg] : 0;
-
-      // Ensure it's an integer for Modbus
-      if (typeof writeValue === 'number') {
-        writeValue = Math.round(writeValue);
-      } else if (typeof writeValue === 'string') {
-        writeValue = parseInt(writeValue, 10) || 0;
-      }
-
-      payload = {
-        version: "1.0",
-        requestId: Date.now(),
-        endPoint: "Modbus",
-        method: "Write",
-        timeout: 5,
-        data: {
-          type: "RTU",
-          uartPort: 1,
-          slaveId: 1,
-          address: point.protocol.modbus.address,
-          function: functionCode,
-          value: writeValue
-        }
-      };
-    }
-  }
-
-  return {
-    success: true,
-    timestamp: new Date().toISOString(),
-    payload: payload,
-    result: { status: 'Command executed successfully' },
   };
 }
 
@@ -824,7 +463,7 @@ export async function sendCGICommandToGateway(
         // For mock purposes, find and return the point value
         // In real implementation, this would send the CGI command to the gateway
         const element = elements[0];
-        const pointId = `${element.Cluster}_${element.Element}`;
+        const pointId = `${element.Cluster}.${element.Element}`;
         const value = mockPointValues.get(pointId);
 
         return {
@@ -846,7 +485,7 @@ export async function sendCGICommandToGateway(
         }
 
         const element = elements[0];
-        const pointId = `${element.Cluster}_${element.Element}`;
+        const pointId = `${element.Cluster}.${element.Element}`;
 
         // Update the mock value
         let currentValue = mockPointValues.get(pointId);
@@ -901,96 +540,6 @@ export async function sendCGICommandToGateway(
       timestamp: new Date().toISOString(),
     };
   }
-}
-
-/**
- * Read multiple points in a single batch operation
- *
- * This would typically optimize multiple reads into a single
- * network request or batch device operation
- *
- * @param request - List of points to read
- * @returns Values for all requested points
- * @deprecated Use sendCGICommandToGateway instead
- */
-export async function batchRead(
-  request: BatchReadRequest
-): Promise<BatchReadResponse> {
-  await delay(NETWORK_DELAY);
-
-  const values: Record<string, PointValue> = {};
-  let successCount = 0;
-  let failureCount = 0;
-
-  for (const pointId of request.pointIds) {
-    try {
-      const response = await readPoint({
-        pointId,
-        equipmentId: request.equipmentId,
-      });
-      values[pointId] = response.value;
-      successCount++;
-    } catch (error) {
-      failureCount++;
-      values[pointId] = {
-        pointId,
-        entries: {},
-        lastRead: new Date().toISOString(),
-        success: false,
-        error: error instanceof Error ? error.message : 'Read failed',
-      };
-    }
-  }
-
-  return {
-    values,
-    success: failureCount === 0,
-    successCount,
-    failureCount,
-  };
-}
-
-/**
- * Write to multiple points in a single batch operation
- *
- * This would typically optimize multiple writes into a single
- * network request or batch device operation
- *
- * @param request - List of points to write
- * @returns Results for all write operations
- * @deprecated Use sendCGICommandToGateway instead
- */
-export async function batchWrite(
-  request: BatchWriteRequest
-): Promise<BatchWriteResponse> {
-  await delay(NETWORK_DELAY);
-
-  const results: Record<string, WritePointResponse> = {};
-  let successCount = 0;
-  let failureCount = 0;
-
-  for (const write of request.writes) {
-    const response = await writePoint({
-      pointId: write.pointId,
-      equipmentId: request.equipmentId,
-      values: write.values,
-    });
-
-    results[write.pointId] = response;
-
-    if (response.success) {
-      successCount++;
-    } else {
-      failureCount++;
-    }
-  }
-
-  return {
-    results,
-    success: failureCount === 0,
-    successCount,
-    failureCount,
-  };
 }
 
 /**

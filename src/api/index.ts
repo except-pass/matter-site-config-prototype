@@ -11,12 +11,6 @@ export type {
   FetchSiteConfigResponse,
   FetchPointValuesRequest,
   FetchPointValuesResponse,
-  ReadPointRequest,
-  ReadPointResponse,
-  WritePointRequest,
-  WritePointResponse,
-  InvokeCommandRequest,
-  InvokeCommandResponse,
   PointValue,
   EntryValue,
   GetGatewayStatusRequest,
@@ -38,16 +32,18 @@ export type {
 export {
   fetchSiteConfig,
   fetchPointValues,
-  readPoint,
-  writePoint,
-  invokeCommand,
   getGatewayStatus,
   getEquipmentsAtSite,
   getPointThemes,
   getPointValuesByPsn,
   sendCGICommandToGateway,
-  batchRead,
-  batchWrite,
   clearMockData,
   getAllMockValues,
 } from './mockApi';
+
+// Export CGI payload builders
+export {
+  buildReadPayload,
+  buildWritePayload,
+  buildInvokePayload,
+} from './buildCgiPayload';
