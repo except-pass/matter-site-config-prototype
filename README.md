@@ -1,117 +1,402 @@
 # Matter Site Config Prototype
 
-A configuration UI for managing Matter and Modbus device points through a hierarchical, theme-based interface.
+A dual-purpose web application for managing energy storage systems that combines **device configuration** and **telemetry visualization** into a unified interface.
 
-## Architecture Overview
+## What This Application Does
 
-This project uses a **three-file approach** to separate protocol data from UI presentation concerns:
+This prototype provides two integrated views:
 
-1. **`matter.csv`** - Protocol-level point definitions (Matter protocol)
-2. **`hierarchy.yaml`** - UI structure, ordering, and presentation settings
-3. **`envy_specific.yaml`** - Envy-specific points (Modbus/CGI protocol) that don't use Matter protocol
+1. **Site Configuration** - A theme-based UI for reading and writing device settings (Matter/Modbus protocols)
+2. **Historical Data** - A flexible charting interface for visualizing time-series telemetry data
 
-These files are combined by `rebuildFromHierarchy.ts` to generate `demo_rebuilt.json`, which the frontend consumes.
+Both views share common infrastructure including equipment mapping, gateway status tracking, and a mock API layer designed for easy migration to production.
 
 ---
 
-## Source Files
+## Quick Start
 
-### `matter.csv` - Protocol Data (Matter Points)
+```bash
+# Install dependencies
+npm install
 
-**Purpose**: Defines the raw protocol-level data for Matter points. This is the single source of truth for what each point does at the firmware/protocol level.
+# Rebuild configuration from source files
+npm run rebuild:config
 
-**Format**: One row per entry, with point-level fields (`command_id`, `title`, `help`, etc.) only populated in the first row for each point.
+# Start development server
+npm run dev
+```
+
+The application will open at `http://localhost:5173` with two navigation options:
+- ⚙️ **Site Config** - Configure device settings
+- 📊 **Historical Data** - View telemetry charts
+
+---
+
+## Architecture Overview
+
+### Application Structure
+
+```
+App.tsx (Main Router)
+├── Site Config View
+│   └── SiteConfigApp.tsx
+│       ├── Equipment selector
+│       ├── Theme navigation
+│       └── Point cards (read/write)
+└── Historical Data View
+    └── HistoricalDataApp.tsx
+        ├── Chart grid
+        ├── Label filtering
+        └── Time-series visualization
+```
+
+### Core Infrastructure
+
+Both pages share these foundational services:
+
+- **Mock API Layer** (`src/api/mockApi.ts`) - Protocol-aware endpoints for site config, point values, and gateway status
+- **Equipment Mapping** (`useEquipmentMappings`) - Links equipment serial numbers to their gateways
+- **Gateway Status** (`useGatewayStatus`) - Tracks device online/offline state
+- **Theme Management** - Hierarchical organization of configuration points
+
+---
+
+## Page 1: Site Configuration
+
+### Overview
+
+The Site Configuration page provides a theme-driven interface for managing device settings. Configuration points are organized hierarchically into **themes** → **sections** → **subsections** → **points**, mirroring how users think about equipment setup.
+
+### Key Features
+
+#### 1. Theme-Based Navigation
+- **Sticky sidebar** with equipment selector and section navigation
+- **Scroll-linked table of contents** highlights active section as you scroll
+- **Collapsible subsections** with progressive disclosure (advanced settings hidden by default)
+
+#### 2. Equipment Management
+- **Equipment selector dropdown** switches between different devices
+- Each equipment preset bundles:
+  - Matter Thing ID (Type, Mn, Md, SN)
+  - Modbus Slave ID
+  - Gateway mapping information
+- **Gateway status indicator** shows online/offline state in header
+
+#### 3. Search with Context
+- **Full-text search** across point titles, help text, and entry labels
+- **Auto-expand matching subsections** to reveal search results
+- **Context highlighting** shows why a point matched
+
+#### 4. Point Cards (Command Façade Pattern)
+
+Each configuration point is rendered as a card with:
+
+- **Title & Help Icon** - Click for detailed modal with descriptions
+- **Read-only Badge** - Protocol-level or UI-override read-only enforcement
+- **Reload Control** - Fetch latest value from device
+- **Form Inputs** - Adaptive widgets based on data type:
+  - **Enums** → Dropdowns or radio buttons
+  - **Numbers** → Text inputs with range validation
+  - **Bitfields** → Checkbox groups
+  - **Dates/Times** → DateTime pickers
+  - **Ranges** → Dual-handle sliders with constraints
+- **Set/Invoke Buttons** - Send command to device (with preview modal)
+
+#### 5. Advanced Widgets
+
+- **DateTimeWidget** - Date and time picker for system time
+- **TimeRangeWidget** - Start/end time selector with visual timeline
+- **MultiTimeRangeWidget** - Multiple time windows (e.g., peak shaving schedules)
+- **DualHandleSlider** - Two-handle slider enforcing `less_than`/`greater_than` constraints (e.g., SOC ranges)
+- **GeneratorExerciseWidget** - Generator scheduling with day-of-month and time-of-day
+- **ULComplianceReportWidget** - Specialized compliance reporting
+
+#### 6. Protocol-Aware Payloads
+
+The application automatically generates the correct protocol payload based on point type:
+
+- **Matter Write** - For Matter attributes (`access: "RW"`)
+- **Matter Invoke** - For Matter services (`element_type: "service"`)
+- **Modbus Read/Write** - For points with Modbus protocol config
+- **CGI Requests** - For CGI-based custom commands
+
+Scale factors are automatically applied for Modbus points to convert between display values (decimals) and wire values (integers).
+
+#### 7. Telemetry Integration
+
+- **Pre-population from telemetry** - Most points have a corresponding telemetry point (typically in the "04" model, e.g., 40104 for inverters)
+- **Telemetry History Modal** - View historical values from database
+- **Last Updated Timestamp** - Shows when values were last fetched
+
+### Layout Components
+
+**Sidebar** (`Sidebar.tsx`):
+- Equipment selector dropdown
+- Theme/section navigation tree
+- Scroll-linked highlighting
+
+**Header** (`Header.tsx`):
+- Search box
+- Last updated timestamp
+- Refresh button (reloads all values)
+- Gateway status indicator
+
+**MainContent** (`MainContent.tsx`):
+- Renders themes with sections and subsections
+- Applies visibility rules (advanced/collapsed)
+- Handles search filtering
+
+### Data Flow
+
+```
+User selects equipment
+        ↓
+fetchSiteConfig(equipment)
+        ↓
+Returns PageDef[] (themes structure)
+        ↓
+fetchPointValues(equipment, pointIds)
+        ↓
+Returns Record<pointId, PointValue>
+        ↓
+Render PointCards with current values
+        ↓
+User edits and clicks "Set"
+        ↓
+sendCGICommandToGateway(payload)
+        ↓
+Success/Error response
+```
+
+---
+
+## Page 2: Historical Data
+
+### Overview
+
+The Historical Data page provides a flexible charting interface for visualizing time-series telemetry data from inverters. Users can create custom chart layouts, apply multi-dimensional filters, and explore data at different detail levels.
+
+### Key Features
+
+#### 1. Dynamic Chart Grid
+
+- **Resizable grid layout** - Drag corner/edge handles to resize chart cells
+- **Row/column dividers** - Split charts horizontally or vertically
+- **Add/remove charts** - Click `+` buttons on dividers to add new charts
+- **Default preconfigured charts** - Starts with sensible defaults
+- **Drag-and-drop** - Future support for reordering charts
+
+#### 2. Advanced Label Filtering
+
+Data is organized using **label families** (hierarchical dimensions):
+
+**Label Families**:
+- **Equipment** - Specific inverter serial number
+- **Component** - Battery, Inverter, PV, Grid, Load, etc.
+- **Type of Data** - Voltage, Current, Power, Energy, SOC, Temperature, etc.
+- **Unit** - kW, V, A, %, °C, etc.
+- **Measurement Type** - Phase (A/B/C/N), Port (1/2/3), direction, etc.
+- **Detail Level** - Standard, Extended, Complete
+
+**Filter Modes**:
+1. **Sequential Mode** - Filters unlock step-by-step as you make selections (guided workflow)
+2. **Freeform Mode** - Select any filters in any order (power users)
+
+**Hierarchy Configuration**:
+- **Customize grouping order** - Choose which label families to use and in what order
+- **Examples**:
+  - `Equipment → Component → Type of Data → Unit`
+  - `Component → Type of Data → Equipment → Unit`
+  - `Type of Data → Component → Equipment`
+
+#### 3. Detail Level Control
+
+Slider control filters telemetry points by detail level:
+
+- **Standard** - Core metrics (power, SOC, voltage, current)
+- **Extended** - Additional operational data (temperatures, frequencies)
+- **Complete** - All available telemetry including diagnostic data
+
+#### 4. Chart Visualization
+
+**LineChartPreview** - SVG-based line charts with:
+- Smooth time-series rendering
+- Color-coded series (consistent with label colors)
+- Legend with visibility toggles
+- Crosshair tracking on hover
+- Automatic Y-axis scaling
+
+**CategoricalChart** - For non-numeric data:
+- State changes over time
+- Discrete value visualization
+
+**Chart Controls**:
+- **Title editing** - Click to rename charts
+- **Legend toggles** - Show/hide individual series
+- **Remove button** - Delete chart from grid
+
+#### 5. Inverter Selection
+
+- **Multi-select dropdown** - Choose which inverters to display
+- **Equipment filtering** - Filter data to specific equipment
+- Predefined equipment list: `envy-04237218B0`, `envy-04237219C3`
+
+#### 6. Search Functionality
+
+- **Full-text search** across telemetry point titles, descriptions, and help text
+- **Context-aware matching** - Searches within current filter selection
+- **Auto-expand groups** - Matching label groups expand automatically
+
+### UI Components
+
+**ChartGrid** (`ChartGrid.tsx`):
+- Grid layout management
+- Row/column/corner divider handles
+- Add chart functionality
+
+**FakeChart** (`FakeChart.tsx`):
+- Individual chart rendering
+- Title editing
+- Legend management
+- Chart type selection (line/categorical)
+
+**LabelFilter** (`LabelFilter.tsx`):
+- Multi-level label filtering
+- Sequential vs. freeform mode toggle
+- Label family grouping
+
+**PreferencesModal** (`PreferencesModal.tsx`):
+- Hierarchy configuration
+- Filter structure customization
+- Sort order preferences
+
+**HelpModals**:
+- **ChartTutorialModal** - Overview of chart features
+- **FilterHelpModal** - Explains filter modes
+- **LabelHelpModal** - Describes label families
+- **GroupByHelpModal** - How hierarchy configuration works
+
+### Data Sources
+
+Historical data is loaded from YAML files:
+
+- **`ss40k_inverter.yaml`** - Inverter telemetry points (40104 model)
+- **`lifecycle_events.yaml`** - Lifecycle events
+- **`label_help.yaml`** - Help text for label families
+
+Each telemetry point includes:
+```yaml
+title: "Battery Voltage"
+help: "Current battery voltage in volts"
+labels:
+  component: Battery
+  type: Voltage
+  unit: V
+  detail_level: Standard
+```
+
+### Data Flow
+
+```
+Load telemetry YAML files
+        ↓
+Parse into TelemetryPoint[]
+        ↓
+Apply label filters (Equipment, Component, Type of Data, etc.)
+        ↓
+Apply detail level filter (Standard/Extended/Complete)
+        ↓
+Apply search filter
+        ↓
+Render filtered points in charts
+        ↓
+User toggles series visibility
+        ↓
+Re-render charts with updated visibility
+```
+
+---
+
+## Data Sources & Configuration Files
+
+### The Three-File Approach (Site Config)
+
+Configuration for the Site Config page is built from three source files:
+
+#### 1. `matter.csv` - Protocol Data (Matter Points)
+
+**Purpose**: Single source of truth for Matter protocol definitions.
+
+**Format**: CSV with one row per entry, point-level fields only in first row.
 
 **Key Columns**:
-- `command_id` - Unique identifier (e.g., `Basic.SystemTime`)
-- `title` - Display name
-- `help` - Description text
-- `element_type` - `attribute`, `service`, or `custom`
-- `access` - `R`, `RW`, or `INVOKE`
-- `MEP`, `Cluster`, `Element` - Matter protocol identifiers
-- **"Entry"-level fields** (see below): `arg`, `name`, `dtype`, `unit`, `range_min/max`, `meanings`, `friendly_meanings`, etc.
+- **Point-level**: `command_id`, `title`, `help`, `element_type`, `access`, `MEP`, `Cluster`, `Element`
+- **Entry-level**: `arg`, `name`, `dtype`, `unit`, `range_min`, `range_max`, `meanings`, `friendly_meanings`
 
-**Entry-Level Fields**:
+**Entry-Level Field Definitions**:
 
-Each row in `matter.csv` represents one entry within a point. These fields define the data structure and behavior of individual entries:
+- **`arg`** - Argument name in protocol payloads (e.g., `Year`, `SOC`, `Mode`). Used as the key when sending/receiving data. Must be unique within a point.
 
-- **`arg`** - Argument name used in protocol payloads (e.g., `Year`, `Mon`, `SOC`). Must be unique within a point. Used as the key when sending/receiving data.
+- **`name`** - Display label shown in UI (e.g., "Year", "State of Charge", "Operating Mode"). Human-readable field name.
 
-- **`name`** - Display label shown in the UI (e.g., "Year", "Month", "State of Charge"). Human-readable name for the entry field.
-
-- **`dtype`** - Data type. Values:
+- **`dtype`** - Data type:
   - `Number` - Numeric value (integer or decimal)
   - `Enum` - Enumeration (discrete set of values)
   - `String` - Text value
 
-- **`description`** - Short description/tooltip shown in the UI. Brief explanation of what this entry represents.
+- **`unit`** - Unit of measurement (e.g., `V`, `kW`, `%`, `°C`). Displayed in UI but not sent in protocol.
 
-- **`longdescription`** - Extended description shown in help modals or detailed views. More comprehensive explanation than `description`.
+- **`range_min` / `range_max`** - Minimum/maximum allowed values for `Number` dtype. Used for:
+  - HTML input validation
+  - Slider rendering
+  - User input constraints
 
-- **`unit`** - Unit of measurement displayed after the value (e.g., `V`, `kW`, `%`, `°C`). Shown in the UI but not sent in protocol payloads.
+- **`less_than` / `greater_than`** - Constraint references to other entries' `arg` names. Enforces relational constraints (e.g., "Stop SOC must be greater than Start SOC"). Used for dual-handle sliders.
 
-- **`range_min`** - Minimum allowed value (for `Number` dtype). Used to:
-  - Set HTML input `min` attribute
-  - Render slider controls with range
-  - Validate user input
+- **`meanings`** - Raw protocol enum values (e.g., `"Off-grid,Grid-tied"`). What actually gets sent to the device.
 
-- **`range_max`** - Maximum allowed value (for `Number` dtype). Used to:
-  - Set HTML input `max` attribute
-  - Render slider controls with range
-  - Validate user input
+- **`friendly_meanings`** - User-friendly enum labels (e.g., `"Off-Grid. There is no available power grid,Grid-Tied. Grid power is available."`). Displayed in dropdowns instead of raw values.
 
-- **`less_than`** - Constraint referencing another entry's `arg` name (e.g., `StopSOC`). Ensures this entry's value is less than the referenced entry's value. Used for dual-handle sliders and validation.
-
-- **`greater_than`** - Constraint referencing another entry's `arg` name (e.g., `StartSOC`). Ensures this entry's value is greater than the referenced entry's value. Used for dual-handle sliders and validation.
-
-- **`meanings`** - Enum value mappings (raw protocol values). Format: comma-separated labels (e.g., `"Off-grid,Grid-tied"`). This is what gets sent to/received from the device.
-
-- **`friendly_meanings`** - User-friendly enum labels shown in the UI. Format: comma-separated labels (e.g., `"Off-Grid.  There is no available power grid,Grid-Tied. Grid power is available."`). These are displayed in dropdowns/radios instead of the raw `meanings` values.
+**Telemetry Mapping**:
+Almost every Matter point has a corresponding telemetry point (typically in the "04" model, e.g., 40104 for inverters). This linkage is documented in `matter.xlsx`. The UI reads telemetry to pre-populate values, reducing load time.
 
 **Example**:
 ```csv
-command_id,title,help,element_type,access,MEP,Cluster,Element,arg,name,dtype,unit,range_min,range_max,meanings,friendly_meanings
-Basic.SystemTime,System Time,Attribute in Basic cluster,attribute,RW,HybridInverter,Basic,SystemTime,Year,Year,Number,,0,99,,
-,,,,,,,,Mon,Mon,Number,,,1,12,,
-Basic.OperatingMode,Grid Interaction,Select grid mode,attribute,RW,HybridInverter,Basic,OperatingMode,Mode,Mode,enum,,,,,,"Off-grid,Grid-tied","Off-Grid.  There is no available power grid,Grid-Tied. Grid power is available."
+command_id,title,help,element_type,access,MEP,Cluster,Element,arg,name,dtype,unit,range_min,range_max
+Basic.SystemTime,System Time,Set device date and time,attribute,RW,HybridInverter,Basic,SystemTime,Year,Year,Number,,0,99
+,,,,,,,,Mon,Month,Number,,1,12
+ACCharge.ACChgStartSOC,Grid Charge Start SOC,SOC at which grid charging starts,attribute,RW,HybridInverter,ACCharge,ACChgStartSOC,SOC,SOC,Number,%,0,100
 ```
 
-**Telemetry Mapping**:
-(Almost) every Matter point has a corresponding telemetry point, and most are in the "04" model (e.g. 40104 for the inverter).  This linkage is documented in the matter.xlsx file.  The intention is that the UI can read all the telemetry points from the database to pre-populate the UI with the most recent values.  This should greatly reduce the load time for the UI.
+#### 2. `hierarchy.yaml` - UI Structure & Presentation
 
-**Design Philosophy**: 
-- Protocol-focused: Contains only data that matters at the firmware/protocol level
-- No UI concerns: Widget types, visibility, ordering, and read-only overrides are NOT here
-- Easy to edit: Can be edited in Excel/Google Sheets by non-developers
+**Purpose**: Defines how points are organized and displayed in the UI. All UI presentation concerns live here.
 
----
-
-### `hierarchy.yaml` - UI Structure & Presentation
-
-**Purpose**: Defines how points are organized and displayed in the UI. This is where UI presentation concerns live.
-
-**Format**: YAML structure mirroring the UI hierarchy: `themes` → `sections` → `subsections` → `points`
+**Format**: YAML hierarchy: `themes` → `sections` → `subsections` → `points`
 
 **Key Features**:
-- **Ordering**: Controls the order of themes, sections, subsections, and points
-- **UI Overrides**: Can specify `widget`, `readOnly`, `invokeButtonText`, `showInvokeButton` per point
-- **Visibility**: Can mark subsections as `advanced` and `collapsedByDefault`
-- **Combining Entries**: Can combine entries from multiple points into a single UI point (e.g., dual-handle sliders)
-- **IDs**: Optional `theme_id`, `section_id`, `subsection_id` for referencing from `envy_specific.yaml`
+- **Ordering** - Controls display order at all levels
+- **UI Overrides** - Per-point `widget`, `readOnly`, `invokeButtonText`, `showInvokeButton`
+- **Visibility** - Mark subsections as `advanced` and `collapsedByDefault`
+- **Combining Entries** - Merge entries from multiple points into one UI point (e.g., dual-handle sliders)
+- **IDs** - Optional `theme_id`, `section_id`, `subsection_id` for cross-referencing
 
 **Example**:
 ```yaml
 themes:
   - name: Inverter
+    theme_id: inverter
     sections:
-      - name: Basic Setup
+      - name: Battery Management
+        section_id: battery
         subsections:
-          - points:
+          - name: Charging
+            subsection_id: charging
+            points:
               - command_id: Basic.SystemTime
                 widget: datetime
-              - Basic.OperatingMode
-              - command_id: Basic.PowerStatus
-                readOnly: true
+
+              # Combine two points into one dual-handle slider
               - combine:
                   title: "Grid Charge SOC Range"
                   command_id: "ACCharge.ACChgSOCRange"
@@ -122,32 +407,32 @@ themes:
                     - point: ACCharge.ACChgStopSOC
                       entry: SOC
                       arg: StopSOC
+
+          - name: Advanced Settings
+            advanced: true
+            collapsedByDefault: true
+            points:
+              - ACCharge.ACChgPower
 ```
 
-**Design Philosophy**:
-- UI-focused: All presentation concerns live here
-- Flexible: Can reorganize UI without touching protocol data
-- Developer-friendly: Clean YAML syntax for version control
+#### 3. `envy_specific.yaml` - Envy-Specific Points (Modbus/CGI)
 
----
+**Purpose**: Defines points specific to Envy devices that use Modbus or CGI protocol instead of Matter.
 
-### `envy_specific.yaml` - Envy-Specific Points
-
-**Purpose**: Defines points specific to Envy devices that use Modbus or CGI protocol instead of Matter. These are typically device-specific register mappings and custom functionality.
-
-**Format**: YAML array of point definitions with full protocol and entry details.
+**Format**: YAML array of complete point definitions.
 
 **Key Features**:
-- **Protocol**: Uses `modbus` or `cgi` protocol with `address`, `register_type`, `size` (for Modbus) or `MEP`, `Cluster`, `Element` (for CGI)
-- **Placement**: Can reference existing sections/subsections via `section_id`/`subsection_id`, or create new ones
-- **On-the-fly Creation**: Can create new themes, sections, and subsections that don't exist in `hierarchy.yaml`
-- **Scale Factors**: Supports `scalefactor` for converting between display values and register values
+- **Full point definitions** - Each point is self-contained
+- **Modbus protocol** - Includes `address`, `register_type`, `size`, `scalefactor`
+- **CGI protocol** - Uses `MEP`, `Cluster`, `Element` for CGI commands
+- **Flexible placement** - Can reference existing hierarchy via IDs or create new structure
+- **On-the-fly creation** - Can create new themes/sections/subsections
 
 **Example**:
 ```yaml
 points:
-  - section_id: measurement
-    subsection_id: measurement-advanced
+  - section_id: battery
+    subsection_id: charging
     visibility: advanced
     collapsedByDefault: true
     title: Meter Measurement Source
@@ -161,6 +446,9 @@ points:
         meanings:
           "0": Meter
           "1": CTs
+        friendly_meanings:
+          "0": "Smart meter connected via RS485"
+          "1": "Current transformers on AC input"
     protocol:
       modbus:
         address: 1
@@ -168,90 +456,49 @@ points:
         size: 1
 ```
 
-**Design Philosophy**:
-- Complete definitions: Each point is fully self-contained
-- Flexible placement: Can reference existing hierarchy or create new structure
-- Protocol-specific: Contains Modbus/CGI register mappings that don't fit Matter protocol
+### Build Process
 
----
+#### `rebuildFromHierarchy.ts` - Configuration Builder
 
-## Build Process
+Combines all three source files into `demo_rebuilt.json`:
 
-### `rebuildFromHierarchy.ts` - The Build Script
-
-This script combines all three source files into a single `demo_rebuilt.json` file:
-
-1. **Loads `hierarchy.yaml`**: Parses the UI structure and point references
-2. **Loads `matter.csv`**: Reads protocol data for Matter points
-3. **Matches Points**: For each point in hierarchy, finds corresponding data in CSV
-4. **Applies UI Overrides**: Applies widget types, readOnly flags, invokeButtonText from hierarchy
-5. **Handles Combined Points**: Processes `combine` syntax to merge entries from multiple points
-6. **Loads `envy_specific.yaml`**: Merges Envy-specific points into the structure
-7. **Creates Missing Structure**: If Envy-specific points reference IDs that don't exist, creates new themes/sections/subsections
-8. **Outputs `demo_rebuilt.json`**: Final JSON consumed by the frontend
+**Steps**:
+1. Load `hierarchy.yaml` (UI structure)
+2. Load `matter.csv` (protocol data)
+3. Match points: For each point in hierarchy, find data in CSV
+4. Apply UI overrides (widget types, readOnly flags)
+5. Handle combined points (merge entries from multiple points)
+6. Load `envy_specific.yaml` (Modbus/CGI points)
+7. Create missing structure (if Envy points reference non-existent IDs)
+8. Output `demo_rebuilt.json`
 
 **Usage**:
 ```bash
-npx tsx src/transforms/rebuildFromHierarchy.ts
+npm run rebuild:config
+# Runs: npx tsx src/transforms/rebuildFromHierarchy.ts
 ```
 
 **Output**: `src/themes/demo_rebuilt.json`
 
----
-
-## Frontend Consumption
-
-### `App.tsx` - The React Application
-
-The frontend loads and parses json file:
-
-**Default Behavior**:
-- Loads all JSON files from `src/themes/` directory
-- Displays them in a dropdown selector
-- Renders the selected theme's structure
-
-**CLI Override**:
-```bash
-THEME_FILE=src/themes/demo_rebuilt.json npm run dev
-```
-- Loads only the specified JSON file
-- Useful for testing specific configurations
-
 **Data Flow**:
-1. JSON is loaded (either via `import.meta.glob` or `fetch`)
-2. Parsed into `PageDef` structure: `themes` → `sections` → `subsections` → `points`
-3. Each point is rendered as a `PointCard` component
-4. User interactions generate protocol-specific payloads (Matter or Modbus)
-
-**Key Features**:
-- **Protocol-Aware**: Automatically detects Matter vs Modbus and generates appropriate payloads
-- **Widget Rendering**: Uses `widget` field to render specialized inputs (datetime, timerange, etc.)
-- **Scale Factor Handling**: For Modbus points with `scale_factor`, converts between display values (decimals) and wire values (integers)
-- **Read-Only Enforcement**: Respects protocol-level read-only (`access === "R"`) and UI overrides
-
----
-
-## Data Flow Summary
-
 ```
 ┌─────────────────┐
-│   matter.csv   │  Protocol data (Matter points)
+│   matter.csv    │  Protocol data (Matter)
 └────────┬────────┘
          │
          │   ┌─────────────────┐
-         │   │ hierarchy.yaml  │  UI structure & presentation
+         │   │ hierarchy.yaml  │  UI structure
          │   └────────┬────────┘
          │            │
          │            │   ┌──────────────────────┐
-         │            │   │ envy_specific.yaml│  Envy-specific points
-         │            │   └──────────┬────────────┘
-         │            │              │
+         │            │   │ envy_specific.yaml   │  Envy points (Modbus/CGI)
+         │            │   └──────────┬───────────┘
          │            │              │
          ▼            ▼              ▼
-    ┌─────────────────────────────────────┐
+    ┌────────────────────────────────────┐
     │   rebuildFromHierarchy.ts          │
-    │   (Build Script)                   │
-    └────────────────┬────────────────────┘
+    │   (Merge & transform)              │
+    └────────────────┬───────────────────┘
                      │
                      ▼
          ┌──────────────────────┐
@@ -260,39 +507,442 @@ THEME_FILE=src/themes/demo_rebuilt.json npm run dev
                     │
                     ▼
          ┌──────────────────────┐
-         │     App.tsx          │
+         │   mockApi.ts         │
+         │   (API Layer)        │
+         └──────────┬───────────┘
+                    │
+                    ▼
+         ┌──────────────────────┐
+         │  SiteConfigApp.tsx   │
          │  (React Frontend)    │
          └──────────────────────┘
 ```
 
 ---
 
-## Key UI Features
+## API Layer
 
-- **Theme-driven navigation**: Sticky left rail with equipment selector and scroll-linked table of contents
-- **Equipment-aware routing**: Equipment presets bundle Matter thing IDs and Modbus slave IDs
-- **Search with context**: Queries across titles, help text, entry labels; matching subsections auto-expand
-- **Point cards as command façades**: Each card shows title, help icon, read-only badge, reload control, and Set/Invoke actions
-- **Adaptive input widgets**: Bitfields → checkboxes, enums → dropdowns/radios, numbers → inputs with ranges
-- **Multi-handle sliders**: For points with multiple ranged numbers, enforces constraints and provides color-coded sliders
-- **Time-centric widgets**: Datetime pickers, time ranges, multi-window schedules, generator exercise scheduler
-- **Protocol-aware payloads**: Generates Matter write/invoke, Modbus read/write, or CGI requests based on point protocol
-- **Progressive disclosure**: Sections respect `collapsedByDefault` flags and expand on search hits
+### Mock API Architecture
+
+The application uses a **mock API layer** (`src/api/mockApi.ts`) designed to be easily replaced with real HTTP calls in production.
+
+### API Endpoints
+
+#### 1. `fetchSiteConfig(request: FetchSiteConfigRequest)`
+
+Fetches configuration definitions (themes, sections, subsections, points).
+
+**Request**:
+```typescript
+{
+  thingId: { Type, Mn, Md, SN },
+  modbusId?: number
+}
+```
+
+**Response**:
+```typescript
+{
+  pageDefs: PageDef[],
+  lastModified: string,
+  version: string
+}
+```
+
+#### 2. `fetchPointValues(request: FetchPointValuesRequest)`
+
+Bulk fetch of current point values.
+
+**Request**:
+```typescript
+{
+  thingId: { Type, Mn, Md, SN },
+  modbusId?: number,
+  pointIds: string[]
+}
+```
+
+**Response**:
+```typescript
+Record<pointId, {
+  entries: Record<arg, any>,
+  status: "success" | "error",
+  timestamp: string
+}>
+```
+
+#### 3. `getGatewayStatus(request: GetGatewayStatusRequest)`
+
+Checks if a gateway is online.
+
+**Request**:
+```typescript
+{
+  gatewaySn: string
+}
+```
+
+**Response**:
+```typescript
+{
+  isOnline: boolean,
+  timestamp: string
+}
+```
+
+#### 4. `getEquipmentsAtSite(request: GetEquipmentsAtSiteRequest)`
+
+Maps equipment to their gateways.
+
+**Request**:
+```typescript
+{
+  siteId: number
+}
+```
+
+**Response**:
+```typescript
+EquipmentMapEntry[] {
+  gateway_sn: string,
+  equipments: Equipment[]
+}
+```
+
+#### 5. `sendCGICommandToGateway(request: SendCGICommandRequest)`
+
+Sends commands to device (Matter write/invoke, Modbus read/write).
+
+**Request**:
+```typescript
+{
+  gatewaySn: string,
+  payload: {
+    protocol: "matter" | "modbus" | "cgi",
+    action: "write" | "invoke" | "read",
+    thingId?: { Type, Mn, Md, SN },
+    modbusId?: number,
+    data: { /* protocol-specific */ }
+  }
+}
+```
+
+**Response**:
+```typescript
+{
+  success: boolean,
+  message: string,
+  data?: any
+}
+```
+
+#### 6. `getPointThemes(request: GetPointThemesRequest)`
+
+Fetches theme configuration for site.
+
+**Request**:
+```typescript
+{
+  siteId: number
+}
+```
+
+**Response**:
+```typescript
+{
+  themes: ThemeConfig[]
+}
+```
+
+#### 7. `getPointValuesByPsn(request: GetPointValuesByPsnRequest)`
+
+Gets point values by product serial number (queries telemetry).
+
+**Request**:
+```typescript
+{
+  psn: string,
+  pointIds: string[]
+}
+```
+
+**Response**:
+```typescript
+Record<pointId, PointValue>
+```
+
+### Theme Data Merging
+
+The API merges two theme files:
+- **`envy_themes.json`** - Envy-specific configuration
+- **`matter_themes.json`** - Matter protocol configuration
+
+This allows protocol-agnostic and protocol-specific configurations to coexist.
+
+---
+
+## Equipment Mapping
+
+### Purpose
+
+Links equipment (inverters, batteries) to their gateways for proper command routing and status queries.
+
+### Implementation (`useEquipmentMappings` hook)
+
+**Data Structure**:
+```typescript
+Equipment {
+  id: string
+  sn: string              // Serial number (e.g., "04237218B0")
+  md: string              // Model code (e.g., "04")
+  md_name: string         // Model name (e.g., "Hybrid Inverter")
+  site_id: number
+  is_primary: boolean
+  product_type: string
+  software_version: string
+}
+
+EquipmentMapEntry {
+  gateway_sn: string
+  equipments: Equipment[]
+}
+```
+
+**Mapping Functions**:
+- `getMapping(equipmentSn)` - Returns full equipment + gateway info
+- `getGatewaySn(equipmentSn)` - Returns gateway serial number
+- `isPrimary(equipmentSn)` - Checks if equipment is primary
+
+**Data Flow**:
+```
+Equipment serial number
+        ↓
+getEquipmentsAtSite(siteId)
+        ↓
+Find gateway_sn for equipment
+        ↓
+getGatewayStatus(gateway_sn)
+        ↓
+Display online/offline status
+```
+
+### Gateway Status Integration
+
+The `useGatewayStatus` hook:
+- Tracks gateway online/offline state
+- Auto-fetches when equipment changes
+- Displays in header with timestamp
+- Provides refresh capability
+
+**Status Display**:
+- 🟢 **Online** - Gateway is reachable
+- 🔴 **Offline** - Gateway is not reachable
+- **Last checked**: Timestamp of last status query
 
 ---
 
 ## Separation of Concerns
 
-The three-file approach provides clear separation:
+The architecture provides clear separation:
 
-| Concern | File | Editable By |
-|---------|------|-------------|
-| **Protocol Data** | `matter.csv` | Non-developers (Excel/Sheets) |
-| **UI Structure** | `hierarchy.yaml` | Developers (YAML) |
-| **Envy-Specific Points** | `envy_specific.yaml` | Developers (YAML) |
+| Concern | File/Module | Editable By | Purpose |
+|---------|-------------|-------------|---------|
+| **Protocol Data** | `matter.csv` | Non-developers | Matter protocol definitions (Excel/Sheets) |
+| **UI Structure** | `hierarchy.yaml` | Developers | UI organization and presentation (YAML) |
+| **Envy-Specific** | `envy_specific.yaml` | Developers | Modbus/CGI points (YAML) |
+| **Telemetry Schema** | `ss40k_inverter.yaml` | Developers | Telemetry point definitions (YAML) |
+| **API Layer** | `mockApi.ts` | Developers | Data fetching and command sending (TypeScript) |
+| **UI Components** | `src/pages/` | Developers | React components (TSX) |
 
 **Benefits**:
-- Non-developers can edit protocol data without touching UI code
+- Non-developers can edit protocol data without touching code
 - UI can be reorganized without changing protocol definitions
 - Protocol changes don't require UI code changes
 - Clear ownership and responsibility boundaries
+- Easy to migrate from mock API to production API
+
+---
+
+## Development
+
+### Project Structure
+
+```
+src/
+├── api/
+│   ├── mockApi.ts              # Mock API layer
+│   └── types.ts                # API type definitions
+├── pages/
+│   ├── siteConfig/             # Site Configuration page
+│   │   ├── SiteConfigApp.tsx
+│   │   ├── components/
+│   │   │   ├── layout/         # Sidebar, Header, MainContent
+│   │   │   ├── blocks/         # ThemeBlock, SectionBlock, SubsectionBlock
+│   │   │   ├── points/         # PointCard
+│   │   │   ├── widgets/        # EntryField, DateTimeWidget, DualHandleSlider
+│   │   │   └── modals/         # HelpModal, CommandPreviewModal, TelemetryHistoryModal
+│   │   └── hooks/
+│   └── historicData/           # Historical Data page
+│       ├── HistoricalDataApp.tsx
+│       ├── components/
+│       │   ├── charts/         # ChartGrid, FakeChart, LineChartPreview
+│       │   ├── filters/        # LabelFilter, DetailLevelSlider, HistorySearch
+│       │   ├── ui/             # InverterSelector, HelpToggle, GridDividers
+│       │   └── modals/         # ChartTutorialModal, PreferencesModal
+│       └── utils/
+├── hooks/
+│   ├── useSiteConfigLoader.ts  # Load configuration
+│   ├── useEquipmentMappings.ts # Equipment-to-gateway mapping
+│   ├── useGatewayStatus.ts     # Gateway status tracking
+│   └── usePointFormWithApi.ts  # Point value management
+├── transforms/
+│   └── rebuildFromHierarchy.ts # Build script
+├── themes/
+│   ├── demo_rebuilt.json       # Generated configuration
+│   ├── envy_themes.json        # Envy-specific themes
+│   └── matter_themes.json      # Matter themes
+├── telemetry/
+│   ├── ss40k_inverter.yaml     # Inverter telemetry schema
+│   ├── lifecycle_events.yaml   # Event definitions
+│   └── label_help.yaml         # Label help text
+└── App.tsx                     # Main router
+```
+
+### Build Scripts
+
+```bash
+# Rebuild configuration from CSV/YAML
+npm run rebuild:config
+
+# Split theme files
+npm run split:themes
+
+# Convert telemetry formats
+npm run convert:telemetry
+
+# Development server
+npm run dev
+
+# Production build
+npm run build
+```
+
+### Environment Variables
+
+```bash
+# Load specific theme file only (bypasses dropdown)
+THEME_FILE=src/themes/demo_rebuilt.json npm run dev
+```
+
+### Key Technologies
+
+- **React 18** - UI framework with hooks
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Utility-first styling
+- **Vite** - Build tool and dev server
+- **YAML** - Configuration files (hierarchy, telemetry, envy-specific)
+- **CSV** - Protocol data (matter.csv)
+- **SVG** - Custom charts (line, categorical)
+
+### Adding a New Configuration Point
+
+1. **Add to `matter.csv`**:
+   ```csv
+   Basic.NewPoint,New Point,Description,attribute,RW,HybridInverter,Basic,NewPoint,Value,Value,Number,kW,0,100
+   ```
+
+2. **Add to `hierarchy.yaml`**:
+   ```yaml
+   - section_id: battery
+     subsections:
+       - points:
+           - command_id: Basic.NewPoint
+             widget: slider  # optional UI override
+   ```
+
+3. **Rebuild configuration**:
+   ```bash
+   npm run rebuild:config
+   ```
+
+4. **Refresh frontend** - The new point will appear in the UI
+
+### Adding a New Modbus Point
+
+1. **Add to `envy_specific.yaml`**:
+   ```yaml
+   - section_id: battery
+     title: New Modbus Point
+     command_id: Modbus.NewPoint
+     element_type: custom
+     access: RW
+     entries:
+       - name: Value
+         arg: Value
+         dtype: Number
+         unit: kW
+     protocol:
+       modbus:
+         address: 100
+         register_type: 3
+         size: 1
+         scalefactor: 10  # divide by 10 when reading
+   ```
+
+2. **Rebuild configuration**:
+   ```bash
+   npm run rebuild:config
+   ```
+
+### Adding a New Telemetry Point
+
+1. **Add to `ss40k_inverter.yaml`**:
+   ```yaml
+   - title: "New Telemetry Point"
+     help: "Description of what this measures"
+     labels:
+       component: Battery
+       type: Power
+       unit: kW
+       detail_level: Standard
+   ```
+
+2. **Restart dev server** - The point will appear in Historical Data filters
+
+---
+
+## Design Philosophy
+
+### Three-File Approach (Site Config)
+- **Protocol-focused** - `matter.csv` contains only firmware-level concerns
+- **UI-focused** - `hierarchy.yaml` handles all presentation logic
+- **Device-specific** - `envy_specific.yaml` for non-Matter protocols
+
+### Mock API Layer
+- **Easy migration** - Replace mock functions with real HTTP calls
+- **Type safety** - Full TypeScript types for request/response
+- **Protocol-aware** - Handles Matter, Modbus, and CGI protocols
+
+### Component Architecture
+- **Separation of concerns** - Layout, blocks, points, widgets are separate
+- **Reusable widgets** - Shared components for common input patterns
+- **Hook-based state** - Custom hooks for equipment, gateway status, search
+
+### Label-Based Filtering (Historical Data)
+- **Multi-dimensional** - Filter by equipment, component, type, unit, etc.
+- **Hierarchical** - Configurable grouping order
+- **Progressive disclosure** - Detail level controls complexity
+
+---
+
+## Future Enhancements
+
+- **Real-time updates** - WebSocket integration for live telemetry
+- **Undo/Redo** - Command history with rollback
+- **Batch operations** - Apply changes to multiple points at once
+- **Export/Import** - Save and restore configurations
+- **User preferences** - Persist UI state (collapsed sections, chart layouts)
+- **Multi-language support** - i18n for labels and help text
+- **Production API** - Replace mock API with real backend
+- **Authentication** - User login and role-based access control
+- **Audit logging** - Track who changed what and when
