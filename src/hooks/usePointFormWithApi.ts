@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { PointDef, EntryValue, EquipmentOption } from '../pages/siteConfig/types/schema';
 import { buildInitialPointState } from '../pages/siteConfig/utils/initialState';
 import { readPoint, writePoint, invokeCommand } from '../api';
+import { useEquipmentMappings } from './useEquipmentMappings';
 
 /**
  * Custom hook for managing PointCard form state with API integration.
@@ -11,8 +12,11 @@ import { readPoint, writePoint, invokeCommand } from '../api';
  * - Execute read operations
  * - Execute write operations
  * - Execute invoke operations
+ * - Validate non-primary inverter restrictions for Modbus commands
  */
 export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption) {
+  // Get equipment mappings to look up gateway and primary status
+  const { getGatewaySn, isPrimary, isLoading: mappingsLoading } = useEquipmentMappings();
   const [formState, setFormState] = useState<EntryValue>(
     buildInitialPointState(point)
   );
@@ -67,6 +71,10 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
       setIsLoading(true);
       setError(null);
 
+      // Look up the gateway for this equipment
+      const equipmentSn = equipment.thingId.SN;
+      const gatewaySn = getGatewaySn(equipmentSn);
+
       const response = await readPoint({
         pointId: point.command_id,
         equipmentId: equipment.id,
@@ -75,7 +83,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
       if (response.value.success) {
         setFormState(response.value.entries);
         setLastRead(response.value.lastRead);
-        return { success: true, payload: response.payload };
+        return { success: true, payload: response.payload, gatewaySn };
       } else {
         setError(response.value.error || 'Failed to read point');
         return { success: false, error: response.value.error };
@@ -87,7 +95,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     } finally {
       setIsLoading(false);
     }
-  }, [point.command_id, equipment.id]);
+  }, [point.command_id, equipment.id, equipment.thingId.SN, getGatewaySn]);
 
   /**
    * Handle set button - write current values to device
@@ -96,6 +104,17 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     try {
       setIsLoading(true);
       setError(null);
+
+      // Check if this is a Modbus command on a non-primary inverter
+      const equipmentSn = equipment.thingId.SN;
+      const isModbusCommand = point.protocol?.modbus !== undefined;
+      const isNonPrimary = !isPrimary(equipmentSn);
+
+      if (isModbusCommand && isNonPrimary) {
+        const errorMessage = 'Writing to Modbus commands on non-primary inverters is not currently supported';
+        setError(errorMessage);
+        return { success: false, error: errorMessage };
+      }
 
       // Normalize enum values: convert friendly meanings back to semantic meanings
       const normalizedValues: Record<string, any> = { ...formState };
@@ -122,6 +141,9 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
         }
       });
 
+      // Look up the gateway for this equipment
+      const gatewaySn = getGatewaySn(equipmentSn);
+
       const response = await writePoint({
         pointId: point.command_id,
         equipmentId: equipment.id,
@@ -134,7 +156,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
           setFormState(response.newValue.entries);
           setLastRead(response.newValue.lastRead);
         }
-        return { success: true, payload: response.payload };
+        return { success: true, payload: response.payload, gatewaySn };
       } else {
         setError(response.error || 'Failed to write point');
         return { success: false, error: response.error };
@@ -146,7 +168,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     } finally {
       setIsLoading(false);
     }
-  }, [point.command_id, point.entries, equipment.id, formState]);
+  }, [point.command_id, point.entries, point.protocol, equipment.id, equipment.thingId.SN, formState, isPrimary, getGatewaySn]);
 
   /**
    * Handle invoke button - execute a service/command
@@ -155,6 +177,10 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     try {
       setIsLoading(true);
       setError(null);
+
+      // Look up the gateway for this equipment
+      const equipmentSn = equipment.thingId.SN;
+      const gatewaySn = getGatewaySn(equipmentSn);
 
       // Normalize enum values: convert friendly meanings back to semantic meanings
       const normalizedParameters: Record<string, any> = { ...formState };
@@ -188,7 +214,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
       });
 
       if (response.success) {
-        return { success: true, payload: response.payload, result: response.result };
+        return { success: true, payload: response.payload, result: response.result, gatewaySn };
       } else {
         setError(response.error || 'Failed to invoke command');
         return { success: false, error: response.error };
@@ -200,7 +226,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     } finally {
       setIsLoading(false);
     }
-  }, [point.command_id, point.entries, equipment.id, formState]);
+  }, [point.command_id, point.entries, equipment.id, equipment.thingId.SN, formState, getGatewaySn]);
 
   return {
     formState,
@@ -209,7 +235,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     handleRefresh,
     handleSet,
     handleInvoke,
-    isLoading,
+    isLoading: isLoading || mappingsLoading,
     error,
     lastRead,
   };

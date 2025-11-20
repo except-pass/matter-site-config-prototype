@@ -673,15 +673,16 @@ export async function getEquipmentsAtSite(
 ): Promise<GetEquipmentsAtSiteResponse> {
   await delay(NETWORK_DELAY);
 
-  // Mock data: return sample equipment mappings
+  // Mock data: return sample equipment mappings - 1 gateway per inverter
+  // Using serial numbers that match the equipmentOptions in types/equipment.ts
   return {
     items: [
       {
         gateway_sn: 'GW001234567890',
         equipments: [
           {
-            id: 'inv-001',
-            sn: 'INV001234567890',
+            id: 'envy-04237218B0',
+            sn: '04237218B0',
             md: 'FP-ENVY-Inverter',
             md_name: 'Fortress Power ENVY Inverter',
             site_id: request.site_id,
@@ -689,14 +690,23 @@ export async function getEquipmentsAtSite(
             product_type: 'Inverter',
             sub_product_type: 'Hybrid',
             software_version: '1.2.3',
+            arm_sub_product_type: 'ARM-V1',
+            arm_software_version: '1.2.3',
+            dsp_sub_product_type: 'DSP-V1',
+            dsp_software_version: '2.3.4',
             firmwares: [
               { name: 'ARM', version: '1.2.3' },
               { name: 'DSP', version: '2.3.4' },
             ],
           },
+        ],
+      },
+      {
+        gateway_sn: 'GW002234567890',
+        equipments: [
           {
-            id: 'inv-002',
-            sn: 'INV002234567890',
+            id: 'envy-04237219C3',
+            sn: '04237219C3',
             md: 'FP-ENVY-Inverter',
             md_name: 'Fortress Power ENVY Inverter',
             site_id: request.site_id,
@@ -704,6 +714,10 @@ export async function getEquipmentsAtSite(
             product_type: 'Inverter',
             sub_product_type: 'Hybrid',
             software_version: '1.2.3',
+            arm_sub_product_type: 'ARM-V1',
+            arm_software_version: '1.2.3',
+            dsp_sub_product_type: 'DSP-V1',
+            dsp_software_version: '2.3.4',
             firmwares: [
               { name: 'ARM', version: '1.2.3' },
               { name: 'DSP', version: '2.3.4' },
