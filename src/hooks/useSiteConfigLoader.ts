@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PageDef, PageRegistryEntry } from '../types/schema';
+import { PageDef, PageRegistryEntry } from '../pages/siteConfig/types/schema';
 import { fetchSiteConfig } from '../api';
 
 interface UseSiteConfigLoaderResult {

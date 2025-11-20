@@ -1,5 +1,5 @@
 import { PointDef, EquipmentOption } from '../../../types/schema';
-import { usePointFormWithApi } from '../../../hooks/usePointFormWithApi';
+import { usePointFormWithApi } from '../../../../../hooks/usePointFormWithApi';
 import { useModalState } from '../../../hooks/useModalState';
 import { PointCardHeader } from './PointCardHeader';
 import { PointCardBody } from './PointCardBody';
@@ -25,8 +25,6 @@ export function PointCard({
     handleRefresh,
     handleSet,
     handleInvoke,
-    isLoading,
-    error,
   } = usePointFormWithApi(point, equipment);
 
   const helpModal = useModalState();

@@ -5,7 +5,7 @@ import { PageDef } from "./types/schema";
 import { equipmentOptions } from "./types/equipment";
 
 // Hooks
-import { useSiteConfigLoader } from "./hooks/useSiteConfigLoader";
+import { useSiteConfigLoader } from "../../hooks/useSiteConfigLoader";
 import { useScrollTracking } from "./hooks/useScrollTracking";
 import { useSearch } from "./hooks/useSearch";
 

@@ -5,7 +5,7 @@
  * These types represent the contract between the frontend and backend.
  */
 
-import { PageDef, PointDef } from '../types/schema';
+import { PageDef } from '../pages/siteConfig/types/schema';
 
 // ============================================================================
 // Site Configuration API

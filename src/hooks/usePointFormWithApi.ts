@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
-import { PointDef, EntryValue, EquipmentOption } from '../types/schema';
-import { buildInitialPointState } from '../utils/initialState';
+import { PointDef, EntryValue, EquipmentOption } from '../pages/siteConfig/types/schema';
+import { buildInitialPointState } from '../pages/siteConfig/utils/initialState';
 import { readPoint, writePoint, invokeCommand } from '../api';
 
 /**
@@ -56,7 +56,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
    * Handle field value changes
    */
   const handleFieldChange = useCallback((argName: string, nextVal: any) => {
-    setFormState((prev) => ({ ...prev, [argName]: nextVal }));
+    setFormState((prev: Record<string, any>) => ({ ...prev, [argName]: nextVal }));
   }, []);
 
   /**
@@ -97,10 +97,35 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
       setIsLoading(true);
       setError(null);
 
+      // Normalize enum values: convert friendly meanings back to semantic meanings
+      const normalizedValues: Record<string, any> = { ...formState };
+
+      point.entries.forEach((entry: any) => {
+        if (entry.dtype !== 'enum' || !entry.meanings) {
+          return;
+        }
+
+        const rawValue = normalizedValues[entry.arg];
+        if (rawValue === undefined || rawValue === null || rawValue === '') {
+          return;
+        }
+
+        // Find the wire value (key) that matches either the friendly or semantic meaning
+        const match = Object.entries(entry.meanings).find(([wireVal, semantic]: [string, any]) => {
+          const friendly = entry.friendly_meanings?.[wireVal] ?? semantic;
+          return rawValue === friendly || rawValue === semantic;
+        });
+
+        // Use the semantic meaning (wire value) for the command
+        if (match) {
+          normalizedValues[entry.arg] = match[1];
+        }
+      });
+
       const response = await writePoint({
         pointId: point.command_id,
         equipmentId: equipment.id,
-        values: formState,
+        values: normalizedValues,
       });
 
       if (response.success) {
@@ -121,7 +146,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     } finally {
       setIsLoading(false);
     }
-  }, [point.command_id, equipment.id, formState]);
+  }, [point.command_id, point.entries, equipment.id, formState]);
 
   /**
    * Handle invoke button - execute a service/command
@@ -131,10 +156,35 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
       setIsLoading(true);
       setError(null);
 
+      // Normalize enum values: convert friendly meanings back to semantic meanings
+      const normalizedParameters: Record<string, any> = { ...formState };
+
+      point.entries.forEach((entry: any) => {
+        if (entry.dtype !== 'enum' || !entry.meanings) {
+          return;
+        }
+
+        const rawValue = normalizedParameters[entry.arg];
+        if (rawValue === undefined || rawValue === null || rawValue === '') {
+          return;
+        }
+
+        // Find the wire value (key) that matches either the friendly or semantic meaning
+        const match = Object.entries(entry.meanings).find(([wireVal, semantic]: [string, any]) => {
+          const friendly = entry.friendly_meanings?.[wireVal] ?? semantic;
+          return rawValue === friendly || rawValue === semantic;
+        });
+
+        // Use the semantic meaning (wire value) for the command
+        if (match) {
+          normalizedParameters[entry.arg] = match[1];
+        }
+      });
+
       const response = await invokeCommand({
         pointId: point.command_id,
         equipmentId: equipment.id,
-        parameters: formState,
+        parameters: normalizedParameters,
       });
 
       if (response.success) {
@@ -150,7 +200,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     } finally {
       setIsLoading(false);
     }
-  }, [point.command_id, equipment.id, formState]);
+  }, [point.command_id, point.entries, equipment.id, formState]);
 
   return {
     formState,

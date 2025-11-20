@@ -8,7 +8,7 @@
  * simulated network delay to mimic real API behavior.
  */
 
-import { PageDef, PointDef } from '../types/schema';
+import { PageDef, PointDef } from '../pages/siteConfig/types/schema';
 import {
   FetchSiteConfigRequest,
   FetchSiteConfigResponse,
@@ -29,7 +29,7 @@ import {
 } from './types';
 
 // Import theme data (in production, this would come from the backend)
-import demoThemeData from '../themes/demo_rebuilt.json';
+import demoThemeData from '../pages/siteConfig/themes/demo_rebuilt.json';
 
 // ============================================================================
 // Mock Data Store
@@ -66,8 +66,8 @@ const delay = (ms: number): Promise<void> =>
  */
 function generateMockEntryValue(
   entry: any,
-  idx: number,
-  allEntries: any[]
+  _idx: number,
+  _allEntries: any[]
 ): EntryValue {
   // If a default value is specified, use it
   if (entry.value !== undefined) {
@@ -146,11 +146,11 @@ function generateMockPointValue(point: PointDef): PointValue {
 
   // Special handling for generator-exercise widget
   if (point.widget === 'generator-exercise') {
-    point.entries.forEach((entry) => {
+    point.entries.forEach((entry: any) => {
       entries[entry.arg] = '';
     });
   } else {
-    point.entries.forEach((entry, idx) => {
+    point.entries.forEach((entry: any, idx: number) => {
       entries[entry.arg] = generateMockEntryValue(
         entry,
         idx,
@@ -171,10 +171,10 @@ function generateMockPointValue(point: PointDef): PointValue {
  * Initialize mock values for all points in a page
  */
 function initializeMockValues(page: PageDef): void {
-  page.themes.forEach((theme) => {
-    theme.sections.forEach((section) => {
-      section.subsections.forEach((subsection) => {
-        subsection.points.forEach((point) => {
+  page.themes.forEach((theme: any) => {
+    theme.sections.forEach((section: any) => {
+      section.subsections.forEach((subsection: any) => {
+        subsection.points.forEach((point: any) => {
           if (!mockPointValues.has(point.command_id)) {
             mockPointValues.set(
               point.command_id,
@@ -191,18 +191,16 @@ function initializeMockValues(page: PageDef): void {
  * Find a point by its command_id
  */
 function findPointById(pointId: string): PointDef | null {
-  const pages = demoThemeData as any as { themes: any[] }[];
+  const page = demoThemeData as any;
 
-  for (const page of pages as any) {
-    if (!page.themes) continue;
+  if (!page.themes) return null;
 
-    for (const theme of page.themes) {
-      for (const section of theme.sections) {
-        for (const subsection of section.subsections) {
-          for (const point of subsection.points) {
-            if (point.command_id === pointId) {
-              return point;
-            }
+  for (const theme of page.themes) {
+    for (const section of theme.sections) {
+      for (const subsection of section.subsections) {
+        for (const point of subsection.points) {
+          if (point.command_id === pointId) {
+            return point;
           }
         }
       }
@@ -385,19 +383,58 @@ export async function writePoint(
   // Store the new value
   mockPointValues.set(request.pointId, newValue);
 
-  // In production, would generate and send actual protocol payload
-  const mockPayload = {
-    protocol: 'matter',
-    pointId: request.pointId,
-    equipmentId: request.equipmentId,
-    operation: 'write',
-    values: request.values,
-  };
+  // Find the point definition to build proper protocol payload
+  const point = findPointById(request.pointId);
+  let payload: any = {};
+
+  if (point && point.protocol) {
+    if (point.protocol.matter) {
+      // Build Matter protocol payload
+      payload = {
+        version: "1.0",
+        timeout: 60,
+        requestId: Date.now(),
+        endPoint: "Matter",
+        method:
+          point.element_type === "Service" || point.access === "Invoke"
+            ? "Invoke"
+            : "Write",
+        data: {
+          Elements: [
+            {
+              MEP: point.protocol.matter.MEP,
+              Cluster: point.protocol.matter.Cluster,
+              Element: point.protocol.matter.Element,
+              arguments: request.values
+            }
+          ],
+          thingId: {
+            Type: "Inverter",
+            Mn: "fortress",
+            Md: "FP-ENVY-Inverter",
+            SN: request.equipmentId
+          }
+        }
+      };
+    } else if (point.protocol.modbus) {
+      // Build Modbus protocol payload
+      payload = {
+        bus: "modbus",
+        write: point.access !== "R",
+        map: {
+          address: point.protocol.modbus.address,
+          register_type: point.protocol.modbus.register_type,
+          size: point.protocol.modbus.size
+        },
+        values: request.values
+      };
+    }
+  }
 
   return {
     success: true,
     timestamp: new Date().toISOString(),
-    payload: mockPayload,
+    payload: payload,
     newValue,
   };
 }
@@ -425,19 +462,54 @@ export async function invokeCommand(
     };
   }
 
-  // In production, would generate and send actual protocol payload
-  const mockPayload = {
-    protocol: 'matter',
-    pointId: request.pointId,
-    equipmentId: request.equipmentId,
-    operation: 'invoke',
-    parameters: request.parameters,
-  };
+  // Build proper protocol payload based on point definition
+  let payload: any = {};
+
+  if (point.protocol) {
+    if (point.protocol.matter) {
+      // Build Matter protocol payload for invoke
+      payload = {
+        version: "1.0",
+        timeout: 60,
+        requestId: Date.now(),
+        endPoint: "Matter",
+        method: "Invoke",
+        data: {
+          Elements: [
+            {
+              MEP: point.protocol.matter.MEP,
+              Cluster: point.protocol.matter.Cluster,
+              Element: point.protocol.matter.Element,
+              arguments: request.parameters
+            }
+          ],
+          thingId: {
+            Type: "Inverter",
+            Mn: "fortress",
+            Md: "FP-ENVY-Inverter",
+            SN: request.equipmentId
+          }
+        }
+      };
+    } else if (point.protocol.modbus) {
+      // Build Modbus protocol payload for invoke
+      payload = {
+        bus: "modbus",
+        write: true,
+        map: {
+          address: point.protocol.modbus.address,
+          register_type: point.protocol.modbus.register_type,
+          size: point.protocol.modbus.size
+        },
+        values: request.parameters
+      };
+    }
+  }
 
   return {
     success: true,
     timestamp: new Date().toISOString(),
-    payload: mockPayload,
+    payload: payload,
     result: { status: 'Command executed successfully' },
   };
 }
