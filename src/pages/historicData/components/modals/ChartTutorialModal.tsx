@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import addingPointsImg from '../../tutorial/images/adding_points.png';
-import resizingChartImg from '../../tutorial/images/resizing_chart.png';
-import createAdditionalChartsImg from '../../tutorial/images/create_additional_charts.png';
-import movingPointsBetweenChartsImg from '../../tutorial/images/moving_points_between_charts.png';
-import removeChartImg from '../../tutorial/images/remove_chart.png';
-import browseAndFindPointsImg from '../../tutorial/images/browse_and_find_points.png';
-import selectingDevicesImg from '../../tutorial/images/selecting_devices.png';
-import troubleshootingPointsImg from '../../tutorial/images/troubleshooting_points.png';
-import linesVsStatusImg from '../../tutorial/images/lines_vs_status.png';
+import addingPointsImg from '../../../siteConfig/tutorial/images/adding_points.png';
+import resizingChartImg from '../../../siteConfig/tutorial/images/resizing_chart.png';
+import createAdditionalChartsImg from '../../../siteConfig/tutorial/images/create_additional_charts.png';
+import movingPointsBetweenChartsImg from '../../../siteConfig/tutorial/images/moving_points_between_charts.png';
+import removeChartImg from '../../../siteConfig/tutorial/images/remove_chart.png';
+import browseAndFindPointsImg from '../../../siteConfig/tutorial/images/browse_and_find_points.png';
+import selectingDevicesImg from '../../../siteConfig/tutorial/images/selecting_devices.png';
+import troubleshootingPointsImg from '../../../siteConfig/tutorial/images/troubleshooting_points.png';
+import linesVsStatusImg from '../../../siteConfig/tutorial/images/lines_vs_status.png';
 
 interface TutorialStep {
   title: string;
@@ -18,10 +18,18 @@ interface TutorialStep {
 interface ChartTutorialModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialStep?: number;
 }
 
-const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose }) => {
-  const [currentStep, setCurrentStep] = useState(0);
+const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose, initialStep = 0 }) => {
+  const [currentStep, setCurrentStep] = useState(initialStep);
+
+  // Update currentStep when modal opens with a new initialStep
+  React.useEffect(() => {
+    if (isOpen) {
+      setCurrentStep(initialStep);
+    }
+  }, [isOpen, initialStep]);
 
   const handleClose = () => {
     setCurrentStep(0);
@@ -189,7 +197,8 @@ const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose
           <div>
             <h4 className="font-semibold mb-2">Status charts</h4>
             <p className="text-sm mb-2">
-              Show what <em>state</em> the equipment was in over time, such as:
+              Data points that will be plotted as a status chart are designated with the 📊 icon.<br />
+              These show what <em>state</em> the equipment was in over time, such as:
             </p>
             <ul className="list-disc pl-5 text-sm text-slate-600 space-y-1">
               <li>Normal</li>

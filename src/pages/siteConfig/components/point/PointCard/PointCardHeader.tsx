@@ -1,5 +1,5 @@
 import { PointDef } from '../../../types/schema';
-import { InfoIcon, ClockIcon, RefreshIcon } from '../../ui/Icons';
+import { InfoIcon, ClockIcon, RefreshIcon } from '../../../../../shared/components/Icons';
 import { ReadOnlyBadge } from '../../ui/ReadOnlyBadge';
 
 interface PointCardHeaderProps {

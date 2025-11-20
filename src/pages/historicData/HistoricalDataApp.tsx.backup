@@ -4,6 +4,9 @@ import rawYaml from "./definitions/telemetry/ss40k_inverter.yaml?raw";
 import rawLifecycleEventsYaml from "./definitions/telemetry/lifecycle_events.yaml?raw";
 import rawLabelHelp from "./definitions/telemetry/label_help.yaml?raw";
 import ChartTutorialModal from "./components/modals/ChartTutorialModal";
+import LabelGroup from "./components/filters/LabelGroup";
+import LabelFilter from "./components/filters/LabelFilter";
+import ChartGrid, { type ChartGridCallbacks } from "./components/charts/ChartGrid";
 
 type Meanings = Record<string | number, string>;
 
