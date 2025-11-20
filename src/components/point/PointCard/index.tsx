@@ -1,5 +1,5 @@
 import { PointDef, EquipmentOption } from '../../../types/schema';
-import { usePointForm } from '../../../hooks/usePointForm';
+import { usePointFormWithApi } from '../../../hooks/usePointFormWithApi';
 import { useModalState } from '../../../hooks/useModalState';
 import { PointCardHeader } from './PointCardHeader';
 import { PointCardBody } from './PointCardBody';
@@ -19,7 +19,15 @@ export function PointCard({
   equipment,
 }: PointCardProps) {
   // Use custom hooks for form state and modal management
-  const { formState, handleFieldChange, handleRefresh, handleSet } = usePointForm(point, equipment);
+  const {
+    formState,
+    handleFieldChange,
+    handleRefresh,
+    handleSet,
+    handleInvoke,
+    isLoading,
+    error,
+  } = usePointFormWithApi(point, equipment);
 
   const helpModal = useModalState();
   const telemetryModal = useModalState();
@@ -30,14 +38,25 @@ export function PointCard({
   const onHelpClick = () => helpModal.open();
   const onHistoryClick = () => telemetryModal.open();
 
-  const onRefreshClick = () => {
-    const payload = handleRefresh();
-    refreshModal.open(payload);
+  const onRefreshClick = async () => {
+    const result = await handleRefresh();
+    if (result?.payload) {
+      refreshModal.open(result.payload);
+    }
   };
 
-  const onSetClick = () => {
-    const payload = handleSet();
-    commandModal.open(payload);
+  const onSetClick = async () => {
+    const result = await handleSet();
+    if (result?.payload) {
+      commandModal.open(result.payload);
+    }
+  };
+
+  const onInvokeClick = async () => {
+    const result = await handleInvoke();
+    if (result?.payload) {
+      commandModal.open(result.payload);
+    }
   };
 
   // Compute UI state
@@ -92,7 +111,7 @@ export function PointCard({
         isInvoke={isInvoke}
         setButtonAppearance={setButtonAppearance}
         onChange={handleFieldChange}
-        onInvokeClick={onSetClick}
+        onInvokeClick={onInvokeClick}
         equipment={equipment}
       />
 
