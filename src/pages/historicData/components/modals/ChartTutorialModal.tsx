@@ -18,10 +18,11 @@ interface TutorialStep {
 interface ChartTutorialModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialStep?: number;
 }
 
-const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose }) => {
-  const [currentStep, setCurrentStep] = useState(0);
+const ChartTutorialModal: React.FC<ChartTutorialModalProps> = ({ isOpen, onClose, initialStep = 0 }) => {
+  const [currentStep, setCurrentStep] = useState(initialStep);
 
   const handleClose = () => {
     setCurrentStep(0);
