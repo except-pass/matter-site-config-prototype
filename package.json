@@ -9,9 +9,10 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "rebuild:config": "tsx src/transforms/rebuildFromHierarchy.ts",
+    "rebuild:config": "tsx src/pages/siteConfig/transforms/rebuildFromHierarchy.ts",
     "rebuild": "npm run rebuild:config",
-    "convert:telemetry": "tsx src/transforms/yamlJsonConvert.ts"
+    "split:themes": "tsx src/pages/siteConfig/transforms/splitThemes.ts",
+    "convert:telemetry": "tsx src/pages/siteConfig/transforms/yamlJsonConvert.ts"
   },
   "dependencies": {
     "csv-parse": "^6.1.0",

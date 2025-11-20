@@ -8,11 +8,15 @@ import { equipmentOptions } from "./types/equipment";
 import { useSiteConfigLoader } from "../../hooks/useSiteConfigLoader";
 import { useScrollTracking } from "./hooks/useScrollTracking";
 import { useSearch } from "./hooks/useSearch";
+import { useModalState } from "./hooks/useModalState";
+import { useEquipmentMappings } from "../../hooks/useEquipmentMappings";
+import { useGatewayStatus } from "../../hooks/useGatewayStatus";
 
 // Layout components
 import { Sidebar } from "./components/layout/Sidebar";
 import { Header } from "./components/layout/Header";
 import { MainContent } from "./components/layout/MainContent";
+import { RefreshInfoModal } from "./components/modals/RefreshInfoModal";
 
 // Utils
 import { assertSchemaExpectations } from "./utils/validation";
@@ -45,6 +49,9 @@ export default function PointThemeDemoPage() {
   // Search functionality
   const { searchQuery, setSearchQuery, pointMatchesSearch } = useSearch();
 
+  // Modal for explaining refresh behavior
+  const refreshModal = useModalState();
+
   // Last updated timestamp from API
   const lastUpdatedLabel = useMemo(() => {
     if (!lastModified) return 'Never';
@@ -64,6 +71,24 @@ export default function PointThemeDemoPage() {
   const activeEquipment = useMemo(() => {
     return equipmentOptions.find((eq) => eq.id === selectedEquipmentId) || equipmentOptions[0];
   }, [selectedEquipmentId]);
+
+  const { getGatewaySn, isLoading: equipmentMappingLoading } = useEquipmentMappings();
+
+  const equipmentSn = activeEquipment?.thingId?.SN;
+  const gatewaySn = equipmentSn ? getGatewaySn(equipmentSn) : undefined;
+  const gatewayStatus = useGatewayStatus(gatewaySn);
+
+  const headerGatewayStatus = {
+    gatewaySn,
+    isOnline: gatewaySn ? gatewayStatus.isOnline : null,
+    isLoading: equipmentMappingLoading || (!!gatewaySn && gatewayStatus.isLoading),
+    lastChecked: gatewayStatus.statusTimestamp,
+    error:
+      gatewayStatus.error ||
+      (!equipmentMappingLoading && equipmentSn && !gatewaySn
+        ? "Gateway mapping unavailable"
+        : null)
+  };
 
   // Validate schema on page load
   useEffect(() => {
@@ -127,6 +152,8 @@ export default function PointThemeDemoPage() {
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             lastUpdatedLabel={lastUpdatedLabel}
+            onRefresh={() => refreshModal.open()}
+            gatewayStatus={headerGatewayStatus}
           />
 
           {/* Theme content */}
@@ -138,6 +165,8 @@ export default function PointThemeDemoPage() {
           />
         </main>
       </div>
+
+      <RefreshInfoModal isOpen={refreshModal.isOpen} onClose={refreshModal.close} />
     </div>
   );
 }

@@ -29,7 +29,76 @@ import {
 } from './types';
 
 // Import theme data (in production, this would come from the backend)
-import demoThemeData from '../pages/siteConfig/themes/demo_rebuilt.json';
+import envyThemeData from '../pages/siteConfig/themes/envy_themes.json';
+import matterThemeData from '../pages/siteConfig/themes/matter_themes.json';
+
+/**
+ * Merge two theme files by combining themes, sections, and subsections
+ */
+function mergeThemeData(envyData: { themes: any[] }, matterData: { themes: any[] }): { themes: any[] } {
+  const mergedThemes: any[] = [];
+
+  // Create a map of themes by name for quick lookup
+  const themeMap = new Map<string, any>();
+
+  // First, add all matter themes (base themes)
+  matterData.themes.forEach((theme) => {
+    const themeKey = theme.themeName || theme.theme_id || '';
+    const themeCopy = {
+      ...theme,
+      sections: theme.sections.map((section: any) => ({
+        ...section,
+        subsections: [...section.subsections],
+      })),
+    };
+    themeMap.set(themeKey, themeCopy);
+    mergedThemes.push(themeCopy);
+  });
+
+  // Then, merge envy themes into matter themes
+  envyData.themes.forEach((envyTheme) => {
+    const themeKey = envyTheme.themeName || envyTheme.theme_id || '';
+    let matterTheme = themeMap.get(themeKey);
+
+    if (!matterTheme) {
+      // Theme doesn't exist in matter, add it
+      matterTheme = {
+        ...envyTheme,
+        sections: envyTheme.sections.map((section: any) => ({
+          ...section,
+          subsections: [...section.subsections],
+        })),
+      };
+      themeMap.set(themeKey, matterTheme);
+      mergedThemes.push(matterTheme);
+      return;
+    }
+
+    // Merge sections
+    envyTheme.sections.forEach((envySection: any) => {
+      const sectionKey = envySection.section_id || envySection.sectionTitle || '';
+      let matterSection = matterTheme.sections.find(
+        (s: any) => (s.section_id || s.sectionTitle) === sectionKey
+      );
+
+      if (!matterSection) {
+        // Section doesn't exist in matter, add it
+        matterTheme.sections.push({
+          ...envySection,
+          subsections: [...envySection.subsections],
+        });
+      } else {
+        // Section exists, append envy subsections to matter subsections
+        matterSection.subsections.push(...envySection.subsections);
+      }
+    });
+  });
+
+  return { themes: mergedThemes };
+}
+
+// Merge the split theme files
+const demoThemeData = mergeThemeData(envyThemeData, matterThemeData);
 
 // ============================================================================
 // Mock Data Store

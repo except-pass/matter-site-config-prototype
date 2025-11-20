@@ -29,8 +29,8 @@ export function PointCard({
 
   const helpModal = useModalState();
   const telemetryModal = useModalState();
-  const commandModal = useModalState<any>();
-  const refreshModal = useModalState<any>();
+  const commandModal = useModalState<{ payload: any; gatewaySn?: string }>();
+  const refreshModal = useModalState<{ payload: any; gatewaySn?: string }>();
 
   // Handle button clicks
   const onHelpClick = () => helpModal.open();
@@ -39,21 +39,21 @@ export function PointCard({
   const onRefreshClick = async () => {
     const result = await handleRefresh();
     if (result?.payload) {
-      refreshModal.open(result.payload);
+      refreshModal.open({ payload: result.payload, gatewaySn: result.gatewaySn });
     }
   };
 
   const onSetClick = async () => {
     const result = await handleSet();
     if (result?.payload) {
-      commandModal.open(result.payload);
+      commandModal.open({ payload: result.payload, gatewaySn: result.gatewaySn });
     }
   };
 
   const onInvokeClick = async () => {
     const result = await handleInvoke();
     if (result?.payload) {
-      commandModal.open(result.payload);
+      commandModal.open({ payload: result.payload, gatewaySn: result.gatewaySn });
     }
   };
 
@@ -129,14 +129,16 @@ export function PointCard({
 
       <CommandPreviewModal
         title="Command Preview"
-        payload={commandModal.data}
+        payload={commandModal.data?.payload}
+        gatewaySn={commandModal.data?.gatewaySn}
         isOpen={commandModal.isOpen}
         onClose={commandModal.close}
       />
 
       <CommandPreviewModal
         title="Read Command Preview"
-        payload={refreshModal.data}
+        payload={refreshModal.data?.payload}
+        gatewaySn={refreshModal.data?.gatewaySn}
         isOpen={refreshModal.isOpen}
         onClose={refreshModal.close}
         type="refresh"
