@@ -1,7 +1,13 @@
 import { useState, useCallback, useEffect } from 'react';
 import { PointDef, EntryValue, EquipmentOption } from '../pages/siteConfig/types/schema';
 import { buildInitialPointState } from '../pages/siteConfig/utils/initialState';
-import { readPoint, writePoint, invokeCommand } from '../api';
+import {
+  sendCGICommandToGateway,
+  PointValue,
+  buildReadPayload,
+  buildWritePayload,
+  buildInvokePayload,
+} from '../api';
 
 /**
  * Custom hook for managing PointCard form state with API integration.
@@ -30,16 +36,22 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
         setIsLoading(true);
         setError(null);
 
-        const response = await readPoint({
-          pointId: point.command_id,
-          equipmentId: equipment.id,
+        const payload = buildReadPayload(point, equipment.id);
+        const response = await sendCGICommandToGateway({
+          gatewaySn: 'GW001234567890', // TODO: Get from equipment-to-gateway mapping
+          payload,
         });
 
-        if (response.value.success) {
-          setFormState(response.value.entries);
-          setLastRead(response.value.lastRead);
+        if (response.success && response.data) {
+          const pointValue = response.data as PointValue;
+          if (pointValue.success) {
+            setFormState(pointValue.entries);
+            setLastRead(pointValue.lastRead);
+          } else {
+            setError(pointValue.error || 'Failed to read point');
+          }
         } else {
-          setError(response.value.error || 'Failed to read point');
+          setError(response.error || 'Failed to read point');
         }
       } catch (err) {
         console.error('Error fetching initial value:', err);
@@ -50,7 +62,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     };
 
     fetchInitialValue();
-  }, [point.command_id, equipment.id, point.access]);
+  }, [point, equipment.id]);
 
   /**
    * Handle field value changes
@@ -67,18 +79,25 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
       setIsLoading(true);
       setError(null);
 
-      const response = await readPoint({
-        pointId: point.command_id,
-        equipmentId: equipment.id,
+      const payload = buildReadPayload(point, equipment.id);
+      const response = await sendCGICommandToGateway({
+        gatewaySn: 'GW001234567890', // TODO: Get from equipment-to-gateway mapping
+        payload,
       });
 
-      if (response.value.success) {
-        setFormState(response.value.entries);
-        setLastRead(response.value.lastRead);
-        return { success: true, payload: response.payload };
+      if (response.success && response.data) {
+        const pointValue = response.data as PointValue;
+        if (pointValue.success) {
+          setFormState(pointValue.entries);
+          setLastRead(pointValue.lastRead);
+          return { success: true, payload };
+        } else {
+          setError(pointValue.error || 'Failed to read point');
+          return { success: false, error: pointValue.error };
+        }
       } else {
-        setError(response.value.error || 'Failed to read point');
-        return { success: false, error: response.value.error };
+        setError(response.error || 'Failed to read point');
+        return { success: false, error: response.error };
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to refresh';
@@ -87,7 +106,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     } finally {
       setIsLoading(false);
     }
-  }, [point.command_id, equipment.id]);
+  }, [point, equipment.id]);
 
   /**
    * Handle set button - write current values to device
@@ -122,19 +141,22 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
         }
       });
 
-      const response = await writePoint({
-        pointId: point.command_id,
-        equipmentId: equipment.id,
-        values: normalizedValues,
+      const payload = buildWritePayload(point, equipment.id, normalizedValues);
+      const response = await sendCGICommandToGateway({
+        gatewaySn: 'GW001234567890', // TODO: Get from equipment-to-gateway mapping
+        payload,
       });
 
       if (response.success) {
         // Update form with new value if provided
-        if (response.newValue) {
-          setFormState(response.newValue.entries);
-          setLastRead(response.newValue.lastRead);
+        if (response.data) {
+          const pointValue = response.data as PointValue;
+          if (pointValue.entries) {
+            setFormState(pointValue.entries);
+            setLastRead(pointValue.lastRead);
+          }
         }
-        return { success: true, payload: response.payload };
+        return { success: true, payload };
       } else {
         setError(response.error || 'Failed to write point');
         return { success: false, error: response.error };
@@ -146,7 +168,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     } finally {
       setIsLoading(false);
     }
-  }, [point.command_id, point.entries, equipment.id, formState]);
+  }, [point, equipment.id, formState]);
 
   /**
    * Handle invoke button - execute a service/command
@@ -181,14 +203,14 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
         }
       });
 
-      const response = await invokeCommand({
-        pointId: point.command_id,
-        equipmentId: equipment.id,
-        parameters: normalizedParameters,
+      const payload = buildInvokePayload(point, equipment.id, normalizedParameters);
+      const response = await sendCGICommandToGateway({
+        gatewaySn: 'GW001234567890', // TODO: Get from equipment-to-gateway mapping
+        payload,
       });
 
       if (response.success) {
-        return { success: true, payload: response.payload, result: response.result };
+        return { success: true, payload, result: response.data };
       } else {
         setError(response.error || 'Failed to invoke command');
         return { success: false, error: response.error };
@@ -200,7 +222,7 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     } finally {
       setIsLoading(false);
     }
-  }, [point.command_id, point.entries, equipment.id, formState]);
+  }, [point, equipment.id, formState]);
 
   return {
     formState,
