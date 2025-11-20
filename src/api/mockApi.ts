@@ -187,29 +187,6 @@ function initializeMockValues(page: PageDef): void {
   });
 }
 
-/**
- * Find a point by its command_id
- */
-function findPointById(pointId: string): PointDef | null {
-  const page = demoThemeData as any;
-
-  if (!page.themes) return null;
-
-  for (const theme of page.themes) {
-    for (const section of theme.sections) {
-      for (const subsection of section.subsections) {
-        for (const point of subsection.points) {
-          if (point.command_id === pointId) {
-            return point;
-          }
-        }
-      }
-    }
-  }
-
-  return null;
-}
-
 // ============================================================================
 // Mock API Functions
 // ============================================================================
@@ -472,7 +449,7 @@ export async function sendCGICommandToGateway(
         // For mock purposes, find and return the point value
         // In real implementation, this would send the CGI command to the gateway
         const element = elements[0];
-        const pointId = `${element.Cluster}_${element.Element}`;
+        const pointId = `${element.Cluster}.${element.Element}`;
         const value = mockPointValues.get(pointId);
 
         return {
@@ -494,7 +471,7 @@ export async function sendCGICommandToGateway(
         }
 
         const element = elements[0];
-        const pointId = `${element.Cluster}_${element.Element}`;
+        const pointId = `${element.Cluster}.${element.Element}`;
 
         // Update the mock value
         let currentValue = mockPointValues.get(pointId);

@@ -41,6 +41,29 @@ export function buildReadPayload(
         },
       },
     };
+  } else if (point.protocol.cgi) {
+    return {
+      version: '1.0',
+      timeout: 60,
+      requestId: Date.now(),
+      endPoint: 'Matter',
+      method: 'Read',
+      data: {
+        Elements: [
+          {
+            MEP: point.protocol.cgi.MEP,
+            Cluster: point.protocol.cgi.Cluster,
+            Element: point.protocol.cgi.Element,
+          },
+        ],
+        thingId: {
+          Type: 'Inverter',
+          Mn: 'fortress',
+          Md: 'FP-ENVY-Inverter',
+          SN: equipmentId,
+        },
+      },
+    };
   } else if (point.protocol.modbus) {
     const registerType = point.protocol.modbus.register_type;
     const functionCode = registerType === 3 ? 3 : 4;
@@ -95,6 +118,35 @@ export function buildWritePayload(
             MEP: point.protocol.matter.MEP,
             Cluster: point.protocol.matter.Cluster,
             Element: point.protocol.matter.Element,
+            arguments: values,
+          },
+        ],
+        thingId: {
+          Type: 'Inverter',
+          Mn: 'fortress',
+          Md: 'FP-ENVY-Inverter',
+          SN: equipmentId,
+        },
+      },
+    };
+  } else if (point.protocol.cgi) {
+    const method =
+      point.element_type === 'Service' || point.access === 'Invoke' || point.element_type === 'custom'
+        ? 'Invoke'
+        : 'Write';
+
+    return {
+      version: '1.0',
+      timeout: 60,
+      requestId: Date.now(),
+      endPoint: 'Matter',
+      method,
+      data: {
+        Elements: [
+          {
+            MEP: point.protocol.cgi.MEP,
+            Cluster: point.protocol.cgi.Cluster,
+            Element: point.protocol.cgi.Element,
             arguments: values,
           },
         ],
@@ -165,6 +217,30 @@ export function buildInvokePayload(
             MEP: point.protocol.matter.MEP,
             Cluster: point.protocol.matter.Cluster,
             Element: point.protocol.matter.Element,
+            arguments: parameters,
+          },
+        ],
+        thingId: {
+          Type: 'Inverter',
+          Mn: 'fortress',
+          Md: 'FP-ENVY-Inverter',
+          SN: equipmentId,
+        },
+      },
+    };
+  } else if (point.protocol.cgi) {
+    return {
+      version: '1.0',
+      timeout: 60,
+      requestId: Date.now(),
+      endPoint: 'Matter',
+      method: 'Invoke',
+      data: {
+        Elements: [
+          {
+            MEP: point.protocol.cgi.MEP,
+            Cluster: point.protocol.cgi.Cluster,
+            Element: point.protocol.cgi.Element,
             arguments: parameters,
           },
         ],

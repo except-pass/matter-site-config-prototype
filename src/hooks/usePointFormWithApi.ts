@@ -29,8 +29,14 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
   // Fetch initial value from API on mount
   useEffect(() => {
     const fetchInitialValue = async () => {
-      // Skip for invoke-only commands
-      if (point.access === 'Invoke') return;
+      // Skip for invoke-only commands (unless they explicitly show refresh button)
+      const normalizedAccess = typeof point.access === 'string'
+        ? point.access.trim().toLowerCase()
+        : '';
+      const isInvoke = normalizedAccess === 'invoke' || point.element_type === 'service';
+
+      // Skip initial fetch for invoke commands unless showRefresh is explicitly true
+      if (isInvoke && point.showRefresh !== true) return;
 
       try {
         setIsLoading(true);
