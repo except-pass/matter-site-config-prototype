@@ -20,13 +20,47 @@ import {
   WritePointResponse,
   InvokeCommandRequest,
   InvokeCommandResponse,
-  BatchReadRequest,
-  BatchReadResponse,
-  BatchWriteRequest,
-  BatchWriteResponse,
   PointValue,
   EntryValue,
+  GetGatewayStatusRequest,
+  GetGatewayStatusResponse,
+  GetEquipmentsAtSiteRequest,
+  GetEquipmentsAtSiteResponse,
+  GetPointThemesRequest,
+  GetPointThemesResponse,
+  GetPointValuesByPsnRequest,
+  GetPointValuesByPsnResponse,
+  SendCGICommandRequest,
+  SendCGICommandResponse,
 } from './types';
+
+// Legacy batch types (kept for backward compatibility)
+interface BatchReadRequest {
+  pointIds: string[];
+  equipmentId: string;
+}
+
+interface BatchReadResponse {
+  values: Record<string, PointValue>;
+  success: boolean;
+  successCount: number;
+  failureCount: number;
+}
+
+interface BatchWriteRequest {
+  writes: Array<{
+    pointId: string;
+    values: Record<string, EntryValue>;
+  }>;
+  equipmentId: string;
+}
+
+interface BatchWriteResponse {
+  results: Record<string, WritePointResponse>;
+  success: boolean;
+  successCount: number;
+  failureCount: number;
+}
 
 // Import theme data (in production, this would come from the backend)
 import demoThemeData from '../pages/siteConfig/themes/demo_rebuilt.json';
@@ -594,6 +628,267 @@ export async function invokeCommand(
   };
 }
 
+// ============================================================================
+// New API Functions
+// ============================================================================
+
+/**
+ * Get gateway online/offline status
+ *
+ * Mock implementation that always returns online.
+ * In a real implementation, this should query ra-telemetry latest values for:
+ * - model=lifecycle_events
+ * - gsn=<gateway SN>
+ * - fields=["is_online"]
+ * A value of 1 means the gateway is currently online, 0 means offline.
+ *
+ * @param request - Gateway serial number
+ * @returns Gateway online status
+ */
+export async function getGatewayStatus(
+  _request: GetGatewayStatusRequest
+): Promise<GetGatewayStatusResponse> {
+  await delay(NETWORK_DELAY);
+
+  // Mock: always return online
+  // TODO: In real implementation, query ra-telemetry:
+  // SELECT is_online FROM lifecycle_events WHERE gsn = _request.gatewaySn ORDER BY timestamp DESC LIMIT 1
+  return {
+    isOnline: true,
+    timestamp: new Date().toISOString(),
+  };
+}
+
+/**
+ * Get equipment to guardian linkage
+ *
+ * Patterns after RA-Physical method GetEquipmentsAtSite.
+ * Shows the list of serial numbers and which inverter SN is attached to which gateway.
+ *
+ * @param request - Site ID to query
+ * @returns Equipment mappings by gateway
+ */
+export async function getEquipmentsAtSite(
+  request: GetEquipmentsAtSiteRequest
+): Promise<GetEquipmentsAtSiteResponse> {
+  await delay(NETWORK_DELAY);
+
+  // Mock data: return sample equipment mappings
+  return {
+    items: [
+      {
+        gateway_sn: 'GW001234567890',
+        equipments: [
+          {
+            id: 'inv-001',
+            sn: 'INV001234567890',
+            md: 'FP-ENVY-Inverter',
+            md_name: 'Fortress Power ENVY Inverter',
+            site_id: request.site_id,
+            is_primary: true,
+            product_type: 'Inverter',
+            sub_product_type: 'Hybrid',
+            software_version: '1.2.3',
+            firmwares: [
+              { name: 'ARM', version: '1.2.3' },
+              { name: 'DSP', version: '2.3.4' },
+            ],
+          },
+          {
+            id: 'inv-002',
+            sn: 'INV002234567890',
+            md: 'FP-ENVY-Inverter',
+            md_name: 'Fortress Power ENVY Inverter',
+            site_id: request.site_id,
+            is_primary: false,
+            product_type: 'Inverter',
+            sub_product_type: 'Hybrid',
+            software_version: '1.2.3',
+            firmwares: [
+              { name: 'ARM', version: '1.2.3' },
+              { name: 'DSP', version: '2.3.4' },
+            ],
+          },
+        ],
+      },
+    ],
+    success: true,
+    message: 'Equipment retrieved successfully',
+    request_id: request.request_id,
+    code: 200,
+  };
+}
+
+/**
+ * Get point themes for a site
+ *
+ * Given a siteID, returns the point themes JSON from the mock backend.
+ *
+ * @param request - Site ID to query
+ * @returns Point themes configuration
+ */
+export async function getPointThemes(
+  _request: GetPointThemesRequest
+): Promise<GetPointThemesResponse> {
+  await delay(NETWORK_DELAY);
+
+  // Return the demo theme data
+  // In production, this would filter by _request.siteId
+  return {
+    themes: demoThemeData.themes,
+    timestamp: new Date().toISOString(),
+  };
+}
+
+/**
+ * Get point values by product serial number
+ *
+ * Given a siteID and product serial number (PSN), loads the latest values
+ * from 40104 model for the given PSN.
+ *
+ * @param request - Site ID and product serial number
+ * @returns Point values for the specified equipment
+ */
+export async function getPointValuesByPsn(
+  request: GetPointValuesByPsnRequest
+): Promise<GetPointValuesByPsnResponse> {
+  await delay(NETWORK_DELAY);
+
+  // For mock purposes, return all cached point values
+  // In real implementation, this would query 40104 model filtered by PSN
+  const values: Record<string, PointValue> = {};
+  mockPointValues.forEach((value, pointId) => {
+    values[pointId] = value;
+  });
+
+  return {
+    values,
+    timestamp: new Date().toISOString(),
+    psn: request.psn,
+  };
+}
+
+/**
+ * Send CGI command to gateway
+ *
+ * Unified endpoint that replaces ReadPointRequest, WritePointRequest, and InvokeCommandRequest.
+ * The frontend constructs the CGI command payload and sends it to this endpoint.
+ *
+ * @param request - Gateway SN and CGI command payload
+ * @returns Response from the gateway
+ */
+export async function sendCGICommandToGateway(
+  request: SendCGICommandRequest
+): Promise<SendCGICommandResponse> {
+  await delay(NETWORK_DELAY);
+
+  try {
+    // Parse the payload to determine the operation type
+    const { payload } = request;
+
+    if (!payload || !payload.method) {
+      return {
+        success: false,
+        error: 'Invalid payload: missing method',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    // Handle different methods
+    switch (payload.method) {
+      case 'Read': {
+        // Extract point information from payload
+        const elements = payload.data?.Elements;
+        if (!elements || elements.length === 0) {
+          return {
+            success: false,
+            error: 'No elements specified for read operation',
+            timestamp: new Date().toISOString(),
+          };
+        }
+
+        // For mock purposes, find and return the point value
+        // In real implementation, this would send the CGI command to the gateway
+        const element = elements[0];
+        const pointId = `${element.Cluster}_${element.Element}`;
+        const value = mockPointValues.get(pointId);
+
+        return {
+          success: true,
+          data: value || { entries: {} },
+          timestamp: new Date().toISOString(),
+        };
+      }
+
+      case 'Write': {
+        // Extract point information and values from payload
+        const elements = payload.data?.Elements;
+        if (!elements || elements.length === 0) {
+          return {
+            success: false,
+            error: 'No elements specified for write operation',
+            timestamp: new Date().toISOString(),
+          };
+        }
+
+        const element = elements[0];
+        const pointId = `${element.Cluster}_${element.Element}`;
+
+        // Update the mock value
+        let currentValue = mockPointValues.get(pointId);
+        if (currentValue) {
+          currentValue = {
+            ...currentValue,
+            entries: {
+              ...currentValue.entries,
+              ...element.arguments,
+            },
+            lastRead: new Date().toISOString(),
+          };
+          mockPointValues.set(pointId, currentValue);
+        }
+
+        return {
+          success: true,
+          data: currentValue,
+          timestamp: new Date().toISOString(),
+        };
+      }
+
+      case 'Invoke': {
+        // Handle invoke command
+        const elements = payload.data?.Elements;
+        if (!elements || elements.length === 0) {
+          return {
+            success: false,
+            error: 'No elements specified for invoke operation',
+            timestamp: new Date().toISOString(),
+          };
+        }
+
+        return {
+          success: true,
+          data: { status: 'Command executed successfully' },
+          timestamp: new Date().toISOString(),
+        };
+      }
+
+      default:
+        return {
+          success: false,
+          error: `Unknown method: ${payload.method}`,
+          timestamp: new Date().toISOString(),
+        };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString(),
+    };
+  }
+}
+
 /**
  * Read multiple points in a single batch operation
  *
@@ -602,6 +897,7 @@ export async function invokeCommand(
  *
  * @param request - List of points to read
  * @returns Values for all requested points
+ * @deprecated Use sendCGICommandToGateway instead
  */
 export async function batchRead(
   request: BatchReadRequest
@@ -648,6 +944,7 @@ export async function batchRead(
  *
  * @param request - List of points to write
  * @returns Results for all write operations
+ * @deprecated Use sendCGICommandToGateway instead
  */
 export async function batchWrite(
   request: BatchWriteRequest
