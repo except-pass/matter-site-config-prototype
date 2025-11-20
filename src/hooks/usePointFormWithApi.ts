@@ -32,6 +32,9 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
 
   // Fetch initial value from API on mount
   useEffect(() => {
+    // Wait for mappings to load before fetching
+    if (mappingsLoading) return;
+
     const fetchInitialValue = async () => {
       // Skip for invoke-only commands (unless they explicitly show refresh button)
       const normalizedAccess = typeof point.access === 'string'
@@ -76,7 +79,8 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     };
 
     fetchInitialValue();
-  }, [point, equipment.id, equipment.thingId.SN, getGatewaySn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [point.command_id, equipment.id, mappingsLoading]);
 
   /**
    * Handle field value changes
@@ -124,7 +128,8 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     } finally {
       setIsLoading(false);
     }
-  }, [point, equipment.id, equipment.thingId.SN, getGatewaySn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [point.command_id, equipment.id]);
 
   /**
    * Handle set button - write current values to device
@@ -200,7 +205,8 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     } finally {
       setIsLoading(false);
     }
-  }, [point.entries, point.protocol, equipment.id, equipment.thingId.SN, formState, isPrimary, getGatewaySn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [point.command_id, equipment.id, formState]);
 
   /**
    * Handle invoke button - execute a service/command
@@ -258,7 +264,8 @@ export function usePointFormWithApi(point: PointDef, equipment: EquipmentOption)
     } finally {
       setIsLoading(false);
     }
-  }, [point.entries, equipment.id, equipment.thingId.SN, formState, getGatewaySn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [point.command_id, equipment.id, formState]);
 
   return {
     formState,
