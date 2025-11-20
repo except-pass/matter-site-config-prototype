@@ -306,7 +306,7 @@ export default function LabelFilter({
         {filterStructure === 'sequential' ? (
           // Sequential mode rendering
           <>
-            {SEQUENTIAL_ORDER.map((family, _index) => {
+            {SEQUENTIAL_ORDER.map((family, index) => {
               const texts = otherLabels.get(family);
               if (!texts) return null;
 
@@ -321,14 +321,99 @@ export default function LabelFilter({
               if (isLocked && !hasSelection) return null;
 
               return (
-                <div key={family} className="flex items-center gap-1.5 text-xs py-0.5">
+                <div key={family}>
+                  {index > 0 && (
+                    <div className="border-t border-gray-200 my-1"></div>
+                  )}
+                  <div className="flex items-center gap-1.5 text-xs py-1 px-1 rounded bg-gray-50/30">
+                    <button
+                      onClick={() => setHelpModalFamily(family)}
+                      className={`flex items-center gap-1 rounded-md border px-2 py-0.5 font-semibold transition-colors flex-shrink-0 w-28 justify-between ${
+                        hasSelection
+                          ? `${familyColor.bg} ${familyColor.text} ${familyColor.border} border-2`
+                          : isLocked
+                          ? 'bg-slate-50 text-slate-400 border-slate-200 border'
+                          : `${familyColor.bg} ${familyColor.text} ${familyColor.border} border`
+                      }`}
+                      title={familyHelp || `View help for ${family} labels`}
+                      aria-label={`Help for ${family}`}
+                    >
+                      <span className="truncate">{family}</span>
+                      <svg className={`h-3 w-3 flex-shrink-0 ${familyColor.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </button>
+                    <div className="flex flex-wrap items-center gap-1 flex-1">
+                      {[...texts].sort().map((text) => {
+                        const labelKey = `${family}:${text}`;
+                        const isSelected = selections.includes(text);
+                        const count = isActive ? computeCountForChip(family, text) : 0;
+                        const isDisabled = !isActive || (!isSelected && count === 0);
+                        const color = getLabelColor(family, text);
+                        const labelHelp = getLabelHelp(family, text);
+
+                        return (
+                          <button
+                            key={labelKey}
+                            onClick={() => {
+                              if (!isDisabled) {
+                                onToggleLabel(family, text);
+                              }
+                            }}
+                            className={`rounded border px-1.5 py-0.5 text-xs transition-all ${
+                              isDisabled
+                                ? 'opacity-40 cursor-not-allowed bg-white'
+                                : isSelected
+                                ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
+                                : `bg-white ${color.text} ${color.border} hover:opacity-80 cursor-pointer`
+                            }`}
+                            style={!isSelected && !isDisabled ? { borderColor: 'currentColor' } : undefined}
+                            title={
+                              isLocked
+                                ? "Pick something above to unlock this step"
+                                : isDisabled
+                                ? "No points available with this combination of filters"
+                                : labelHelp || `${family}: ${text}`
+                            }
+                            aria-disabled={isDisabled}
+                            tabIndex={isDisabled ? -1 : 0}
+                          >
+                            <span>{text}</span>
+                            {!isSelected && isActive && (
+                              <span className={`ml-1 ${isDisabled ? 'text-gray-400' : 'text-gray-500'}`}>
+                                ({count})
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </>
+        ) : (
+          // Freeform mode rendering (uses the same family ordering as sequential)
+          <>
+          {SEQUENTIAL_ORDER.map((family, index) => {
+            const texts = otherLabels.get(family);
+            if (!texts) return null;
+            const familyHelp = getLabelHelp(family);
+            const familyColor = getLabelColor(family, '');
+            // Check if any label in this family is selected
+            const hasSelectedLabel = Array.from(texts).some(text => selectedLabels.has(`${family}:${text}`));
+            return (
+              <div key={family}>
+                {index > 0 && (
+                  <div className="border-t border-gray-200 my-1"></div>
+                )}
+                <div className="flex items-center gap-1.5 text-xs py-1 px-1 rounded bg-gray-50/30">
                   <button
                     onClick={() => setHelpModalFamily(family)}
                     className={`flex items-center gap-1 rounded-md border px-2 py-0.5 font-semibold transition-colors flex-shrink-0 w-28 justify-between ${
-                      hasSelection
+                      hasSelectedLabel
                         ? `${familyColor.bg} ${familyColor.text} ${familyColor.border} border-2`
-                        : isLocked
-                        ? 'bg-slate-50 text-slate-400 border-slate-200 border'
                         : `${familyColor.bg} ${familyColor.text} ${familyColor.border} border`
                     }`}
                     title={familyHelp || `View help for ${family} labels`}
@@ -342,9 +427,9 @@ export default function LabelFilter({
                   <div className="flex flex-wrap items-center gap-1 flex-1">
                     {[...texts].sort().map((text) => {
                       const labelKey = `${family}:${text}`;
-                      const isSelected = selections.includes(text);
-                      const count = isActive ? computeCountForChip(family, text) : 0;
-                      const isDisabled = !isActive || (!isSelected && count === 0);
+                      const isSelected = selectedLabels.has(labelKey);
+                      const count = computeCountForChip(family, text);
+                      const isDisabled = !isSelected && count === 0;
                       const color = getLabelColor(family, text);
                       const labelHelp = getLabelHelp(family, text);
 
@@ -365,9 +450,7 @@ export default function LabelFilter({
                           }`}
                           style={!isSelected && !isDisabled ? { borderColor: 'currentColor' } : undefined}
                           title={
-                            isLocked
-                              ? "Pick something above to unlock this step"
-                              : isDisabled
+                            isDisabled
                               ? "No points available with this combination of filters"
                               : labelHelp || `${family}: ${text}`
                           }
@@ -375,91 +458,18 @@ export default function LabelFilter({
                           tabIndex={isDisabled ? -1 : 0}
                         >
                           <span>{text}</span>
-                          {!isSelected && isActive && (
+                          {!isSelected && (
                             <span className={`ml-1 ${isDisabled ? 'text-gray-400' : 'text-gray-500'}`}>
                               ({count})
                             </span>
                           )}
                         </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </>
-        ) : (
-          // Freeform mode rendering (uses the same family ordering as sequential)
-          <>
-          {SEQUENTIAL_ORDER.map((family) => {
-            const texts = otherLabels.get(family);
-            if (!texts) return null;
-            const familyHelp = getLabelHelp(family);
-            const familyColor = getLabelColor(family, '');
-            // Check if any label in this family is selected
-            const hasSelectedLabel = Array.from(texts).some(text => selectedLabels.has(`${family}:${text}`));
-            return (
-              <div key={family} className="flex items-center gap-1.5 text-xs py-0.5">
-                <button
-                  onClick={() => setHelpModalFamily(family)}
-                  className={`flex items-center gap-1 rounded-md border px-2 py-0.5 font-semibold transition-colors flex-shrink-0 w-28 justify-between ${
-                    hasSelectedLabel
-                      ? `${familyColor.bg} ${familyColor.text} ${familyColor.border} border-2`
-                      : `${familyColor.bg} ${familyColor.text} ${familyColor.border} border`
-                  }`}
-                  title={familyHelp || `View help for ${family} labels`}
-                  aria-label={`Help for ${family}`}
-                >
-                  <span className="truncate">{family}</span>
-                  <svg className={`h-3 w-3 flex-shrink-0 ${familyColor.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </button>
-                <div className="flex flex-wrap items-center gap-1 flex-1">
-                  {[...texts].sort().map((text) => {
-                    const labelKey = `${family}:${text}`;
-                    const isSelected = selectedLabels.has(labelKey);
-                    const count = computeCountForChip(family, text);
-                    const isDisabled = !isSelected && count === 0;
-                    const color = getLabelColor(family, text);
-                    const labelHelp = getLabelHelp(family, text);
-
-                    return (
-                      <button
-                        key={labelKey}
-                        onClick={() => {
-                          if (!isDisabled) {
-                            onToggleLabel(family, text);
-                          }
-                        }}
-                        className={`rounded border px-1.5 py-0.5 text-xs transition-all ${
-                          isDisabled
-                            ? 'opacity-40 cursor-not-allowed bg-white'
-                            : isSelected
-                            ? `${color.bg} ${color.text} ${color.border} border-2 font-semibold`
-                            : `bg-white ${color.text} ${color.border} hover:opacity-80 cursor-pointer`
-                        }`}
-                        style={!isSelected && !isDisabled ? { borderColor: 'currentColor' } : undefined}
-                        title={
-                          isDisabled
-                            ? "No points available with this combination of filters"
-                            : labelHelp || `${family}: ${text}`
-                        }
-                        aria-disabled={isDisabled}
-                        tabIndex={isDisabled ? -1 : 0}
-                      >
-                        <span>{text}</span>
-                    {!isSelected && (
-                          <span className={`ml-1 ${isDisabled ? 'text-gray-400' : 'text-gray-500'}`}>
-                            ({count})
-                          </span>
-                        )}
-                      </button>
                     );
                   })}
                 </div>
               </div>
-            );
+            </div>
+          );
           })}
           </>
         )}

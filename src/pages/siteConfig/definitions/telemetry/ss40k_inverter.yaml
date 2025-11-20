@@ -4492,6 +4492,8 @@ protocols:
       meanings: {}
     labels:
       - label_family: Level of Detail
+        label_text: Extended    
+      - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Generator
@@ -4646,6 +4648,8 @@ protocols:
       meanings: {}
     labels:
       - label_family: Level of Detail
+        label_text: Extended    
+      - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
         label_text: Generator
@@ -4797,6 +4801,8 @@ protocols:
       category: Generator
       meanings: {}
     labels:
+      - label_family: Level of Detail
+        label_text: Extended    
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
