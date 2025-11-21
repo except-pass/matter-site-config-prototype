@@ -1,17 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Workspace, WorkspaceListItem, SerializableWorkspaceData } from '../types';
+import { workspaceApi } from '../api/workspaceApi';
 import {
-  getWorkspaces,
-  getWorkspace,
-  createWorkspace,
-  updateWorkspace,
-  deleteWorkspace,
-  setDefaultWorkspace,
-  getDefaultWorkspace,
-} from '../../../api/mockApi';
-import {
-  serializeWorkspaceData,
-  deserializeWorkspaceData,
   hasWorkspaceChanged,
   cloneWorkspaceData,
   exportWorkspaceAsJSON,
@@ -62,7 +52,7 @@ export function useWorkspaceManager(
     try {
       setIsLoading(true);
       setError(null);
-      const response = await getWorkspaces({});
+      const response = await workspaceApi.getWorkspaces({});
       setWorkspaces(response.workspaces);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to load workspaces';
@@ -79,7 +69,7 @@ export function useWorkspaceManager(
       try {
         setIsLoading(true);
         setError(null);
-        const response = await getWorkspace({ id: workspaceId });
+        const response = await workspaceApi.getWorkspace({ id: workspaceId });
         setCurrentWorkspace(response.workspace);
         lastSavedData.current = cloneWorkspaceData(response.workspace.data);
         setIsDirty(false);
@@ -105,7 +95,7 @@ export function useWorkspaceManager(
       try {
         setIsLoading(true);
         setError(null);
-        const response = await createWorkspace({ name, data });
+        const response = await workspaceApi.createWorkspace({ name, data });
         setCurrentWorkspace(response.workspace);
         lastSavedData.current = cloneWorkspaceData(response.workspace.data);
         setIsDirty(false);
@@ -135,7 +125,7 @@ export function useWorkspaceManager(
     try {
       setIsLoading(true);
       setError(null);
-      const response = await updateWorkspace({
+      const response = await workspaceApi.updateWorkspace({
         id: currentWorkspace.id,
         data: currentWorkspace.data,
       });
@@ -180,7 +170,7 @@ export function useWorkspaceManager(
       try {
         setIsLoading(true);
         setError(null);
-        const response = await updateWorkspace({
+        const response = await workspaceApi.updateWorkspace({
           id: workspaceId,
           name: newName,
         });
@@ -212,7 +202,7 @@ export function useWorkspaceManager(
         setError(null);
 
         // First, load the workspace to duplicate
-        const response = await getWorkspace({ id: workspaceId });
+        const response = await workspaceApi.getWorkspace({ id: workspaceId });
         const original = response.workspace;
 
         // Create a new workspace with the same data
@@ -240,7 +230,7 @@ export function useWorkspaceManager(
       try {
         setIsLoading(true);
         setError(null);
-        await deleteWorkspace({ id: workspaceId });
+        await workspaceApi.deleteWorkspace({ id: workspaceId });
 
         // If we deleted the current workspace, clear it
         if (currentWorkspace?.id === workspaceId) {
@@ -268,7 +258,7 @@ export function useWorkspaceManager(
     try {
       setIsLoading(true);
       setError(null);
-      const response = await getWorkspace({ id: workspaceId });
+      const response = await workspaceApi.getWorkspace({ id: workspaceId });
       exportWorkspaceAsJSON(response.workspace.name, response.workspace.data);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to export workspace';
@@ -307,7 +297,7 @@ export function useWorkspaceManager(
       try {
         setIsLoading(true);
         setError(null);
-        await setDefaultWorkspace({ id: workspaceId });
+        await workspaceApi.setDefaultWorkspace({ id: workspaceId });
 
         // Refresh workspace list to show updated default status
         await loadWorkspaces();
@@ -340,7 +330,7 @@ export function useWorkspaceManager(
   useEffect(() => {
     const loadDefault = async () => {
       try {
-        const response = await getDefaultWorkspace();
+        const response = await workspaceApi.getDefaultWorkspace();
         if (response && response.workspace) {
           await loadWorkspace(response.workspace.id);
         }
