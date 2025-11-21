@@ -375,7 +375,24 @@ export default function App() {
   const [lastInverterSelection, setLastInverterSelection] = React.useState<Set<string>>(new Set(DEFAULT_INVERTER_SELECTION));
 
   // Workspace management
-  const [workspaceState, workspaceActions] = useWorkspaceManager();
+  const [workspaceState, workspaceActions] = useWorkspaceManager({
+    onWorkspaceLoaded: useCallback((data) => {
+      // Load workspace data into ChartGrid
+      if (chartGridCallbacksRef.current) {
+        const deserialized = {
+          charts: data.charts.map(c => ({
+            ...c,
+            selectedPoints: new Map(Object.entries(c.selectedPoints).map(([k, v]) => [k, new Set(v)]))
+          })),
+          rowHeights: new Map(Object.entries(data.rowHeights).map(([k, v]) => [Number(k), v])),
+          columnWidths: new Map(Object.entries(data.columnWidths).map(([k, v]) => [Number(k), v])),
+          nextChartId: data.nextChartId,
+          activeChartId: data.activeChartId
+        };
+        chartGridCallbacksRef.current.setChartGridState(deserialized);
+      }
+    }, [chartGridCallbacksRef])
+  });
   const [showManageModal, setShowManageModal] = useState(false);
   const [showSaveAsDialog, setShowSaveAsDialog] = useState(false);
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
@@ -823,19 +840,38 @@ export default function App() {
     }
 
     try {
-      // TODO: Get actual chart data from ChartGrid
-      // For now, we'll keep the existing data
+      // Get actual chart data from ChartGrid
+      if (chartGridCallbacksRef.current) {
+        const gridState = chartGridCallbacksRef.current.getChartGridState();
+        const data = serializeWorkspaceData(
+          gridState.charts,
+          gridState.rowHeights,
+          gridState.columnWidths,
+          gridState.nextChartId,
+          gridState.activeChartId
+        );
+        workspaceActions.updateCurrentWorkspace(data);
+      }
       await workspaceActions.saveCurrentWorkspace();
       alert('Workspace saved successfully!');
     } catch (error) {
       alert(`Failed to save workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-  }, [workspaceState.currentWorkspace, workspaceActions]);
+  }, [workspaceState.currentWorkspace, workspaceActions, chartGridCallbacksRef]);
 
   const handleSaveAs = useCallback((name: string, tags?: string[]) => {
-    // TODO: Get actual chart data from ChartGrid
-    // For now, we'll create a simple workspace
-    const data = serializeWorkspaceData([], new Map(), new Map(), 0);
+    // Get actual chart data from ChartGrid
+    let data = serializeWorkspaceData([], new Map(), new Map(), 0);
+    if (chartGridCallbacksRef.current) {
+      const gridState = chartGridCallbacksRef.current.getChartGridState();
+      data = serializeWorkspaceData(
+        gridState.charts,
+        gridState.rowHeights,
+        gridState.columnWidths,
+        gridState.nextChartId,
+        gridState.activeChartId
+      );
+    }
 
     workspaceActions.createNewWorkspace(name, data, tags)
       .then(() => {
@@ -845,7 +881,7 @@ export default function App() {
       .catch((error) => {
         alert(`Failed to save workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
       });
-  }, [workspaceActions]);
+  }, [workspaceActions, chartGridCallbacksRef]);
 
   const handleSwitchWorkspace = useCallback((workspaceId: string) => {
     if (workspaceState.isDirty) {
@@ -871,7 +907,9 @@ export default function App() {
 
     try {
       const workspace = await workspaceActions.importWorkspace(file);
-      alert(`Workspace "${workspace.name}" imported successfully!`);
+      // Load the imported workspace immediately
+      await workspaceActions.loadWorkspace(workspace.id);
+      alert(`Workspace "${workspace.name}" imported and loaded successfully!`);
     } catch (error) {
       alert(`Failed to import workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
@@ -948,11 +986,6 @@ export default function App() {
               onManage={() => setShowManageModal(true)}
               hasUnsavedChanges={workspaceState.isDirty}
             />
-          </div>
-          <div className="flex items-center gap-3">
-            {workspaceState.error && (
-              <span className="text-sm text-red-600">{workspaceState.error}</span>
-            )}
             <WorkspaceSwitcher
               currentWorkspace={workspaceState.currentWorkspace}
               recentWorkspaces={workspaceState.workspaces.slice(0, 5)}
@@ -960,6 +993,11 @@ export default function App() {
               onManage={() => setShowManageModal(true)}
               hasUnsavedChanges={workspaceState.isDirty}
             />
+          </div>
+          <div className="flex items-center gap-3">
+            {workspaceState.error && (
+              <span className="text-sm text-red-600">{workspaceState.error}</span>
+            )}
           </div>
         </div>
 

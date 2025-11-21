@@ -25,7 +25,6 @@ const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
   onDelete,
   onExport,
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<{
@@ -36,7 +35,6 @@ const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
   // Reset state when modal closes
   useEffect(() => {
     if (!isOpen) {
-      setSearchQuery('');
       setEditingId(null);
       setEditingName('');
     }
@@ -56,12 +54,7 @@ const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
 
   if (!isOpen) return null;
 
-  const filteredWorkspaces = workspaces.filter((ws) =>
-    ws.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    ws.tags?.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
-
-  const sortedWorkspaces = [...filteredWorkspaces].sort((a, b) => {
+  const sortedWorkspaces = [...workspaces].sort((a, b) => {
     // Current workspace first
     if (a.id === currentWorkspaceId) return -1;
     if (b.id === currentWorkspaceId) return 1;
@@ -134,27 +127,6 @@ const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
             </button>
           </div>
 
-          {/* Search */}
-          <div className="p-4 border-b border-gray-200">
-            <div className="relative">
-              <svg
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search workspaces..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-          </div>
-
           {/* Workspace List */}
           <div className="flex-1 overflow-y-auto p-4">
             {sortedWorkspaces.length === 0 ? (
@@ -162,9 +134,7 @@ const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
                 <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
                 </svg>
-                <p className="text-gray-500">
-                  {searchQuery ? 'No workspaces found' : 'No workspaces available'}
-                </p>
+                <p className="text-gray-500">No workspaces available</p>
               </div>
             ) : (
               <div className="space-y-2">
