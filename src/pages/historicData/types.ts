@@ -31,11 +31,15 @@ export interface ProtocolPoint {
 export type LabelHierarchy = Map<string, LabelHierarchy | ProtocolPoint[]>;
 
 // Workspace Management Types
+
+// Inverter selection keywords
+export type InverterSelectionKeyword = 'primary' | 'first' | 'all';
+
 export interface SerializableChartConfig {
   id: string;
   row: number;
   col: number;
-  selectedPoints: Record<string, string[]>; // Serializable version of Map<string, Set<string>>
+  selectedPoints: Record<string, InverterSelectionKeyword[]>; // Maps point IDs to selection keywords (primary/first/all)
 }
 
 export interface SerializableWorkspaceData {
@@ -50,7 +54,6 @@ export interface WorkspaceMetadata {
   id: string;
   name: string;
   type: 'user' | 'builtin';
-  isDefault: boolean;
   createdAt: string;
   updatedAt: string;
   chartCount: number;
@@ -60,7 +63,6 @@ export interface Workspace {
   id: string;
   name: string;
   type: 'user' | 'builtin';
-  isDefault: boolean;
   createdAt: string;
   updatedAt: string;
   data: SerializableWorkspaceData;
@@ -68,6 +70,11 @@ export interface Workspace {
 
 export interface WorkspaceListItem extends WorkspaceMetadata {
   // Used in the management UI
+}
+
+// User settings for workspace preferences
+export interface UserWorkspaceSettings {
+  defaultWorkspaceId?: string;
 }
 
 // Time window context (for future enhancement)

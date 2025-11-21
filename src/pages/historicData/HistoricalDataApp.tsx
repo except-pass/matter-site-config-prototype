@@ -17,6 +17,7 @@ import SaveAsDialog from "./components/workspace/SaveAsDialog";
 import UnsavedChangesDialog from "./components/workspace/UnsavedChangesDialog";
 import { useWorkspaceManager } from "./hooks/useWorkspaceManager";
 import { serializeWorkspaceData } from "./utils/workspaceUtils";
+import { getDefaultWorkspaceId } from "./utils/userSettings";
 import type { SerializableWorkspaceData, SerializableChartConfig } from "./types";
 
 type Meanings = Record<string | number, string>;
@@ -881,7 +882,7 @@ export default function App() {
       return;
     }
 
-    // If workspace is built-in, use save as to create a copy
+    // If workspace is a built-in, prevent overwriting - show save as dialog
     if (workspaceState.currentWorkspace.type === 'builtin') {
       setShowSaveAsDialog(true);
       return;
@@ -1036,7 +1037,7 @@ export default function App() {
                 id: workspaceState.currentWorkspace.id,
                 name: workspaceState.currentWorkspace.name,
                 type: workspaceState.currentWorkspace.type,
-                isDefault: workspaceState.currentWorkspace.isDefault,
+                isDefault: workspaceState.currentWorkspace.id === getDefaultWorkspaceId(),
                 createdAt: workspaceState.currentWorkspace.createdAt,
                 updatedAt: workspaceState.currentWorkspace.updatedAt,
                 chartCount: workspaceState.currentWorkspace.data.charts.length
@@ -1206,12 +1207,12 @@ export default function App() {
             <div className="flex-1 flex flex-col overflow-hidden min-h-0">
               {/* Collapsible top section */}
               <div className="border-b border-gray-200">
-                <button
+                <div
                   onClick={() => {
                     lastManualToggleTime.current = Date.now();
                     setTopSectionCollapsed(!topSectionCollapsed);
                   }}
-                  className="w-full p-2 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  className="w-full p-2 flex items-center justify-between hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-2">
                     <svg 
@@ -1241,7 +1242,7 @@ export default function App() {
                       Preferences
                     </button>
                   </div>
-                </button>
+                </div>
               </div>
               <div 
                 className={`transition-all duration-300 overflow-hidden ${

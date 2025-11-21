@@ -259,7 +259,10 @@ export function useWorkspaceManager(
       setIsLoading(true);
       setError(null);
       const response = await workspaceApi.getWorkspace({ id: workspaceId });
-      exportWorkspaceAsJSON(response.workspace.name, response.workspace.data);
+      const result = exportWorkspaceAsJSON(response.workspace.name, response.workspace.data);
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to export workspace');
+      }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to export workspace';
       setError(errorMsg);
