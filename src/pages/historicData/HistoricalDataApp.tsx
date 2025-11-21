@@ -19,7 +19,7 @@ import { useWorkspaceManager } from "./hooks/useWorkspaceManager";
 import { serializeWorkspaceData, deserializeChartData, type InverterInfo } from "./utils/workspaceUtils";
 import { getDefaultWorkspaceId } from "./utils/userSettings";
 import { AVAILABLE_INVERTERS } from "./components/charts/chartUtils";
-import type { SerializableWorkspaceData, SerializableChartConfig } from "./types";
+import type { SerializableWorkspaceData } from "./types";
 
 type Meanings = Record<string | number, string>;
 

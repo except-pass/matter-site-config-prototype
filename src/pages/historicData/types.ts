@@ -39,7 +39,7 @@ export interface SerializableChartConfig {
   id: string;
   row: number;
   col: number;
-  selectedPoints: Record<string, InverterSelectionKeyword[]>; // Maps point IDs to selection keywords (primary/first/all)
+  selectedPoints: Record<string, (InverterSelectionKeyword | string)[]>; // Maps point IDs to selection keywords (primary/first/all) or inverter IDs
 }
 
 export interface SerializableWorkspaceData {
@@ -70,6 +70,7 @@ export interface Workspace {
 
 export interface WorkspaceListItem extends WorkspaceMetadata {
   // Used in the management UI
+  isDefault?: boolean;
 }
 
 // User settings for workspace preferences
