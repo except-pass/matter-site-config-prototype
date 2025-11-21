@@ -17,6 +17,7 @@ import SaveAsDialog from "./components/workspace/SaveAsDialog";
 import UnsavedChangesDialog from "./components/workspace/UnsavedChangesDialog";
 import { useWorkspaceManager } from "./hooks/useWorkspaceManager";
 import { serializeWorkspaceData } from "./utils/workspaceUtils";
+import type { SerializableWorkspaceData, SerializableChartConfig } from "./types";
 
 type Meanings = Record<string | number, string>;
 
@@ -376,16 +377,16 @@ export default function App() {
 
   // Workspace management
   const [workspaceState, workspaceActions] = useWorkspaceManager({
-    onWorkspaceLoaded: useCallback((data) => {
+    onWorkspaceLoaded: useCallback((data: SerializableWorkspaceData) => {
       // Load workspace data into ChartGrid
       if (chartGridCallbacksRef.current) {
         const deserialized = {
-          charts: data.charts.map(c => ({
+          charts: data.charts.map((c: SerializableChartConfig) => ({
             ...c,
-            selectedPoints: new Map(Object.entries(c.selectedPoints).map(([k, v]) => [k, new Set(v)]))
+            selectedPoints: new Map(Object.entries(c.selectedPoints).map(([k, v]) => [k, new Set(v as string[])]))
           })),
-          rowHeights: new Map(Object.entries(data.rowHeights).map(([k, v]) => [Number(k), v])),
-          columnWidths: new Map(Object.entries(data.columnWidths).map(([k, v]) => [Number(k), v])),
+          rowHeights: new Map(Object.entries(data.rowHeights).map(([k, v]) => [Number(k), v as number])),
+          columnWidths: new Map(Object.entries(data.columnWidths).map(([k, v]) => [Number(k), v as number])),
           nextChartId: data.nextChartId,
           activeChartId: data.activeChartId
         };
@@ -1025,7 +1026,15 @@ export default function App() {
               hasUnsavedChanges={workspaceState.isDirty}
             />
             <WorkspaceSwitcher
-              currentWorkspace={workspaceState.currentWorkspace}
+              currentWorkspace={workspaceState.currentWorkspace ? {
+                id: workspaceState.currentWorkspace.id,
+                name: workspaceState.currentWorkspace.name,
+                type: workspaceState.currentWorkspace.type,
+                isDefault: workspaceState.currentWorkspace.isDefault,
+                createdAt: workspaceState.currentWorkspace.createdAt,
+                updatedAt: workspaceState.currentWorkspace.updatedAt,
+                chartCount: workspaceState.currentWorkspace.data.charts.length
+              } : null}
               recentWorkspaces={workspaceState.workspaces.slice(0, 5)}
               onSwitch={handleSwitchWorkspace}
               onManage={() => setShowManageModal(true)}
