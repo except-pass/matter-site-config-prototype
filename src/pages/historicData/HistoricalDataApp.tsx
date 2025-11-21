@@ -854,7 +854,7 @@ export default function App() {
         // Success - workspace is now loaded
       })
       .catch((error) => {
-        alert(`Failed to create workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        console.error('Failed to create workspace:', error);
       });
   }, [chartGridCallbacksRef, workspaceActions]);
 
@@ -888,9 +888,8 @@ export default function App() {
         workspaceActions.updateCurrentWorkspace(data);
       }
       await workspaceActions.saveCurrentWorkspace();
-      alert('Workspace saved successfully!');
     } catch (error) {
-      alert(`Failed to save workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Failed to save workspace:', error);
     }
   }, [workspaceState.currentWorkspace, workspaceActions, chartGridCallbacksRef]);
 
@@ -911,10 +910,9 @@ export default function App() {
     workspaceActions.createNewWorkspace(name, data, tags)
       .then(() => {
         setShowSaveAsDialog(false);
-        alert('Workspace saved successfully!');
       })
       .catch((error) => {
-        alert(`Failed to save workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        console.error('Failed to save workspace:', error);
       });
   }, [workspaceActions, chartGridCallbacksRef]);
 
@@ -944,9 +942,8 @@ export default function App() {
       const workspace = await workspaceActions.importWorkspace(file);
       // Load the imported workspace immediately
       await workspaceActions.loadWorkspace(workspace.id);
-      alert(`Workspace "${workspace.name}" imported and loaded successfully!`);
     } catch (error) {
-      alert(`Failed to import workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Failed to import workspace:', error);
     }
 
     // Reset file input
@@ -978,7 +975,7 @@ export default function App() {
         setPendingAction(null);
       }
     } catch (error) {
-      alert(`Failed to save workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Failed to save workspace:', error);
     }
   }, [workspaceActions, pendingWorkspaceSwitch, pendingAction, createBlankWorkspace]);
 
@@ -1438,13 +1435,11 @@ export default function App() {
         onRename={workspaceActions.renameWorkspace}
         onDuplicate={(id) => {
           workspaceActions.duplicateWorkspace(id)
-            .then(() => alert('Workspace duplicated successfully!'))
-            .catch((error) => alert(`Failed to duplicate: ${error instanceof Error ? error.message : 'Unknown error'}`));
+            .catch((error) => console.error('Failed to duplicate workspace:', error));
         }}
         onDelete={(id) => {
           workspaceActions.deleteWorkspace(id)
-            .then(() => alert('Workspace deleted successfully!'))
-            .catch((error) => alert(`Failed to delete: ${error instanceof Error ? error.message : 'Unknown error'}`));
+            .catch((error) => console.error('Failed to delete workspace:', error));
         }}
         onExport={workspaceActions.exportWorkspace}
       />
