@@ -46,9 +46,15 @@ import {
 import type { Workspace, SerializableWorkspaceData } from '../types';
 import { getDefaultWorkspaceId, setDefaultWorkspaceId } from '../utils/userSettings';
 
-// Import built-in workspaces
-import powerFlowsBuiltin from '../workspace/builtIns/power-flows.json';
-import batteryDetailsBuiltin from '../workspace/builtIns/battery-details.json';
+// Dynamically import all built-in workspace JSON files
+// With eager: true, JSON files are imported directly as the data structure
+const builtInWorkspaceModules = import.meta.glob<{
+  version: string;
+  id: string;
+  name: string;
+  type: 'builtin';
+  data: SerializableWorkspaceData;
+}>('../workspace/builtIns/*.json', { eager: true, import: 'default' });
 
 // ============================================================================
 // MOCK DATA STORAGE (Replace with database in production)
@@ -155,11 +161,8 @@ function initializeBuiltInWorkspaces(): void {
   // First try to load from storage
   loadWorkspacesFromStorage();
 
-  // Define all built-in workspaces
-  const builtInWorkspaces = [
-    powerFlowsBuiltin,
-    batteryDetailsBuiltin,
-  ];
+  // Get all built-in workspace data from dynamically imported modules
+  const builtInWorkspaces = Object.values(builtInWorkspaceModules);
 
   // Ensure all built-in workspaces are present (add if missing)
   let hasNewBuiltIns = false;
@@ -172,8 +175,15 @@ function initializeBuiltInWorkspaces(): void {
   });
 
   // If no workspaces existed before, set the first built-in as default
+  // Prefer "Power Flows" if it exists, otherwise use the first one
   if (mockWorkspaces.size === builtInWorkspaces.length && !getDefaultWorkspaceId()) {
-    setDefaultWorkspaceId(powerFlowsBuiltin.id);
+    const powerFlowsWorkspace = builtInWorkspaces.find(
+      (w) => w.id === 'ws-builtin-power-flows'
+    );
+    const defaultWorkspaceId = powerFlowsWorkspace?.id || builtInWorkspaces[0]?.id;
+    if (defaultWorkspaceId) {
+      setDefaultWorkspaceId(defaultWorkspaceId);
+    }
   }
 
   // Save if we added new built-ins or if this is the first initialization
