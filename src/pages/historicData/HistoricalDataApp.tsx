@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import YAML from "yaml";
 import rawYaml from "../siteConfig/definitions/telemetry/ss40k_inverter.yaml?raw";
 import rawLifecycleEventsYaml from "../siteConfig/definitions/telemetry/lifecycle_events.yaml?raw";
@@ -10,6 +10,13 @@ import SearchBox from "./components/filters/SearchBox";
 import DetailLevelSlider from "./components/filters/DetailLevelSlider";
 import HierarchyConfig from "./components/filters/HierarchyConfig";
 import ChartTutorialModal from "./components/modals/ChartTutorialModal";
+import WorkspaceMenu from "./components/workspace/WorkspaceMenu";
+import WorkspaceSwitcher from "./components/workspace/WorkspaceSwitcher";
+import ManageWorkspacesModal from "./components/workspace/ManageWorkspacesModal";
+import SaveAsDialog from "./components/workspace/SaveAsDialog";
+import UnsavedChangesDialog from "./components/workspace/UnsavedChangesDialog";
+import { useWorkspaceManager } from "./hooks/useWorkspaceManager";
+import { serializeWorkspaceData } from "./utils/workspaceUtils";
 
 type Meanings = Record<string | number, string>;
 
@@ -366,6 +373,32 @@ export default function App() {
   const [activeChartPosition, setActiveChartPosition] = React.useState<DOMRect | null>(null);
   // State to remember last inverter selection
   const [lastInverterSelection, setLastInverterSelection] = React.useState<Set<string>>(new Set(DEFAULT_INVERTER_SELECTION));
+
+  // Workspace management
+  const [workspaceState, workspaceActions] = useWorkspaceManager({
+    onWorkspaceLoaded: useCallback((data) => {
+      // Load workspace data into ChartGrid
+      if (chartGridCallbacksRef.current) {
+        const deserialized = {
+          charts: data.charts.map(c => ({
+            ...c,
+            selectedPoints: new Map(Object.entries(c.selectedPoints).map(([k, v]) => [k, new Set(v)]))
+          })),
+          rowHeights: new Map(Object.entries(data.rowHeights).map(([k, v]) => [Number(k), v])),
+          columnWidths: new Map(Object.entries(data.columnWidths).map(([k, v]) => [Number(k), v])),
+          nextChartId: data.nextChartId,
+          activeChartId: data.activeChartId
+        };
+        chartGridCallbacksRef.current.setChartGridState(deserialized);
+      }
+    }, [chartGridCallbacksRef])
+  });
+  const [showManageModal, setShowManageModal] = useState(false);
+  const [showSaveAsDialog, setShowSaveAsDialog] = useState(false);
+  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
+  const [pendingWorkspaceSwitch, setPendingWorkspaceSwitch] = useState<string | null>(null);
+  const [pendingAction, setPendingAction] = useState<'new' | 'import' | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Calculate sidebar position based on active chart position
   const sidebarPosition = React.useMemo(() => {
@@ -787,9 +820,225 @@ export default function App() {
     }
   }, []);
 
+  // Workspace action handlers
+  const createBlankWorkspace = useCallback(() => {
+    // Create a single empty chart at position (0, 0)
+    const emptyChart = {
+      id: 'chart-0',
+      row: 0,
+      col: 0,
+      selectedPoints: new Map<string, Set<string>>()
+    };
+
+    if (chartGridCallbacksRef.current) {
+      chartGridCallbacksRef.current.setChartGridState({
+        charts: [emptyChart],
+        rowHeights: new Map([[0, 520]]),
+        columnWidths: new Map([[0, 780]]),
+        nextChartId: 1,
+        activeChartId: 'chart-0'
+      });
+    }
+
+    // Create a new workspace with one empty chart
+    const blankData = serializeWorkspaceData(
+      [emptyChart],
+      new Map([[0, 520]]),
+      new Map([[0, 780]]),
+      1,
+      'chart-0'
+    );
+
+    workspaceActions.createNewWorkspace('Untitled Workspace', blankData)
+      .then(() => {
+        // Success - workspace is now loaded
+      })
+      .catch((error) => {
+        console.error('Failed to create workspace:', error);
+      });
+  }, [chartGridCallbacksRef, workspaceActions]);
+
+  const handleNewWorkspace = useCallback(() => {
+    if (workspaceState.isDirty) {
+      setPendingAction('new');
+      setShowUnsavedDialog(true);
+    } else {
+      createBlankWorkspace();
+    }
+  }, [workspaceState.isDirty, createBlankWorkspace]);
+
+  const handleSaveWorkspace = useCallback(async () => {
+    if (!workspaceState.currentWorkspace) {
+      // No workspace loaded, show save as dialog
+      setShowSaveAsDialog(true);
+      return;
+    }
+
+    // If workspace is named "Untitled Workspace", prompt for a new name
+    if (workspaceState.currentWorkspace.name === 'Untitled Workspace') {
+      setShowSaveAsDialog(true);
+      return;
+    }
+
+    try {
+      // Get actual chart data from ChartGrid
+      if (chartGridCallbacksRef.current) {
+        const gridState = chartGridCallbacksRef.current.getChartGridState();
+        const data = serializeWorkspaceData(
+          gridState.charts,
+          gridState.rowHeights,
+          gridState.columnWidths,
+          gridState.nextChartId,
+          gridState.activeChartId
+        );
+        workspaceActions.updateCurrentWorkspace(data);
+      }
+      await workspaceActions.saveCurrentWorkspace();
+    } catch (error) {
+      console.error('Failed to save workspace:', error);
+    }
+  }, [workspaceState.currentWorkspace, workspaceActions, chartGridCallbacksRef]);
+
+  const handleSaveAs = useCallback((name: string) => {
+    // Get actual chart data from ChartGrid
+    let data = serializeWorkspaceData([], new Map(), new Map(), 0);
+    if (chartGridCallbacksRef.current) {
+      const gridState = chartGridCallbacksRef.current.getChartGridState();
+      data = serializeWorkspaceData(
+        gridState.charts,
+        gridState.rowHeights,
+        gridState.columnWidths,
+        gridState.nextChartId,
+        gridState.activeChartId
+      );
+    }
+
+    workspaceActions.createNewWorkspace(name, data)
+      .then(() => {
+        setShowSaveAsDialog(false);
+      })
+      .catch((error) => {
+        console.error('Failed to save workspace:', error);
+      });
+  }, [workspaceActions, chartGridCallbacksRef]);
+
+  const handleSwitchWorkspace = useCallback((workspaceId: string) => {
+    if (workspaceState.isDirty) {
+      setPendingWorkspaceSwitch(workspaceId);
+      setShowUnsavedDialog(true);
+    } else {
+      workspaceActions.loadWorkspace(workspaceId);
+    }
+  }, [workspaceState.isDirty, workspaceActions]);
+
+  const handleImportWorkspace = useCallback(() => {
+    if (workspaceState.isDirty) {
+      setPendingAction('import');
+      setShowUnsavedDialog(true);
+    } else {
+      fileInputRef.current?.click();
+    }
+  }, [workspaceState.isDirty]);
+
+  const handleFileSelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const workspace = await workspaceActions.importWorkspace(file);
+      // Load the imported workspace immediately
+      await workspaceActions.loadWorkspace(workspace.id);
+    } catch (error) {
+      console.error('Failed to import workspace:', error);
+    }
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, [workspaceActions]);
+
+  const handleExportWorkspace = useCallback(() => {
+    if (workspaceState.currentWorkspace) {
+      workspaceActions.exportWorkspace(workspaceState.currentWorkspace.id);
+    }
+  }, [workspaceState.currentWorkspace, workspaceActions]);
+
+  const handleUnsavedDialogSave = useCallback(async () => {
+    try {
+      await workspaceActions.saveCurrentWorkspace();
+      setShowUnsavedDialog(false);
+
+      // Execute pending action
+      if (pendingWorkspaceSwitch) {
+        workspaceActions.loadWorkspace(pendingWorkspaceSwitch);
+        setPendingWorkspaceSwitch(null);
+      } else if (pendingAction === 'new') {
+        createBlankWorkspace();
+        setPendingAction(null);
+      } else if (pendingAction === 'import') {
+        fileInputRef.current?.click();
+        setPendingAction(null);
+      }
+    } catch (error) {
+      console.error('Failed to save workspace:', error);
+    }
+  }, [workspaceActions, pendingWorkspaceSwitch, pendingAction, createBlankWorkspace]);
+
+  const handleUnsavedDialogDiscard = useCallback(() => {
+    setShowUnsavedDialog(false);
+    workspaceActions.markClean();
+
+    // Execute pending action
+    if (pendingWorkspaceSwitch) {
+      workspaceActions.loadWorkspace(pendingWorkspaceSwitch);
+      setPendingWorkspaceSwitch(null);
+    } else if (pendingAction === 'new') {
+      createBlankWorkspace();
+      setPendingAction(null);
+    } else if (pendingAction === 'import') {
+      fileInputRef.current?.click();
+      setPendingAction(null);
+    }
+  }, [workspaceActions, pendingWorkspaceSwitch, pendingAction, createBlankWorkspace]);
+
+  const handleUnsavedDialogCancel = useCallback(() => {
+    setShowUnsavedDialog(false);
+    setPendingWorkspaceSwitch(null);
+    setPendingAction(null);
+  }, []);
+
   return (
     <div className="h-full bg-slate-100 p-4 md:p-6">
       <div className="mx-auto w-full max-w-[95vw] h-[calc(100vh-2rem)] rounded-2xl border bg-white shadow-sm relative overflow-hidden flex flex-col">
+        {/* Workspace Controls Top Bar */}
+        <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-gray-50">
+          <div className="flex items-center gap-3">
+            <h1 className="text-lg font-semibold text-gray-900">Historical Data</h1>
+            <WorkspaceMenu
+              onNew={handleNewWorkspace}
+              onSave={handleSaveWorkspace}
+              onSaveAs={() => setShowSaveAsDialog(true)}
+              onImport={handleImportWorkspace}
+              onExport={handleExportWorkspace}
+              onManage={() => setShowManageModal(true)}
+              hasUnsavedChanges={workspaceState.isDirty}
+            />
+            <WorkspaceSwitcher
+              currentWorkspace={workspaceState.currentWorkspace}
+              recentWorkspaces={workspaceState.workspaces.slice(0, 5)}
+              onSwitch={handleSwitchWorkspace}
+              onManage={() => setShowManageModal(true)}
+              hasUnsavedChanges={workspaceState.isDirty}
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            {workspaceState.error && (
+              <span className="text-sm text-red-600">{workspaceState.error}</span>
+            )}
+          </div>
+        </div>
+
         {/* Chart grid area */}
         <div className="flex-1 min-h-0 relative">
           <ChartGrid
@@ -1177,6 +1426,56 @@ export default function App() {
         isOpen={chartTutorialModalOpen}
         onClose={() => setChartTutorialModalOpen(false)}
         initialStep={7}
+      />
+
+      {/* Workspace Management Modals */}
+      <ManageWorkspacesModal
+        isOpen={showManageModal}
+        workspaces={workspaceState.workspaces}
+        currentWorkspaceId={workspaceState.currentWorkspace?.id || null}
+        onClose={() => setShowManageModal(false)}
+        onSwitch={(id) => {
+          setShowManageModal(false);
+          handleSwitchWorkspace(id);
+        }}
+        onRename={workspaceActions.renameWorkspace}
+        onDuplicate={(id) => {
+          workspaceActions.duplicateWorkspace(id)
+            .catch((error) => console.error('Failed to duplicate workspace:', error));
+        }}
+        onDelete={(id) => {
+          workspaceActions.deleteWorkspace(id)
+            .catch((error) => console.error('Failed to delete workspace:', error));
+        }}
+        onExport={workspaceActions.exportWorkspace}
+        onSetDefault={(id) => {
+          workspaceActions.setDefaultWorkspace(id)
+            .catch((error) => console.error('Failed to set default workspace:', error));
+        }}
+      />
+
+      <SaveAsDialog
+        isOpen={showSaveAsDialog}
+        currentName={workspaceState.currentWorkspace?.name || 'New Workspace'}
+        onSave={handleSaveAs}
+        onCancel={() => setShowSaveAsDialog(false)}
+      />
+
+      <UnsavedChangesDialog
+        isOpen={showUnsavedDialog}
+        workspaceName={workspaceState.currentWorkspace?.name || 'Current Workspace'}
+        onSave={handleUnsavedDialogSave}
+        onDiscard={handleUnsavedDialogDiscard}
+        onCancel={handleUnsavedDialogCancel}
+      />
+
+      {/* Hidden file input for import */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".json"
+        onChange={handleFileSelect}
+        style={{ display: 'none' }}
       />
     </div>
   );

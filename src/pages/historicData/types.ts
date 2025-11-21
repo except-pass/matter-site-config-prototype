@@ -29,3 +29,51 @@ export interface ProtocolPoint {
 
 // Recursive type for arbitrary depth hierarchy
 export type LabelHierarchy = Map<string, LabelHierarchy | ProtocolPoint[]>;
+
+// Workspace Management Types
+export interface SerializableChartConfig {
+  id: string;
+  row: number;
+  col: number;
+  selectedPoints: Record<string, string[]>; // Serializable version of Map<string, Set<string>>
+}
+
+export interface SerializableWorkspaceData {
+  charts: SerializableChartConfig[];
+  rowHeights: Record<number, number>; // Serializable version of Map<number, number>
+  columnWidths: Record<number, number>; // Serializable version of Map<number, number>
+  nextChartId: number;
+  activeChartId?: string;
+}
+
+export interface WorkspaceMetadata {
+  id: string;
+  name: string;
+  type: 'user' | 'builtin';
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+  chartCount: number;
+}
+
+export interface Workspace {
+  id: string;
+  name: string;
+  type: 'user' | 'builtin';
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+  data: SerializableWorkspaceData;
+}
+
+export interface WorkspaceListItem extends WorkspaceMetadata {
+  // Used in the management UI
+}
+
+// Time window context (for future enhancement)
+export interface TimeWindow {
+  type: 'relative' | 'absolute';
+  start?: string;
+  end?: string;
+  duration?: string;
+}

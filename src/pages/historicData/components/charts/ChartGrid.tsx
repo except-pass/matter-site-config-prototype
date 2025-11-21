@@ -65,6 +65,20 @@ export interface ChartGridCallbacks {
   getActiveChartSelectedPoints: () => Map<string, Set<string>>;
   togglePointForActiveChart: (pointKey: string) => void;
   updateInvertersForActiveChart: (pointKey: string, inverters: Set<string>) => void;
+  getChartGridState: () => {
+    charts: ChartData[];
+    rowHeights: Map<number, number>;
+    columnWidths: Map<number, number>;
+    nextChartId: number;
+    activeChartId: string;
+  };
+  setChartGridState: (state: {
+    charts: ChartData[];
+    rowHeights: Map<number, number>;
+    columnWidths: Map<number, number>;
+    nextChartId: number;
+    activeChartId?: string;
+  }) => void;
 }
 
 interface ChartGridProps {
@@ -254,9 +268,27 @@ function ChartGrid({ protocols, onUpdateInverters, onScrollToPoint, onRemoveInve
           });
           return result;
         });
+      },
+      getChartGridState: () => {
+        return {
+          charts: charts.map(c => ({ ...c, selectedPoints: new Map(c.selectedPoints) })),
+          rowHeights: new Map(rowHeights),
+          columnWidths: new Map(columnWidths),
+          nextChartId,
+          activeChartId,
+        };
+      },
+      setChartGridState: (state) => {
+        setCharts(state.charts.map(c => ({ ...c, selectedPoints: new Map(c.selectedPoints) })));
+        setRowHeights(new Map(state.rowHeights));
+        setColumnWidths(new Map(state.columnWidths));
+        setNextChartId(state.nextChartId);
+        if (state.activeChartId) {
+          setActiveChartId(state.activeChartId);
+        }
       }
     };
-  }, [charts, activeChartId, callbacksRef]);
+  }, [charts, activeChartId, callbacksRef, rowHeights, columnWidths, nextChartId]);
 
   React.useEffect(() => {
     if (typeof ResizeObserver === 'undefined') {
