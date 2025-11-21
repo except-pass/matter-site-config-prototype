@@ -270,8 +270,6 @@ import type { Workspace, WorkspaceListItem } from '../pages/historicData/types';
  * Request to fetch all workspaces
  */
 export interface GetWorkspacesRequest {
-  /** Optional filter by tags */
-  tags?: string[];
   /** Optional limit on number of results */
   limit?: number;
 }
@@ -308,8 +306,6 @@ export interface GetWorkspaceResponse {
 export interface CreateWorkspaceRequest {
   /** Workspace name */
   name: string;
-  /** Optional tags */
-  tags?: string[];
   /** Workspace data (chart configurations, layout) */
   data: Workspace['data'];
 }
@@ -332,8 +328,6 @@ export interface UpdateWorkspaceRequest {
   id: string;
   /** Updated name (optional) */
   name?: string;
-  /** Updated tags (optional) */
-  tags?: string[];
   /** Updated workspace data (optional) */
   data?: Workspace['data'];
 }

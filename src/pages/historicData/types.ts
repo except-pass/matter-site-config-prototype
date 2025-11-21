@@ -49,7 +49,6 @@ export interface SerializableWorkspaceData {
 export interface WorkspaceMetadata {
   id: string;
   name: string;
-  tags?: string[];
   createdAt: string;
   updatedAt: string;
   chartCount: number;
@@ -58,7 +57,6 @@ export interface WorkspaceMetadata {
 export interface Workspace {
   id: string;
   name: string;
-  tags?: string[];
   createdAt: string;
   updatedAt: string;
   data: SerializableWorkspaceData;

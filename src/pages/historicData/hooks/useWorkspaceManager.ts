@@ -27,7 +27,7 @@ export interface WorkspaceManagerState {
 export interface WorkspaceManagerActions {
   loadWorkspaces: () => Promise<void>;
   loadWorkspace: (workspaceId: string) => Promise<void>;
-  createNewWorkspace: (name: string, data: SerializableWorkspaceData, tags?: string[]) => Promise<Workspace>;
+  createNewWorkspace: (name: string, data: SerializableWorkspaceData) => Promise<Workspace>;
   saveCurrentWorkspace: () => Promise<void>;
   updateCurrentWorkspace: (data: SerializableWorkspaceData) => void;
   renameWorkspace: (workspaceId: string, newName: string) => Promise<void>;
@@ -98,11 +98,11 @@ export function useWorkspaceManager(
 
   // Create a new workspace
   const createNewWorkspace = useCallback(
-    async (name: string, data: SerializableWorkspaceData, tags?: string[]) => {
+    async (name: string, data: SerializableWorkspaceData) => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await createWorkspace({ name, data, tags });
+        const response = await createWorkspace({ name, data });
         setCurrentWorkspace(response.workspace);
         lastSavedData.current = cloneWorkspaceData(response.workspace.data);
         setIsDirty(false);
@@ -212,14 +212,10 @@ export function useWorkspaceManager(
         const response = await getWorkspace({ id: workspaceId });
         const original = response.workspace;
 
-        // Filter out 'default' tag - duplicates should not be marked as default
-        const filteredTags = original.tags?.filter(tag => tag !== 'default');
-
         // Create a new workspace with the same data
         const newWorkspace = await createNewWorkspace(
           `${original.name} (Copy)`,
-          original.data,
-          filteredTags
+          original.data
         );
 
         return newWorkspace;
@@ -288,7 +284,7 @@ export function useWorkspaceManager(
         setIsLoading(true);
         setError(null);
         const { name, data } = await importWorkspaceFromJSON(file);
-        const newWorkspace = await createNewWorkspace(name, data, ['imported']);
+        const newWorkspace = await createNewWorkspace(name, data);
         return newWorkspace;
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : 'Failed to import workspace';

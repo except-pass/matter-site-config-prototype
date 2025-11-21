@@ -874,6 +874,12 @@ export default function App() {
       return;
     }
 
+    // If workspace is named "Untitled Workspace", prompt for a new name
+    if (workspaceState.currentWorkspace.name === 'Untitled Workspace') {
+      setShowSaveAsDialog(true);
+      return;
+    }
+
     try {
       // Get actual chart data from ChartGrid
       if (chartGridCallbacksRef.current) {
@@ -893,7 +899,7 @@ export default function App() {
     }
   }, [workspaceState.currentWorkspace, workspaceActions, chartGridCallbacksRef]);
 
-  const handleSaveAs = useCallback((name: string, tags?: string[]) => {
+  const handleSaveAs = useCallback((name: string) => {
     // Get actual chart data from ChartGrid
     let data = serializeWorkspaceData([], new Map(), new Map(), 0);
     if (chartGridCallbacksRef.current) {
@@ -907,7 +913,7 @@ export default function App() {
       );
     }
 
-    workspaceActions.createNewWorkspace(name, data, tags)
+    workspaceActions.createNewWorkspace(name, data)
       .then(() => {
         setShowSaveAsDialog(false);
       })

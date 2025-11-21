@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 interface SaveAsDialogProps {
   isOpen: boolean;
   currentName: string;
-  onSave: (name: string, tags?: string[]) => void;
+  onSave: (name: string) => void;
   onCancel: () => void;
 }
 
@@ -14,13 +14,11 @@ const SaveAsDialog: React.FC<SaveAsDialogProps> = ({
   onCancel,
 }) => {
   const [name, setName] = useState('');
-  const [tagsInput, setTagsInput] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (isOpen) {
       setName(`${currentName} (Copy)`);
-      setTagsInput('');
       setError('');
     }
   }, [isOpen, currentName]);
@@ -46,12 +44,7 @@ const SaveAsDialog: React.FC<SaveAsDialogProps> = ({
       return;
     }
 
-    const tags = tagsInput
-      .split(',')
-      .map((tag) => tag.trim())
-      .filter((tag) => tag.length > 0);
-
-    onSave(trimmedName, tags.length > 0 ? tags : undefined);
+    onSave(trimmedName);
   };
 
   return (
@@ -83,24 +76,6 @@ const SaveAsDialog: React.FC<SaveAsDialogProps> = ({
                 autoFocus
               />
               {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-            </div>
-
-            <div>
-              <label htmlFor="workspace-tags" className="block text-sm font-medium text-gray-700 mb-1">
-                Tags (optional)
-              </label>
-              <input
-                id="workspace-tags"
-                type="text"
-                value={tagsInput}
-                onChange={(e) => setTagsInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleSave();
-                }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="e.g., production, testing (comma-separated)"
-              />
-              <p className="mt-1 text-xs text-gray-500">Separate multiple tags with commas</p>
             </div>
           </div>
 

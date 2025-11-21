@@ -640,6 +640,9 @@ export function getAllMockValues(): Map<string, PointValue> {
 // Workspace Management Mock API
 // ============================================================================
 
+const WORKSPACES_STORAGE_KEY = 'historicalData_workspaces';
+const WORKSPACE_COUNTER_KEY = 'historicalData_workspaceCounter';
+
 /**
  * In-memory storage for workspaces
  * In production, this would be stored in a database
@@ -652,14 +655,54 @@ const mockWorkspaces = new Map<string, Workspace>();
 let workspaceIdCounter = 0;
 
 /**
- * Initialize with a default workspace
+ * Save workspaces to localStorage
+ */
+function saveWorkspacesToStorage(): void {
+  try {
+    const workspacesArray = Array.from(mockWorkspaces.values());
+    localStorage.setItem(WORKSPACES_STORAGE_KEY, JSON.stringify(workspacesArray));
+    localStorage.setItem(WORKSPACE_COUNTER_KEY, String(workspaceIdCounter));
+  } catch (error) {
+    console.error('Failed to save workspaces to localStorage:', error);
+  }
+}
+
+/**
+ * Load workspaces from localStorage
+ */
+function loadWorkspacesFromStorage(): void {
+  try {
+    const stored = localStorage.getItem(WORKSPACES_STORAGE_KEY);
+    const counterStored = localStorage.getItem(WORKSPACE_COUNTER_KEY);
+
+    if (stored) {
+      const workspacesArray = JSON.parse(stored) as Workspace[];
+      mockWorkspaces.clear();
+      workspacesArray.forEach(workspace => {
+        mockWorkspaces.set(workspace.id, workspace);
+      });
+    }
+
+    if (counterStored) {
+      workspaceIdCounter = parseInt(counterStored, 10);
+    }
+  } catch (error) {
+    console.error('Failed to load workspaces from localStorage:', error);
+  }
+}
+
+/**
+ * Initialize with a default workspace if none exist
  */
 function initializeDefaultWorkspace(): void {
+  // First try to load from storage
+  loadWorkspacesFromStorage();
+
+  // If no workspaces exist, create default
   if (mockWorkspaces.size === 0) {
     const defaultWorkspace: Workspace = {
       id: 'ws-default',
       name: 'Default Workspace',
-      tags: ['default'],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       data: {
@@ -708,10 +751,11 @@ function initializeDefaultWorkspace(): void {
     };
     mockWorkspaces.set(defaultWorkspace.id, defaultWorkspace);
     workspaceIdCounter = 1;
+    saveWorkspacesToStorage();
   }
 }
 
-// Initialize default workspace on module load
+// Initialize workspaces on module load
 initializeDefaultWorkspace();
 
 /**
@@ -724,13 +768,6 @@ export async function getWorkspaces(
 
   let workspaces = Array.from(mockWorkspaces.values());
 
-  // Filter by tags if provided
-  if (request.tags && request.tags.length > 0) {
-    workspaces = workspaces.filter((ws) =>
-      ws.tags?.some((tag) => request.tags?.includes(tag))
-    );
-  }
-
   // Apply limit if provided
   if (request.limit && request.limit > 0) {
     workspaces = workspaces.slice(0, request.limit);
@@ -740,7 +777,6 @@ export async function getWorkspaces(
   const workspaceList: WorkspaceListItem[] = workspaces.map((ws) => ({
     id: ws.id,
     name: ws.name,
-    tags: ws.tags,
     createdAt: ws.createdAt,
     updatedAt: ws.updatedAt,
     chartCount: ws.data.charts.length,
@@ -783,13 +819,13 @@ export async function createWorkspace(
   const workspace: Workspace = {
     id: `ws-${workspaceIdCounter++}`,
     name: request.name,
-    tags: request.tags,
     createdAt: now,
     updatedAt: now,
     data: request.data,
   };
 
   mockWorkspaces.set(workspace.id, workspace);
+  saveWorkspacesToStorage();
 
   return {
     workspace,
@@ -815,12 +851,12 @@ export async function updateWorkspace(
   const updatedWorkspace: Workspace = {
     ...workspace,
     name: request.name ?? workspace.name,
-    tags: request.tags ?? workspace.tags,
     data: request.data ?? workspace.data,
     updatedAt: now,
   };
 
   mockWorkspaces.set(request.id, updatedWorkspace);
+  saveWorkspacesToStorage();
 
   return {
     workspace: updatedWorkspace,
@@ -848,6 +884,7 @@ export async function deleteWorkspace(
   }
 
   mockWorkspaces.delete(request.id);
+  saveWorkspacesToStorage();
 
   return {
     success: true,

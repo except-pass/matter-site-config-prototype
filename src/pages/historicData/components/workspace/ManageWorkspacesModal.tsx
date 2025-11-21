@@ -182,16 +182,6 @@ const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
                           <span>•</span>
                           <span>Updated {formatDate(workspace.updatedAt)}</span>
                         </div>
-
-                        {workspace.tags && workspace.tags.length > 0 && (
-                          <div className="flex gap-2 mt-2">
-                            {workspace.tags.map((tag) => (
-                              <span key={tag} className="px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
                       </div>
 
                       {/* Actions */}
