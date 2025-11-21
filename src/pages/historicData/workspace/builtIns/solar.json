@@ -1,0 +1,89 @@
+{
+  "version": "1.0",
+  "id": "ws-builtin-solar",
+  "name": "Solar",
+  "type": "builtin",
+  "data": {
+    "charts": [
+      {
+        "id": "chart-0",
+        "row": 0,
+        "col": 0,
+        "selectedPoints": {
+          "40101:pPvTotal": [
+            "001"
+          ],
+          "40102:ePvTdy": [
+            "001"
+          ],
+          "40101:pMppt1": [
+            "001"
+          ],
+          "40101:pMppt2": [
+            "001"
+          ],
+          "40101:pMppt3": [
+            "001"
+          ],
+          "40101:pMppt4": [
+            "001"
+          ]
+        }
+      },
+      {
+        "id": "chart-4",
+        "row": 0,
+        "col": 1,
+        "selectedPoints": {
+          "40101:iMppt2": [
+            "001"
+          ],
+          "40101:iMppt1": [
+            "001"
+          ],
+          "40101:vMppt1": [
+            "001"
+          ],
+          "40101:vMppt2": [
+            "001"
+          ],
+          "40101:iMppt3": [
+            "001"
+          ],
+          "40101:vMppt3": [
+            "001"
+          ],
+          "40101:iMppt4": [
+            "001"
+          ],
+          "40101:vMppt4": [
+            "001"
+          ]
+        }
+      },
+      {
+        "id": "chart-5",
+        "row": 1,
+        "col": 0,
+        "selectedPoints": {
+          "40103:dcPvFault": [
+            "001"
+          ],
+          "40103:dcPvWarning": [
+            "001"
+          ]
+        }
+      }
+    ],
+    "rowHeights": {
+      "0": 948,
+      "1": 956
+    },
+    "columnWidths": {
+      "0": 780,
+      "1": 780
+    },
+    "nextChartId": 6,
+    "activeChartId": "chart-5"
+  }
+}
