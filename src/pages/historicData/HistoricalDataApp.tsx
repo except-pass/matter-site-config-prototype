@@ -821,16 +821,43 @@ export default function App() {
   }, []);
 
   // Workspace action handlers
+  const createBlankWorkspace = useCallback(() => {
+    // Clear all charts and reset to a blank state
+    if (chartGridCallbacksRef.current) {
+      chartGridCallbacksRef.current.setChartGridState({
+        charts: [],
+        rowHeights: new Map([[0, 520]]),
+        columnWidths: new Map([[0, 780]]),
+        nextChartId: 0,
+        activeChartId: undefined
+      });
+    }
+
+    // Create a new unsaved workspace
+    const blankData = serializeWorkspaceData(
+      [],
+      new Map([[0, 520]]),
+      new Map([[0, 780]]),
+      0
+    );
+
+    workspaceActions.createNewWorkspace('Untitled Workspace', blankData)
+      .then(() => {
+        // Success - workspace is now loaded
+      })
+      .catch((error) => {
+        alert(`Failed to create workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      });
+  }, [chartGridCallbacksRef, workspaceActions]);
+
   const handleNewWorkspace = useCallback(() => {
     if (workspaceState.isDirty) {
       setPendingAction('new');
       setShowUnsavedDialog(true);
     } else {
-      // Clear the current workspace and create a blank slate
-      // In a real scenario, you might want to actually create a new workspace immediately
-      alert('New workspace created! This would clear all charts and start fresh.');
+      createBlankWorkspace();
     }
-  }, [workspaceState.isDirty]);
+  }, [workspaceState.isDirty, createBlankWorkspace]);
 
   const handleSaveWorkspace = useCallback(async () => {
     if (!workspaceState.currentWorkspace) {
@@ -936,7 +963,7 @@ export default function App() {
         workspaceActions.loadWorkspace(pendingWorkspaceSwitch);
         setPendingWorkspaceSwitch(null);
       } else if (pendingAction === 'new') {
-        alert('New workspace created!');
+        createBlankWorkspace();
         setPendingAction(null);
       } else if (pendingAction === 'import') {
         fileInputRef.current?.click();
@@ -945,7 +972,7 @@ export default function App() {
     } catch (error) {
       alert(`Failed to save workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-  }, [workspaceActions, pendingWorkspaceSwitch, pendingAction]);
+  }, [workspaceActions, pendingWorkspaceSwitch, pendingAction, createBlankWorkspace]);
 
   const handleUnsavedDialogDiscard = useCallback(() => {
     setShowUnsavedDialog(false);
@@ -956,13 +983,13 @@ export default function App() {
       workspaceActions.loadWorkspace(pendingWorkspaceSwitch);
       setPendingWorkspaceSwitch(null);
     } else if (pendingAction === 'new') {
-      alert('New workspace created!');
+      createBlankWorkspace();
       setPendingAction(null);
     } else if (pendingAction === 'import') {
       fileInputRef.current?.click();
       setPendingAction(null);
     }
-  }, [workspaceActions, pendingWorkspaceSwitch, pendingAction]);
+  }, [workspaceActions, pendingWorkspaceSwitch, pendingAction, createBlankWorkspace]);
 
   const handleUnsavedDialogCancel = useCallback(() => {
     setShowUnsavedDialog(false);
