@@ -36,6 +36,8 @@ import {
   UpdateWorkspaceResponse,
   DeleteWorkspaceRequest,
   DeleteWorkspaceResponse,
+  SetDefaultWorkspaceRequest,
+  SetDefaultWorkspaceResponse,
 } from './types';
 import type { Workspace, WorkspaceListItem } from '../pages/historicData/types';
 
@@ -698,11 +700,13 @@ function initializeDefaultWorkspace(): void {
   // First try to load from storage
   loadWorkspacesFromStorage();
 
-  // If no workspaces exist, create default
+  // If no workspaces exist, create built-in workspace
   if (mockWorkspaces.size === 0) {
-    const defaultWorkspace: Workspace = {
-      id: 'ws-default',
-      name: 'Default Workspace',
+    const powerFlowsWorkspace: Workspace = {
+      id: 'ws-builtin-power-flows',
+      name: 'Power Flows',
+      type: 'builtin',
+      isDefault: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       data: {
@@ -749,7 +753,7 @@ function initializeDefaultWorkspace(): void {
         activeChartId: 'chart-0',
       },
     };
-    mockWorkspaces.set(defaultWorkspace.id, defaultWorkspace);
+    mockWorkspaces.set(powerFlowsWorkspace.id, powerFlowsWorkspace);
     workspaceIdCounter = 1;
     saveWorkspacesToStorage();
   }
@@ -777,6 +781,8 @@ export async function getWorkspaces(
   const workspaceList: WorkspaceListItem[] = workspaces.map((ws) => ({
     id: ws.id,
     name: ws.name,
+    type: ws.type,
+    isDefault: ws.isDefault,
     createdAt: ws.createdAt,
     updatedAt: ws.updatedAt,
     chartCount: ws.data.charts.length,
@@ -819,6 +825,8 @@ export async function createWorkspace(
   const workspace: Workspace = {
     id: `ws-${workspaceIdCounter++}`,
     name: request.name,
+    type: 'user',
+    isDefault: false,
     createdAt: now,
     updatedAt: now,
     data: request.data,
@@ -845,6 +853,11 @@ export async function updateWorkspace(
 
   if (!workspace) {
     throw new Error(`Workspace not found: ${request.id}`);
+  }
+
+  // Prevent renaming of built-in workspaces
+  if (workspace.type === 'builtin' && request.name && request.name !== workspace.name) {
+    throw new Error('Cannot rename built-in workspaces');
   }
 
   const now = new Date().toISOString();
@@ -878,9 +891,9 @@ export async function deleteWorkspace(
     throw new Error(`Workspace not found: ${request.id}`);
   }
 
-  // Prevent deletion of the default workspace
-  if (request.id === 'ws-default') {
-    throw new Error('Cannot delete the default workspace');
+  // Prevent deletion of built-in workspaces
+  if (workspace.type === 'builtin') {
+    throw new Error('Cannot delete built-in workspaces');
   }
 
   mockWorkspaces.delete(request.id);
@@ -889,6 +902,55 @@ export async function deleteWorkspace(
   return {
     success: true,
     message: 'Workspace deleted successfully',
+  };
+}
+
+/**
+ * Set a workspace as default
+ */
+export async function setDefaultWorkspace(
+  request: SetDefaultWorkspaceRequest
+): Promise<SetDefaultWorkspaceResponse> {
+  await delay(100);
+
+  const workspace = mockWorkspaces.get(request.id);
+
+  if (!workspace) {
+    throw new Error(`Workspace not found: ${request.id}`);
+  }
+
+  // Unset all other workspaces as default
+  mockWorkspaces.forEach((ws) => {
+    ws.isDefault = false;
+  });
+
+  // Set the requested workspace as default
+  workspace.isDefault = true;
+  mockWorkspaces.set(workspace.id, workspace);
+  saveWorkspacesToStorage();
+
+  return {
+    workspace,
+    message: 'Default workspace updated successfully',
+  };
+}
+
+/**
+ * Get the default workspace
+ */
+export async function getDefaultWorkspace(): Promise<GetWorkspaceResponse | null> {
+  await delay(100);
+
+  const defaultWorkspace = Array.from(mockWorkspaces.values()).find(
+    (ws) => ws.isDefault
+  );
+
+  if (!defaultWorkspace) {
+    return null;
+  }
+
+  return {
+    workspace: defaultWorkspace,
   };
 }
 

@@ -359,3 +359,21 @@ export interface DeleteWorkspaceResponse {
   /** Success message */
   message: string;
 }
+
+/**
+ * Request to set a workspace as default
+ */
+export interface SetDefaultWorkspaceRequest {
+  /** Workspace ID to set as default */
+  id: string;
+}
+
+/**
+ * Response after setting default workspace
+ */
+export interface SetDefaultWorkspaceResponse {
+  /** Updated workspace */
+  workspace: Workspace;
+  /** Success message */
+  message: string;
+}

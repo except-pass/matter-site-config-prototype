@@ -6,6 +6,8 @@ import {
   createWorkspace,
   updateWorkspace,
   deleteWorkspace,
+  setDefaultWorkspace,
+  getDefaultWorkspace,
 } from '../../../api/mockApi';
 import {
   serializeWorkspaceData,
@@ -35,6 +37,7 @@ export interface WorkspaceManagerActions {
   deleteWorkspace: (workspaceId: string) => Promise<void>;
   exportWorkspace: (workspaceId: string) => Promise<void>;
   importWorkspace: (file: File) => Promise<Workspace>;
+  setDefaultWorkspace: (workspaceId: string) => Promise<void>;
   markClean: () => void;
 }
 
@@ -298,6 +301,28 @@ export function useWorkspaceManager(
     [createNewWorkspace]
   );
 
+  // Set default workspace
+  const setDefaultWorkspaceHandler = useCallback(
+    async (workspaceId: string) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await setDefaultWorkspace({ id: workspaceId });
+
+        // Refresh workspace list to show updated default status
+        await loadWorkspaces();
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Failed to set default workspace';
+        setError(errorMsg);
+        console.error('Failed to set default workspace:', err);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [loadWorkspaces]
+  );
+
   // Mark as clean
   const markClean = useCallback(() => {
     if (currentWorkspace) {
@@ -310,6 +335,25 @@ export function useWorkspaceManager(
   useEffect(() => {
     loadWorkspaces();
   }, [loadWorkspaces]);
+
+  // Load default workspace on mount
+  useEffect(() => {
+    const loadDefault = async () => {
+      try {
+        const response = await getDefaultWorkspace();
+        if (response && response.workspace) {
+          await loadWorkspace(response.workspace.id);
+        }
+      } catch (error) {
+        console.error('Failed to load default workspace:', error);
+      }
+    };
+
+    // Only load default if no workspace is currently loaded
+    if (!currentWorkspace) {
+      loadDefault();
+    }
+  }, []); // Empty deps array - only run on mount
 
   const state: WorkspaceManagerState = {
     currentWorkspace,
@@ -330,6 +374,7 @@ export function useWorkspaceManager(
     deleteWorkspace: deleteWorkspaceHandler,
     exportWorkspace: exportWorkspaceHandler,
     importWorkspace: importWorkspaceHandler,
+    setDefaultWorkspace: setDefaultWorkspaceHandler,
     markClean,
   };
 

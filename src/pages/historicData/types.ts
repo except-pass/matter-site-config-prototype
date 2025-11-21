@@ -49,6 +49,8 @@ export interface SerializableWorkspaceData {
 export interface WorkspaceMetadata {
   id: string;
   name: string;
+  type: 'user' | 'builtin';
+  isDefault: boolean;
   createdAt: string;
   updatedAt: string;
   chartCount: number;
@@ -57,6 +59,8 @@ export interface WorkspaceMetadata {
 export interface Workspace {
   id: string;
   name: string;
+  type: 'user' | 'builtin';
+  isDefault: boolean;
   createdAt: string;
   updatedAt: string;
   data: SerializableWorkspaceData;

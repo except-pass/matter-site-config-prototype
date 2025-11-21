@@ -12,6 +12,7 @@ interface ManageWorkspacesModalProps {
   onDuplicate: (workspaceId: string) => void;
   onDelete: (workspaceId: string) => void;
   onExport: (workspaceId: string) => void;
+  onSetDefault: (workspaceId: string) => void;
 }
 
 const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
@@ -24,6 +25,7 @@ const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
   onDuplicate,
   onDelete,
   onExport,
+  onSetDefault,
 }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
@@ -145,6 +147,8 @@ const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
                       border rounded-lg p-4 transition-all
                       ${workspace.id === currentWorkspaceId
                         ? 'border-blue-500 bg-blue-50'
+                        : workspace.type === 'builtin'
+                        ? 'border-purple-200 bg-purple-50 hover:border-purple-300'
                         : 'border-gray-200 hover:border-gray-300 bg-white'
                       }
                     `}
@@ -165,10 +169,20 @@ const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
                             autoFocus
                           />
                         ) : (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <h3 className="text-lg font-medium text-gray-900 truncate">
                               {workspace.name}
                             </h3>
+                            {workspace.type === 'builtin' && (
+                              <span className="px-2 py-0.5 text-xs font-medium bg-purple-600 text-white rounded">
+                                Built-in
+                              </span>
+                            )}
+                            {workspace.isDefault && (
+                              <span className="px-2 py-0.5 text-xs font-medium bg-green-600 text-white rounded">
+                                Default
+                              </span>
+                            )}
                             {workspace.id === currentWorkspaceId && (
                               <span className="px-2 py-0.5 text-xs font-medium bg-blue-600 text-white rounded">
                                 Current
@@ -220,10 +234,26 @@ const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
                                 </svg>
                               </button>
                             )}
+                            {!workspace.isDefault && (
+                              <button
+                                onClick={() => onSetDefault(workspace.id)}
+                                className="p-2 text-yellow-600 hover:bg-yellow-50 rounded transition-colors"
+                                title="Set as default workspace"
+                              >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                </svg>
+                              </button>
+                            )}
                             <button
-                              onClick={() => handleStartEdit(workspace)}
-                              className="p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors"
-                              title="Rename"
+                              onClick={() => workspace.type !== 'builtin' && handleStartEdit(workspace)}
+                              disabled={workspace.type === 'builtin'}
+                              className={`p-2 rounded transition-colors ${
+                                workspace.type === 'builtin'
+                                  ? 'text-gray-400 cursor-not-allowed'
+                                  : 'text-gray-600 hover:bg-gray-100'
+                              }`}
+                              title={workspace.type === 'builtin' ? 'Built-in workspaces cannot be renamed' : 'Rename'}
                             >
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -248,10 +278,14 @@ const ManageWorkspacesModal: React.FC<ManageWorkspacesModalProps> = ({
                               </svg>
                             </button>
                             <button
-                              onClick={() => handleDeleteClick(workspace)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
-                              title="Delete"
-                              disabled={workspace.id === 'ws-default'}
+                              onClick={() => workspace.type !== 'builtin' && handleDeleteClick(workspace)}
+                              disabled={workspace.type === 'builtin'}
+                              className={`p-2 rounded transition-colors ${
+                                workspace.type === 'builtin'
+                                  ? 'text-gray-400 cursor-not-allowed'
+                                  : 'text-red-600 hover:bg-red-50'
+                              }`}
+                              title={workspace.type === 'builtin' ? 'Built-in workspaces cannot be deleted' : 'Delete'}
                             >
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

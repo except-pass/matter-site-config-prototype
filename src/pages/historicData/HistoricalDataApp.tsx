@@ -1448,6 +1448,10 @@ export default function App() {
             .catch((error) => console.error('Failed to delete workspace:', error));
         }}
         onExport={workspaceActions.exportWorkspace}
+        onSetDefault={(id) => {
+          workspaceActions.setDefaultWorkspace(id)
+            .catch((error) => console.error('Failed to set default workspace:', error));
+        }}
       />
 
       <SaveAsDialog
