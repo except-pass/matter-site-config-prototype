@@ -395,11 +395,12 @@ export function validateWorkspaceData(data: any): data is SerializableWorkspaceD
     if (typeof chart.id !== 'string') return false;
     if (typeof chart.row !== 'number') return false;
     if (typeof chart.col !== 'number') return false;
-    if (typeof chart.selectedPoints !== 'object') return false;
+    if (typeof chart.selectedPoints !== 'object' || chart.selectedPoints === null) return false;
 
-    // Validate selectedPoints contain valid keywords
-    const validation = validateSelectedPoints(chart.selectedPoints);
-    if (!validation.valid) return false;
+    // Validate selectedPoints structure (but not semantic validity - that's checked in validateWorkspaceForExport)
+    for (const values of Object.values(chart.selectedPoints)) {
+      if (!Array.isArray(values)) return false;
+    }
   }
 
   return true;
