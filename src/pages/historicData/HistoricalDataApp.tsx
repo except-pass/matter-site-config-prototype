@@ -16,8 +16,9 @@ import ManageWorkspacesModal from "./components/workspace/ManageWorkspacesModal"
 import SaveAsDialog from "./components/workspace/SaveAsDialog";
 import UnsavedChangesDialog from "./components/workspace/UnsavedChangesDialog";
 import { useWorkspaceManager } from "./hooks/useWorkspaceManager";
-import { serializeWorkspaceData } from "./utils/workspaceUtils";
+import { serializeWorkspaceData, deserializeChartData, type InverterInfo } from "./utils/workspaceUtils";
 import { getDefaultWorkspaceId } from "./utils/userSettings";
+import { AVAILABLE_INVERTERS } from "./components/charts/chartUtils";
 import type { SerializableWorkspaceData, SerializableChartConfig } from "./types";
 
 type Meanings = Record<string | number, string>;
@@ -376,16 +377,23 @@ export default function App() {
   // State to remember last inverter selection
   const [lastInverterSelection, setLastInverterSelection] = React.useState<Set<string>>(new Set(DEFAULT_INVERTER_SELECTION));
 
+  // Define available inverters for keyword resolution
+  const availableInverters: InverterInfo[] = useMemo(() => {
+    return AVAILABLE_INVERTERS.map((id, index) => ({
+      id,
+      isPrimary: index === 0, // First inverter is primary
+    }));
+  }, []);
+
   // Workspace management
   const [workspaceState, workspaceActions] = useWorkspaceManager({
     onWorkspaceLoaded: useCallback((data: SerializableWorkspaceData) => {
       // Load workspace data into ChartGrid
       if (chartGridCallbacksRef.current) {
+        // Resolve keywords like "first" to actual inverter IDs
+        const deserializedCharts = deserializeChartData(data.charts, availableInverters);
         const deserialized = {
-          charts: data.charts.map((c: SerializableChartConfig) => ({
-            ...c,
-            selectedPoints: new Map(Object.entries(c.selectedPoints).map(([k, v]) => [k, new Set(v as string[])]))
-          })),
+          charts: deserializedCharts,
           rowHeights: new Map(Object.entries(data.rowHeights).map(([k, v]) => [Number(k), v as number])),
           columnWidths: new Map(Object.entries(data.columnWidths).map(([k, v]) => [Number(k), v as number])),
           nextChartId: data.nextChartId,
@@ -393,7 +401,7 @@ export default function App() {
         };
         chartGridCallbacksRef.current.setChartGridState(deserialized);
       }
-    }, [chartGridCallbacksRef])
+    }, [chartGridCallbacksRef, availableInverters])
   });
   const [showManageModal, setShowManageModal] = useState(false);
   const [showSaveAsDialog, setShowSaveAsDialog] = useState(false);
