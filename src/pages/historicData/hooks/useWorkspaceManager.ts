@@ -20,7 +20,7 @@ export interface WorkspaceManagerActions {
   loadWorkspaces: () => Promise<void>;
   loadWorkspace: (workspaceId: string) => Promise<void>;
   createNewWorkspace: (name: string, data: SerializableWorkspaceData) => Promise<Workspace>;
-  saveCurrentWorkspace: () => Promise<void>;
+  saveCurrentWorkspace: (data?: SerializableWorkspaceData) => Promise<void>;
   updateCurrentWorkspace: (data: SerializableWorkspaceData) => void;
   renameWorkspace: (workspaceId: string, newName: string) => Promise<void>;
   duplicateWorkspace: (workspaceId: string) => Promise<Workspace>;
@@ -117,17 +117,20 @@ export function useWorkspaceManager(
   );
 
   // Save current workspace
-  const saveCurrentWorkspace = useCallback(async () => {
+  const saveCurrentWorkspace = useCallback(async (data?: SerializableWorkspaceData) => {
     if (!currentWorkspace) {
       throw new Error('No workspace is currently loaded');
     }
+
+    // Use provided data or fall back to current workspace data
+    const dataToSave = data || currentWorkspace.data;
 
     try {
       setIsLoading(true);
       setError(null);
       const response = await workspaceApi.updateWorkspace({
         id: currentWorkspace.id,
-        data: currentWorkspace.data,
+        data: dataToSave,
       });
       setCurrentWorkspace(response.workspace);
       lastSavedData.current = cloneWorkspaceData(response.workspace.data);

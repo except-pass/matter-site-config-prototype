@@ -39,9 +39,7 @@ export function serializeChartData(
         if (availableInverters && availableInverters.length > 0) {
           const allInverterIds = availableInverters.map(inv => inv.id);
           const primaryInverterId = availableInverters.find(inv => inv.isPrimary)?.id;
-          console.log(`[serializeChartData] Point: ${key}, Selected IDs:`, inverterIds, 'All IDs:', allInverterIds, 'Primary:', primaryInverterId);
           const keyword = getKeywordForInverterIds(inverterIds, allInverterIds, primaryInverterId);
-          console.log(`[serializeChartData] Keyword result for ${key}:`, keyword);
 
           // If we can map to a keyword, use it
           if (keyword) {
@@ -50,7 +48,6 @@ export function serializeChartData(
         }
 
         // Keep the IDs as-is (will fail validation if exported as built-in)
-        console.log(`[serializeChartData] Keeping raw IDs for ${key}:`, inverterIds);
         return [key, inverterIds];
       })
     ),
@@ -346,10 +343,7 @@ export function getKeywordForInverterIds(
   allInverterIds: string[],
   primaryInverterId?: string
 ): InverterSelectionKeyword | undefined {
-  console.log('[getKeywordForInverterIds] Input:', { inverterIds, allInverterIds, primaryInverterId });
-
   if (inverterIds.length === 0) {
-    console.log('[getKeywordForInverterIds] Empty inverterIds, returning undefined');
     return undefined;
   }
 
@@ -357,26 +351,21 @@ export function getKeywordForInverterIds(
   if (inverterIds.length === allInverterIds.length) {
     const sortedSelected = [...inverterIds].sort();
     const sortedAll = [...allInverterIds].sort();
-    console.log('[getKeywordForInverterIds] Checking "all":', { sortedSelected, sortedAll });
     if (sortedSelected.every((id, i) => id === sortedAll[i])) {
-      console.log('[getKeywordForInverterIds] Matched "all"');
       return 'all';
     }
   }
 
   // Check if it's 'primary'
   if (primaryInverterId && inverterIds.length === 1 && inverterIds[0] === primaryInverterId) {
-    console.log('[getKeywordForInverterIds] Matched "primary"');
     return 'primary';
   }
 
   // Check if it's 'first'
   if (inverterIds.length === 1 && allInverterIds.length > 0 && inverterIds[0] === allInverterIds[0]) {
-    console.log('[getKeywordForInverterIds] Matched "first"');
     return 'first';
   }
 
-  console.log('[getKeywordForInverterIds] No match, returning undefined');
   return undefined;
 }
 

@@ -910,8 +910,11 @@ export default function App() {
           availableInverters
         );
         workspaceActions.updateCurrentWorkspace(data);
+        // Pass data directly to save to avoid race condition with async state update
+        await workspaceActions.saveCurrentWorkspace(data);
+      } else {
+        await workspaceActions.saveCurrentWorkspace();
       }
-      await workspaceActions.saveCurrentWorkspace();
     } catch (error) {
       console.error('Failed to save workspace:', error);
     }
