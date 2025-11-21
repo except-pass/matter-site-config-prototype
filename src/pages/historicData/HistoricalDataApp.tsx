@@ -881,6 +881,12 @@ export default function App() {
       return;
     }
 
+    // If workspace is built-in, use save as to create a copy
+    if (workspaceState.currentWorkspace.type === 'builtin') {
+      setShowSaveAsDialog(true);
+      return;
+    }
+
     try {
       // Get actual chart data from ChartGrid
       if (chartGridCallbacksRef.current) {
