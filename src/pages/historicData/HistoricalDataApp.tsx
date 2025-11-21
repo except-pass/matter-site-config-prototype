@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import YAML from "yaml";
 import rawYaml from "../siteConfig/definitions/telemetry/ss40k_inverter.yaml?raw";
 import rawLifecycleEventsYaml from "../siteConfig/definitions/telemetry/lifecycle_events.yaml?raw";
@@ -10,6 +10,13 @@ import SearchBox from "./components/filters/SearchBox";
 import DetailLevelSlider from "./components/filters/DetailLevelSlider";
 import HierarchyConfig from "./components/filters/HierarchyConfig";
 import ChartTutorialModal from "./components/modals/ChartTutorialModal";
+import WorkspaceMenu from "./components/workspace/WorkspaceMenu";
+import WorkspaceSwitcher from "./components/workspace/WorkspaceSwitcher";
+import ManageWorkspacesModal from "./components/workspace/ManageWorkspacesModal";
+import SaveAsDialog from "./components/workspace/SaveAsDialog";
+import UnsavedChangesDialog from "./components/workspace/UnsavedChangesDialog";
+import { useWorkspaceManager } from "./hooks/useWorkspaceManager";
+import { serializeWorkspaceData } from "./utils/workspaceUtils";
 
 type Meanings = Record<string | number, string>;
 
@@ -366,6 +373,15 @@ export default function App() {
   const [activeChartPosition, setActiveChartPosition] = React.useState<DOMRect | null>(null);
   // State to remember last inverter selection
   const [lastInverterSelection, setLastInverterSelection] = React.useState<Set<string>>(new Set(DEFAULT_INVERTER_SELECTION));
+
+  // Workspace management
+  const [workspaceState, workspaceActions] = useWorkspaceManager();
+  const [showManageModal, setShowManageModal] = useState(false);
+  const [showSaveAsDialog, setShowSaveAsDialog] = useState(false);
+  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
+  const [pendingWorkspaceSwitch, setPendingWorkspaceSwitch] = useState<string | null>(null);
+  const [pendingAction, setPendingAction] = useState<'new' | 'import' | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Calculate sidebar position based on active chart position
   const sidebarPosition = React.useMemo(() => {
@@ -787,9 +803,166 @@ export default function App() {
     }
   }, []);
 
+  // Workspace action handlers
+  const handleNewWorkspace = useCallback(() => {
+    if (workspaceState.isDirty) {
+      setPendingAction('new');
+      setShowUnsavedDialog(true);
+    } else {
+      // Clear the current workspace and create a blank slate
+      // In a real scenario, you might want to actually create a new workspace immediately
+      alert('New workspace created! This would clear all charts and start fresh.');
+    }
+  }, [workspaceState.isDirty]);
+
+  const handleSaveWorkspace = useCallback(async () => {
+    if (!workspaceState.currentWorkspace) {
+      // No workspace loaded, show save as dialog
+      setShowSaveAsDialog(true);
+      return;
+    }
+
+    try {
+      // TODO: Get actual chart data from ChartGrid
+      // For now, we'll keep the existing data
+      await workspaceActions.saveCurrentWorkspace();
+      alert('Workspace saved successfully!');
+    } catch (error) {
+      alert(`Failed to save workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }, [workspaceState.currentWorkspace, workspaceActions]);
+
+  const handleSaveAs = useCallback((name: string, tags?: string[]) => {
+    // TODO: Get actual chart data from ChartGrid
+    // For now, we'll create a simple workspace
+    const data = serializeWorkspaceData([], new Map(), new Map(), 0);
+
+    workspaceActions.createNewWorkspace(name, data, tags)
+      .then(() => {
+        setShowSaveAsDialog(false);
+        alert('Workspace saved successfully!');
+      })
+      .catch((error) => {
+        alert(`Failed to save workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      });
+  }, [workspaceActions]);
+
+  const handleSwitchWorkspace = useCallback((workspaceId: string) => {
+    if (workspaceState.isDirty) {
+      setPendingWorkspaceSwitch(workspaceId);
+      setShowUnsavedDialog(true);
+    } else {
+      workspaceActions.loadWorkspace(workspaceId);
+    }
+  }, [workspaceState.isDirty, workspaceActions]);
+
+  const handleImportWorkspace = useCallback(() => {
+    if (workspaceState.isDirty) {
+      setPendingAction('import');
+      setShowUnsavedDialog(true);
+    } else {
+      fileInputRef.current?.click();
+    }
+  }, [workspaceState.isDirty]);
+
+  const handleFileSelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const workspace = await workspaceActions.importWorkspace(file);
+      alert(`Workspace "${workspace.name}" imported successfully!`);
+    } catch (error) {
+      alert(`Failed to import workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, [workspaceActions]);
+
+  const handleExportWorkspace = useCallback(() => {
+    if (workspaceState.currentWorkspace) {
+      workspaceActions.exportWorkspace(workspaceState.currentWorkspace.id);
+    }
+  }, [workspaceState.currentWorkspace, workspaceActions]);
+
+  const handleUnsavedDialogSave = useCallback(async () => {
+    try {
+      await workspaceActions.saveCurrentWorkspace();
+      setShowUnsavedDialog(false);
+
+      // Execute pending action
+      if (pendingWorkspaceSwitch) {
+        workspaceActions.loadWorkspace(pendingWorkspaceSwitch);
+        setPendingWorkspaceSwitch(null);
+      } else if (pendingAction === 'new') {
+        alert('New workspace created!');
+        setPendingAction(null);
+      } else if (pendingAction === 'import') {
+        fileInputRef.current?.click();
+        setPendingAction(null);
+      }
+    } catch (error) {
+      alert(`Failed to save workspace: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }, [workspaceActions, pendingWorkspaceSwitch, pendingAction]);
+
+  const handleUnsavedDialogDiscard = useCallback(() => {
+    setShowUnsavedDialog(false);
+    workspaceActions.markClean();
+
+    // Execute pending action
+    if (pendingWorkspaceSwitch) {
+      workspaceActions.loadWorkspace(pendingWorkspaceSwitch);
+      setPendingWorkspaceSwitch(null);
+    } else if (pendingAction === 'new') {
+      alert('New workspace created!');
+      setPendingAction(null);
+    } else if (pendingAction === 'import') {
+      fileInputRef.current?.click();
+      setPendingAction(null);
+    }
+  }, [workspaceActions, pendingWorkspaceSwitch, pendingAction]);
+
+  const handleUnsavedDialogCancel = useCallback(() => {
+    setShowUnsavedDialog(false);
+    setPendingWorkspaceSwitch(null);
+    setPendingAction(null);
+  }, []);
+
   return (
     <div className="h-full bg-slate-100 p-4 md:p-6">
       <div className="mx-auto w-full max-w-[95vw] h-[calc(100vh-2rem)] rounded-2xl border bg-white shadow-sm relative overflow-hidden flex flex-col">
+        {/* Workspace Controls Top Bar */}
+        <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-gray-50">
+          <div className="flex items-center gap-3">
+            <h1 className="text-lg font-semibold text-gray-900">Historical Data</h1>
+            <WorkspaceMenu
+              onNew={handleNewWorkspace}
+              onSave={handleSaveWorkspace}
+              onSaveAs={() => setShowSaveAsDialog(true)}
+              onImport={handleImportWorkspace}
+              onExport={handleExportWorkspace}
+              onManage={() => setShowManageModal(true)}
+              hasUnsavedChanges={workspaceState.isDirty}
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            {workspaceState.error && (
+              <span className="text-sm text-red-600">{workspaceState.error}</span>
+            )}
+            <WorkspaceSwitcher
+              currentWorkspace={workspaceState.currentWorkspace}
+              recentWorkspaces={workspaceState.workspaces.slice(0, 5)}
+              onSwitch={handleSwitchWorkspace}
+              onManage={() => setShowManageModal(true)}
+              hasUnsavedChanges={workspaceState.isDirty}
+            />
+          </div>
+        </div>
+
         {/* Chart grid area */}
         <div className="flex-1 min-h-0 relative">
           <ChartGrid
@@ -1177,6 +1350,54 @@ export default function App() {
         isOpen={chartTutorialModalOpen}
         onClose={() => setChartTutorialModalOpen(false)}
         initialStep={7}
+      />
+
+      {/* Workspace Management Modals */}
+      <ManageWorkspacesModal
+        isOpen={showManageModal}
+        workspaces={workspaceState.workspaces}
+        currentWorkspaceId={workspaceState.currentWorkspace?.id || null}
+        onClose={() => setShowManageModal(false)}
+        onSwitch={(id) => {
+          setShowManageModal(false);
+          handleSwitchWorkspace(id);
+        }}
+        onRename={workspaceActions.renameWorkspace}
+        onDuplicate={(id) => {
+          workspaceActions.duplicateWorkspace(id)
+            .then(() => alert('Workspace duplicated successfully!'))
+            .catch((error) => alert(`Failed to duplicate: ${error instanceof Error ? error.message : 'Unknown error'}`));
+        }}
+        onDelete={(id) => {
+          workspaceActions.deleteWorkspace(id)
+            .then(() => alert('Workspace deleted successfully!'))
+            .catch((error) => alert(`Failed to delete: ${error instanceof Error ? error.message : 'Unknown error'}`));
+        }}
+        onExport={workspaceActions.exportWorkspace}
+      />
+
+      <SaveAsDialog
+        isOpen={showSaveAsDialog}
+        currentName={workspaceState.currentWorkspace?.name || 'New Workspace'}
+        onSave={handleSaveAs}
+        onCancel={() => setShowSaveAsDialog(false)}
+      />
+
+      <UnsavedChangesDialog
+        isOpen={showUnsavedDialog}
+        workspaceName={workspaceState.currentWorkspace?.name || 'Current Workspace'}
+        onSave={handleUnsavedDialogSave}
+        onDiscard={handleUnsavedDialogDiscard}
+        onCancel={handleUnsavedDialogCancel}
+      />
+
+      {/* Hidden file input for import */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".json"
+        onChange={handleFileSelect}
+        style={{ display: 'none' }}
       />
     </div>
   );

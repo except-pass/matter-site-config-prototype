@@ -259,3 +259,109 @@ export interface SendCGICommandResponse {
   /** Timestamp when the command was executed */
   timestamp: string;
 }
+
+// ============================================================================
+// Workspace Management API
+// ============================================================================
+
+import type { Workspace, WorkspaceListItem } from '../pages/historicData/types';
+
+/**
+ * Request to fetch all workspaces
+ */
+export interface GetWorkspacesRequest {
+  /** Optional filter by tags */
+  tags?: string[];
+  /** Optional limit on number of results */
+  limit?: number;
+}
+
+/**
+ * Response containing list of workspaces
+ */
+export interface GetWorkspacesResponse {
+  /** List of workspace metadata items */
+  workspaces: WorkspaceListItem[];
+  /** Total count of workspaces */
+  total: number;
+}
+
+/**
+ * Request to fetch a specific workspace
+ */
+export interface GetWorkspaceRequest {
+  /** Workspace ID */
+  id: string;
+}
+
+/**
+ * Response containing workspace details
+ */
+export interface GetWorkspaceResponse {
+  /** Full workspace data */
+  workspace: Workspace;
+}
+
+/**
+ * Request to create a new workspace
+ */
+export interface CreateWorkspaceRequest {
+  /** Workspace name */
+  name: string;
+  /** Optional tags */
+  tags?: string[];
+  /** Workspace data (chart configurations, layout) */
+  data: Workspace['data'];
+}
+
+/**
+ * Response after creating a workspace
+ */
+export interface CreateWorkspaceResponse {
+  /** Created workspace */
+  workspace: Workspace;
+  /** Success message */
+  message: string;
+}
+
+/**
+ * Request to update an existing workspace
+ */
+export interface UpdateWorkspaceRequest {
+  /** Workspace ID */
+  id: string;
+  /** Updated name (optional) */
+  name?: string;
+  /** Updated tags (optional) */
+  tags?: string[];
+  /** Updated workspace data (optional) */
+  data?: Workspace['data'];
+}
+
+/**
+ * Response after updating a workspace
+ */
+export interface UpdateWorkspaceResponse {
+  /** Updated workspace */
+  workspace: Workspace;
+  /** Success message */
+  message: string;
+}
+
+/**
+ * Request to delete a workspace
+ */
+export interface DeleteWorkspaceRequest {
+  /** Workspace ID */
+  id: string;
+}
+
+/**
+ * Response after deleting a workspace
+ */
+export interface DeleteWorkspaceResponse {
+  /** Whether the deletion was successful */
+  success: boolean;
+  /** Success message */
+  message: string;
+}

@@ -26,7 +26,18 @@ import {
   GetPointValuesByPsnResponse,
   SendCGICommandRequest,
   SendCGICommandResponse,
+  GetWorkspacesRequest,
+  GetWorkspacesResponse,
+  GetWorkspaceRequest,
+  GetWorkspaceResponse,
+  CreateWorkspaceRequest,
+  CreateWorkspaceResponse,
+  UpdateWorkspaceRequest,
+  UpdateWorkspaceResponse,
+  DeleteWorkspaceRequest,
+  DeleteWorkspaceResponse,
 } from './types';
+import type { Workspace, WorkspaceListItem } from '../pages/historicData/types';
 
 // Import theme data (in production, this would come from the backend)
 import envyThemeData from '../pages/siteConfig/themes/envy_themes.json';
@@ -623,4 +634,232 @@ export function clearMockData(): void {
  */
 export function getAllMockValues(): Map<string, PointValue> {
   return new Map(mockPointValues);
+}
+
+// ============================================================================
+// Workspace Management Mock API
+// ============================================================================
+
+/**
+ * In-memory storage for workspaces
+ * In production, this would be stored in a database
+ */
+const mockWorkspaces = new Map<string, Workspace>();
+
+/**
+ * Counter for generating unique workspace IDs
+ */
+let workspaceIdCounter = 0;
+
+/**
+ * Initialize with a default workspace
+ */
+function initializeDefaultWorkspace(): void {
+  if (mockWorkspaces.size === 0) {
+    const defaultWorkspace: Workspace = {
+      id: 'ws-default',
+      name: 'Default Workspace',
+      tags: ['default'],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      data: {
+        charts: [
+          {
+            id: 'chart-0',
+            row: 0,
+            col: 0,
+            selectedPoints: {
+              '40101:pPvTotal': ['001'],
+              '40101:pGridImpTot': ['001'],
+              '40101:pGridExpTot': ['001'],
+              '40101:pBatChg': ['001'],
+              '40101:pBatDischg': ['001'],
+            },
+          },
+          {
+            id: 'chart-1',
+            row: 0,
+            col: 1,
+            selectedPoints: {
+              'lifecycle_events:is_online': ['001'],
+              '40101:gridStat': ['001'],
+            },
+          },
+          {
+            id: 'chart-2',
+            row: 1,
+            col: 0,
+            selectedPoints: {
+              '40101:socBat': ['001'],
+            },
+          },
+          {
+            id: 'chart-3',
+            row: 1,
+            col: 1,
+            selectedPoints: {},
+          },
+        ],
+        rowHeights: { 0: 520, 1: 520 },
+        columnWidths: { 0: 780, 1: 780 },
+        nextChartId: 4,
+        activeChartId: 'chart-0',
+      },
+    };
+    mockWorkspaces.set(defaultWorkspace.id, defaultWorkspace);
+    workspaceIdCounter = 1;
+  }
+}
+
+// Initialize default workspace on module load
+initializeDefaultWorkspace();
+
+/**
+ * Get all workspaces
+ */
+export async function getWorkspaces(
+  request: GetWorkspacesRequest
+): Promise<GetWorkspacesResponse> {
+  await delay(100);
+
+  let workspaces = Array.from(mockWorkspaces.values());
+
+  // Filter by tags if provided
+  if (request.tags && request.tags.length > 0) {
+    workspaces = workspaces.filter((ws) =>
+      ws.tags?.some((tag) => request.tags?.includes(tag))
+    );
+  }
+
+  // Apply limit if provided
+  if (request.limit && request.limit > 0) {
+    workspaces = workspaces.slice(0, request.limit);
+  }
+
+  // Convert to list items
+  const workspaceList: WorkspaceListItem[] = workspaces.map((ws) => ({
+    id: ws.id,
+    name: ws.name,
+    tags: ws.tags,
+    createdAt: ws.createdAt,
+    updatedAt: ws.updatedAt,
+    chartCount: ws.data.charts.length,
+  }));
+
+  return {
+    workspaces: workspaceList,
+    total: workspaceList.length,
+  };
+}
+
+/**
+ * Get a specific workspace by ID
+ */
+export async function getWorkspace(
+  request: GetWorkspaceRequest
+): Promise<GetWorkspaceResponse> {
+  await delay(100);
+
+  const workspace = mockWorkspaces.get(request.id);
+
+  if (!workspace) {
+    throw new Error(`Workspace not found: ${request.id}`);
+  }
+
+  return {
+    workspace,
+  };
+}
+
+/**
+ * Create a new workspace
+ */
+export async function createWorkspace(
+  request: CreateWorkspaceRequest
+): Promise<CreateWorkspaceResponse> {
+  await delay(150);
+
+  const now = new Date().toISOString();
+  const workspace: Workspace = {
+    id: `ws-${workspaceIdCounter++}`,
+    name: request.name,
+    tags: request.tags,
+    createdAt: now,
+    updatedAt: now,
+    data: request.data,
+  };
+
+  mockWorkspaces.set(workspace.id, workspace);
+
+  return {
+    workspace,
+    message: 'Workspace created successfully',
+  };
+}
+
+/**
+ * Update an existing workspace
+ */
+export async function updateWorkspace(
+  request: UpdateWorkspaceRequest
+): Promise<UpdateWorkspaceResponse> {
+  await delay(150);
+
+  const workspace = mockWorkspaces.get(request.id);
+
+  if (!workspace) {
+    throw new Error(`Workspace not found: ${request.id}`);
+  }
+
+  const now = new Date().toISOString();
+  const updatedWorkspace: Workspace = {
+    ...workspace,
+    name: request.name ?? workspace.name,
+    tags: request.tags ?? workspace.tags,
+    data: request.data ?? workspace.data,
+    updatedAt: now,
+  };
+
+  mockWorkspaces.set(request.id, updatedWorkspace);
+
+  return {
+    workspace: updatedWorkspace,
+    message: 'Workspace updated successfully',
+  };
+}
+
+/**
+ * Delete a workspace
+ */
+export async function deleteWorkspace(
+  request: DeleteWorkspaceRequest
+): Promise<DeleteWorkspaceResponse> {
+  await delay(100);
+
+  const workspace = mockWorkspaces.get(request.id);
+
+  if (!workspace) {
+    throw new Error(`Workspace not found: ${request.id}`);
+  }
+
+  // Prevent deletion of the default workspace
+  if (request.id === 'ws-default') {
+    throw new Error('Cannot delete the default workspace');
+  }
+
+  mockWorkspaces.delete(request.id);
+
+  return {
+    success: true,
+    message: 'Workspace deleted successfully',
+  };
+}
+
+/**
+ * Clear all workspaces (useful for testing)
+ */
+export function clearWorkspaces(): void {
+  mockWorkspaces.clear();
+  workspaceIdCounter = 0;
+  initializeDefaultWorkspace();
 }
