@@ -26,20 +26,7 @@ import {
   GetPointValuesByPsnResponse,
   SendCGICommandRequest,
   SendCGICommandResponse,
-  GetWorkspacesRequest,
-  GetWorkspacesResponse,
-  GetWorkspaceRequest,
-  GetWorkspaceResponse,
-  CreateWorkspaceRequest,
-  CreateWorkspaceResponse,
-  UpdateWorkspaceRequest,
-  UpdateWorkspaceResponse,
-  DeleteWorkspaceRequest,
-  DeleteWorkspaceResponse,
-  SetDefaultWorkspaceRequest,
-  SetDefaultWorkspaceResponse,
 } from './types';
-import type { Workspace, WorkspaceListItem } from '../pages/historicData/types';
 
 // Import theme data (in production, this would come from the backend)
 import envyThemeData from '../pages/siteConfig/themes/envy_themes.json';
@@ -639,326 +626,42 @@ export function getAllMockValues(): Map<string, PointValue> {
 }
 
 // ============================================================================
-// Workspace Management Mock API
+// Workspace Management API - MOVED
 // ============================================================================
 
-const WORKSPACES_STORAGE_KEY = 'historicalData_workspaces';
-const WORKSPACE_COUNTER_KEY = 'historicalData_workspaceCounter';
-
 /**
- * In-memory storage for workspaces
- * In production, this would be stored in a database
+ * ⚠️ WORKSPACE API HAS BEEN REFACTORED ⚠️
+ *
+ * The workspace management API has been extracted into a separate, well-structured
+ * module to support easier migration to production.
+ *
+ * NEW LOCATION:
+ * - Interface: src/pages/historicData/api/workspaceApi.interface.ts
+ * - Mock Implementation: src/pages/historicData/api/workspaceApi.mock.ts
+ * - Service Layer: src/pages/historicData/api/workspaceApi.ts
+ * - Documentation: src/pages/historicData/api/README.md
+ *
+ * TO USE THE WORKSPACE API:
+ * ```typescript
+ * import { workspaceApi } from '../pages/historicData/api/workspaceApi';
+ *
+ * // All operations are now methods on the workspaceApi object:
+ * const workspaces = await workspaceApi.getWorkspaces({});
+ * const workspace = await workspaceApi.getWorkspace({ id: 'ws-1' });
+ * const created = await workspaceApi.createWorkspace({ name: 'My Workspace', data });
+ * const updated = await workspaceApi.updateWorkspace({ id: 'ws-1', name: 'Updated' });
+ * await workspaceApi.deleteWorkspace({ id: 'ws-1' });
+ * await workspaceApi.setDefaultWorkspace({ id: 'ws-1' });
+ * const defaultWs = await workspaceApi.getDefaultWorkspace();
+ * ```
+ *
+ * BENEFITS OF THE NEW STRUCTURE:
+ * - Clear separation between API contract and implementation
+ * - Easy to swap mock implementation for real backend
+ * - Comprehensive documentation for production migration
+ * - Better type safety and error handling
+ * - Follows industry best practices (Strategy Pattern)
+ *
+ * FOR MORE INFORMATION:
+ * See src/pages/historicData/api/README.md for complete migration guide
  */
-const mockWorkspaces = new Map<string, Workspace>();
-
-/**
- * Counter for generating unique workspace IDs
- */
-let workspaceIdCounter = 0;
-
-/**
- * Save workspaces to localStorage
- */
-function saveWorkspacesToStorage(): void {
-  try {
-    const workspacesArray = Array.from(mockWorkspaces.values());
-    localStorage.setItem(WORKSPACES_STORAGE_KEY, JSON.stringify(workspacesArray));
-    localStorage.setItem(WORKSPACE_COUNTER_KEY, String(workspaceIdCounter));
-  } catch (error) {
-    console.error('Failed to save workspaces to localStorage:', error);
-  }
-}
-
-/**
- * Load workspaces from localStorage
- */
-function loadWorkspacesFromStorage(): void {
-  try {
-    const stored = localStorage.getItem(WORKSPACES_STORAGE_KEY);
-    const counterStored = localStorage.getItem(WORKSPACE_COUNTER_KEY);
-
-    if (stored) {
-      const workspacesArray = JSON.parse(stored) as Workspace[];
-      mockWorkspaces.clear();
-      workspacesArray.forEach(workspace => {
-        mockWorkspaces.set(workspace.id, workspace);
-      });
-    }
-
-    if (counterStored) {
-      workspaceIdCounter = parseInt(counterStored, 10);
-    }
-  } catch (error) {
-    console.error('Failed to load workspaces from localStorage:', error);
-  }
-}
-
-/**
- * Initialize with a default workspace if none exist
- */
-function initializeDefaultWorkspace(): void {
-  // First try to load from storage
-  loadWorkspacesFromStorage();
-
-  // If no workspaces exist, create built-in workspace
-  if (mockWorkspaces.size === 0) {
-    const powerFlowsWorkspace: Workspace = {
-      id: 'ws-builtin-power-flows',
-      name: 'Power Flows',
-      type: 'builtin',
-      isDefault: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      data: {
-        charts: [
-          {
-            id: 'chart-0',
-            row: 0,
-            col: 0,
-            selectedPoints: {
-              '40101:pPvTotal': ['001'],
-              '40101:pGridImpTot': ['001'],
-              '40101:pGridExpTot': ['001'],
-              '40101:pBatChg': ['001'],
-              '40101:pBatDischg': ['001'],
-            },
-          },
-          {
-            id: 'chart-1',
-            row: 0,
-            col: 1,
-            selectedPoints: {
-              'lifecycle_events:is_online': ['001'],
-              '40101:gridStat': ['001'],
-            },
-          },
-          {
-            id: 'chart-2',
-            row: 1,
-            col: 0,
-            selectedPoints: {
-              '40101:socBat': ['001'],
-            },
-          },
-          {
-            id: 'chart-3',
-            row: 1,
-            col: 1,
-            selectedPoints: {},
-          },
-        ],
-        rowHeights: { 0: 520, 1: 520 },
-        columnWidths: { 0: 780, 1: 780 },
-        nextChartId: 4,
-        activeChartId: 'chart-0',
-      },
-    };
-    mockWorkspaces.set(powerFlowsWorkspace.id, powerFlowsWorkspace);
-    workspaceIdCounter = 1;
-    saveWorkspacesToStorage();
-  }
-}
-
-// Initialize workspaces on module load
-initializeDefaultWorkspace();
-
-/**
- * Get all workspaces
- */
-export async function getWorkspaces(
-  request: GetWorkspacesRequest
-): Promise<GetWorkspacesResponse> {
-  await delay(100);
-
-  let workspaces = Array.from(mockWorkspaces.values());
-
-  // Apply limit if provided
-  if (request.limit && request.limit > 0) {
-    workspaces = workspaces.slice(0, request.limit);
-  }
-
-  // Convert to list items
-  const workspaceList: WorkspaceListItem[] = workspaces.map((ws) => ({
-    id: ws.id,
-    name: ws.name,
-    type: ws.type,
-    isDefault: ws.isDefault,
-    createdAt: ws.createdAt,
-    updatedAt: ws.updatedAt,
-    chartCount: ws.data.charts.length,
-  }));
-
-  return {
-    workspaces: workspaceList,
-    total: workspaceList.length,
-  };
-}
-
-/**
- * Get a specific workspace by ID
- */
-export async function getWorkspace(
-  request: GetWorkspaceRequest
-): Promise<GetWorkspaceResponse> {
-  await delay(100);
-
-  const workspace = mockWorkspaces.get(request.id);
-
-  if (!workspace) {
-    throw new Error(`Workspace not found: ${request.id}`);
-  }
-
-  return {
-    workspace,
-  };
-}
-
-/**
- * Create a new workspace
- */
-export async function createWorkspace(
-  request: CreateWorkspaceRequest
-): Promise<CreateWorkspaceResponse> {
-  await delay(150);
-
-  const now = new Date().toISOString();
-  const workspace: Workspace = {
-    id: `ws-${workspaceIdCounter++}`,
-    name: request.name,
-    type: 'user',
-    isDefault: false,
-    createdAt: now,
-    updatedAt: now,
-    data: request.data,
-  };
-
-  mockWorkspaces.set(workspace.id, workspace);
-  saveWorkspacesToStorage();
-
-  return {
-    workspace,
-    message: 'Workspace created successfully',
-  };
-}
-
-/**
- * Update an existing workspace
- */
-export async function updateWorkspace(
-  request: UpdateWorkspaceRequest
-): Promise<UpdateWorkspaceResponse> {
-  await delay(150);
-
-  const workspace = mockWorkspaces.get(request.id);
-
-  if (!workspace) {
-    throw new Error(`Workspace not found: ${request.id}`);
-  }
-
-  // Prevent renaming of built-in workspaces
-  if (workspace.type === 'builtin' && request.name && request.name !== workspace.name) {
-    throw new Error('Cannot rename built-in workspaces');
-  }
-
-  const now = new Date().toISOString();
-  const updatedWorkspace: Workspace = {
-    ...workspace,
-    name: request.name ?? workspace.name,
-    data: request.data ?? workspace.data,
-    updatedAt: now,
-  };
-
-  mockWorkspaces.set(request.id, updatedWorkspace);
-  saveWorkspacesToStorage();
-
-  return {
-    workspace: updatedWorkspace,
-    message: 'Workspace updated successfully',
-  };
-}
-
-/**
- * Delete a workspace
- */
-export async function deleteWorkspace(
-  request: DeleteWorkspaceRequest
-): Promise<DeleteWorkspaceResponse> {
-  await delay(100);
-
-  const workspace = mockWorkspaces.get(request.id);
-
-  if (!workspace) {
-    throw new Error(`Workspace not found: ${request.id}`);
-  }
-
-  // Prevent deletion of built-in workspaces
-  if (workspace.type === 'builtin') {
-    throw new Error('Cannot delete built-in workspaces');
-  }
-
-  mockWorkspaces.delete(request.id);
-  saveWorkspacesToStorage();
-
-  return {
-    success: true,
-    message: 'Workspace deleted successfully',
-  };
-}
-
-/**
- * Set a workspace as default
- */
-export async function setDefaultWorkspace(
-  request: SetDefaultWorkspaceRequest
-): Promise<SetDefaultWorkspaceResponse> {
-  await delay(100);
-
-  const workspace = mockWorkspaces.get(request.id);
-
-  if (!workspace) {
-    throw new Error(`Workspace not found: ${request.id}`);
-  }
-
-  // Unset all other workspaces as default
-  mockWorkspaces.forEach((ws) => {
-    ws.isDefault = false;
-  });
-
-  // Set the requested workspace as default
-  workspace.isDefault = true;
-  mockWorkspaces.set(workspace.id, workspace);
-  saveWorkspacesToStorage();
-
-  return {
-    workspace,
-    message: 'Default workspace updated successfully',
-  };
-}
-
-/**
- * Get the default workspace
- */
-export async function getDefaultWorkspace(): Promise<GetWorkspaceResponse | null> {
-  await delay(100);
-
-  const defaultWorkspace = Array.from(mockWorkspaces.values()).find(
-    (ws) => ws.isDefault
-  );
-
-  if (!defaultWorkspace) {
-    return null;
-  }
-
-  return {
-    workspace: defaultWorkspace,
-  };
-}
-
-/**
- * Clear all workspaces (useful for testing)
- */
-export function clearWorkspaces(): void {
-  mockWorkspaces.clear();
-  workspaceIdCounter = 0;
-  initializeDefaultWorkspace();
-}

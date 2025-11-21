@@ -264,6 +264,22 @@ export interface SendCGICommandResponse {
 // Workspace Management API
 // ============================================================================
 
+/**
+ * ⚠️ WORKSPACE API TYPES HAVE MOVED ⚠️
+ *
+ * These types are kept here for backward compatibility, but the workspace API
+ * has been refactored into a separate module structure.
+ *
+ * NEW LOCATION: src/pages/historicData/api/workspaceApi.interface.ts
+ *
+ * For new code, import from:
+ * ```typescript
+ * import { workspaceApi, type GetWorkspacesRequest } from '../pages/historicData/api/workspaceApi';
+ * ```
+ *
+ * See: src/pages/historicData/api/README.md for migration guide
+ */
+
 import type { Workspace, WorkspaceListItem } from '../pages/historicData/types';
 
 /**
