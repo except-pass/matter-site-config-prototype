@@ -43,7 +43,11 @@ import {
   WorkspaceErrorCode,
 } from './workspaceApi.interface';
 
-import type { Workspace } from '../types';
+import type { Workspace, SerializableWorkspaceData } from '../types';
+import { getDefaultWorkspaceId, setDefaultWorkspaceId } from '../utils/userSettings';
+
+// Import built-in workspaces
+import powerFlowsBuiltin from '../workspace/builtIns/power-flows.json';
 
 // ============================================================================
 // MOCK DATA STORAGE (Replace with database in production)
@@ -121,68 +125,45 @@ function loadWorkspacesFromStorage(): void {
 }
 
 /**
- * Initialize with a default built-in workspace
+ * Load built-in workspace from JSON file
+ */
+function loadBuiltInWorkspace(builtinData: {
+  version: string;
+  id: string;
+  name: string;
+  type: 'builtin';
+  data: SerializableWorkspaceData;
+}): Workspace {
+  const now = new Date().toISOString();
+  return {
+    id: builtinData.id,
+    name: builtinData.name,
+    type: builtinData.type,
+    createdAt: now,
+    updatedAt: now,
+    data: builtinData.data,
+  };
+}
+
+/**
+ * Initialize built-in workspaces
  * PRODUCTION: Built-in workspaces should be stored in the database
  * and associated with each user account on creation
  */
-function initializeDefaultWorkspace(): void {
+function initializeBuiltInWorkspaces(): void {
   // First try to load from storage
   loadWorkspacesFromStorage();
 
-  // If no workspaces exist, create built-in workspace
+  // If no workspaces exist, load built-in workspaces from JSON files
   if (mockWorkspaces.size === 0) {
-    const powerFlowsWorkspace: Workspace = {
-      id: 'ws-builtin-power-flows',
-      name: 'Power Flows',
-      type: 'builtin',
-      isDefault: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      data: {
-        charts: [
-          {
-            id: 'chart-0',
-            row: 0,
-            col: 0,
-            selectedPoints: {
-              '40101:pPvTotal': ['001'],
-              '40101:pGridImpTot': ['001'],
-              '40101:pGridExpTot': ['001'],
-              '40101:pBatChg': ['001'],
-              '40101:pBatDischg': ['001'],
-            },
-          },
-          {
-            id: 'chart-1',
-            row: 0,
-            col: 1,
-            selectedPoints: {
-              'lifecycle_events:is_online': ['001'],
-              '40101:gridStat': ['001'],
-            },
-          },
-          {
-            id: 'chart-2',
-            row: 1,
-            col: 0,
-            selectedPoints: {
-              '40101:socBat': ['001'],
-            },
-          },
-          {
-            id: 'chart-3',
-            row: 1,
-            col: 1,
-            selectedPoints: {},
-          },
-        ],
-        rowHeights: { 0: 520, 1: 520 },
-        columnWidths: { 0: 780, 1: 780 },
-        nextChartId: 4,
-        activeChartId: 'chart-0',
-      },
-    };
+    const powerFlowsWorkspace = loadBuiltInWorkspace(powerFlowsBuiltin);
     mockWorkspaces.set(powerFlowsWorkspace.id, powerFlowsWorkspace);
+
+    // Set as default if no default is set
+    if (!getDefaultWorkspaceId()) {
+      setDefaultWorkspaceId(powerFlowsWorkspace.id);
+    }
+
     workspaceIdCounter = 1;
     saveWorkspacesToStorage();
   }
@@ -190,7 +171,7 @@ function initializeDefaultWorkspace(): void {
 
 // Initialize workspaces on module load
 // PRODUCTION: Remove auto-initialization
-initializeDefaultWorkspace();
+initializeBuiltInWorkspaces();
 
 // ============================================================================
 // MOCK API IMPLEMENTATION
@@ -227,11 +208,12 @@ class MockWorkspaceApi implements IWorkspaceApi {
     }
 
     // Convert to list items (lightweight metadata)
+    const defaultWorkspaceId = getDefaultWorkspaceId();
     const workspaceList = workspaces.map((ws) => ({
       id: ws.id,
       name: ws.name,
       type: ws.type,
-      isDefault: ws.isDefault,
+      isDefault: ws.id === defaultWorkspaceId,
       createdAt: ws.createdAt,
       updatedAt: ws.updatedAt,
       chartCount: ws.data.charts.length,
@@ -298,13 +280,18 @@ class MockWorkspaceApi implements IWorkspaceApi {
       id: `ws-${workspaceIdCounter++}`, // PRODUCTION: Use server-generated ID
       name: request.name,
       type: 'user',
-      isDefault: request.isDefault ?? false,
       createdAt: now, // PRODUCTION: Use server timestamp
       updatedAt: now, // PRODUCTION: Use server timestamp
       data: request.data,
     };
 
     mockWorkspaces.set(workspace.id, workspace);
+
+    // Set as default if requested
+    if (request.isDefault) {
+      setDefaultWorkspaceId(workspace.id);
+    }
+
     saveWorkspacesToStorage();
 
     return {
@@ -412,8 +399,7 @@ class MockWorkspaceApi implements IWorkspaceApi {
    * Set a workspace as the default
    *
    * MOCK BEHAVIOR:
-   * - Loops through all workspaces to unset default
-   * - No race condition handling
+   * - Updates user settings with default workspace ID
    *
    * PRODUCTION CHANGES NEEDED:
    * - Use atomic database transaction
@@ -435,16 +421,8 @@ class MockWorkspaceApi implements IWorkspaceApi {
       );
     }
 
-    // Unset all other workspaces as default
-    // PRODUCTION: This should be an atomic database operation
-    mockWorkspaces.forEach((ws) => {
-      ws.isDefault = false;
-    });
-
-    // Set the requested workspace as default
-    workspace.isDefault = true;
-    mockWorkspaces.set(workspace.id, workspace);
-    saveWorkspacesToStorage();
+    // Set the workspace as default in user settings
+    setDefaultWorkspaceId(request.id);
 
     return {
       success: true,
@@ -455,7 +433,7 @@ class MockWorkspaceApi implements IWorkspaceApi {
    * Get the default workspace
    *
    * MOCK BEHAVIOR:
-   * - Searches in-memory Map
+   * - Looks up default workspace ID from user settings
    * - No user filtering
    *
    * PRODUCTION CHANGES NEEDED:
@@ -466,7 +444,10 @@ class MockWorkspaceApi implements IWorkspaceApi {
   async getDefaultWorkspace(): Promise<GetDefaultWorkspaceResponse> {
     await delay(100);
 
-    const defaultWorkspace = Array.from(mockWorkspaces.values()).find((ws) => ws.isDefault);
+    const defaultWorkspaceId = getDefaultWorkspaceId();
+    const defaultWorkspace = defaultWorkspaceId
+      ? mockWorkspaces.get(defaultWorkspaceId)
+      : undefined;
 
     return {
       workspace: defaultWorkspace ?? null,
@@ -492,7 +473,7 @@ export const __testing__ = {
   clearWorkspaces: () => {
     mockWorkspaces.clear();
     workspaceIdCounter = 0;
-    initializeDefaultWorkspace();
+    initializeBuiltInWorkspaces();
   },
   getWorkspacesMap: () => mockWorkspaces,
   resetCounter: () => {

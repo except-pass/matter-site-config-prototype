@@ -17,6 +17,7 @@ import SaveAsDialog from "./components/workspace/SaveAsDialog";
 import UnsavedChangesDialog from "./components/workspace/UnsavedChangesDialog";
 import { useWorkspaceManager } from "./hooks/useWorkspaceManager";
 import { serializeWorkspaceData } from "./utils/workspaceUtils";
+import { getDefaultWorkspaceId } from "./utils/userSettings";
 import type { SerializableWorkspaceData, SerializableChartConfig } from "./types";
 
 type Meanings = Record<string | number, string>;
@@ -1030,7 +1031,7 @@ export default function App() {
                 id: workspaceState.currentWorkspace.id,
                 name: workspaceState.currentWorkspace.name,
                 type: workspaceState.currentWorkspace.type,
-                isDefault: workspaceState.currentWorkspace.isDefault,
+                isDefault: workspaceState.currentWorkspace.id === getDefaultWorkspaceId(),
                 createdAt: workspaceState.currentWorkspace.createdAt,
                 updatedAt: workspaceState.currentWorkspace.updatedAt,
                 chartCount: workspaceState.currentWorkspace.data.charts.length
