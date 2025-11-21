@@ -882,6 +882,12 @@ export default function App() {
       return;
     }
 
+    // If workspace is a built-in, prevent overwriting - show save as dialog
+    if (workspaceState.currentWorkspace.type === 'builtin') {
+      setShowSaveAsDialog(true);
+      return;
+    }
+
     try {
       // Get actual chart data from ChartGrid
       if (chartGridCallbacksRef.current) {
