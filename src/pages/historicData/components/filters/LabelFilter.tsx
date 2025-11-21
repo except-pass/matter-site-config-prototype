@@ -30,8 +30,8 @@ export default function LabelFilter({
   const [isResizing, setIsResizing] = React.useState(false);
   const [helpModalFamily, setHelpModalFamily] = React.useState<string | null>(null);
   const [showFilterHelpModal, setShowFilterHelpModal] = React.useState(false);
-  // Expand the Add Filters panel by default so chips are visible on load
-  const [isExpanded, setIsExpanded] = React.useState(true);
+  // Start collapsed by default
+  const [isExpanded, setIsExpanded] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const detailsRef = React.useRef<HTMLDetailsElement>(null);
 
@@ -212,37 +212,94 @@ export default function LabelFilter({
         onToggle={(e) => setIsExpanded((e.target as HTMLDetailsElement).open)}
       >
         <summary className="cursor-pointer list-none">
-          <div className="mb-1 flex items-center gap-2 text-xs font-semibold text-gray-700">
-            {/* Filter icon and label */}
-            <svg className="h-4 w-4 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-            <span className="flex-shrink-0">Filters</span>
-            {activeFilters.length > 0 && (
-              <span className="text-gray-500">({activeFilters.length} active)</span>
+          <div className="mb-1 flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 flex-1 min-w-0">
+              {/* Filter icon and label */}
+              <svg className="h-4 w-4 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+              <span className="flex-shrink-0">Filters</span>
+              {activeFilters.length > 0 && (
+                <span className="text-gray-500">({activeFilters.length} active)</span>
+              )}
+            </div>
+            
+            {/* When collapsed, show Add Filter button and help text */}
+            {!isExpanded && (
+              <div className="flex items-center gap-3 flex-wrap">
+                {otherLabels.size > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (detailsRef.current) {
+                        detailsRef.current.open = true;
+                        setIsExpanded(true);
+                      }
+                    }}
+                    className="rounded border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition-colors flex-shrink-0"
+                  >
+                    + Add Filter
+                  </button>
+                )}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setShowFilterHelpModal(true);
+                  }}
+                  className="flex-shrink-0 text-xs text-blue-600 hover:text-blue-700 underline transition-colors"
+                >
+                  How do I use filters?
+                </button>
+              </div>
             )}
           </div>
-        </summary>
-        <div className="mb-2 flex items-center justify-between gap-2 flex-wrap">
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            {/* Add Filter button when collapsed */}
-            {!isExpanded && otherLabels.size > 0 && (
+          
+          {/* Active filter badges - show when collapsed */}
+          {!isExpanded && activeFilters.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5 min-w-0 mt-1">
+              {activeFilters.map(({ family, text }) => {
+                const color = getLabelColor(family, text);
+                return (
+                  <span
+                    key={`${family}:${text}`}
+                    className={`rounded border px-1.5 py-0.5 text-xs ${color.bg} ${color.text} ${color.border} border-2 font-semibold flex-shrink-0 flex items-center gap-1`}
+                  >
+                    <span>{text}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleLabel(family, text);
+                      }}
+                      className="hover:opacity-70 transition-opacity flex-shrink-0"
+                      title={`Remove ${family}: ${text} filter`}
+                      aria-label={`Remove ${family}: ${text} filter`}
+                    >
+                      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </span>
+                );
+              })}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (detailsRef.current) {
-                    detailsRef.current.open = true;
-                    setIsExpanded(true);
-                  }
+                  onClearFilters();
                 }}
-                className="rounded border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition-colors flex-shrink-0"
+                className="flex-shrink-0 text-xs text-gray-500 hover:text-gray-700 transition-colors"
+                title="Clear all filters"
+                aria-label="Clear all filters"
               >
-                + Add Filter
+                Clear all
               </button>
-            )}
-
-            {/* Active filter badges */}
-            {activeFilters.length > 0 && (
+            </div>
+          )}
+        </summary>
+        <div className="mb-2 flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            {/* Active filter badges - show when expanded */}
+            {isExpanded && activeFilters.length > 0 && (
               <div className="flex flex-wrap items-center gap-1.5 min-w-0">
                 {activeFilters.map(({ family, text }) => {
                   const color = getLabelColor(family, text);
@@ -271,8 +328,8 @@ export default function LabelFilter({
               </div>
             )}
 
-            {/* Clear all button */}
-            {activeFilters.length > 0 && (
+            {/* Clear all button - show when expanded */}
+            {isExpanded && activeFilters.length > 0 && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -287,17 +344,19 @@ export default function LabelFilter({
             )}
           </div>
 
-          {/* Help text on far right */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setShowFilterHelpModal(true);
-            }}
-            className="flex-shrink-0 text-xs text-blue-600 hover:text-blue-700 underline transition-colors"
-          >
-            How do I use filters?
-          </button>
+          {/* Help text on far right - show when expanded */}
+          {isExpanded && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowFilterHelpModal(true);
+              }}
+              className="flex-shrink-0 text-xs text-blue-600 hover:text-blue-700 underline transition-colors"
+            >
+              How do I use filters?
+            </button>
+          )}
         </div>
         <div
           className="space-y-0.5 overflow-auto mt-2"

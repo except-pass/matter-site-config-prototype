@@ -4263,7 +4263,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4292,7 +4292,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Extended
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4318,7 +4318,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Extended
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4340,7 +4340,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4362,7 +4362,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4384,7 +4384,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4404,7 +4404,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4426,7 +4426,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4448,7 +4448,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4472,7 +4472,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Extended
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4492,11 +4492,11 @@ protocols:
       meanings: {}
     labels:
       - label_family: Level of Detail
-        label_text: Extended    
+        label_text: Extended
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4518,7 +4518,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4540,7 +4540,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4562,7 +4562,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4582,7 +4582,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4606,7 +4606,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Extended
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4628,7 +4628,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4648,11 +4648,11 @@ protocols:
       meanings: {}
     labels:
       - label_family: Level of Detail
-        label_text: Extended    
+        label_text: Extended
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4674,7 +4674,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4696,7 +4696,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4718,7 +4718,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4738,7 +4738,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4760,7 +4760,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4782,7 +4782,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4802,11 +4802,11 @@ protocols:
       meanings: {}
     labels:
       - label_family: Level of Detail
-        label_text: Extended    
+        label_text: Extended
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4828,7 +4828,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4850,7 +4850,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4872,7 +4872,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4892,7 +4892,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4914,7 +4914,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4936,7 +4936,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -4965,7 +4965,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -7257,7 +7257,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -7279,7 +7279,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -7954,7 +7954,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -11764,7 +11764,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -11788,7 +11788,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -11809,7 +11809,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -11831,7 +11831,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -11854,7 +11854,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -11879,7 +11879,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -11905,7 +11905,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data
@@ -11930,7 +11930,7 @@ protocols:
       - label_family: Level of Detail
         label_text: Complete
       - label_family: Equipment
-        label_text: Generator
+        label_text: Inverter
       - label_family: Component
         label_text: Generator
       - label_family: Type of Data

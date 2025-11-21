@@ -417,6 +417,7 @@ export default function App() {
   const [filterStructure, setFilterStructure] = React.useState<'freeform' | 'sequential'>('sequential');
   const topSectionScrollTop = React.useRef<number>(0);
   const lastManualToggleTime = React.useRef<number>(0);
+  const isInitialLoad = React.useRef<boolean>(true);
 
   // Track scroll position to highlight active group and collapse top section
   // Note: This effect queries the DOM directly, so it doesn't need grouped in dependencies
@@ -432,6 +433,13 @@ export default function App() {
       // Don't auto-collapse/expand if user manually toggled recently (within last 500ms)
       const timeSinceManualToggle = Date.now() - lastManualToggleTime.current;
       if (timeSinceManualToggle < 500) {
+        topSectionScrollTop.current = currentScrollTop;
+        return;
+      }
+      
+      // Skip auto-expand on initial load to keep section collapsed by default
+      if (isInitialLoad.current) {
+        isInitialLoad.current = false;
         topSectionScrollTop.current = currentScrollTop;
         return;
       }
@@ -1068,7 +1076,7 @@ export default function App() {
               <div className="border-t border-gray-200 bg-white/80 px-4 py-3">
                 <p className="text-xs text-gray-600 mb-2">
                   {detailLevel !== 'Complete'
-                    ? "Didn't find what you were looking for? Increase the Detail Level, remove filters, or clearing your search terms to see more data points."
+                    ? "Didn't find what you were looking for? Increase the Detail Level, remove filters, or clear your search terms to see more data points."
                     : "Didn't find what you were looking for? Try removing filters or clearing your search terms to see more data points."}
                 </p>
                 <DetailLevelSlider value={detailLevel} onChange={setDetailLevel} getLabelHelp={getLabelHelp} />
