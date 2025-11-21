@@ -126,7 +126,14 @@ const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({
                       </svg>
                     )}
                     <div className="flex-1 min-w-0">
-                      <div className="truncate">{workspace.name}</div>
+                      <div className="flex items-center gap-2">
+                        <span className="truncate">{workspace.name}</span>
+                        {workspace.type === 'builtin' && (
+                          <span className="px-2 py-0.5 text-xs font-medium bg-purple-600 text-white rounded flex-shrink-0">
+                            Built-in
+                          </span>
+                        )}
+                      </div>
                       <div className="text-xs text-gray-500 mt-0.5">
                         {workspace.chartCount} {workspace.chartCount === 1 ? 'chart' : 'charts'}
                       </div>
