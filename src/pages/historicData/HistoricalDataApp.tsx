@@ -1201,12 +1201,12 @@ export default function App() {
             <div className="flex-1 flex flex-col overflow-hidden min-h-0">
               {/* Collapsible top section */}
               <div className="border-b border-gray-200">
-                <button
+                <div
                   onClick={() => {
                     lastManualToggleTime.current = Date.now();
                     setTopSectionCollapsed(!topSectionCollapsed);
                   }}
-                  className="w-full p-2 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  className="w-full p-2 flex items-center justify-between hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-2">
                     <svg 
@@ -1236,7 +1236,7 @@ export default function App() {
                       Preferences
                     </button>
                   </div>
-                </button>
+                </div>
               </div>
               <div 
                 className={`transition-all duration-300 overflow-hidden ${

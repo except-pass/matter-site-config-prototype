@@ -48,6 +48,7 @@ import { getDefaultWorkspaceId, setDefaultWorkspaceId } from '../utils/userSetti
 
 // Import built-in workspaces
 import powerFlowsBuiltin from '../workspace/builtIns/power-flows.json';
+import batteryDetailsBuiltin from '../workspace/builtIns/battery-details.json';
 
 // ============================================================================
 // MOCK DATA STORAGE (Replace with database in production)
@@ -154,17 +155,30 @@ function initializeBuiltInWorkspaces(): void {
   // First try to load from storage
   loadWorkspacesFromStorage();
 
-  // If no workspaces exist, load built-in workspaces from JSON files
-  if (mockWorkspaces.size === 0) {
-    const powerFlowsWorkspace = loadBuiltInWorkspace(powerFlowsBuiltin);
-    mockWorkspaces.set(powerFlowsWorkspace.id, powerFlowsWorkspace);
+  // Define all built-in workspaces
+  const builtInWorkspaces = [
+    powerFlowsBuiltin,
+    batteryDetailsBuiltin,
+  ];
 
-    // Set as default if no default is set
-    if (!getDefaultWorkspaceId()) {
-      setDefaultWorkspaceId(powerFlowsWorkspace.id);
+  // Ensure all built-in workspaces are present (add if missing)
+  let hasNewBuiltIns = false;
+  builtInWorkspaces.forEach((builtinData) => {
+    if (!mockWorkspaces.has(builtinData.id)) {
+      const workspace = loadBuiltInWorkspace(builtinData);
+      mockWorkspaces.set(workspace.id, workspace);
+      hasNewBuiltIns = true;
     }
+  });
 
-    workspaceIdCounter = 1;
+  // If no workspaces existed before, set the first built-in as default
+  if (mockWorkspaces.size === builtInWorkspaces.length && !getDefaultWorkspaceId()) {
+    setDefaultWorkspaceId(powerFlowsBuiltin.id);
+  }
+
+  // Save if we added new built-ins or if this is the first initialization
+  if (hasNewBuiltIns || mockWorkspaces.size === builtInWorkspaces.length) {
+    workspaceIdCounter = Math.max(workspaceIdCounter, 1);
     saveWorkspacesToStorage();
   }
 }

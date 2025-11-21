@@ -1,0 +1,94 @@
+{
+  "version": "1.0",
+  "id": "ws-builtin-battery-details",
+  "name": "Battery Details",
+  "type": "builtin",
+  "data": {
+    "charts": [
+      {
+        "id": "chart-0",
+        "row": 0,
+        "col": 0,
+        "selectedPoints": {
+          "40101:socBat": [
+            "first"
+          ],
+          "40101:pBatChg": [
+            "first"
+          ],
+          "40101:pBatDischg": [
+            "first"
+          ],
+          "40101:iBat": [
+            "first"
+          ],
+          "40101:vBat": [
+            "first"
+          ]
+        }
+      },
+      {
+        "id": "chart-4",
+        "row": 0,
+        "col": 1,
+        "selectedPoints": {
+          "40101:locBatCellVoltMax": [
+            "first"
+          ],
+          "40101:vBatCellMax": [
+            "first"
+          ],
+          "40101:vBatCellMin": [
+            "first"
+          ],
+          "40101:locBatCellVoltMin": [
+            "first"
+          ]
+        }
+      },
+      {
+        "id": "chart-5",
+        "row": 1,
+        "col": 0,
+        "selectedPoints": {
+          "40104:ACChargeStatus": [
+            "first"
+          ],
+          "40101:bmsReqForceChg": [
+            "first"
+          ]
+        }
+      },
+      {
+        "id": "chart-6",
+        "row": 0,
+        "col": 2,
+        "selectedPoints": {
+          "40101:tempBatCellMax": [
+            "first"
+          ],
+          "40101:locBatCellTempMax": [
+            "first"
+          ],
+          "40101:tempBatCellMin": [
+            "first"
+          ],
+          "40101:locBatCellTempMin": [
+            "first"
+          ]
+        }
+      }
+    ],
+    "rowHeights": {
+      "0": 968,
+      "1": 824
+    },
+    "columnWidths": {
+      "0": 780,
+      "1": 780,
+      "2": 780
+    },
+    "nextChartId": 7,
+    "activeChartId": "chart-6"
+  }
+}
