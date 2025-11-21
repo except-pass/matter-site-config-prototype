@@ -212,11 +212,14 @@ export function useWorkspaceManager(
         const response = await getWorkspace({ id: workspaceId });
         const original = response.workspace;
 
+        // Filter out 'default' tag - duplicates should not be marked as default
+        const filteredTags = original.tags?.filter(tag => tag !== 'default');
+
         // Create a new workspace with the same data
         const newWorkspace = await createNewWorkspace(
           `${original.name} (Copy)`,
           original.data,
-          original.tags
+          filteredTags
         );
 
         return newWorkspace;
