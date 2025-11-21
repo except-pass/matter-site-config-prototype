@@ -11,22 +11,22 @@
         "col": 0,
         "selectedPoints": {
           "40101:pPvTotal": [
-            "001"
+            "first"
           ],
           "40102:ePvTdy": [
-            "001"
+            "first"
           ],
           "40101:pMppt1": [
-            "001"
+            "first"
           ],
           "40101:pMppt2": [
-            "001"
+            "first"
           ],
           "40101:pMppt3": [
-            "001"
+            "first"
           ],
           "40101:pMppt4": [
-            "001"
+            "first"
           ]
         }
       },
@@ -36,28 +36,28 @@
         "col": 1,
         "selectedPoints": {
           "40101:iMppt2": [
-            "001"
+            "first"
           ],
           "40101:iMppt1": [
-            "001"
+            "first"
           ],
           "40101:vMppt1": [
-            "001"
+            "first"
           ],
           "40101:vMppt2": [
-            "001"
+            "first"
           ],
           "40101:iMppt3": [
-            "001"
+            "first"
           ],
           "40101:vMppt3": [
-            "001"
+            "first"
           ],
           "40101:iMppt4": [
-            "001"
+            "first"
           ],
           "40101:vMppt4": [
-            "001"
+            "first"
           ]
         }
       },
@@ -67,10 +67,10 @@
         "col": 0,
         "selectedPoints": {
           "40103:dcPvFault": [
-            "001"
+            "first"
           ],
           "40103:dcPvWarning": [
-            "001"
+            "first"
           ]
         }
       }
