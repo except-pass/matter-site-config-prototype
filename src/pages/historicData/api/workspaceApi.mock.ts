@@ -352,10 +352,10 @@ class MockWorkspaceApi implements IWorkspaceApi {
       );
     }
 
-    // Prevent renaming of built-in workspaces
-    if (workspace.type === 'builtin' && request.name && request.name !== workspace.name) {
+    // Prevent any modifications to built-in workspaces
+    if (workspace.type === 'builtin') {
       throw new WorkspaceApiError(
-        'Cannot rename built-in workspaces',
+        'Cannot modify built-in workspaces',
         WorkspaceErrorCode.VALIDATION_ERROR
       );
     }
