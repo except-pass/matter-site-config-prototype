@@ -19,19 +19,60 @@ export interface InverterInfo {
 }
 
 /**
+ * Try to convert inverter IDs to a keyword using heuristics
+ * This is used when the full inverter list is not available
+ */
+function inferKeywordFromIds(inverterIds: string[]): InverterSelectionKeyword | null {
+  if (inverterIds.length === 0) {
+    return null;
+  }
+
+  // If all points in a chart have the same single inverter, assume it's "first"
+  if (inverterIds.length === 1) {
+    return 'first';
+  }
+
+  return null;
+}
+
+/**
  * Serialize chart data for storage/export
  * Converts Maps and Sets to plain objects and arrays
+ * Attempts to convert inverter IDs back to keywords for portability
  */
-export function serializeChartData(charts: ChartData[]): SerializableChartConfig[] {
+export function serializeChartData(
+  charts: ChartData[],
+  availableInverters?: InverterInfo[]
+): SerializableChartConfig[] {
   return charts.map((chart) => ({
     id: chart.id,
     row: chart.row,
     col: chart.col,
     selectedPoints: Object.fromEntries(
-      Array.from(chart.selectedPoints.entries()).map(([key, set]) => [
-        key,
-        Array.from(set),
-      ])
+      Array.from(chart.selectedPoints.entries()).map(([key, set]) => {
+        const inverterIds = Array.from(set);
+
+        // If inverter info is provided, try to convert IDs to keywords
+        if (availableInverters && availableInverters.length > 0) {
+          const allInverterIds = availableInverters.map(inv => inv.id);
+          const primaryInverterId = availableInverters.find(inv => inv.isPrimary)?.id;
+          const keyword = getKeywordForInverterIds(inverterIds, allInverterIds, primaryInverterId);
+
+          // If we can map to a keyword, use it
+          if (keyword) {
+            return [key, [keyword]];
+          }
+        } else {
+          // No inverter info provided, try heuristic-based conversion
+          const keyword = inferKeywordFromIds(inverterIds);
+          if (keyword) {
+            return [key, [keyword]];
+          }
+        }
+
+        // Keep the IDs as-is (will fail validation if exported as built-in)
+        return [key, inverterIds];
+      })
     ),
   }));
 }
@@ -68,9 +109,17 @@ export function resolveInverterKeywords(
 }
 
 /**
+ * Check if a value is a keyword
+ */
+function isKeyword(value: string): value is InverterSelectionKeyword {
+  return value === 'first' || value === 'primary' || value === 'all';
+}
+
+/**
  * Deserialize chart data from storage/import
  * Converts plain objects and arrays back to Maps and Sets
  * Optionally resolves keywords to actual inverter IDs
+ * Handles both legacy format (IDs) and new format (keywords)
  */
 export function deserializeChartData(
   serializedCharts: SerializableChartConfig[],
@@ -81,12 +130,19 @@ export function deserializeChartData(
     row: chart.row,
     col: chart.col,
     selectedPoints: new Map(
-      Object.entries(chart.selectedPoints).map(([key, keywords]) => {
-        // If inverter info is provided, resolve keywords to IDs
-        const values = availableInverters
-          ? resolveInverterKeywords(keywords, availableInverters)
-          : keywords;
-        return [key, new Set(values)];
+      Object.entries(chart.selectedPoints).map(([key, values]) => {
+        // Check if values are keywords that need resolution
+        const hasKeywords = Array.isArray(values) && values.some(isKeyword);
+
+        if (hasKeywords && availableInverters) {
+          // Resolve keywords to IDs
+          const keywords = values.filter(isKeyword) as InverterSelectionKeyword[];
+          const resolvedIds = resolveInverterKeywords(keywords, availableInverters);
+          return [key, new Set(resolvedIds)];
+        } else {
+          // Use values as-is (either already IDs, or no inverter info to resolve)
+          return [key, new Set(values)];
+        }
       })
     ),
   }));
@@ -94,16 +150,18 @@ export function deserializeChartData(
 
 /**
  * Serialize workspace data for storage/export
+ * Optionally converts inverter IDs back to keywords for portability
  */
 export function serializeWorkspaceData(
   charts: ChartData[],
   rowHeights: Map<number, number>,
   columnWidths: Map<number, number>,
   nextChartId: number,
-  activeChartId?: string
+  activeChartId?: string,
+  availableInverters?: InverterInfo[]
 ): SerializableWorkspaceData {
   return {
-    charts: serializeChartData(charts),
+    charts: serializeChartData(charts, availableInverters),
     rowHeights: Object.fromEntries(rowHeights),
     columnWidths: Object.fromEntries(columnWidths),
     nextChartId,
@@ -147,10 +205,20 @@ export function validateWorkspaceForExport(
   }
 
   // Validate that all selectedPoints use valid keywords
-  for (const chart of data.charts) {
+  for (let i = 0; i < data.charts.length; i++) {
+    const chart = data.charts[i];
     const validation = validateSelectedPoints(chart.selectedPoints);
     if (!validation.valid) {
-      return validation.error;
+      // Check if the issue is with specific inverter IDs
+      const hasInverterIds = Object.values(chart.selectedPoints).some((values: any) =>
+        Array.isArray(values) && values.some((v: any) => typeof v === 'string' && v.match(/^\d+$/))
+      );
+
+      if (hasInverterIds) {
+        return `Cannot export workspace: Chart ${i + 1} uses specific inverter serial numbers instead of keywords. Only workspaces using 'first', 'primary', or 'all' keywords can be exported as built-ins. Please ensure all charts use one of these keyword options.`;
+      }
+
+      return `Chart ${i + 1}: ${validation.error}`;
     }
   }
 
