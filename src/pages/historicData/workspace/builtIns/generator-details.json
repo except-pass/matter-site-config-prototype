@@ -1,0 +1,87 @@
+{
+  "version": "1.0",
+  "id": "ws-builtin-generator-details",
+  "name": "Generator details",
+  "type": "builtin",
+  "data": {
+    "charts": [
+      {
+        "id": "chart-0",
+        "row": 0,
+        "col": 0,
+        "selectedPoints": {
+          "40101:pGenTot": [
+            "first"
+          ],
+          "40101:iGenTot": [
+            "first"
+          ],
+          "40101:pBatChg": [
+            "first"
+          ],
+          "40101:pBkupTot": [
+            "first"
+          ],
+          "40101:pLoad": [
+            "first"
+          ]
+        }
+      },
+      {
+        "id": "chart-1",
+        "row": 1,
+        "col": 0,
+        "selectedPoints": {
+          "40101:genRelayStat": [
+            "first"
+          ],
+          "40101:genDryContactState": [
+            "first"
+          ],
+          "40103:genFault": [
+            "first"
+          ]
+        }
+      },
+      {
+        "id": "chart-2",
+        "row": 0,
+        "col": 1,
+        "selectedPoints": {
+          "40101:vGenLL": [
+            "first"
+          ],
+          "40101:vGenLN": [
+            "first"
+          ]
+        }
+      },
+      {
+        "id": "chart-3",
+        "row": 1,
+        "col": 1,
+        "selectedPoints": {
+          "40104:socGenEnd": [
+            "first"
+          ],
+          "40104:socGenStart": [
+            "first"
+          ],
+          "40101:socBat": [
+            "first"
+          ]
+        }
+      }
+    ],
+    "rowHeights": {
+      "0": 894,
+      "1": 902
+    },
+    "columnWidths": {
+      "0": 780,
+      "1": 780
+    },
+    "nextChartId": 4,
+    "activeChartId": "chart-3"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "version": "1.0",
+  "id": "ws-builtin-power-flows",
+  "name": "Power Flows",
+  "type": "builtin",
+  "data": {
+    "charts": [
+      {
+        "id": "chart-0",
+        "row": 0,
+        "col": 0,
+        "selectedPoints": {
+          "40101:pPvTotal": ["first"],
+          "40101:pGridImpTot": ["first"],
+          "40101:pGridExpTot": ["first"],
+          "40101:pBatChg": ["first"],
+          "40101:pBatDischg": ["first"]
+        }
+      },
+      {
+        "id": "chart-1",
+        "row": 0,
+        "col": 1,
+        "selectedPoints": {
+          "40101:pPvTotal": ["first"],
+          "40101:pLoad": ["first"]
+        }
+      },
+      {
+        "id": "chart-2",
+        "row": 1,
+        "col": 0,
+        "selectedPoints": {
+          "40101:pGridImpTot": ["first"],
+          "40101:pGridExpTot": ["first"]
+        }
+      },
+      {
+        "id": "chart-3",
+        "row": 1,
+        "col": 1,
+        "selectedPoints": {
+          "40101:pBatChg": ["first"],
+          "40101:pBatDischg": ["first"]
+        }
+      }
+    ],
+    "rowHeights": {
+      "0": 520,
+      "1": 520
+    },
+    "columnWidths": {
+      "0": 780,
+      "1": 780
+    },
+    "nextChartId": 4,
+    "activeChartId": "chart-0"
+  }
+}
