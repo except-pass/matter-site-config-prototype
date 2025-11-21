@@ -822,23 +822,31 @@ export default function App() {
 
   // Workspace action handlers
   const createBlankWorkspace = useCallback(() => {
-    // Clear all charts and reset to a blank state
+    // Create a single empty chart at position (0, 0)
+    const emptyChart = {
+      id: 'chart-0',
+      row: 0,
+      col: 0,
+      selectedPoints: new Map<string, Set<string>>()
+    };
+
     if (chartGridCallbacksRef.current) {
       chartGridCallbacksRef.current.setChartGridState({
-        charts: [],
+        charts: [emptyChart],
         rowHeights: new Map([[0, 520]]),
         columnWidths: new Map([[0, 780]]),
-        nextChartId: 0,
-        activeChartId: undefined
+        nextChartId: 1,
+        activeChartId: 'chart-0'
       });
     }
 
-    // Create a new unsaved workspace
+    // Create a new workspace with one empty chart
     const blankData = serializeWorkspaceData(
-      [],
+      [emptyChart],
       new Map([[0, 520]]),
       new Map([[0, 780]]),
-      0
+      1,
+      'chart-0'
     );
 
     workspaceActions.createNewWorkspace('Untitled Workspace', blankData)
