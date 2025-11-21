@@ -19,23 +19,6 @@ export interface InverterInfo {
 }
 
 /**
- * Try to convert inverter IDs to a keyword using heuristics
- * This is used when the full inverter list is not available
- */
-function inferKeywordFromIds(inverterIds: string[]): InverterSelectionKeyword | null {
-  if (inverterIds.length === 0) {
-    return null;
-  }
-
-  // If all points in a chart have the same single inverter, assume it's "first"
-  if (inverterIds.length === 1) {
-    return 'first';
-  }
-
-  return null;
-}
-
-/**
  * Serialize chart data for storage/export
  * Converts Maps and Sets to plain objects and arrays
  * Attempts to convert inverter IDs back to keywords for portability
@@ -59,12 +42,6 @@ export function serializeChartData(
           const keyword = getKeywordForInverterIds(inverterIds, allInverterIds, primaryInverterId);
 
           // If we can map to a keyword, use it
-          if (keyword) {
-            return [key, [keyword]];
-          }
-        } else {
-          // No inverter info provided, try heuristic-based conversion
-          const keyword = inferKeywordFromIds(inverterIds);
           if (keyword) {
             return [key, [keyword]];
           }

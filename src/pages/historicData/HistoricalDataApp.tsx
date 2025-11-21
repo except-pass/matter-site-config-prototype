@@ -856,7 +856,8 @@ export default function App() {
       new Map([[0, 520]]),
       new Map([[0, 780]]),
       1,
-      'chart-0'
+      'chart-0',
+      availableInverters
     );
 
     workspaceActions.createNewWorkspace('Untitled Workspace', blankData)
@@ -905,7 +906,8 @@ export default function App() {
           gridState.rowHeights,
           gridState.columnWidths,
           gridState.nextChartId,
-          gridState.activeChartId
+          gridState.activeChartId,
+          availableInverters
         );
         workspaceActions.updateCurrentWorkspace(data);
       }
@@ -913,11 +915,11 @@ export default function App() {
     } catch (error) {
       console.error('Failed to save workspace:', error);
     }
-  }, [workspaceState.currentWorkspace, workspaceActions, chartGridCallbacksRef]);
+  }, [workspaceState.currentWorkspace, workspaceActions, chartGridCallbacksRef, availableInverters]);
 
   const handleSaveAs = useCallback((name: string) => {
     // Get actual chart data from ChartGrid
-    let data = serializeWorkspaceData([], new Map(), new Map(), 0);
+    let data = serializeWorkspaceData([], new Map(), new Map(), 0, undefined, availableInverters);
     if (chartGridCallbacksRef.current) {
       const gridState = chartGridCallbacksRef.current.getChartGridState();
       data = serializeWorkspaceData(
@@ -925,7 +927,8 @@ export default function App() {
         gridState.rowHeights,
         gridState.columnWidths,
         gridState.nextChartId,
-        gridState.activeChartId
+        gridState.activeChartId,
+        availableInverters
       );
     }
 
@@ -936,7 +939,7 @@ export default function App() {
       .catch((error) => {
         console.error('Failed to save workspace:', error);
       });
-  }, [workspaceActions, chartGridCallbacksRef]);
+  }, [workspaceActions, chartGridCallbacksRef, availableInverters]);
 
   const handleSwitchWorkspace = useCallback((workspaceId: string) => {
     if (workspaceState.isDirty) {
