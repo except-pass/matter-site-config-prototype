@@ -19,23 +19,6 @@ export interface InverterInfo {
 }
 
 /**
- * Try to convert inverter IDs to a keyword using heuristics
- * This is used when the full inverter list is not available
- */
-function inferKeywordFromIds(inverterIds: string[]): InverterSelectionKeyword | null {
-  if (inverterIds.length === 0) {
-    return null;
-  }
-
-  // If all points in a chart have the same single inverter, assume it's "first"
-  if (inverterIds.length === 1) {
-    return 'first';
-  }
-
-  return null;
-}
-
-/**
  * Serialize chart data for storage/export
  * Converts Maps and Sets to plain objects and arrays
  * Attempts to convert inverter IDs back to keywords for portability
@@ -59,12 +42,6 @@ export function serializeChartData(
           const keyword = getKeywordForInverterIds(inverterIds, allInverterIds, primaryInverterId);
 
           // If we can map to a keyword, use it
-          if (keyword) {
-            return [key, [keyword]];
-          }
-        } else {
-          // No inverter info provided, try heuristic-based conversion
-          const keyword = inferKeywordFromIds(inverterIds);
           if (keyword) {
             return [key, [keyword]];
           }
@@ -204,22 +181,38 @@ export function validateWorkspaceForExport(
     return 'Invalid workspace structure';
   }
 
+  const invalidPoints: Array<{ chartNum: number; pointId: string; values: string[] }> = [];
+
   // Validate that all selectedPoints use valid keywords
   for (let i = 0; i < data.charts.length; i++) {
     const chart = data.charts[i];
-    const validation = validateSelectedPoints(chart.selectedPoints);
-    if (!validation.valid) {
-      // Check if the issue is with specific inverter IDs
-      const hasInverterIds = Object.values(chart.selectedPoints).some((values: any) =>
-        Array.isArray(values) && values.some((v: any) => typeof v === 'string' && v.match(/^\d+$/))
-      );
 
-      if (hasInverterIds) {
-        return `Cannot export workspace: Chart ${i + 1} uses specific inverter serial numbers instead of keywords. Only workspaces using 'first', 'primary', or 'all' keywords can be exported as built-ins. Please ensure all charts use one of these keyword options.`;
+    // Check each point in the chart
+    for (const [pointId, values] of Object.entries(chart.selectedPoints)) {
+      if (!Array.isArray(values)) {
+        return `Chart ${i + 1}: Invalid format for point '${pointId}'`;
       }
 
-      return `Chart ${i + 1}: ${validation.error}`;
+      // Find any invalid values
+      const invalidValues = values.filter((v: any) => !isValidKeyword(v));
+      if (invalidValues.length > 0) {
+        invalidPoints.push({
+          chartNum: i + 1,
+          pointId,
+          values: invalidValues,
+        });
+      }
     }
+  }
+
+  if (invalidPoints.length > 0) {
+    const pointsList = invalidPoints
+      .map(({ chartNum, pointId, values }) =>
+        `  - Chart ${chartNum}, Point '${pointId}': ${values.map(v => `'${v}'`).join(', ')}`
+      )
+      .join('\n');
+
+    return `Cannot save as workspace. The following points have invalid equipment selection:\n\n${pointsList}\n\nYou can select either 'primary', 'first', or 'all'. Please update these points to use one of these valid options.`;
   }
 
   return undefined;
@@ -391,11 +384,12 @@ export function validateWorkspaceData(data: any): data is SerializableWorkspaceD
     if (typeof chart.id !== 'string') return false;
     if (typeof chart.row !== 'number') return false;
     if (typeof chart.col !== 'number') return false;
-    if (typeof chart.selectedPoints !== 'object') return false;
+    if (typeof chart.selectedPoints !== 'object' || chart.selectedPoints === null) return false;
 
-    // Validate selectedPoints contain valid keywords
-    const validation = validateSelectedPoints(chart.selectedPoints);
-    if (!validation.valid) return false;
+    // Validate selectedPoints structure (but not semantic validity - that's checked in validateWorkspaceForExport)
+    for (const values of Object.values(chart.selectedPoints)) {
+      if (!Array.isArray(values)) return false;
+    }
   }
 
   return true;
